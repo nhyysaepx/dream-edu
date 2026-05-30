@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us | Dream Education</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#1a1c1e",
+                      "primary-fixed-dim": "#afc6ff",
+                      "secondary-fixed-dim": "#f0c100",
+                      "surface-variant": "#e2e2e5",
+                      "on-tertiary-container": "#afada7",
+                      "tertiary-container": "#41413c",
+                      "on-primary": "#ffffff",
+                      "secondary": "#745c00",
+                      "tertiary": "#2b2b27",
+                      "primary-fixed": "#d9e2ff",
+                      "on-primary-container": "#8bacf7",
+                      "inverse-on-surface": "#f0f0f3",
+                      "on-surface": "#1a1c1e",
+                      "background": "#f9f9fc",
+                      "on-primary-fixed-variant": "#1e4488",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#e5e2db",
+                      "on-secondary-fixed-variant": "#574500",
+                      "on-primary-fixed": "#001944",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#f9f9fc",
+                      "secondary-container": "#fdcc15",
+                      "primary-container": "#163e82",
+                      "on-secondary": "#ffffff",
+                      "surface-container-low": "#f3f3f6",
+                      "surface-container": "#eeeef0",
+                      "error-container": "#ffdad6",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-container-high": "#e8e8ea",
+                      "on-surface-variant": "#434751",
+                      "on-tertiary-fixed-variant": "#474742",
+                      "primary": "#002862",
+                      "on-secondary-container": "#6e5700",
+                      "outline": "#747782",
+                      "tertiary-fixed-dim": "#c9c6c0",
+                      "outline-variant": "#c4c6d2",
+                      "inverse-surface": "#2f3133",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#e2e2e5",
+                      "inverse-primary": "#afc6ff",
+                      "surface-tint": "#3a5ca2",
+                      "surface-bright": "#f9f9fc",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#dadadc",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#ffe089",
+                      "on-tertiary-fixed": "#1c1c18"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "margin-mobile": "20px",
+                      "stack-sm": "12px",
+                      "gutter": "24px",
+                      "container-max": "1280px",
+                      "stack-lg": "48px",
+                      "base": "8px",
+                      "stack-md": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Montserrat"],
+                      "body-sm": ["Inter"],
+                      "display-lg": ["Montserrat"],
+                      "label-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Montserrat"],
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Montserrat"],
+                      "headline-sm": ["Montserrat"]
+              },
+              "fontSize": {
+                      "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-card {
+            box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .tonal-card:hover {
+            box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12);
+            transform: translateY(-4px);
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, #d9e2ff, #002862, #d9e2ff);
+            transform: translateX(-50%);
+        }
+        @media (max-width: 768px) {
+            .timeline-line::before {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-desktop py-4">
+<div class="font-headline-sm text-headline-sm font-bold text-primary">
+                Dream Education
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Courses</a>
+<a class="font-label-lg text-label-lg text-primary border-b-2 border-secondary pb-1" href="#">About</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Success Stories</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Blog</a>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-lg text-label-lg hover:bg-primary-container hover:text-on-primary-container transition-all active:scale-95">
+                Book Placement Test
+            </button>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero Section -->
+<section class="relative h-[614px] flex items-center overflow-hidden bg-primary-container">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-30 mix-blend-overlay" data-alt="A grand university library with soaring neoclassical arches and long wooden study tables. Warm sunlight streams through high windows, illuminating dust motes in the air. The atmosphere is quiet, studious, and elite, using a palette of deep royal blues and golden wood tones to represent academic excellence and tradition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUuQt2q5nn4flcHGBCxE_8_gOh73XJgDxvqkhjWJ4oaq5_RE1cT82S0ii7N1Gs7aIacUYJAlukpRdGwDIwH6pbFkNN8oxok-tL_NfJ67lImcOx0KwYmWxHEWE1e-K9On_af04-AdYwK3HhttFjdkFP4AJ4_sIdjtN4jcjr4owq-fV_DQp7QyZh7-XcFsgspHGuB7uaiY3WyzaPDyCwi4oW3RNgEsy-EjqE8lLHN_jTt5kXo1szHAQ0O_o6h2nnLrBj8qHtZNoXTZs"/>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-desktop w-full">
+<div class="max-w-2xl">
+<span class="inline-block bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md mb-4 uppercase tracking-widest">Since 2008</span>
+<h1 class="font-display-lg text-display-lg text-on-primary mb-6">Bridging Dreams to International Realities.</h1>
+<p class="font-body-lg text-body-lg text-on-primary-container leading-relaxed">We provide world-class linguistic preparation for the next generation of global leaders, scholars, and professionals.</p>
+</div>
+</div>
+</section>
+<!-- Vision, Mission, Values Bento Grid -->
+<section class="py-stack-lg max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="md:col-span-2 bg-surface-container-lowest p-10 rounded-xl tonal-card border border-outline-variant/30 relative overflow-hidden">
+<div class="relative z-10">
+<span class="material-symbols-outlined text-primary mb-4" style="font-size: 40px;">visibility</span>
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Our Vision</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                            To become the world’s most trusted bridge for international education, empowering students to cross linguistic borders and unlock their fullest potential in any academic or professional environment.
+                        </p>
+</div>
+<div class="absolute -right-10 -bottom-10 opacity-5">
+<span class="material-symbols-outlined" style="font-size: 240px;">language</span>
+</div>
+</div>
+<div class="bg-primary p-10 rounded-xl tonal-card text-on-primary flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-secondary-container mb-4" style="font-size: 40px;">flag</span>
+<h2 class="font-headline-sm text-headline-sm mb-4">Our Mission</h2>
+<p class="font-body-md text-body-md opacity-90 leading-relaxed">
+                            Delivering excellence through rigorous IELTS preparation, expert-led English immersion, and comprehensive academic placement services.
+                        </p>
+</div>
+<a class="mt-8 flex items-center gap-2 font-label-lg text-label-lg text-secondary-container hover:underline" href="#">
+                        View our courses <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mt-gutter">
+<div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant/50">
+<span class="material-symbols-outlined text-primary mb-2">school</span>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Integrity</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Unwavering commitment to academic honesty and ethical guidance.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant/50">
+<span class="material-symbols-outlined text-primary mb-2">star</span>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Excellence</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Striving for the highest standards in teaching and student support.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant/50">
+<span class="material-symbols-outlined text-primary mb-2">groups</span>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Diversity</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Celebrating cultural exchange as the heart of modern learning.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-outline-variant/50">
+<span class="material-symbols-outlined text-primary mb-2">psychology</span>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Innovation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Utilizing cutting-edge pedagogy to accelerate language acquisition.</p>
+</div>
+</div>
+</section>
+<!-- Timeline Section -->
+<section class="py-stack-lg bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Our Growth Story</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">From a small tutoring center to a leading international education consultancy.</p>
+</div>
+<div class="relative timeline-line">
+<!-- 2008 -->
+<div class="flex flex-col md:flex-row items-center mb-16 gap-gutter relative">
+<div class="md:w-1/2 md:text-right">
+<h4 class="font-headline-sm text-headline-sm text-primary">The Inception</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Dream Education opened its doors with a single classroom and a vision for quality IELTS prep.</p>
+</div>
+<div class="z-10 w-10 h-10 rounded-full bg-secondary-fixed border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-fixed">2008</div>
+<div class="md:w-1/2">
+<img class="rounded-lg shadow-sm w-full h-48 object-cover" data-alt="A black and white photograph of a small, humble classroom with a few wooden desks and an old-fashioned chalkboard. The image feels nostalgic and historic, representing the small beginnings of a now-large educational institution. The lighting is soft and focused on the center of the room." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5lRzX3OiraHAtHuNoVfj33OHDLIxV1XkBrtLWPERPZ31GqjqyibkUErMdYsz-pB-C3OX1CjmB-b4HdYIn3OiTbz7z7bbFUzI1BDTXzOIC-dFm_75ciizJiG-tu2k4nvQO0maQho3nwUIgydBGHNPNMM7Qr9WwnA2og9F8MEVTm9Gc6-1T-Y5kuMf7gc0rBDwIjqyi3teYtbbpNL2z4BqTipOkYM-J4MVMlpMeHlLhHqwnnLXmGAfypseYtTHAF8O2rVZVWP5mU6E"/>
+</div>
+</div>
+<!-- 2014 -->
+<div class="flex flex-col md:flex-row-reverse items-center mb-16 gap-gutter relative">
+<div class="md:w-1/2">
+<h4 class="font-headline-sm text-headline-sm text-primary">Global Partnership</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Secured official partnerships with top UK and Australian universities for direct placements.</p>
+</div>
+<div class="z-10 w-10 h-10 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center font-bold text-on-primary">2014</div>
+<div class="md:w-1/2 md:text-right">
+<img class="rounded-lg shadow-sm w-full h-48 object-cover" data-alt="Two professional men in suits shaking hands in front of a glass office wall overlooking a modern city skyline. The style is corporate and professional, with a cool blue color grade. The focus is on the handshake, symbolizing successful partnership and trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL2MvouZNwLimg_KQvNZP2LBATH2wkoMTXsEbAM23ForoudVOXaNeu1gipjbMjy3cCu7fhGeGmr2rdwgv9wQ6gtRBve477HtEAkbkywUySAo0VZD6CuXYypBZe0VAGDazjCKPGIIeEJwT3wWTo0ac3Bad_MR6n91G7LsUJ4iSXH3xTvlTVHAkT2diI3-z28lTAM17DLHxhkeqotB-dAtfJCc8QA96YFhge8jEfhTOliC6pYym-nnRCX862feznjLTRb0zQj1Y_77E"/>
+</div>
+</div>
+<!-- 2024 -->
+<div class="flex flex-col md:flex-row items-center gap-gutter relative">
+<div class="md:w-1/2 md:text-right">
+<h4 class="font-headline-sm text-headline-sm text-primary">The Modern Era</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Launching our fully integrated digital learning platform, serving students across 15 countries.</p>
+</div>
+<div class="z-10 w-10 h-10 rounded-full bg-secondary-fixed border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-fixed">2024</div>
+<div class="md:w-1/2">
+<img class="rounded-lg shadow-sm w-full h-48 object-cover" data-alt="A modern student using a tablet and laptop in a high-tech, brightly lit learning space with ergonomic furniture and vibrant accent colors. The aesthetic is clean, tech-forward, and sophisticated, emphasizing the marriage of traditional education with digital innovation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj4Kl34SxD6OjbHayVzdt58ygr4Ccyo6l5MHaAVUG8wqy6VQJvPP-_nIia7kDWxRB74p53qLJnfrMrlPM63_hCazW1pSpF4MjOlUVlh_CxBVDCrlj2VSH_1Rn0-csB9a2c8tri3yPF46ZfI9TQTBEEBIhw0TgEN1iwUboSU8NT8oR3DnBHVCeOu-gwqRl0diwf5gYJRguEede7zMKHvWUn8nrEGtfw7WS5CyJxnWHDKG4JC1-oPsX3edcIJ8wIwCkkgXKfuGzIn-w"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Choose Us -->
+<section class="py-stack-lg max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-col md:flex-row gap-stack-lg items-center">
+<div class="md:w-1/2">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-8 leading-tight">Why the World's Brightest Students Choose Us</h2>
+<div class="space-y-6">
+<div class="flex gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-12 shrink-0 rounded-full bg-secondary-fixed/20 flex items-center justify-center text-secondary group-hover:bg-secondary-fixed group-hover:text-on-secondary-fixed transition-all">
+<span class="material-symbols-outlined">record_voice_over</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-1">Native Instructors</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Learn with educators from the UK, USA, and Australia to master authentic accents and idioms.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-12 shrink-0 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
+<span class="material-symbols-outlined">emoji_events</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-1">Academic Excellence</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Our curriculum is designed by Oxford alumni, ensuring rigor and result-oriented learning.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-12 shrink-0 rounded-full bg-secondary-fixed/20 flex items-center justify-center text-secondary group-hover:bg-secondary-fixed group-hover:text-on-secondary-fixed transition-all">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-1">Guaranteed Scores</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">94% of our students achieve their target band score within their first attempt.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="md:w-1/2 relative">
+<div class="relative rounded-2xl overflow-hidden aspect-square border-8 border-white shadow-xl">
+<img class="w-full h-full object-cover" data-alt="A group of diverse international students collaborating around a table in a bright, modern glass-walled seminar room. They are laughing and engaged, showing a mix of digital tablets and physical textbooks. The mood is energetic, youthful, and intellectually stimulating, set in a high-end corporate campus environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmbpAObe_kru6dEmoJYNXxXZrFSF2sWGYvubA4OTlgK9orCxxxmayCMksLTrLSbxa7SMxN1Y70hDroWkvjd7QOC67qQhMST9m5XUAGErnr3YWfkO35y8MkEldbyGRKGwiVNebdttQeq1E9zkyOWgJWPwWa62tVUj1-RG8LA_65kjL43kZYgF_UZX6I2KKZ5k_XgPUVvI9yBN53qqeyjxNX3HKclazrXni6wPA3ks5A3FNlC2ucGXgkP0iX_amwPrLFrmYYP8VDwIY"/>
+</div>
+<div class="absolute -bottom-6 -left-6 bg-secondary-container p-6 rounded-xl shadow-lg max-w-[200px]">
+<p class="font-display-lg text-headline-lg text-on-secondary-container">15k+</p>
+<p class="font-label-md text-label-md text-on-secondary-container uppercase">Alumni Globally</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="mb-stack-lg max-w-container-max mx-auto px-margin-desktop">
+<div class="bg-primary-container rounded-3xl p-12 text-center relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="grid grid-cols-6 h-full">
+<div class="border-r border-on-primary"></div>
+<div class="border-r border-on-primary"></div>
+<div class="border-r border-on-primary"></div>
+<div class="border-r border-on-primary"></div>
+<div class="border-r border-on-primary"></div>
+<div class="border-r border-on-primary"></div>
+</div>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-primary mb-6">Ready to start your journey?</h2>
+<p class="font-body-lg text-body-lg text-on-primary-container mb-8 max-w-2xl mx-auto">Join the ranks of thousands who have realized their international dreams with our expert guidance.</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-full font-label-lg text-label-lg hover:shadow-lg transition-all transform hover:-translate-y-1">Enroll Now</button>
+<button class="border-2 border-on-primary text-on-primary px-8 py-4 rounded-full font-label-lg text-label-lg hover:bg-white/10 transition-all">Talk to an Advisor</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full rounded-t-xl border-t border-outline-variant/50 pt-16 pb-8">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter mb-12">
+<div class="md:col-span-1">
+<div class="font-headline-sm text-headline-sm font-bold text-primary mb-4">Dream Education</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 Dream Education. Empowering international futures through linguistic excellence.</p>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary mb-6 uppercase tracking-widest">Courses</h4>
+<ul class="space-y-4">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">IELTS Academic</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">General English</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">Business Communication</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary mb-6 uppercase tracking-widest">Resources</h4>
+<ul class="space-y-4">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">Teacher Profiles</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">Study Materials</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">Success Stories</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary mb-6 uppercase tracking-widest">Legal</h4>
+<ul class="space-y-4">
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">Privacy Policy</a></li>
+<li><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-all hover:translate-x-1 block" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop border-t border-outline-variant/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">social_leaderboard</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">language</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">mail</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-60">Handcrafted for educational elite.</p>
+</div>
+</footer>
+<script>
+        // Simple parallax or subtle scroll animations
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroImage = document.querySelector('section img');
+            if(heroImage) {
+                heroImage.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
+
+        // Intersection Observer for fade-in elements
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.tonal-card').forEach(card => {
+            card.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+            observer.observe(card);
+        });
+    </script>
+</body></html>

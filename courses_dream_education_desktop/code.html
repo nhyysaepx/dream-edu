@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dream Education | International Excellence</title>
+<!-- Google Fonts: Montserrat (Headlines) & Inter (Body) -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#1a1c1e",
+                    "primary-fixed-dim": "#afc6ff",
+                    "secondary-fixed-dim": "#f0c100",
+                    "surface-variant": "#e2e2e5",
+                    "on-tertiary-container": "#afada7",
+                    "tertiary-container": "#41413c",
+                    "on-primary": "#ffffff",
+                    "secondary": "#745c00",
+                    "tertiary": "#2b2b27",
+                    "primary-fixed": "#d9e2ff",
+                    "on-primary-container": "#8bacf7",
+                    "inverse-on-surface": "#f0f0f3",
+                    "on-surface": "#1a1c1e",
+                    "background": "#f9f9fc",
+                    "on-primary-fixed-variant": "#1e4488",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#e5e2db",
+                    "on-secondary-fixed-variant": "#574500",
+                    "on-primary-fixed": "#001944",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f9f9fc",
+                    "secondary-container": "#fdcc15",
+                    "primary-container": "#163e82",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f3f3f6",
+                    "surface-container": "#eeeef0",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#241a00",
+                    "surface-container-high": "#e8e8ea",
+                    "on-surface-variant": "#434751",
+                    "on-tertiary-fixed-variant": "#474742",
+                    "primary": "#002862",
+                    "on-secondary-container": "#6e5700",
+                    "outline": "#747782",
+                    "tertiary-fixed-dim": "#c9c6c0",
+                    "outline-variant": "#c4c6d2",
+                    "inverse-surface": "#2f3133",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e5",
+                    "inverse-primary": "#afc6ff",
+                    "surface-tint": "#3a5ca2",
+                    "surface-bright": "#f9f9fc",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#dadadc",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#ffe089",
+                    "on-tertiary-fixed": "#1c1c18"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "margin-mobile": "20px",
+                    "stack-sm": "12px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "stack-lg": "48px",
+                    "base": "8px",
+                    "stack-md": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Montserrat"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Montserrat"],
+                    "label-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-sm": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .card-shadow:hover {
+            box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12);
+            transform: translateY(-4px);
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Top Navigation Bar (Shared Component Strategy) -->
+<header class="fixed top-0 w-full z-50 bg-surface/95 glass-nav border-b border-outline-variant/30">
+<nav class="flex justify-between items-center max-w-container-max mx-auto px-6 md:px-margin-desktop py-4">
+<div class="flex items-center gap-8">
+<a class="font-headline-sm text-headline-sm font-bold text-primary" href="#">Dream Education</a>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-primary border-b-2 border-secondary pb-1 font-label-lg text-label-lg" href="#">Courses</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-lg text-label-lg" href="#">About</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-lg text-label-lg" href="#">Success Stories</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-lg text-label-lg" href="#">Blog</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden lg:flex bg-primary text-on-primary px-6 py-2 rounded-full font-label-lg text-label-lg hover:opacity-90 transition-all active:scale-95">
+                    Book Placement Test
+                </button>
+<button class="md:hidden text-primary p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-stack-lg">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-6 md:px-margin-desktop mb-stack-lg">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center">
+<div class="space-y-stack-sm">
+<span class="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider">Academic Excellence</span>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary leading-tight">
+                        Elevate Your Potential with <span class="text-secondary">Expert Instruction</span>.
+                    </h1>
+<p class="text-on-surface-variant font-body-lg text-body-lg max-w-lg">
+                        Structured curriculum designed for high achievers. From foundational IELTS to advanced Academic English, we bridge the gap between aspiration and global success.
+                    </p>
+</div>
+<div class="relative hidden lg:block h-[400px] rounded-xl overflow-hidden shadow-xl">
+<img alt="Education Success" class="w-full h-full object-cover" data-alt="A clean, minimalist university study lounge with bright, natural light. Students are engaged in focused discussion at a polished wooden table. The atmosphere is professional, featuring high-end architectural details and a sophisticated color palette of deep blues and warm ivory tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNAnodpyFDI7O8GlSbCL-OfEvYPPJlXD8mCqSHNULThjnZGh5SB1h26nqzMHvuGMEVsB0IGW6g_stnWYKgNWTv43mrtr4ET19jC9VBK7WTvTXputnNU9JkD6hq34FdCGl81oKED8fhBtN3RaIdryRRpnjprm3-AHeleOSQUayHJu87D4lDQb1qMAre7CuQmheSwp-EnBgcR0N8huvMoDSly89GKp7Cvk4Lwt-c8EO6mLm8Tp1xQCUAm-O_E031EIK4ReCwPK3bIDw"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
+</div>
+</div>
+</section>
+<!-- Course Filters & Bento Grid -->
+<section class="max-w-container-max mx-auto px-6 md:px-margin-desktop">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Our Curated Courses</h2>
+<p class="text-on-surface-variant">Select the path that matches your current proficiency and goal.</p>
+</div>
+<!-- Filtering Component -->
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md transition-all">All Paths</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed hover:text-on-primary-fixed transition-all font-label-md text-label-md">IELTS Prep</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed hover:text-on-primary-fixed transition-all font-label-md text-label-md">Academic English</button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed hover:text-on-primary-fixed transition-all font-label-md text-label-md">Specialized</button>
+</div>
+</div>
+<!-- Course Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- IELTS Foundation -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 card-shadow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Beginner</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4">IELTS Foundation</h3>
+<p class="text-on-surface-variant text-body-sm font-body-sm mb-6">Build a robust linguistic base across all four skills for students starting their IELTS journey.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+<span class="text-label-lg font-label-lg">12 Weeks / 60 Hours</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">task_alt</span>
+<span class="text-label-lg font-label-lg">Core Grammar &amp; Vocabulary</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Enroll Now</button>
+</div>
+<!-- IELTS Intensive -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 card-shadow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Accelerated</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">speed</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4">IELTS Intensive</h3>
+<p class="text-on-surface-variant text-body-sm font-body-sm mb-6">A fast-track program focusing purely on exam strategies and high-frequency question patterns.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+<span class="text-label-lg font-label-lg">4 Weeks / Daily Sessions</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">trending_up</span>
+<span class="text-label-lg font-label-lg">Strategic Exam Techniques</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Enroll Now</button>
+</div>
+<!-- IELTS 6.5+ -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 card-shadow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Intermediate</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4">IELTS 6.5+</h3>
+<p class="text-on-surface-variant text-body-sm font-body-sm mb-6">Designed for university admission requirements, focusing on academic writing and complex listening.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+<span class="text-label-lg font-label-lg">8 Weeks / Weekend Options</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">edit_note</span>
+<span class="text-label-lg font-label-lg">Academic Writing Mastery</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Enroll Now</button>
+</div>
+<!-- IELTS 7.0+ (Premium Highlight) -->
+<div class="bg-primary-container p-6 rounded-xl border border-primary/20 card-shadow flex flex-col justify-between text-on-primary">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary text-on-secondary px-3 py-1 rounded-full font-label-md text-label-md">Elite Selection</span>
+<span class="material-symbols-outlined text-secondary-fixed" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-primary mb-4">IELTS 7.0+</h3>
+<p class="text-primary-fixed-dim text-body-sm font-body-sm mb-6">Precision training for high-level candidates aiming for postgraduate study or specialized immigration.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed text-[20px]">verified</span>
+<span class="text-label-lg font-label-lg">Expert-Led Feedback Loops</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary-fixed text-[20px]">forum</span>
+<span class="text-label-lg font-label-lg">Advanced Speaking Workshops</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 rounded-lg font-label-lg text-label-lg transition-transform active:scale-95 font-bold">Enroll Now</button>
+</div>
+<!-- Academic English -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 card-shadow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">University Prep</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4">Academic English</h3>
+<p class="text-on-surface-variant text-body-sm font-body-sm mb-6">Master the art of research, referencing, and formal academic discourse for international studies.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">history_edu</span>
+<span class="text-label-lg font-label-lg">Research &amp; Citation Skills</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">psychology</span>
+<span class="text-label-lg font-label-lg">Critical Thinking Seminars</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Enroll Now</button>
+</div>
+<!-- Public Speaking -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 card-shadow flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Communication</span>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">record_voice_over</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4">Public Speaking</h3>
+<p class="text-on-surface-variant text-body-sm font-body-sm mb-6">Gain the confidence to present your ideas with authority and clarity in any professional setting.</p>
+<div class="space-y-4 mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">mic</span>
+<span class="text-label-lg font-label-lg">Body Language &amp; Projection</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[20px]">groups</span>
+<span class="text-label-lg font-label-lg">Live Performance Coaching</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded-lg font-label-lg text-label-lg transition-transform active:scale-95">Enroll Now</button>
+</div>
+</div>
+</section>
+<!-- Call to Action Banner -->
+<section class="max-w-container-max mx-auto px-6 md:px-margin-desktop mt-stack-lg">
+<div class="bg-primary p-12 rounded-2xl relative overflow-hidden text-center lg:text-left lg:flex lg:items-center lg:justify-between gap-gutter">
+<div class="relative z-10">
+<h2 class="font-headline-lg text-on-primary mb-4">Not sure which path is yours?</h2>
+<p class="text-primary-fixed-dim font-body-lg text-body-lg max-w-xl">
+                        Our expert consultants provide a comprehensive diagnostic placement test to find your exact proficiency level.
+                    </p>
+</div>
+<div class="mt-8 lg:mt-0 relative z-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+<button class="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-full font-label-lg text-label-lg font-bold hover:scale-105 transition-all">
+                        Book Placement Test
+                    </button>
+<button class="border-2 border-primary-fixed-dim text-on-primary px-8 py-4 rounded-full font-label-lg text-label-lg hover:bg-white/10 transition-all">
+                        Talk to an Advisor
+                    </button>
+</div>
+<!-- Abstract decorative element -->
+<div class="absolute right-0 top-0 w-64 h-64 bg-secondary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+</div>
+</section>
+</main>
+<!-- Footer Component (Shared Component Strategy) -->
+<footer class="w-full rounded-t-xl bg-surface-container-lowest border-t border-outline-variant/50 mt-stack-lg">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter max-w-container-max mx-auto px-6 md:px-margin-desktop py-stack-lg">
+<div class="space-y-4">
+<div class="font-headline-sm text-headline-sm font-bold text-primary mb-4">Dream Education</div>
+<p class="text-on-surface-variant font-body-sm text-body-sm">
+                    © 2024 Dream Education. Empowering international futures through linguistic excellence.
+                </p>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary mb-4">Quick Links</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all inline-block text-body-sm" href="#">IELTS Academic</a></li>
+<li><a class="text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all inline-block text-body-sm" href="#">General English</a></li>
+<li><a class="text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all inline-block text-body-sm" href="#">Teacher Profiles</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-primary mb-4">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all inline-block text-body-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all inline-block text-body-sm" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-lg text-label-lg text-primary mb-4">Stay Connected</h4>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">share</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">mail</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">call</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Floating Action Button for Contact (Contextual) -->
+<div class="fixed bottom-8 right-8 z-40 hidden md:block">
+<button class="bg-secondary-container text-on-secondary-container p-4 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all flex items-center gap-2 group">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap font-label-lg text-label-lg pr-2">Chat with an Advisor</span>
+</button>
+</div>
+<script>
+        // Simple Interaction: Filter buttons toggle active state
+        document.querySelectorAll('button[class*="px-4 py-2"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('button[class*="px-4 py-2"]').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary');
+                    b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary', 'text-on-primary');
+                btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>

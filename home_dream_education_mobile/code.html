@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dream Education | Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#1a1c1e",
+                    "primary-fixed-dim": "#afc6ff",
+                    "secondary-fixed-dim": "#f0c100",
+                    "surface-variant": "#e2e2e5",
+                    "on-tertiary-container": "#afada7",
+                    "tertiary-container": "#41413c",
+                    "on-primary": "#ffffff",
+                    "secondary": "#745c00",
+                    "tertiary": "#2b2b27",
+                    "primary-fixed": "#d9e2ff",
+                    "on-primary-container": "#8bacf7",
+                    "inverse-on-surface": "#f0f0f3",
+                    "on-surface": "#1a1c1e",
+                    "background": "#f9f9fc",
+                    "on-primary-fixed-variant": "#1e4488",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#e5e2db",
+                    "on-secondary-fixed-variant": "#574500",
+                    "on-primary-fixed": "#001944",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f9f9fc",
+                    "secondary-container": "#fdcc15",
+                    "primary-container": "#163e82",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f3f3f6",
+                    "surface-container": "#eeeef0",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#241a00",
+                    "surface-container-high": "#e8e8ea",
+                    "on-surface-variant": "#434751",
+                    "on-tertiary-fixed-variant": "#474742",
+                    "primary": "#002862",
+                    "on-secondary-container": "#6e5700",
+                    "outline": "#747782",
+                    "tertiary-fixed-dim": "#c9c6c0",
+                    "outline-variant": "#c4c6d2",
+                    "inverse-surface": "#2f3133",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e5",
+                    "inverse-primary": "#afc6ff",
+                    "surface-tint": "#3a5ca2",
+                    "surface-bright": "#f9f9fc",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#dadadc",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#ffe089",
+                    "on-tertiary-fixed": "#1c1c18"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "margin-mobile": "20px",
+                    "stack-sm": "12px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "stack-lg": "48px",
+                    "base": "8px",
+                    "stack-md": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Montserrat"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Montserrat"],
+                    "label-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-sm": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+        }
+        .active-nav-link {
+            border-bottom: 2px solid #745c00;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm md:hidden">
+<div class="flex justify-between items-center px-margin-mobile py-4">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Dream Education</span>
+<button class="p-2 text-primary" id="menuBtn">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+<!-- Mobile Drawer -->
+<div class="hidden absolute top-full left-0 w-full bg-surface-container-lowest border-b border-outline-variant/30 p-margin-mobile flex flex-col gap-stack-md transition-all" id="mobileDrawer">
+<a class="font-label-lg text-label-lg text-primary border-b-2 border-secondary pb-1 w-fit" href="#">Courses</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant" href="#">About</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant" href="#">Success Stories</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant" href="#">Blog</a>
+<button class="bg-primary text-on-primary py-3 px-6 rounded-lg font-label-lg text-label-lg mt-2">Book Placement Test</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="mt-16 relative overflow-hidden bg-surface-container-lowest pt-12 pb-16">
+<div class="px-margin-mobile flex flex-col items-center text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full mb-6">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="font-label-md text-label-md">Official IELTS Partner</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-6 leading-tight">
+                Transform Your English. <br/><span class="text-secondary">Unlock Your Future.</span>
+</h1>
+<p class="font-body-md text-on-surface-variant mb-8 max-w-sm">
+                Elite English coaching for international students and professionals. Achieve the score you need with Ivy-League pedagogical methods.
+            </p>
+<div class="flex flex-col w-full gap-4">
+<button class="bg-primary text-on-primary font-label-lg text-label-lg py-4 rounded-xl shadow-lg active:scale-95 transition-all">
+                    Explore Courses
+                </button>
+<button class="border-2 border-secondary text-secondary font-label-lg text-label-lg py-4 rounded-xl active:scale-95 transition-all">
+                    Free Consultation
+                </button>
+</div>
+</div>
+<!-- Hero Image (Bento-lite style for mobile) -->
+<div class="mt-12 px-margin-mobile">
+<div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="A diverse group of international students collaborating in a high-end, modern campus lounge with large floor-to-ceiling windows. The lighting is warm and natural, creating an atmosphere of focused achievement. The students are dressed in professional-casual attire, reflecting an elite educational environment. The scene is framed with clean lines and a premium corporate-academic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2u6wFecNOY-Qz9O3cUXjMqf5IgzkuYsol7QJ_nqivardfrMca2Wdj66YN0V69LnbRI64LHvikc202iEAJ6blKkTvYcPFsc8UP3evvqqKtltOZhoqqgEu3TBR39EUHmMuwDj0LFFqZPrEEeAI9MVdxZZHjGNDTjQRPlyIi5-IYlHr392S2E83Edmvr9zmcgBaReQ8e7kVbVj6F5nbHiscbA_uE0VuiX8g6968lRRr6o0Sasy1bTthmMxsqzRzawVtcZn16Os1DV9Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+</div>
+</div>
+</section>
+<!-- Quick Stats Bento -->
+<section class="py-stack-lg px-margin-mobile bg-background">
+<div class="grid grid-cols-2 gap-4">
+<div class="p-6 bg-surface-container-lowest rounded-2xl card-shadow flex flex-col items-center text-center">
+<span class="text-headline-md font-headline-md text-primary">98%</span>
+<span class="text-label-md font-label-md text-on-surface-variant">Success Rate</span>
+</div>
+<div class="p-6 bg-surface-container-lowest rounded-2xl card-shadow flex flex-col items-center text-center">
+<span class="text-headline-md font-headline-md text-primary">15k+</span>
+<span class="text-label-md font-label-md text-on-surface-variant">Alumni</span>
+</div>
+</div>
+</section>
+<!-- Featured Courses -->
+<section class="py-stack-lg bg-surface-container-low overflow-hidden">
+<div class="px-margin-mobile flex justify-between items-end mb-8">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-2">Featured Courses</h2>
+<div class="h-1 w-12 bg-secondary rounded-full"></div>
+</div>
+<a class="text-primary font-label-lg text-label-lg flex items-center gap-1" href="#">
+                View all <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="flex overflow-x-auto gap-gutter px-margin-mobile no-scrollbar pb-6">
+<!-- Card 1 -->
+<div class="flex-shrink-0 w-[85%] bg-surface-container-lowest rounded-xl overflow-hidden card-shadow">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A professional close-up of a student preparing for the IELTS exam with a focused expression. High-quality study materials, a clean workspace, and soft ambient lighting suggest a premium learning experience. The color palette features deep blues and clean whites for a trustworthy academic feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4j0SXgmXOch4PDjyqkY4NEZ-3DRpfjvSXWWhFSvAoVXMLRz6ESxx1O2zH29Y8pEmtVr4pWL_BaDbmAHtX4xQOgT4mosep-Kve0eFg-gQG5ZcowCeHCR4Q9o8NI5KuuLU_r2AGlVaQQcBjeGbefcbbh_utbseJjvXFpt4lYkIb4t05cvqA0-pxBwxuOlK87joL5VIg_r0B697GBblHsoTczC2nyJQ1NlOCBXE_hEdIfV9wD_VK8jztQZg1XuxXSCranuqbqBQV7zo"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">IELTS 7.5+</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">IELTS Academic Excellence</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Master the skills required for high-tier university admissions with our intensive 8-week program.</p>
+<div class="flex justify-between items-center">
+<span class="font-headline-sm text-headline-sm text-primary">$499</span>
+<button class="bg-primary text-on-primary p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex-shrink-0 w-[85%] bg-surface-container-lowest rounded-xl overflow-hidden card-shadow">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A modern corporate training room where young professionals are engaged in a workshop. The atmosphere is energetic and collaborative, lit by bright, high-key studio lights. The aesthetic is clean, corporate, and technologically advanced, dominated by navy blue and soft white." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpByk3FiVLymoWZ4k8dMKrNbDHWZ7PjmcL6wr78IHicLvKL6LZg4IJSPjTM02PcwbC5dVERZH-QS4J-04pwrHL7gjxwQcFAD3cRmARObwKfu4StiNOTf4A1Ngj3Z3yRldL7KdBOu5QOhUfZ-5aETL5S0Pw8heL20u0hT6mPx3FD_pxEPHsP6JwOeOQnUhItwcCaQAHIP2Py8DzRYSwwHjMBDfOJvc_bYctAYQeV9DiZLpoXsywB2trLZ4wdxacXieTEsRQhD9QQtg"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">Professional</span>
+</div>
+</div>
+<div class="p-6">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Business English Mastery</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Elevate your professional communication for leadership in the global marketplace.</p>
+<div class="flex justify-between items-center">
+<span class="font-headline-sm text-headline-sm text-primary">$349</span>
+<button class="bg-primary text-on-primary p-2 rounded-lg">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Success Stories Carousel-ish -->
+<section class="py-stack-lg px-margin-mobile">
+<h2 class="font-headline-sm text-headline-sm text-primary mb-8 text-center">Dream Alumni</h2>
+<div class="bg-primary p-8 rounded-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-8xl" data-icon="format_quote">format_quote</span>
+</div>
+<p class="font-body-lg text-on-primary italic mb-6 relative z-10">
+                "The coaching at Dream Education wasn't just about English; it was about confidence. I secured my place at Oxford thanks to their IELTS Intensive course."
+            </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young professional man in a sharp suit, smiling confidently. The background is a blurred high-end office environment. The image uses soft, warm lighting to convey success and friendliness, aligned with a corporate-academic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmVIgVqYnHuOZRp4-84HwH_IHj_0PmSOKA1PiUUTmfvOvVqAM5-0MbEueAeJniOlDMaE47zlWvJFSq5Q-Szl2RQCC22L66_uj4QZj_K_S4Vj9V6H3wuNqlowMD0yiVr22Tn2Px9_73nHtzxtztWl_vg-p7W-xh-iXDXtiHtpV5ud1DoSO4ZluY0-24BWk8Qk65rMEbC9E_E8vSRjVdAkFrIuIsjtLTxjBj2ICSZdb9osFxhBNpiNitYIh5rZ758G032sT6JnBHX2o"/>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-primary">Ahmed Al-Sayed</p>
+<p class="font-label-md text-label-md text-primary-fixed-dim">MSc Candidate, Oxford University</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-16 px-margin-mobile bg-secondary-container text-on-secondary-container text-center">
+<h2 class="font-headline-md text-headline-md mb-4">Ready to start?</h2>
+<p class="font-body-md mb-8">Join the next cohort and start your journey toward international success today.</p>
+<button class="bg-primary text-on-primary w-full py-4 rounded-xl font-headline-sm text-headline-sm shadow-xl">
+            Enroll Now
+        </button>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant/50 pt-12 pb-8 rounded-t-xl">
+<div class="px-margin-mobile flex flex-col gap-8">
+<div>
+<span class="font-headline-sm text-headline-sm font-bold text-primary mb-4 block">Dream Education</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">Empowering international futures through linguistic excellence and pedagogical rigor.</p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="flex flex-col gap-4">
+<h4 class="font-label-lg text-label-lg text-primary">Courses</h4>
+<a class="font-body-sm text-body-sm text-on-surface-variant" href="#">IELTS Academic</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant" href="#">General English</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant" href="#">Teacher Profiles</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-lg text-label-lg text-primary">Legal</h4>
+<a class="font-body-sm text-body-sm text-on-surface-variant" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant" href="#">Terms of Service</a>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant/30 flex flex-col items-center gap-4">
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-primary" data-icon="public">public</span>
+<span class="material-symbols-outlined text-primary" data-icon="brand_awareness">brand_awareness</span>
+<span class="material-symbols-outlined text-primary" data-icon="school">school</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-tertiary-container text-center">
+                    © 2024 Dream Education. Empowering international futures through linguistic excellence.
+                </p>
+</div>
+</div>
+</footer>
+<!-- Fixed Floating Action Button -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="bg-secondary-container text-on-secondary-container p-4 rounded-2xl shadow-2xl flex items-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-label-lg text-label-lg">Contact Us</span>
+</button>
+</div>
+<script>
+        // Simple drawer toggle logic
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        let isOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isOpen = !isOpen;
+            if (isOpen) {
+                mobileDrawer.classList.remove('hidden');
+                menuBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="close">close</span>';
+            } else {
+                mobileDrawer.classList.add('hidden');
+                menuBtn.innerHTML = '<span class="material-symbols-outlined" data-icon="menu">menu</span>';
+            }
+        });
+
+        // Sticky header opacity on scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('bg-surface/98', 'shadow-md');
+            } else {
+                nav.classList.remove('bg-surface/98', 'shadow-md');
+            }
+        });
+    </script>
+</body></html>

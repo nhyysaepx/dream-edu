@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #002862;
+  --color-primary-container: #163e82;
+  --color-on-primary: #ffffff;
+  --color-secondary: #745c00;
+  --color-secondary-container: #fdcc15;
+  --color-on-secondary-container: #6e5700;
+  --color-on-background: #1a1c1e;
+  --color-on-surface: #1a1c1e;
+  --color-on-surface-variant: #434751;
+  --color-background: #f9f9fc;
+  --color-surface: #f9f9fc;
+  --color-surface-dim: #dadadc;
+  --color-surface-bright: #f9f9fc;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f3f3f6;
+  --color-surface-container: #eeeef0;
+  --color-surface-container-high: #e8e8ea;
+  --color-surface-container-highest: #e2e2e5;
+  --color-surface-variant: #e2e2e5;
+  --color-outline: #747782;
+  --color-outline-variant: #c4c6d2;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #d9e2ff;
+  --color-primary-fixed-dim: #afc6ff;
+  --color-on-primary-fixed: #001944;
+  --color-on-primary-fixed-variant: #1e4488;
+  --color-secondary-fixed: #ffe089;
+  --color-secondary-fixed-dim: #f0c100;
+  --color-on-secondary-fixed: #241a00;
+  --color-on-secondary-fixed-variant: #574500;
+  --color-tertiary-fixed: #e5e2db;
+  --color-tertiary-fixed-dim: #c9c6c0;
+  --color-on-tertiary-fixed: #1c1c18;
+  --color-on-tertiary-fixed-variant: #474742;
+
+  /* Brand Colors from User Request */
+  --color-brand-blue: #163e82;
+  --color-brand-gold: #f4c400;
+
+  /* Custom Spacing */
+  --spacing-margin-desktop: 64px;
+  --spacing-margin-mobile: 20px;
+  --spacing-stack-sm: 12px;
+  --spacing-gutter: 24px;
+  --spacing-container-max: 1280px;
+  --spacing-stack-lg: 48px;
+  --spacing-base: 8px;
+  --spacing-stack-md: 24px;
+
+  /* Animation */
+  --animate-bounce-slow: bounce-slow 4s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Typography styles matching DESIGN.md exactly */
+.font-display-lg {
+  font-family: Montserrat, sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 64px;
+  letter-spacing: -0.02em;
+}
+.font-headline-lg {
+  font-family: Montserrat, sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 48px;
+  letter-spacing: -0.01em;
+}
+.font-headline-lg-mobile {
+  font-family: Montserrat, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 40px;
+}
+.font-headline-md {
+  font-family: Montserrat, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+}
+.font-headline-sm {
+  font-family: Montserrat, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+}
+.font-body-lg {
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+}
+.font-body-md {
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+.font-body-sm {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+.font-label-lg {
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0.05em;
+}
+.font-label-md {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+/* Material Symbols Integration styling */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* Custom Shadows and Effects */
+.card-shadow {
+  box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+}
+.interactive-shadow:hover {
+  box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12);
+}
+.text-gradient {
+  background: linear-gradient(135deg, #002862 0%, #163e82 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.glass-nav {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.tonal-card {
+  box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.tonal-card:hover {
+  box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12);
+  transform: translateY(-4px);
+}
+
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, #d9e2ff, #002862, #d9e2ff);
+  transform: translateX(-50%);
+}
+@media (max-width: 768px) {
+  .timeline-line::before {
+    left: 20px;
+  }
+}
+
+.tonal-elevation-1 {
+  box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+}
+.tonal-elevation-2 {
+  box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

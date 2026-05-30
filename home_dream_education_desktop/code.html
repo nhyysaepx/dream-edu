@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dream Education | Transform Your English</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#1a1c1e",
+                    "primary-fixed-dim": "#afc6ff",
+                    "secondary-fixed-dim": "#f0c100",
+                    "surface-variant": "#e2e2e5",
+                    "on-tertiary-container": "#afada7",
+                    "tertiary-container": "#41413c",
+                    "on-primary": "#ffffff",
+                    "secondary": "#745c00",
+                    "tertiary": "#2b2b27",
+                    "primary-fixed": "#d9e2ff",
+                    "on-primary-container": "#8bacf7",
+                    "inverse-on-surface": "#f0f0f3",
+                    "on-surface": "#1a1c1e",
+                    "background": "#f9f9fc",
+                    "on-primary-fixed-variant": "#1e4488",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#e5e2db",
+                    "on-secondary-fixed-variant": "#574500",
+                    "on-primary-fixed": "#001944",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f9f9fc",
+                    "secondary-container": "#fdcc15",
+                    "primary-container": "#163e82",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f3f3f6",
+                    "surface-container": "#eeeef0",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#241a00",
+                    "surface-container-high": "#e8e8ea",
+                    "on-surface-variant": "#434751",
+                    "on-tertiary-fixed-variant": "#474742",
+                    "primary": "#002862",
+                    "on-secondary-container": "#6e5700",
+                    "outline": "#747782",
+                    "tertiary-fixed-dim": "#c9c6c0",
+                    "outline-variant": "#c4c6d2",
+                    "inverse-surface": "#2f3133",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e5",
+                    "inverse-primary": "#afc6ff",
+                    "surface-tint": "#3a5ca2",
+                    "surface-bright": "#f9f9fc",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#dadadc",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#ffe089",
+                    "on-tertiary-fixed": "#1c1c18"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "margin-mobile": "20px",
+                    "stack-sm": "12px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "stack-lg": "48px",
+                    "base": "8px",
+                    "stack-md": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Montserrat"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Montserrat"],
+                    "label-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-sm": ["Montserrat"]
+            },
+            "fontSize": {
+                    "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-shadow {
+            box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06);
+        }
+        .interactive-shadow:hover {
+            box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #002862 0%, #163e82 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+<nav class="flex justify-between items-center max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Dream Education</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-lg text-label-lg text-primary border-b-2 border-secondary pb-1" href="#">Courses</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Success Stories</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Blog</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-all active:scale-95">
+                    Book Placement Test
+                </button>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[921px] flex items-center pt-20 overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Students studying" class="w-full h-full object-cover opacity-15" data-alt="A diverse group of university students in a bright, modern glass-walled library, engaged in collaborative study with laptops and textbooks. The scene is bathed in natural daylight, emphasizing a high-key, professional light-mode aesthetic. Subtle geometric overlays in royal blue and golden yellow create a sense of structure and prestige, reflecting a corporate modern academic environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvpmePQJdLGTBsuCAen4bBK8It-Cn8Slza9C58dHuagIrerlX9z_knvcmLNBX9dqWLd6bRzzy7sIDFCi7WOF2J2T7tgXdnc8NDE_W8FF9hHwUqB8z7sw--hDDeoiv2nWwGK2C5y5fDgyH0brHIlX4mWSw1y6uWX-vXJps6F9_zeybRAdCDoCS9Dz_3gZsDhifnKm0QTLd9LwnZlJ5yA_hrlvkhGgPQrtcldLXQ814jJidM0e8WlHMugg3Ded8GSJM21fKxVZpqR5s"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 gap-stack-lg items-center">
+<div class="space-y-stack-md">
+<div class="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full border border-secondary/20">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Cambridge Certified Partners</span>
+</div>
+<h1 class="font-headline-lg-mobile md:font-display-lg text-headline-lg-mobile md:text-display-lg text-primary leading-tight">
+                        Transform Your <span class="text-secondary">English.</span><br/>Unlock Your Future.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                        Expert IELTS preparation, academic English, and communication skills tailored for ambitious international learners seeking global opportunities.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 pt-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-xl font-headline-sm text-headline-sm shadow-lg hover:shadow-primary/20 transition-all hover:-translate-y-1">
+                            Book a Free Placement Test
+                        </button>
+<button class="border-2 border-primary text-primary px-8 py-4 rounded-xl font-headline-sm text-headline-sm hover:bg-primary/5 transition-all">
+                            Explore Courses
+                        </button>
+</div>
+</div>
+<div class="hidden md:block relative">
+<div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform rotate-2">
+<img alt="Student Success" class="w-full aspect-[4/5] object-cover" data-alt="A close-up portrait of a confident, smiling international student holding an IELTS certificate in front of a prestigious university campus. The lighting is warm and golden, symbolizing success and aspiration. The image uses a shallow depth of field, with soft-focus architectural elements in the background, maintaining the professional and elite educational aesthetic of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYcPFIimG333ogrSawCYf1FJG1vio7bnufvOJ9ozZqUgSPMwC9V0bEm5G51Pa0Rshag-ffK5kojDjT7xZMl3aiQh_ccMJk-ETgUfYd-VpTAf-m8LOA7krydHXI0hw1sidSFrvlv0k4-cH8gxOdFWekx9wnq2MHawWmqJ8Zz73JSS3kjqWyDggmsn3DGXT6UXa-1mFG1cf9HYfyjv9UqZ-vfwmnRC-LLQWenCTtgaQxdg18VV0DBdzWsQa8IdpmUIrhT8M30AaWGtg"/>
+</div>
+<div class="absolute -top-12 -left-12 w-48 h-48 bg-secondary/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-12 -right-12 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+<!-- Stats Badge Overlay -->
+<div class="absolute bottom-10 -left-10 z-20 bg-surface p-6 rounded-xl shadow-2xl border border-outline-variant/30 flex items-center gap-4 animate-bounce-slow">
+<div class="bg-secondary-container p-3 rounded-lg text-on-secondary-container">
+<span class="material-symbols-outlined text-[32px]">trending_up</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">8.5</div>
+<div class="font-label-md text-label-md text-on-surface-variant">Avg. IELTS Score</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="py-stack-lg bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="md:col-span-1 space-y-stack-sm">
+<h2 class="font-headline-md text-headline-md text-primary">Our Vision</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                            To bridge the gap between local potential and global opportunity through linguistic excellence and academic rigor.
+                        </p>
+<div class="h-1 w-20 bg-secondary rounded-full"></div>
+</div>
+<div class="md:col-span-1 space-y-stack-sm">
+<h2 class="font-headline-md text-headline-md text-primary">Our Mission</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                            Empowering students with the tools to master the English language, fostering confidence, and ensuring success in international education.
+                        </p>
+<div class="h-1 w-20 bg-secondary rounded-full"></div>
+</div>
+<div class="md:col-span-1 space-y-stack-sm">
+<h2 class="font-headline-md text-headline-md text-primary">Our Values</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                            Integrity, Excellence, and Personalized Growth. We treat every student's journey as a unique path to global citizenship.
+                        </p>
+<div class="h-1 w-20 bg-secondary rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Courses Preview -->
+<section class="py-stack-lg">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex justify-between items-end mb-stack-lg">
+<div class="space-y-2">
+<span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest">Our Curriculum</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Featured Programs</h2>
+</div>
+<a class="hidden sm:flex items-center gap-2 text-primary font-label-lg hover:underline transition-all" href="#">
+                        View All Courses <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Course Card 1 -->
+<div class="group bg-surface rounded-xl overflow-hidden border border-outline-variant/30 card-shadow interactive-shadow transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="IELTS Foundation" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A clean, minimalist desk setup featuring an open IELTS practice book, a premium fountain pen, and a laptop with a modern educational interface. The lighting is bright and airy, using the brand's blue and ivory palette. The atmosphere is studious and focused, emphasizing academic preparation and the first steps toward language mastery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0ByVhdcqncQmf10oEU-k-gpCQYBwYUvosxGGFkyO2pUTQrtkFXSHTHv6qjPigtchvOyk_cF7EwpzAvjO6E4AG5-_pTPpiMipC2rjBFra3XtWXq1xW623ZnWr1ptA5Pevb6_GK9eo52s9uTtZ82z7fPJxVWvYdtJceRSYmwvCdi8dvbMZj9STLOUcCgGZcSDGxkH9Vh28I7DoDUHjfcfrJQZb7GigenW0JdNjn7KsK5G2uNMpDXpKBisZJuxlB-WahfT_9dBz5tdc"/>
+<div class="absolute top-4 left-4 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md">
+                                Beginner - Intermediate
+                            </div>
+</div>
+<div class="p-6 space-y-4">
+<h3 class="font-headline-sm text-headline-sm text-primary">IELTS Foundation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Build the core skills required for the IELTS exam. Focus on grammar, vocabulary, and basic test formats.</p>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">schedule</span> <span class="text-label-md">8 Weeks</span></div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">group</span> <span class="text-label-md">Max 12</span></div>
+</div>
+<button class="w-full py-3 rounded-lg border-2 border-primary text-primary font-label-lg group-hover:bg-primary group-hover:text-on-primary transition-all">Course Details</button>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="group bg-surface rounded-xl overflow-hidden border border-outline-variant/30 card-shadow interactive-shadow transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="IELTS Intensive" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A focused digital learning environment showing a close-up of a student's hands typing on a modern laptop, with IELTS score graphs visible on the screen. The setting is professional and tech-forward, with cool blue lighting and soft golden highlights. The image conveys the speed and efficiency of an intensive preparatory course for high-achieving students." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp4c18GCeIyS4J7b_zKnNr87XvKnMXekX53xKeOsWOHxlv0suCwdZiPZdci0fAzWo5bgNIy_Hit5IyaEIt0Rs7CrHj56vHT_vydpUZcUSx2ZZxNh_4t3e2fUulJryYGzJ7VsRzueEOiDzeO8o2A25_P-qyyF6BUPv0-TOOpYcaAdiTPEjGzgm5AzHRJNaSORHhloIeWfhL98yGtenCaJLFX4R6ZDjzdEV9WuLeisUWSC7mufENzkBpGpY1xkIKBZJ_jDUQ2xu2WY8"/>
+<div class="absolute top-4 left-4 bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-md text-label-md">
+                                Intensive 4-Week
+                            </div>
+</div>
+<div class="p-6 space-y-4">
+<h3 class="font-headline-sm text-headline-sm text-primary">IELTS Intensive</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">A high-pressure boot camp for students aiming for immediate testing. Strategy-heavy curriculum.</p>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">schedule</span> <span class="text-label-md">4 Weeks</span></div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">group</span> <span class="text-label-md">Max 8</span></div>
+</div>
+<button class="w-full py-3 rounded-lg border-2 border-primary text-primary font-label-lg group-hover:bg-primary group-hover:text-on-primary transition-all">Course Details</button>
+</div>
+</div>
+<!-- Course Card 3 -->
+<div class="group bg-surface rounded-xl overflow-hidden border border-outline-variant/30 card-shadow interactive-shadow transition-all duration-300">
+<div class="relative h-48 overflow-hidden">
+<img alt="IELTS 7.0+" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A group of advanced students in a high-tech seminar room, participating in a sophisticated debate. The room features large whiteboards with complex linguistic diagrams and a large monitor displaying IELTS 7.5 benchmarks. The atmosphere is elite and intellectually stimulating, utilizing rich blue tones and crisp white lighting to emphasize high achievement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAajGHMf3Ifg0H1P5yvrRF3WaSsrqzhotnxV8K4U42kGmT6qNkmS-T8d9yYE0ZihIZMLR4B_aSgGHJNsTK71vwx5s-fyqErmGA_eogRk-c6h9Ab7FzFeBVGdRvcb35oS6ImHmoI_vHZ8pSwoVXCAWY_EM6iUyHFgV4ZLom_Iyp28QSD5E7FO8osnztaiWhqCFQ5-1k3Zez7aYVVldrc7Ehkn1d05n6dpr41WRXAhURd0fUm2t98cOzC8TA8VtqqI3JuLa8xbptJrac"/>
+<div class="absolute top-4 left-4 bg-secondary text-on-primary px-3 py-1 rounded-full font-label-md text-label-md">
+                                Expert Level
+                            </div>
+</div>
+<div class="p-6 space-y-4">
+<h3 class="font-headline-sm text-headline-sm text-primary">IELTS 7.0+ Elite</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">For students already at a band 6.5. Precise focus on the nuances required for top-tier scores.</p>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">schedule</span> <span class="text-label-md">6 Weeks</span></div>
+<div class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">group</span> <span class="text-label-md">Max 6</span></div>
+</div>
+<button class="w-full py-3 rounded-lg border-2 border-primary text-primary font-label-lg group-hover:bg-primary group-hover:text-on-primary transition-all">Course Details</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Success Statistics Section -->
+<section class="py-stack-lg bg-primary text-on-primary relative overflow-hidden">
+<div class="absolute top-0 right-0 w-1/3 h-full bg-secondary/10 skew-x-12 transform translate-x-20"></div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center">
+<div class="space-y-2">
+<div class="font-display-lg text-display-lg text-secondary-fixed counter" data-target="5000">0</div>
+<div class="font-label-lg text-label-lg uppercase opacity-80">Students Guided</div>
+</div>
+<div class="space-y-2">
+<div class="font-display-lg text-display-lg text-secondary-fixed counter" data-target="98">0</div>
+<div class="font-label-lg text-label-lg uppercase opacity-80">Success Rate %</div>
+</div>
+<div class="space-y-2">
+<div class="font-display-lg text-display-lg text-secondary-fixed counter" data-target="150">0</div>
+<div class="font-label-lg text-label-lg uppercase opacity-80">Expert Tutors</div>
+</div>
+<div class="space-y-2">
+<div class="font-display-lg text-display-lg text-secondary-fixed counter" data-target="12">0</div>
+<div class="font-label-lg text-label-lg uppercase opacity-80">Global Partners</div>
+</div>
+</div>
+<!-- Testimonials Teaser -->
+<div class="mt-stack-lg bg-surface/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 max-w-3xl mx-auto text-center">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-[48px]" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+</div>
+<p class="font-body-lg text-body-lg italic mb-6">
+                        "Dream Education didn't just teach me English; they gave me the confidence to apply for my PhD in London. My band score jumped from 6.0 to 8.0 in just 8 weeks."
+                    </p>
+<div class="flex flex-col items-center">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-secondary mb-3">
+<img alt="Ahmed S." class="w-full h-full object-cover" data-alt="A professional headshot of a smiling young male student with a bright, motivated expression. He is wearing a smart-casual blazer, and the background is a soft-focus modern university courtyard. The lighting is natural and flattering, embodying the success and transformation of a high-achieving Dream Education alumnus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc1n-ebBqSL_y8kgIt5_Grt3H5BrG0Q4s_ooDM6Ehy_fEsxHH6h9wC_xjP8uRNSpKGXD1dJclfWT0U55wGKKULWw9gIOPD2Yp3bIq3M98MoyN3uJ8ZEpzgvQrfJcZsIssgAxsVLqwOwzNwkvlIOfJ5nwQH_qo98V5itnxLNrEmOCBEP_0zhZGSEmEAtBqTiW1mSBxBLh5MN9L90bFAycbsCpC7tejyVLqkleUDWhpcWGdHtfhk5RRSjO1LjQUrWgV4syszV8QUroU"/>
+</div>
+<div class="font-headline-sm text-headline-sm">Ahmed S.</div>
+<div class="font-label-md text-label-md opacity-60">IELTS Band 8.0 | King's College London</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-stack-lg">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="bg-surface-container-highest rounded-2xl p-12 text-center space-y-6 border border-outline-variant/30">
+<h2 class="font-headline-lg text-headline-lg text-primary">Ready to Start Your Journey?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                        Take our free 15-minute diagnostic test to discover your current level and get a personalized learning roadmap.
+                    </p>
+<div class="flex justify-center">
+<button class="bg-secondary text-on-secondary px-10 py-5 rounded-xl font-headline-sm text-headline-sm hover:bg-secondary/90 transition-all shadow-lg hover:shadow-secondary/20">
+                            Book My Placement Test Now
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant/50 pt-stack-lg pb-10">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter mb-stack-lg">
+<div class="space-y-4">
+<div class="font-headline-sm text-headline-sm font-bold text-primary mb-4">Dream Education</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    © 2024 Dream Education. Empowering international futures through linguistic excellence.
+                </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-[20px]">public</span></a>
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-[20px]">school</span></a>
+<a class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all" href="#"><span class="material-symbols-outlined text-[20px]">mail</span></a>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-headline-sm text-headline-sm text-primary">Programs</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">IELTS Academic</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">General English</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Business English</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-headline-sm text-headline-sm text-primary">Resources</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Teacher Profiles</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Study Blog</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Free Mock Tests</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-headline-sm text-headline-sm text-primary">Support</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Terms of Service</a></li>
+<li><a class="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block" href="#">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop border-t border-outline-variant/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-md text-label-md text-on-surface-variant">Accredited by the International English Standards Council</p>
+<div class="flex gap-6">
+<img alt="Partner Logo" class="h-8 grayscale opacity-50" data-alt="A minimalist logo of a global education partner, rendered in high-contrast grayscale to blend into a professional footer section." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB-qBjTreRcrgCzOgc07jF7cjxJtC172JepeUVNtqGb02qfwBXmzvCSt-hKCKW7owQQ2TdUTMQRbs_llAV1IVpApKmfytjHcQ36j37aJIy_kZPR9v4OwVMuRyM8_eXNROYlaBKXrUjCVbZEvqpYjHQloYJJFh0CV-38c8CjdvQ7rE2LE4A4nSIvXP1ZCQ3PZO_CVptn1nEJUc5gHT7AoE_qa0sMWdAazDB4EEaNQLdn6OM-SVRKA-Tjb0WyVrOfFKRejMgHFNc_18"/>
+<img alt="Partner Logo" class="h-8 grayscale opacity-50" data-alt="A minimalist logo of a linguistic assessment board, rendered in high-contrast grayscale to blend into a professional footer section." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqrpV28WZKInLr3JoPQF5bttsj_NZNxiBLq2jfzBlBAKRXaVIs7bcXD13pMD6D4UFjv3SdymoRyOAPgRSKnVQAEwwfWr5U5F1E_AiPcdHN40IgKEgBymt47APx66WtjHXwQ29gy65fHUIUsyX0OAGKNLHvGI2ZuaUrBoNhtehCmxL1E_20W6K1zFKu8AsPUCqYnBg85sNOmwL3Z4L7iyPC6lPDRWwkbWk0dmO9EDnoo6T-wUbl2mFL2z9oeCie2UmCsJep6YYR8Dc"/>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and Counter Animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const counters = document.querySelectorAll('.counter');
+            
+            const animateCounter = (el) => {
+                const target = +el.getAttribute('data-target');
+                const count = +el.innerText;
+                const speed = 200;
+                const increment = target / speed;
+
+                if (count < target) {
+                    el.innerText = Math.ceil(count + increment);
+                    setTimeout(() => animateCounter(el), 1);
+                } else {
+                    el.innerText = target + (el.innerText.includes('%') ? '%' : '+');
+                }
+            };
+
+            const observerOptions = {
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            counters.forEach(counter => observer.observe(counter));
+        });
+
+        // Add bounce animation keyframes for floating elements
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes bounce-slow {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-10px); }
+            }
+            .animate-bounce-slow {
+                animation: bounce-slow 4s ease-in-out infinite;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body></html>

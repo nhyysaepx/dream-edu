@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Teacher Profiles | Dream Education</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#1a1c1e",
+                        "primary-fixed-dim": "#afc6ff",
+                        "secondary-fixed-dim": "#f0c100",
+                        "surface-variant": "#e2e2e5",
+                        "on-tertiary-container": "#afada7",
+                        "tertiary-container": "#41413c",
+                        "on-primary": "#ffffff",
+                        "secondary": "#745c00",
+                        "tertiary": "#2b2b27",
+                        "primary-fixed": "#d9e2ff",
+                        "on-primary-container": "#8bacf7",
+                        "inverse-on-surface": "#f0f0f3",
+                        "on-surface": "#1a1c1e",
+                        "background": "#f9f9fc",
+                        "on-primary-fixed-variant": "#1e4488",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#e5e2db",
+                        "on-secondary-fixed-variant": "#574500",
+                        "on-primary-fixed": "#001944",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f9f9fc",
+                        "secondary-container": "#fdcc15",
+                        "primary-container": "#163e82",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f3f3f6",
+                        "surface-container": "#eeeef0",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-container-high": "#e8e8ea",
+                        "on-surface-variant": "#434751",
+                        "on-tertiary-fixed-variant": "#474742",
+                        "primary": "#002862",
+                        "on-secondary-container": "#6e5700",
+                        "outline": "#747782",
+                        "tertiary-fixed-dim": "#c9c6c0",
+                        "outline-variant": "#c4c6d2",
+                        "inverse-surface": "#2f3133",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#e2e2e5",
+                        "inverse-primary": "#afc6ff",
+                        "surface-tint": "#3a5ca2",
+                        "surface-bright": "#f9f9fc",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dadadc",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#ffe089",
+                        "on-tertiary-fixed": "#1c1c18"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "margin-mobile": "20px",
+                        "stack-sm": "12px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "stack-lg": "48px",
+                        "base": "8px",
+                        "stack-md": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Montserrat"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Montserrat"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Montserrat"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Montserrat"],
+                        "headline-sm": ["Montserrat"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .teacher-card-shadow { box-shadow: 0 4px 20px rgba(22, 62, 130, 0.06); }
+        .teacher-card-shadow:hover { box-shadow: 0 12px 32px rgba(22, 62, 130, 0.12); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
+<div class="font-headline-sm text-headline-sm font-bold text-primary">Dream Education</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Courses</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+<a class="font-label-lg text-label-lg text-primary border-b-2 border-secondary pb-1" href="#">Teacher Profiles</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Success Stories</a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors" href="#">Blog</a>
+</nav>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-all active:scale-95">
+                Book Placement Test
+            </button>
+</div>
+</header>
+<main class="pt-32 pb-stack-lg">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-stack-lg">
+<div class="flex flex-col md:flex-row items-center gap-gutter bg-surface-container-low rounded-3xl p-8 md:p-12">
+<div class="flex-1">
+<span class="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md text-label-md mb-4">WORLD-CLASS FACULTY</span>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-6">Learn from the Architects of Academic Success</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Our educators aren't just teachers; they are industry veterans and linguistic experts with a proven track record of helping thousands reach top-tier international universities.</p>
+</div>
+<div class="flex-shrink-0 w-full md:w-1/3 aspect-square rounded-2xl overflow-hidden teacher-card-shadow">
+<img alt="Academic Excellence" class="w-full h-full object-cover" data-alt="A sophisticated medium shot of a diverse group of professional university professors in a modern library setting. The lighting is bright and warm, reflecting a prestigious academic atmosphere. The color palette includes deep navy blues, warm ivory, and subtle golden highlights. The mood is inspiring, scholarly, and focused on high-level educational excellence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByGSOI89FWgW3bNGOEebZlrq0TFmmKor9yXiWZMsoo8HmYeRnkHvYtK6oXTsbVV2nszaahX12M0qnuoDRcWeTrKgP5CS-rWa3-vz03l0fgGbS6-FLySRd402Elg5DqqM0F5w2nGDA_2vmVFf0dNtGAfSqjajQpFONT3_l4UpT3M4EUP-fKvLq-7pdX-vPDIRogpG16vo0pcE9beMW1Cze8jf8FbWOVPKH9iYQHKPTvIVBj6LO1fhYbtvJoIqXn019MOMeR3Ltf0z4"/>
+</div>
+</div>
+</section>
+<!-- Search & Filter (Simulated) -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-stack-md">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<h2 class="font-headline-md text-headline-md text-primary">Our Elite Educators</h2>
+<div class="flex gap-stack-sm overflow-x-auto pb-2 w-full md:w-auto">
+<button class="whitespace-nowrap bg-primary text-on-primary px-4 py-2 rounded-full font-label-md text-label-md">All Specialists</button>
+<button class="whitespace-nowrap bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md hover:bg-outline-variant transition-colors">IELTS Academic</button>
+<button class="whitespace-nowrap bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md hover:bg-outline-variant transition-colors">Business English</button>
+<button class="whitespace-nowrap bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full font-label-md text-label-md hover:bg-outline-variant transition-colors">General English</button>
+</div>
+</div>
+</section>
+<!-- Instructor Grid -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Teacher Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-start gap-gutter mb-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Dr. Sarah Jenkins" class="w-full h-full object-cover" data-alt="A professional portrait of a female professor in her early 40s with a confident and friendly expression. She is wearing professional attire and the background is a blurred office with shelves of books. The lighting is clean and high-key, emphasizing a modern corporate-academic soul. The color palette uses professional blues and soft ivory tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhPoP-waErZkP6WwY4dt8GOQsxAJWuDLibJmPc4b2s_osP6ZV7j8wvC13eLW3NG9pEiN_Uhdcu0FXfDmkupG3lcHTEbiMqzW5iyUi4dwaB33lbEmLLUV9pO34ZVNlepfeiYb8tsgPbSSdtosZULqbfwBU1nBeow8C8z9Q-aPlPMs_GSB6ay2OO9u3RSihzGoPb_50NH04P3gQxy2DfcDKFVPfSNEIwnxxVIO1XyPNdsm4thWASn93aGs0SBlWUmZjh06tGU-wv_QI"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Dr. Sarah Jenkins</h3>
+<p class="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1">Head of IELTS</p>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-lg text-label-lg font-bold">IELTS 9.0 Expert</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-8 flex-1">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Qualification</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">PhD Applied Linguistics</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experience</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">15+ Years</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Specialization</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Writing Task 2</span>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                        View Detailed Portfolio
+                    </button>
+</div>
+<!-- Teacher Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-start gap-gutter mb-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="James Miller" class="w-full h-full object-cover" data-alt="A professional portrait of a male teacher in his late 30s with a warm and encouraging smile. He is standing in a brightly lit modern classroom. The image uses a high-end corporate aesthetic with clean lines and soft lighting. The color palette features royal blue and gold accents, projecting expertise and trustworthiness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXAxqnZGEc_Jx9UDT0nvU6CSPmqzrblMl5agob0if-WCMDoAzpNdZaaJxOA5ey36vbdwU4R_h2BI328cyUXNyiAlW1cxM0769UJE5CryJjWt4wi87gZZVNOWZf9QgtMvfnW2LvlFbWKzMnDa_fVmN_QIdanXkD907xavD4XvC5FcnRCj5CnLDut3Ww-FSyObvgkOnOTiBola-9ETXhB_GqO2U_QxhHbfmHMuhjeLnCwFZ7_UWg5eeYOWUdNxBii78ZFk1yewNapII"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">James Miller</h3>
+<p class="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1">Senior Instructor</p>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-lg text-label-lg font-bold">IELTS 8.5 Master</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-8 flex-1">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Qualification</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">MA TESOL (Oxon)</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experience</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">12 Years</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Specialization</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Speaking Fluency</span>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                        View Detailed Portfolio
+                    </button>
+</div>
+<!-- Teacher Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-start gap-gutter mb-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Elena Rodriguez" class="w-full h-full object-cover" data-alt="A professional portrait of a female instructor wearing a smart navy blazer, looking directly at the camera with a friendly and expert expression. The lighting is soft and ambient, highlighting a prestigious learning environment. The image uses a sophisticated color palette of deep blue and crisp white. The mood is one of reliable partnership and success." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWuZ7KUAww7hFpUINVtc6KGY6meXowDvpog2ybNQaIgNm8NKrqnBz-6tfcJFct5JIxHjKqh24GVv8aSZOaGaJQaN2sB4pqgOrY89rxlXbnZE5w5NefzjUK5pEXX4QslmJ15yVHLZr5mY6MrT2c04mSVQkRTKj3GsH7tQ8mNbVmRU7Xw6_waTrp8FJlMXkyVZbOcfgwaB74iR_h5NGdvOCCLK0fXH96q8Ci0mfkw3PeUQxb5IIJWn7aubAwmNQ3BFAKaHLtDK42QCs"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Elena Rodriguez</h3>
+<p class="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1">Language Strategist</p>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-lg text-label-lg font-bold">IELTS 8.5 Expert</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-8 flex-1">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Qualification</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">CELTA &amp; DELTA Certified</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experience</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">8 Years</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Specialization</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Grammar for Writing</span>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                        View Detailed Portfolio
+                    </button>
+</div>
+<!-- Teacher Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-start gap-gutter mb-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Dr. Arthur Vance" class="w-full h-full object-cover" data-alt="A professional portrait of a senior male educator with a kind, experienced expression. He is wearing a sharp charcoal suit. The lighting is diffused and professional, set in a clean, modern office space. The design uses a cool blue depth and professional layout. The feeling is one of decades of academic wisdom and guided success." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPFZkYOJ2RisaGo31jI0GihaV1HlDQBNYlOZW7rTCrKfnKma4XF7TgbtuxwgAMTsDOSoIR9xuYYC2fHkuTmtxKfDA7na9vKRXwUgX9qrDGzADA-QyPwBzj4CyDytfSo26hNjkzJ9kaBL8bTGn7tCgM3sYc190C7XmxnlLNp2rk2U3VYP7anYYbWYGNvVq6cnqfDNt396mgt0iHDmkm0WsIFRv1whuANVy0Mv8MjHZ2it7vS_j-qaQ66XhGf6M-_yTuA7HVeHn0itI"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Dr. Arthur Vance</h3>
+<p class="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1">Curriculum Designer</p>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-lg text-label-lg font-bold">IELTS 9.0 Veteran</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-8 flex-1">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Qualification</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">PhD Education Policy</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experience</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">20+ Years</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Specialization</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Exam Psychology</span>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                        View Detailed Portfolio
+                    </button>
+</div>
+<!-- Teacher Card 5 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-start gap-gutter mb-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Sophia Chen" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a female instructor with an enthusiastic and knowledgeable look. She is wearing a modern professional outfit with subtle gold jewelry. The lighting is bright and clear, emphasizing focus and clarity. The color palette is composed of soft grays, whites, and royal blue accents, reflecting a tech-forward yet academic soul." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHOPzGl5OG0--ro42__aXlAFjuvlFd0gK1UyTsZq4oKmeqwP9TMwgC3OEamWD8wHlPgpC2uZoWF0xydPBmP698aS8UuA9VWQIOG1bIGly8qlAKdrRzS4m1uleYufD6ax4U6uVBmkpy4sb4IPGzCJDIngPCmtwFptun-5appaa5e-9QknCYU7T6ukVFGm8dhOJJDH96mnAsWftIyOT3i40u-7zSbwc_eg2R0DYFX32rpsZNizIne0J-nCl2sHaEGcDof4n-c2291Hw"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Sophia Chen</h3>
+<p class="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1">IELTS Coordinator</p>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-lg text-label-lg font-bold">IELTS 8.5 Specialist</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-8 flex-1">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Qualification</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">MA English Literature</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experience</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">10 Years</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Specialization</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Reading Strategies</span>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                        View Detailed Portfolio
+                    </button>
+</div>
+<!-- Teacher Card 6 -->
+<div class="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full">
+<div class="flex items-start gap-gutter mb-6">
+<div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Marcus Thorne" class="w-full h-full object-cover" data-alt="A high-end professional portrait of a male educator in his early 30s. He is dressed in a smart navy sweater over a collared shirt. The background is a minimalist, clean educational facility. The lighting is high-key and modern. The overall aesthetic is trustworthy and elite, utilizing deep royal blue and golden yellow highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEJ4RL91LrEBlk9ayqf3hJLOpbkTG-4YwN7UVQZMvjZf4j7jgeOYsOZ80N0yHBjIcHpObwp-E1z9E4qv03eEFR3ENpb5Oi2Yp6GZjaMzgkbGFyM6tLEvcXmROZDE8nYPgsNXFZ8m5DQdu7PgBngsh1J646qgAAIoEaIZK4Sc3BwvV0ZDSfPIOh7TOxL0jIiKWnQkBB5eIsfHd9kCvoT8DihNY0s93kXLGc9RHWsfiSVBX-F9VsVQb1UATWy_CXUC0lEC7uv2TGHx0"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Marcus Thorne</h3>
+<p class="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1">Vocabulary Specialist</p>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-lg text-label-lg font-bold">IELTS 8.5 Coach</span>
+</div>
+</div>
+</div>
+<div class="space-y-4 mb-8 flex-1">
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Qualification</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">MA Applied Linguistics</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experience</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">7 Years</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Specialization</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">Academic Lexis</span>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all">
+                        View Detailed Portfolio
+                    </button>
+</div>
+</div>
+</section>
+<!-- Trust Section -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-stack-lg">
+<div class="bg-primary-container rounded-3xl p-8 md:p-12 text-center">
+<h2 class="font-headline-lg text-on-primary-container mb-6">Our Rigorous Selection Standards</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter text-left">
+<div class="bg-surface/10 p-6 rounded-xl backdrop-blur-sm">
+<span class="material-symbols-outlined text-secondary-container text-[48px] mb-4">verified</span>
+<h4 class="font-headline-sm text-on-primary mb-2">99th Percentile</h4>
+<p class="font-body-sm text-on-primary/80">Every teacher must possess an official IELTS score of 8.5 or higher before joining our elite team.</p>
+</div>
+<div class="bg-surface/10 p-6 rounded-xl backdrop-blur-sm">
+<span class="material-symbols-outlined text-secondary-container text-[48px] mb-4">school</span>
+<h4 class="font-headline-sm text-on-primary mb-2">Academic Pedigree</h4>
+<p class="font-body-sm text-on-primary/80">90% of our staff hold Masters degrees or higher in TESOL, Linguistics, or Education from top global universities.</p>
+</div>
+<div class="bg-surface/10 p-6 rounded-xl backdrop-blur-sm">
+<span class="material-symbols-outlined text-secondary-container text-[48px] mb-4">clinical_notes</span>
+<h4 class="font-headline-sm text-on-primary mb-2">Continuous Training</h4>
+<p class="font-body-sm text-on-primary/80">Teachers undergo 50+ hours of annual professional development to stay updated with exam changes.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full rounded-t-xl border-t border-outline-variant/50">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-12">
+<div class="md:col-span-1">
+<div class="font-headline-sm text-headline-sm font-bold text-primary mb-4">Dream Education</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Empowering international futures through linguistic excellence and expert mentorship.</p>
+</div>
+<div class="flex flex-col gap-2">
+<h5 class="font-label-lg text-label-lg text-primary mb-2">Our Courses</h5>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all" href="#">IELTS Academic</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all" href="#">General English</a>
+</div>
+<div class="flex flex-col gap-2">
+<h5 class="font-label-lg text-label-lg text-primary mb-2">About Us</h5>
+<a class="font-body-sm text-body-sm text-secondary font-bold hover:translate-x-1 transition-all" href="#">Teacher Profiles</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all" href="#">Success Stories</a>
+</div>
+<div class="flex flex-col gap-2">
+<h5 class="font-label-lg text-label-lg text-primary mb-2">Legal</h5>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary hover:translate-x-1 transition-all" href="#">Terms of Service</a>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant/30 text-center md:text-left">
+<p class="font-body-sm text-body-sm text-on-surface-variant">© 2024 Dream Education. Empowering international futures through linguistic excellence.</p>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for cards
+        document.querySelectorAll('.teacher-card-shadow').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const img = card.querySelector('img');
+                if(img) img.style.transform = 'scale(1.05)';
+                img.style.transition = 'transform 0.5s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                const img = card.querySelector('img');
+                if(img) img.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>
