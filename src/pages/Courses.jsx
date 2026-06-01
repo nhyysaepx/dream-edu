@@ -5,10 +5,10 @@ export default function Courses() {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const categories = [
-    { key: 'All', label: 'All Paths' },
-    { key: 'IELTS Prep', label: 'IELTS Prep' },
-    { key: 'Academic English', label: 'Academic English' },
-    { key: 'Specialized', label: 'Specialized' },
+    { key: 'All', label: 'Tất cả lộ trình' },
+    { key: 'IELTS Prep', label: 'Luyện thi IELTS' },
+    { key: 'Academic English', label: 'Tiếng Anh học thuật' },
+    { key: 'Specialized', label: 'Kỹ năng chuyên sâu' },
   ];
 
   const courses = [
@@ -16,12 +16,12 @@ export default function Courses() {
       id: 'ielts-foundation',
       title: 'IELTS Foundation',
       category: 'IELTS Prep',
-      tag: 'Beginner',
+      tag: 'Cơ bản',
       icon: 'auto_stories',
-      description: 'Build a robust linguistic base across all four skills for students starting their IELTS journey.',
+      description: 'Xây dựng nền tảng ngôn ngữ vững chắc ở cả 4 kỹ năng cho học viên mới bắt đầu lộ trình IELTS.',
       stats: [
-        { label: '12 Weeks / 60 Hours', icon: 'schedule' },
-        { label: 'Core Grammar & Vocabulary', icon: 'task_alt' }
+        { label: '12 Tuần / 60 Giờ', icon: 'schedule' },
+        { label: 'Ngữ pháp & Từ vựng Cốt lõi', icon: 'task_alt' }
       ],
       isElite: false
     },
@@ -29,12 +29,12 @@ export default function Courses() {
       id: 'ielts-intensive',
       title: 'IELTS Intensive',
       category: 'IELTS Prep',
-      tag: 'Accelerated',
+      tag: 'Cấp tốc',
       icon: 'speed',
-      description: 'A fast-track program focusing purely on exam strategies and high-frequency question patterns.',
+      description: 'Chương trình tăng tốc tập trung hoàn toàn vào chiến thuật làm bài và các dạng câu hỏi thường gặp.',
       stats: [
-        { label: '4 Weeks / Daily Sessions', icon: 'schedule' },
-        { label: 'Strategic Exam Techniques', icon: 'trending_up' }
+        { label: '4 Tuần / Học Hàng Ngày', icon: 'schedule' },
+        { label: 'Kỹ thuật Làm bài Chiến thuật', icon: 'trending_up' }
       ],
       isElite: false
     },
@@ -42,38 +42,38 @@ export default function Courses() {
       id: 'ielts-6-5',
       title: 'IELTS 6.5+',
       category: 'IELTS Prep',
-      tag: 'Intermediate',
+      tag: 'Trung cấp',
       icon: 'star',
-      description: 'Designed for university admission requirements, focusing on academic writing and complex listening.',
+      description: 'Thiết kế đáp ứng yêu cầu tuyển sinh đại học, tập trung vào Viết học thuật và Nghe chuyên sâu.',
       stats: [
-        { label: '8 Weeks / Weekend Options', icon: 'schedule' },
-        { label: 'Academic Writing Mastery', icon: 'edit_note' }
+        { label: '8 Tuần / Có Lớp Cuối Tuần', icon: 'schedule' },
+        { label: 'Làm chủ Kỹ năng Viết học thuật', icon: 'edit_note' }
       ],
       isElite: false
     },
     {
       id: 'ielts-7-0',
-      title: 'IELTS 7.0+',
+      title: 'IELTS 7.0+ Elite',
       category: 'IELTS Prep',
-      tag: 'Elite Selection',
+      tag: 'Tuyển chọn Đặc biệt',
       icon: 'military_tech',
-      description: 'Precision training for high-level candidates aiming for postgraduate study or specialized immigration.',
+      description: 'Khóa học chuyên sâu dành cho học viên trình độ cao hướng tới mục tiêu học sau đại học hoặc định cư chuyên nghiệp.',
       stats: [
-        { label: 'Expert-Led Feedback Loops', icon: 'verified' },
-        { label: 'Advanced Speaking Workshops', icon: 'forum' }
+        { label: 'Nhận Đánh giá Trực tiếp từ Chuyên gia', icon: 'verified' },
+        { label: 'Xưởng thực hành Nói Nâng cao', icon: 'forum' }
       ],
       isElite: true
     },
     {
       id: 'academic-english',
-      title: 'Academic English',
+      title: 'Tiếng Anh Học Thuật',
       category: 'Academic English',
-      tag: 'University Prep',
+      tag: 'Chuẩn bị Đại học',
       icon: 'school',
-      description: 'Master the art of research, referencing, and formal academic discourse for international studies.',
+      description: 'Làm chủ kỹ năng nghiên cứu, trích dẫn tài liệu và tư duy học thuật phục vụ cho việc học tập quốc tế.',
       stats: [
-        { label: 'Research & Citation Skills', icon: 'history_edu' },
-        { label: 'Critical Thinking Seminars', icon: 'psychology' }
+        { label: 'Kỹ năng Nghiên cứu & Trích dẫn', icon: 'history_edu' },
+        { label: 'Chuyên đề Tư duy Phản biện', icon: 'psychology' }
       ],
       isElite: false
     },
@@ -81,12 +81,12 @@ export default function Courses() {
       id: 'public-speaking',
       title: 'Public Speaking',
       category: 'Specialized',
-      tag: 'Communication',
+      tag: 'Giao tiếp',
       icon: 'record_voice_over',
-      description: 'Gain the confidence to present your ideas with authority and clarity in any professional setting.',
+      description: 'Rèn luyện sự tự tin để trình bày ý tưởng một cách cuốn hút và rõ ràng trong mọi môi trường chuyên nghiệp.',
       stats: [
-        { label: 'Body Language & Projection', icon: 'mic' },
-        { label: 'Live Performance Coaching', icon: 'groups' }
+        { label: 'Ngôn ngữ Cơ thể & Biểu cảm', icon: 'mic' },
+        { label: 'Hướng dẫn Thực hành Trực tiếp', icon: 'groups' }
       ],
       isElite: false
     }
@@ -103,18 +103,18 @@ export default function Courses() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center">
           <div className="space-y-stack-sm">
             <span className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider font-semibold">
-              Academic Excellence
+              Học thuật Xuất sắc
             </span>
             <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary leading-tight font-bold">
-              Elevate Your Potential with <span className="text-secondary">Expert Instruction</span>.
+              Nâng tầm tiềm năng của bạn cùng <span className="text-secondary">Giảng viên Chuyên gia</span>.
             </h1>
             <p className="text-on-surface-variant font-body-lg text-body-lg max-w-lg">
-              Structured curriculum designed for high achievers. From foundational IELTS to advanced Academic English, we bridge the gap between aspiration and global success.
+              Giáo trình được thiết kế bài bản cho những học viên đầy hoài bão. Từ IELTS nền tảng đến Tiếng Anh Học thuật nâng cao, chúng tôi đồng hành cùng bạn trên con đường chinh phục thành công toàn cầu.
             </p>
           </div>
           <div className="relative hidden lg:block h-[400px] rounded-xl overflow-hidden shadow-xl">
             <img
-              alt="Education Success"
+              alt="Thành công Giáo dục"
               className="w-full h-full object-cover"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNAnodpyFDI7O8GlSbCL-OfEvYPPJlXD8mCqSHNULThjnZGh5SB1h26nqzMHvuGMEVsB0IGW6g_stnWYKgNWTv43mrtr4ET19jC9VBK7WTvTXputnNU9JkD6hq34FdCGl81oKED8fhBtN3RaIdryRRpnjprm3-AHeleOSQUayHJu87D4lDQb1qMAre7CuQmheSwp-EnBgcR0N8huvMoDSly89GKp7Cvk4Lwt-c8EO6mLm8Tp1xQCUAm-O_E031EIK4ReCwPK3bIDw"
             />
@@ -127,8 +127,8 @@ export default function Courses() {
       <section className="max-w-container-max mx-auto px-6 md:px-margin-desktop pb-stack-lg text-left">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md">
           <div>
-            <h2 className="font-headline-md text-headline-md text-primary font-bold mb-2">Our Curated Courses</h2>
-            <p className="text-on-surface-variant">Select the path that matches your current proficiency and goal.</p>
+            <h2 className="font-headline-md text-headline-md text-primary font-bold mb-2">Khóa học được Thiết kế Riêng</h2>
+            <p className="text-on-surface-variant">Lựa chọn lộ trình phù hợp nhất với năng lực và mục tiêu của bạn.</p>
           </div>
           
           {/* Filtering Tabs */}
@@ -212,7 +212,7 @@ export default function Courses() {
                     : 'bg-primary text-on-primary hover:bg-primary-container'
                 }`}
               >
-                Enroll Now
+                Đăng ký học ngay
               </Link>
             </div>
           ))}
@@ -223,9 +223,9 @@ export default function Courses() {
       <section className="max-w-container-max mx-auto px-6 md:px-margin-desktop pb-stack-lg text-left">
         <div className="bg-primary p-8 md:p-12 rounded-2xl relative overflow-hidden text-center lg:text-left lg:flex lg:items-center lg:justify-between gap-gutter text-on-primary">
           <div className="relative z-10">
-            <h2 className="font-headline-lg text-headline-lg text-on-primary font-bold mb-4">Not sure which path is yours?</h2>
+            <h2 className="font-headline-lg text-headline-lg text-on-primary font-bold mb-4">Bạn chưa xác định được lộ trình của mình?</h2>
             <p className="text-primary-fixed-dim font-body-lg text-body-lg max-w-xl">
-              Our expert consultants provide a comprehensive diagnostic placement test to find your exact proficiency level.
+              Các chuyên gia của chúng tôi sẽ tư vấn và thực hiện đánh giá trình độ toàn diện để xác định cấp độ chính xác của bạn.
             </p>
           </div>
           <div className="mt-8 lg:mt-0 relative z-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -233,13 +233,13 @@ export default function Courses() {
               to="/contact"
               className="bg-secondary-container text-on-secondary-container px-8 py-4 rounded-full font-label-lg text-label-lg font-bold hover:scale-105 transition-all text-center"
             >
-              Book Placement Test
+              Đăng ký kiểm tra trình độ
             </Link>
             <Link
               to="/contact"
               className="border-2 border-primary-fixed-dim text-on-primary px-8 py-4 rounded-full font-label-lg text-label-lg hover:bg-white/10 transition-all font-bold text-center"
             >
-              Talk to an Advisor
+              Nhận tư vấn từ chuyên gia
             </Link>
           </div>
           <div className="absolute right-0 top-0 w-64 h-64 bg-secondary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
@@ -254,7 +254,7 @@ export default function Courses() {
         >
           <span className="material-symbols-outlined text-2xl">support_agent</span>
           <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 whitespace-nowrap font-label-lg text-label-lg pr-2 font-bold">
-            Chat with an Advisor
+            Trò chuyện với chuyên gia
           </span>
         </Link>
       </div>

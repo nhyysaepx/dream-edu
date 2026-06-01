@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="space-y-4">
           <div className="font-headline-sm text-headline-sm font-bold text-primary mb-4">Dream Education</div>
           <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            © 2026 Dream Education. Empowering international futures through linguistic excellence.
+            © 2026 Dream Education. Kiến tạo tương lai toàn cầu thông qua năng lực ngôn ngữ vượt trội.
           </p>
           <div className="flex gap-4">
             <a
@@ -42,21 +42,21 @@ export default function Footer() {
 
         {/* Programs Column */}
         <div className="space-y-4">
-          <h4 className="font-headline-sm text-headline-sm text-primary">Programs</h4>
+          <h4 className="font-headline-sm text-headline-sm text-primary">Chương trình học</h4>
           <ul className="space-y-2">
             <li>
               <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                IELTS Academic Focus
+                Luyện thi IELTS Học thuật
               </Link>
             </li>
             <li>
               <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                General English Mastery
+                Tiếng Anh Giao tiếp Thành thạo
               </Link>
             </li>
             <li>
               <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Business Communication
+                Tiếng Anh Thương mại
               </Link>
             </li>
           </ul>
@@ -64,21 +64,21 @@ export default function Footer() {
 
         {/* Resources Column */}
         <div className="space-y-4">
-          <h4 className="font-headline-sm text-headline-sm text-primary">Resources</h4>
+          <h4 className="font-headline-sm text-headline-sm text-primary">Tài nguyên</h4>
           <ul className="space-y-2">
             <li>
               <Link to="/teachers" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Teacher Profiles
+                Hồ sơ giáo viên
               </Link>
             </li>
             <li>
               <Link to="/success-stories" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Success Stories
+                Học viên tiêu biểu
               </Link>
             </li>
             <li>
               <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Free Mock Tests
+                Thi thử miễn phí
               </Link>
             </li>
           </ul>
@@ -86,21 +86,21 @@ export default function Footer() {
 
         {/* Support Column */}
         <div className="space-y-4">
-          <h4 className="font-headline-sm text-headline-sm text-primary">Support</h4>
+          <h4 className="font-headline-sm text-headline-sm text-primary">Hỗ trợ</h4>
           <ul className="space-y-2">
             <li>
               <Link to="/contact" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Privacy Policy
+                Chính sách bảo mật
               </Link>
             </li>
             <li>
               <Link to="/contact" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Terms of Service
+                Điều khoản dịch vụ
               </Link>
             </li>
             <li>
               <Link to="/contact" className="text-secondary font-bold text-body-sm">
-                Contact Us
+                Liên hệ với chúng tôi
               </Link>
             </li>
           </ul>
@@ -110,8 +110,9 @@ export default function Footer() {
       {/* Partners and Accreditation */}
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop border-t border-outline-variant/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-label-md text-label-md text-on-surface-variant">
-          Accredited by the International English Standards Council
+          Được kiểm định bởi Hội đồng Tiêu chuẩn Tiếng Anh Quốc tế
         </p>
+
         <div className="flex gap-6">
           <img
             alt="Partner Logo"

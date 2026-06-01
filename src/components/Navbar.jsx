@@ -9,12 +9,12 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/courses', label: 'Courses' },
-    { path: '/teachers', label: 'Teachers' },
-    { path: '/success-stories', label: 'Success Stories' },
-    { path: '/contact', label: 'Contact' },
+    { path: '/', label: 'Trang chủ' },
+    { path: '/about', label: 'Giới thiệu' },
+    { path: '/courses', label: 'Khóa học' },
+    { path: '/teachers', label: 'Giáo viên' },
+    { path: '/success-stories', label: 'Học viên tiêu biểu' },
+    { path: '/contact', label: 'Liên hệ' },
   ];
 
   return (
@@ -49,7 +49,7 @@ export default function Navbar() {
             to="/contact"
             className="hidden sm:inline-block bg-primary text-on-primary px-6 py-2.5 rounded-lg font-label-lg text-label-lg hover:bg-primary-container transition-all active:scale-95 shadow-sm text-center"
           >
-            Book Placement Test
+            Đăng ký kiểm tra trình độ
           </Link>
           
           <button
@@ -90,9 +90,10 @@ export default function Navbar() {
           onClick={() => setIsMenuOpen(false)}
           className="bg-primary text-on-primary py-3 px-6 rounded-lg font-label-lg text-label-lg text-center mt-2 active:scale-95 transition-all shadow-sm"
         >
-          Book Placement Test
+          Đăng ký kiểm tra trình độ
         </Link>
       </div>
     </header>
   );
 }
+
