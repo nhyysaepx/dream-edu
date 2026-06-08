@@ -1,5 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
 export default function Footer() {
   return (
@@ -7,7 +7,10 @@ export default function Footer() {
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-gutter mb-stack-lg">
         {/* About Column */}
         <div className="space-y-4">
-          <div className="font-headline-sm text-headline-sm font-bold text-primary mb-4">Dream Education</div>
+          <div className="flex items-center gap-3 mb-4">
+            <img src={logo} alt="Dream Education Logo" className="h-9 w-auto rounded object-contain" />
+            <div className="font-headline-sm text-headline-sm font-bold text-primary">Dream Education</div>
+          </div>
           <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
             © 2026 Dream Education. Kiến tạo tương lai toàn cầu thông qua năng lực ngôn ngữ vượt trội.
           </p>
