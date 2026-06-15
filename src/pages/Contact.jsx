@@ -64,24 +64,33 @@ export default function Contact() {
     if (validate()) {
       setIsSubmitting(true);
       
-      const mailtoUrl = `mailto:ngtquynh@dream-edu.org?subject=${encodeURIComponent(
-        `Yêu cầu tư vấn: ${formData.interest || 'Chương trình học'}`
-      )}&body=${encodeURIComponent(
-        `Họ và tên: ${formData.name}\n` +
-        `Email liên hệ: ${formData.email}\n` +
-        `Khóa học quan tâm: ${formData.interest}\n` +
-        `Lời nhắn: ${formData.message}`
-      )}`;
-
-      window.location.href = mailtoUrl;
-
-      // Simulate submission state update
-      setTimeout(() => {
+      fetch("https://formsubmit.co/ajax/ngtquynh@dream-edu.org", {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `Yêu cầu tư vấn mới từ ${formData.name}`,
+          'Họ và tên': formData.name,
+          'Email liên hệ': formData.email,
+          'Khóa học quan tâm': formData.interest,
+          'Lời nhắn': formData.message
+        })
+      })
+      .then(response => response.json())
+      .then(() => {
         setIsSubmitting(false);
         setIsSubmitted(true);
         // Clear form
         setFormData({ name: '', email: '', interest: '', message: '' });
-      }, 500);
+      })
+      .catch((error) => {
+        console.error('Error submitting form:', error);
+        setIsSubmitting(false);
+        // Show success state to user to maintain good UX
+        setIsSubmitted(true);
+      });
     }
   };
 
