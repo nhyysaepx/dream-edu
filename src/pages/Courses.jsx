@@ -20,21 +20,21 @@ export default function Courses() {
       icon: 'auto_stories',
       description: 'Xây dựng nền tảng ngôn ngữ vững chắc ở cả 4 kỹ năng cho học viên mới bắt đầu lộ trình IELTS.',
       stats: [
-        { label: '12 Tuần / 60 Giờ', icon: 'schedule' },
-        { label: 'Ngữ pháp & Từ vựng Cốt lõi', icon: 'task_alt' }
+        { label: '36 buổi', icon: 'schedule' },
+        { label: 'Tối đa 8 học sinh', icon: 'group' }
       ],
       isElite: false
     },
     {
-      id: 'ielts-intensive',
-      title: 'IELTS Intensive',
+      id: 'ielts-advanced',
+      title: 'IELTS Advanced',
       category: 'IELTS Prep',
-      tag: 'Cấp tốc',
+      tag: 'Nâng cao',
       icon: 'speed',
-      description: 'Chương trình tăng tốc tập trung hoàn toàn vào chiến thuật làm bài và các dạng câu hỏi thường gặp.',
+      description: 'Chương trình chuyên sâu dành cho học viên mục tiêu điểm số cao. Tập trung tối ưu hóa các kỹ năng khó và nâng band điểm vượt trội.',
       stats: [
-        { label: '4 Tuần / Học Hàng Ngày', icon: 'schedule' },
-        { label: 'Kỹ thuật Làm bài Chiến thuật', icon: 'trending_up' }
+        { label: '36 buổi', icon: 'schedule' },
+        { label: 'Tối đa 8 học sinh', icon: 'group' }
       ],
       isElite: false
     },
@@ -52,17 +52,17 @@ export default function Courses() {
       isElite: false
     },
     {
-      id: 'ielts-7-0',
-      title: 'IELTS 7.0+ Elite',
+      id: 'ielts-beginner',
+      title: 'IELTS Beginner',
       category: 'IELTS Prep',
-      tag: 'Tuyển chọn Đặc biệt',
+      tag: 'Mới bắt đầu',
       icon: 'military_tech',
-      description: 'Khóa học chuyên sâu dành cho học viên trình độ cao hướng tới mục tiêu học sau đại học hoặc định cư chuyên nghiệp.',
+      description: 'Dành cho người mới bắt đầu hoặc mất gốc tiếng Anh. Tập trung xây dựng nền tảng ngữ pháp, từ vựng và làm quen cấu trúc bài thi.',
       stats: [
-        { label: 'Nhận Đánh giá Trực tiếp từ Chuyên gia', icon: 'verified' },
-        { label: 'Xưởng thực hành Nói Nâng cao', icon: 'forum' }
+        { label: '36 buổi', icon: 'schedule' },
+        { label: 'Tối đa 8 học sinh', icon: 'group' }
       ],
-      isElite: true
+      isElite: false
     },
     {
       id: 'academic-english',

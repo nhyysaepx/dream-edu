@@ -160,11 +160,11 @@ export default function Home() {
                 <div className="flex items-center gap-4 text-on-surface-variant">
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[18px]">schedule</span>
-                    <span className="text-label-md">8 Tuần</span>
+                    <span className="text-label-md">36 buổi</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[18px]">group</span>
-                    <span className="text-label-md">Tối đa 12</span>
+                    <span className="text-label-md">Tối đa 8 học sinh</span>
                   </div>
                 </div>
                 <Link
@@ -180,27 +180,27 @@ export default function Home() {
             <div className="group bg-surface rounded-xl overflow-hidden border border-outline-variant/30 card-shadow interactive-shadow transition-all duration-300">
               <div className="relative h-48 overflow-hidden">
                 <img
-                  alt="IELTS Intensive"
+                  alt="IELTS Advanced"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp4c18GCeIyS4J7b_zKnNr87XvKnMXekX53xKeOsWOHxlv0suCwdZiPZdci0fAzWo5bgNIy_Hit5IyaEIt0Rs7CrHj56vHT_vydpUZcUSx2ZZxNh_4t3e2fUulJryYGzJ7VsRzueEOiDzeO8o2A25_P-qyyF6BUPv0-TOOpYcaAdiTPEjGzgm5AzHRJNaSORHhloIeWfhL98yGtenCaJLFX4R6ZDjzdEV9WuLeisUWSC7mufENzkBpGpY1xkIKBZJ_jDUQ2xu2WY8"
                 />
                 <div className="absolute top-4 left-4 bg-primary-container text-on-primary-container px-3 py-1 rounded-full font-label-md text-label-md font-semibold">
-                  Cấp tốc 4 tuần
+                  Trình độ Nâng cao
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <h3 className="font-headline-sm text-headline-sm text-primary">IELTS Intensive</h3>
+                <h3 className="font-headline-sm text-headline-sm text-primary">IELTS Advanced</h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  Khóa học cường độ cao dành cho học viên cần thi gấp. Tập trung sâu vào phương pháp làm bài và thực hành.
+                  Chương trình chuyên sâu dành cho học viên mục tiêu điểm số cao. Tập trung tối ưu hóa các kỹ năng khó và nâng band điểm vượt trội.
                 </p>
                 <div className="flex items-center gap-4 text-on-surface-variant">
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[18px]">schedule</span>
-                    <span className="text-label-md">4 Tuần</span>
+                    <span className="text-label-md">36 buổi</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[18px]">group</span>
-                    <span className="text-label-md">Tối đa 8</span>
+                    <span className="text-label-md">Tối đa 8 học sinh</span>
                   </div>
                 </div>
                 <Link
@@ -216,27 +216,27 @@ export default function Home() {
             <div className="group bg-surface rounded-xl overflow-hidden border border-outline-variant/30 card-shadow interactive-shadow transition-all duration-300">
               <div className="relative h-48 overflow-hidden">
                 <img
-                  alt="IELTS 7.0+"
+                  alt="IELTS Beginner"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuAajGHMf3Ifg0H1P5yvrRF3WaSsrqzhotnxV8K4U42kGmT6qNkmS-T8d9yYE0ZihIZMLR4B_aSgGHJNsTK71vwx5s-fyqErmGA_eogRk-c6h9Ab7FzFeBVGdRvcb35oS6ImHmoI_vHZ8pSwoVXCAWY_EM6iUyHFgV4ZLom_Iyp28QSD5E7FO8osnztaiWhqCFQ5-1k3Zez7aYVVldrc7Ehkn1d05n6dpr41WRXAhURd0fUm2t98cOzC8TA8VtqqI3JuLa8xbptJrac"
                 />
                 <div className="absolute top-4 left-4 bg-secondary text-on-primary px-3 py-1 rounded-full font-label-md text-label-md font-semibold">
-                  Trình độ Nâng cao
+                  Mới bắt đầu
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <h3 className="font-headline-sm text-headline-sm text-primary">IELTS 7.0+ Elite</h3>
+                <h3 className="font-headline-sm text-headline-sm text-primary">IELTS Beginner</h3>
                 <p className="font-body-sm text-body-sm text-on-surface-variant">
-                  Dành cho học viên đã đạt band 6.5. Tập trung tối ưu hóa điểm số thông qua các chi tiết và kỹ năng chuyên sâu.
+                  Dành cho người mới bắt đầu hoặc mất gốc tiếng Anh. Tập trung xây dựng nền tảng ngữ pháp, từ vựng và làm quen cấu trúc bài thi.
                 </p>
                 <div className="flex items-center gap-4 text-on-surface-variant">
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[18px]">schedule</span>
-                    <span className="text-label-md">6 Tuần</span>
+                    <span className="text-label-md">36 buổi</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="material-symbols-outlined text-[18px]">group</span>
-                    <span className="text-label-md">Tối đa 6</span>
+                    <span className="text-label-md">Tối đa 8 học sinh</span>
                   </div>
                 </div>
                 <Link
