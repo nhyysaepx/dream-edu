@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import studentImg from '../assets/student.jpg';
+import studentImg from '../assets/student_gialuat.jpg';
 
 function AnimatedCounter({ target, suffix = '+' }) {
   const [count, setCount] = useState(0);
@@ -73,7 +73,7 @@ export default function Home() {
           <div className="hidden md:block relative">
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl transform rotate-2">
               <img
-                alt="Thành công của học viên"
+                alt="Thành công của học viên Gia Luật"
                 className="w-full aspect-[4/5] object-cover"
                 src={studentImg}
               />
@@ -86,8 +86,8 @@ export default function Home() {
                 <span className="material-symbols-outlined text-[32px]">trending_up</span>
               </div>
               <div className="text-left">
-                <div className="font-headline-sm text-headline-sm text-primary font-bold">6.5</div>
-                <div className="font-label-md text-label-md text-on-surface-variant">chỉ trong 4 tháng</div>
+                <div className="font-headline-sm text-headline-sm text-primary font-bold">IELTS 6.5</div>
+                <div className="font-label-md text-label-md text-on-surface-variant">Gia Luật - Bác sĩ đa khoa</div>
               </div>
             </div>
           </div>
