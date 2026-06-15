@@ -64,13 +64,24 @@ export default function Contact() {
     if (validate()) {
       setIsSubmitting(true);
       
-      // Simulate API call
+      const mailtoUrl = `mailto:ngtquynh@dream-edu.org?subject=${encodeURIComponent(
+        `Yêu cầu tư vấn: ${formData.interest || 'Chương trình học'}`
+      )}&body=${encodeURIComponent(
+        `Họ và tên: ${formData.name}\n` +
+        `Email liên hệ: ${formData.email}\n` +
+        `Khóa học quan tâm: ${formData.interest}\n` +
+        `Lời nhắn: ${formData.message}`
+      )}`;
+
+      window.location.href = mailtoUrl;
+
+      // Simulate submission state update
       setTimeout(() => {
         setIsSubmitting(false);
         setIsSubmitted(true);
         // Clear form
         setFormData({ name: '', email: '', interest: '', message: '' });
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -152,10 +163,10 @@ export default function Contact() {
                           onChange={handleInputChange}
                         >
                           <option value="">Lựa chọn chương trình</option>
-                          <option value="ielts">Luyện thi IELTS Học thuật</option>
-                          <option value="general">Tiếng Anh Giao tiếp Thành thạo</option>
-                          <option value="placement">Tư vấn Du học & Tuyển sinh</option>
-                          <option value="other">Yêu cầu khác</option>
+                          <option value="Luyện thi IELTS học thuật">Luyện thi IELTS học thuật</option>
+                          <option value="Tiếng Anh THPT">Tiếng Anh THPT</option>
+                          <option value="Tiếng Anh THCS">Tiếng Anh THCS</option>
+                          <option value="Tiếng Anh Quốc tế cho học sinh tiểu học">Tiếng Anh Quốc tế cho học sinh tiểu học</option>
                         </select>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
                           <span className="material-symbols-outlined">arrow_drop_down</span>
@@ -206,15 +217,15 @@ export default function Contact() {
                     check_circle
                   </span>
                   <div>
-                    <p className="font-headline-sm font-bold text-on-primary">Đã nhận được yêu cầu tư vấn!</p>
+                    <p className="font-headline-sm font-bold text-on-primary">Yêu cầu của bạn đã được ghi nhận</p>
                     <p className="font-body-md opacity-90 mt-2 text-primary-fixed-dim leading-relaxed">
-                      Cảm ơn bạn đã liên hệ với Dream Education. Cố vấn học thuật của chúng tôi sẽ liên hệ lại với bạn qua email đã cung cấp trong vòng 24 giờ.
+                      Chúng tôi sẽ liên hệ cho bạn trong thời gian sớm nhất.
                     </p>
                     <button 
                       onClick={() => setIsSubmitted(false)}
                       className="mt-6 bg-secondary text-on-secondary px-6 py-2 rounded-lg font-label-md hover:brightness-110 active:scale-95 transition-all font-bold cursor-pointer"
                     >
-                      Gửi lời nhắn khác
+                      Gửi yêu cầu mới
                     </button>
                   </div>
                 </div>
