@@ -247,22 +247,22 @@ export default function Contact() {
               <div className="bg-primary text-on-primary p-6 rounded-xl tonal-elevation-1">
                 <h3 className="font-headline-sm text-headline-sm mb-6 text-secondary-container font-bold">Liên hệ trực tiếp</h3>
                 <div className="space-y-6">
-                  <a className="flex items-center group transition-all" href="tel:+842838231234">
+                  <a className="flex items-center group transition-all" href="tel:0777466838">
                     <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mr-4 group-hover:bg-secondary-container transition-colors shrink-0">
                       <span className="material-symbols-outlined text-on-primary-container group-hover:text-on-secondary-container">call</span>
                     </div>
                     <div>
                       <p className="font-label-md opacity-70">Số điện thoại</p>
-                      <p className="font-label-lg font-bold text-on-primary group-hover:text-secondary-container transition-colors">+84 28 3823 1234</p>
+                      <p className="font-label-lg font-bold text-on-primary group-hover:text-secondary-container transition-colors">077 746 6838</p>
                     </div>
                   </a>
-                  <a className="flex items-center group transition-all" href="mailto:admissions@dreamedu.vn">
+                  <a className="flex items-center group transition-all" href="mailto:dreameducation.dn@gmail.com">
                     <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mr-4 group-hover:bg-secondary-container transition-colors shrink-0">
                       <span className="material-symbols-outlined text-on-primary-container group-hover:text-on-secondary-container">mail</span>
                     </div>
                     <div>
                       <p className="font-label-md opacity-70">Email</p>
-                      <p className="font-label-lg font-bold text-on-primary group-hover:text-secondary-container transition-colors">admissions@dreamedu.vn</p>
+                      <p className="font-label-lg font-bold text-on-primary group-hover:text-secondary-container transition-colors">dreameducation.dn@gmail.com</p>
                     </div>
                   </a>
                 </div>
@@ -273,7 +273,7 @@ export default function Contact() {
                 <h3 className="font-headline-sm text-headline-sm mb-4 text-primary font-bold">Kết nối với chúng tôi</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <a 
-                    href="https://facebook.com" 
+                    href="http://facebook.com/dream.education.dn" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex flex-col items-center justify-center p-4 rounded-lg bg-surface-container-low hover:bg-secondary-fixed/30 transition-colors group text-center"
@@ -284,7 +284,7 @@ export default function Contact() {
                     <span className="font-label-md font-semibold text-on-surface">Facebook</span>
                   </a>
                   <a 
-                    href="https://zalo.me" 
+                    href="https://zalo.me/0777466838" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex flex-col items-center justify-center p-4 rounded-lg bg-surface-container-low hover:bg-secondary-fixed/30 transition-colors group text-center"
@@ -307,7 +307,7 @@ export default function Contact() {
                 <div className="flex items-start">
                   <span className="material-symbols-outlined text-primary mr-2">location_on</span>
                   <p className="font-body-sm text-on-surface-variant leading-relaxed">
-                    123 Education Plaza, Quận 1,<br />Thành phố Hồ Chí Minh, Việt Nam
+                    58 Sơn Thuỷ 3, Phường Ngũ Hành Sơn,<br />Thành phố Đà Nẵng, Việt Nam
                   </p>
                 </div>
               </div>
@@ -319,7 +319,7 @@ export default function Contact() {
             <div className="h-[450px] bg-surface-container-high relative">
               <iframe
                 title="Bản đồ Dream Education"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.460232428345!2d106.7017555153561!3d10.776019392321557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f47444b023f%3A0x6a0c5c400494444!2sDistrict%201%2C%20Ho%20Chi%20Minh%20City%2C%20Vietnam!5e0!3m2!1sen!2s!4v1682345678901!5m2!1sen!2s"
+                src="https://maps.google.com/maps?q=58%20S%C6%A1n%20Thu%E1%BB%B7%203,%20Ph%C6%B0%E1%BB%9Dng%20Ng%C5%A9%20H%C3%A0nh%20S%C6%A1n,%20Th%C3%A0nh%20ph%E1%BB%91%20%C4%90%C3%A0%20N%E1%BA%B5ng,%20Vi%E1%BB%87t%20Nam&t=&z=16&ie=UTF8&iwloc=&output=embed"
                 allowFullScreen=""
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -330,7 +330,7 @@ export default function Contact() {
                 <h4 className="font-headline-sm text-primary font-bold mb-2">Cơ sở chính</h4>
                 <p className="font-body-sm mb-4 text-on-surface-variant">Mở cửa Thứ Hai — Thứ Bảy: 8:00 sáng - 9:00 tối</p>
                 <a 
-                  href="https://maps.google.com" 
+                  href="https://www.google.com/maps/place/58+S%C6%A1n+Th%E1%BB%A7y+3,+Ng%C5%A9+H%C3%A0nh+S%C6%A1n,+%C4%90%C3%A0+N%E1%BA%B5ng,+Vi%E1%BB%87t+Nam/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-primary font-label-lg flex items-center hover:translate-x-1 transition-transform font-bold"

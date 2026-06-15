@@ -16,7 +16,7 @@ export default function Footer() {
           </p>
           <div className="flex gap-4">
             <a
-              href="https://facebook.com"
+              href="http://facebook.com/dream.education.dn"
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
@@ -25,7 +25,7 @@ export default function Footer() {
               <span className="material-symbols-outlined text-[20px]">public</span>
             </a>
             <a
-              href="https://zalo.me"
+              href="https://zalo.me/0777466838"
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
@@ -34,7 +34,7 @@ export default function Footer() {
               <span className="material-symbols-outlined text-[20px]">school</span>
             </a>
             <a
-              href="mailto:admissions@dreamedu.vn"
+              href="mailto:dreameducation.dn@gmail.com"
               className="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
               aria-label="Email Admissions"
             >
