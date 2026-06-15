@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import studentImg from '../assets/student.jpg';
 
 function AnimatedCounter({ target, suffix = '+' }) {
   const [count, setCount] = useState(0);
@@ -74,7 +75,7 @@ export default function Home() {
               <img
                 alt="Thành công của học viên"
                 className="w-full aspect-[4/5] object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYcPFIimG333ogrSawCYf1FJG1vio7bnufvOJ9ozZqUgSPMwC9V0bEm5G51Pa0Rshag-ffK5kojDjT7xZMl3aiQh_ccMJk-ETgUfYd-VpTAf-m8LOA7krydHXI0hw1sidSFrvlv0k4-cH8gxOdFWekx9wnq2MHawWmqJ8Zz73JSS3kjqWyDggmsn3DGXT6UXa-1mFG1cf9HYfyjv9UqZ-vfwmnRC-LLQWenCTtgaQxdg18VV0DBdzWsQa8IdpmUIrhT8M30AaWGtg"
+                src={studentImg}
               />
             </div>
             <div className="absolute -top-12 -left-12 w-48 h-48 bg-secondary/10 rounded-full blur-3xl"></div>
@@ -85,8 +86,8 @@ export default function Home() {
                 <span className="material-symbols-outlined text-[32px]">trending_up</span>
               </div>
               <div className="text-left">
-                <div className="font-headline-sm text-headline-sm text-primary font-bold">8.5</div>
-                <div className="font-label-md text-label-md text-on-surface-variant">Điểm IELTS TB</div>
+                <div className="font-headline-sm text-headline-sm text-primary font-bold">6.5</div>
+                <div className="font-label-md text-label-md text-on-surface-variant">chỉ trong 4 tháng</div>
               </div>
             </div>
           </div>
