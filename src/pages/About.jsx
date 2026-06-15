@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import startupImg from '../assets/timeline_startup.png';
+import partnershipImg from '../assets/timeline_partnership.png';
+import nowImg from '../assets/timeline_now.png';
 
 export default function About() {
   return (
@@ -16,7 +19,7 @@ export default function About() {
         <div className="relative z-10 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full text-on-primary">
           <div className="max-w-2xl">
             <span className="inline-block bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md mb-4 uppercase tracking-widest font-semibold">
-              Từ năm 2008
+              Từ năm 2025
             </span>
             <h1 className="font-display-lg text-display-lg text-on-primary mb-6">
               Bản lề vững chắc đưa ước mơ Việt ra thế giới.
@@ -111,62 +114,62 @@ export default function About() {
           </div>
           
           <div className="relative timeline-line space-y-16">
-            {/* 2008 */}
+            {/* 2025 */}
             <div className="flex flex-col md:flex-row items-center gap-gutter relative">
               <div className="md:w-1/2 md:text-right">
                 <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Khởi đầu</h4>
                 <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                  Dream Education mở lớp học đầu tiên với sứ mệnh mang đến chương trình luyện thi IELTS chất lượng cao.
+                  Dream Education được thành lập với sứ mệnh mang đến chương trình luyện thi chất lượng cao.
                 </p>
               </div>
               <div className="z-10 w-12 h-12 rounded-full bg-secondary-container border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-container shrink-0">
-                2008
+                2025
               </div>
               <div className="md:w-1/2 w-full">
                 <img
                   className="rounded-lg shadow-sm w-full h-48 object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5lRzX3OiraHAtHuNoVfj33OHDLIxV1XkBrtLWPERPZ31GqjqyibkUErMdYsz-pB-C3OX1CjmB-b4HdYIn3OiTbz7z7bbFUzI1BDTXzOIC-dFm_75ciizJiG-tu2k4nvQO0maQho3nwUIgydBGHNPNMM7Qr9WwnA2og9F8MEVTm9Gc6-1T-Y5kuMf7gc0rBDwIjqyi3teYtbbpNL2z4BqTipOkYM-J4MVMlpMeHlLhHqwnnLXmGAfypseYtTHAF8O2rVZVWP5mU6E"
-                  alt="Lớp học đơn sơ những ngày đầu"
+                  src={startupImg}
+                  alt="Khởi đầu của Dream Education năm 2025"
                 />
               </div>
             </div>
 
-            {/* 2014 */}
+            {/* 2026 */}
             <div className="flex flex-col md:flex-row-reverse items-center gap-gutter relative">
               <div className="md:w-1/2 text-left">
-                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Hợp tác toàn cầu</h4>
+                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Đối tác Hội đồng Anh</h4>
                 <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                  Ký kết hợp tác chính thức với các trường đại học hàng đầu tại Anh và Úc để tuyển sinh trực tiếp.
+                  Đối tác thi với Hội đồng Anh (British Council)
                 </p>
               </div>
               <div className="z-10 w-12 h-12 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center font-bold text-on-primary shrink-0">
-                2014
+                2026
               </div>
               <div className="md:w-1/2 w-full">
                 <img
                   className="rounded-lg shadow-sm w-full h-48 object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL2MvouZNwLimg_KQvNZP2LBATH2wkoMTXsEbAM23ForoudVOXaNeu1gipjbMjy3cCu7fhGeGmr2rdwgv9wQ6gtRBve477HtEAkbkywUySAo0VZD6CuXYypBZe0VAGDazjCKPGIIeEJwT3wWTo0ac3Bad_MR6n91G7LsUJ4iSXH3xTvlTVHAkT2diI3-z28lTAM17DLHxhkeqotB-dAtfJCc8QA96YFhge8jEfhTOliC6pYym-nnRCX862feznjLTRb0zQj1Y_77E"
-                  alt="Bắt tay hợp tác doanh nghiệp"
+                  src={partnershipImg}
+                  alt="Đối tác chính thức với British Council"
                 />
               </div>
             </div>
 
-            {/* 2024 */}
+            {/* Nay */}
             <div className="flex flex-col md:flex-row items-center gap-gutter relative">
               <div className="md:w-1/2 md:text-right">
-                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Kỷ nguyên Hiện đại</h4>
+                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Hỗ trợ học sinh Việt Nam</h4>
                 <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                  Ra mắt nền tảng học tập số tích hợp toàn diện, hỗ trợ học viên từ 15 quốc gia khác nhau.
+                  Hỗ trợ hơn 100 học sinh khắp Việt Nam
                 </p>
               </div>
               <div className="z-10 w-12 h-12 rounded-full bg-secondary-container border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-container shrink-0">
-                2024
+                Nay
               </div>
               <div className="md:w-1/2 w-full">
                 <img
                   className="rounded-lg shadow-sm w-full h-48 object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj4Kl34SxD6OjbHayVzdt58ygr4Ccyo6l5MHaAVUG8wqy6VQJvPP-_nIia7kDWxRB74p53qLJnfrMrlPM63_hCazW1pSpF4MjOlUVlh_CxBVDCrlj2VSH_1Rn0-csB9a2c8tri3yPF46ZfI9TQTBEEBIhw0TgEN1iwUboSU8NT8oR3DnBHVCeOu-gwqRl0diwf5gYJRguEede7zMKHvWUn8nrEGtfw7WS5CyJxnWHDKG4JC1-oPsX3edcIJ8wIwCkkgXKfuGzIn-w"
-                  alt="Mô hình học tập kỹ thuật số"
+                  src={nowImg}
+                  alt="Hỗ trợ học sinh khắp Việt Nam học tập hiệu quả"
                 />
               </div>
             </div>
