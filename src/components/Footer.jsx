@@ -45,29 +45,17 @@ export default function Footer() {
 
         {/* Programs Column */}
         <div className="space-y-4">
-          <h4 className="font-headline-sm text-headline-sm text-primary">Chương trình học</h4>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Luyện thi IELTS Học thuật
-              </Link>
-            </li>
-            <li>
-              <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Tiếng Anh Giao tiếp Thành thạo
-              </Link>
-            </li>
-            <li>
-              <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Tiếng Anh Thương mại
-              </Link>
-            </li>
-          </ul>
+          <Link
+            to="/courses"
+            className="font-headline-sm text-headline-sm text-primary hover:text-secondary transition-colors font-bold block"
+          >
+            Chương trình học
+          </Link>
         </div>
 
         {/* Resources Column */}
         <div className="space-y-4">
-          <h4 className="font-headline-sm text-headline-sm text-primary">Tài nguyên</h4>
+          <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Tài nguyên</h4>
           <ul className="space-y-2">
             <li>
               <Link to="/teachers" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
@@ -89,43 +77,26 @@ export default function Footer() {
 
         {/* Support Column */}
         <div className="space-y-4">
-          <h4 className="font-headline-sm text-headline-sm text-primary">Hỗ trợ</h4>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/contact" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Chính sách bảo mật
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Điều khoản dịch vụ
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="text-secondary font-bold text-body-sm">
-                Liên hệ với chúng tôi
-              </Link>
-            </li>
-          </ul>
+          <Link
+            to="/contact"
+            className="font-headline-sm text-headline-sm text-secondary hover:text-secondary/80 transition-colors font-bold block"
+          >
+            Liên hệ với chúng tôi
+          </Link>
         </div>
       </div>
 
       {/* Partners and Accreditation */}
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop border-t border-outline-variant/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-label-md text-label-md text-on-surface-variant">
-          Được kiểm định bởi Hội đồng Tiêu chuẩn Tiếng Anh Quốc tế
+          Đối tác thi của Hội đồng Anh - British Council
         </p>
 
         <div className="flex gap-6">
           <img
-            alt="Partner Logo"
-            className="h-8 grayscale opacity-50 hover:opacity-80 transition-opacity"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB-qBjTreRcrgCzOgc07jF7cjxJtC172JepeUVNtqGb02qfwBXmzvCSt-hKCKW7owQQ2TdUTMQRbs_llAV1IVpApKmfytjHcQ36j37aJIy_kZPR9v4OwVMuRyM8_eXNROYlaBKXrUjCVbZEvqpYjHQloYJJFh0CV-38c8CjdvQ7rE2LE4A4nSIvXP1ZCQ3PZO_CVptn1nEJUc5gHT7AoE_qa0sMWdAazDB4EEaNQLdn6OM-SVRKA-Tjb0WyVrOfFKRejMgHFNc_18"
-          />
-          <img
-            alt="Partner Logo"
-            className="h-8 grayscale opacity-50 hover:opacity-80 transition-opacity"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqrpV28WZKInLr3JoPQF5bttsj_NZNxiBLq2jfzBlBAKRXaVIs7bcXD13pMD6D4UFjv3SdymoRyOAPgRSKnVQAEwwfWr5U5F1E_AiPcdHN40IgKEgBymt47APx66WtjHXwQ29gy65fHUIUsyX0OAGKNLHvGI2ZuaUrBoNhtehCmxL1E_20W6K1zFKu8AsPUCqYnBg85sNOmwL3Z4L7iyPC6lPDRWwkbWk0dmO9EDnoo6T-wUbl2mFL2z9oeCie2UmCsJep6YYR8Dc"
+            alt="British Council Logo"
+            className="h-8 object-contain opacity-75 hover:opacity-100 transition-opacity"
+            src="https://upload.wikimedia.org/wikipedia/commons/e/e3/British_Council_logo.svg"
           />
         </div>
       </div>
