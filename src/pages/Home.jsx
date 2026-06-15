@@ -1,33 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import studentImg from '../assets/student_gialuat.jpg';
-
-function AnimatedCounter({ target, suffix = '+' }) {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const end = parseInt(target, 10);
-    if (start === end) return;
-
-    const totalDuration = 1500;
-    const incrementTime = Math.max(Math.floor(totalDuration / end), 15);
-    
-    const timer = setInterval(() => {
-      start += Math.ceil(end / 100);
-      if (start >= end) {
-        clearInterval(timer);
-        setCount(end);
-      } else {
-        setCount(start);
-      }
-    }, incrementTime);
-
-    return () => clearInterval(timer);
-  }, [target]);
-
-  return <span>{count}{suffix}</span>;
-}
 
 export default function Home() {
   return (
@@ -251,61 +224,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Success Statistics Section */}
-      <section className="py-stack-lg bg-primary text-on-primary relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-secondary/10 skew-x-12 transform translate-x-20"></div>
-        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-gutter text-center">
-            <div className="space-y-2">
-              <div className="font-display-lg text-display-lg text-secondary-fixed font-bold">
-                <AnimatedCounter target="5000" />
-              </div>
-              <div className="font-label-lg text-label-lg uppercase opacity-80">Học viên tốt nghiệp</div>
-            </div>
-            <div className="space-y-2">
-              <div className="font-display-lg text-display-lg text-secondary-fixed font-bold">
-                <AnimatedCounter target="98" suffix="%" />
-              </div>
-              <div className="font-label-lg text-label-lg uppercase opacity-80">Tỷ lệ đạt mục tiêu</div>
-            </div>
-            <div className="space-y-2">
-              <div className="font-display-lg text-display-lg text-secondary-fixed font-bold">
-                <AnimatedCounter target="150" />
-              </div>
-              <div className="font-label-lg text-label-lg uppercase opacity-80">Giảng viên chuyên gia</div>
-            </div>
-            <div className="space-y-2">
-              <div className="font-display-lg text-display-lg text-secondary-fixed font-bold">
-                <AnimatedCounter target="12" />
-              </div>
-              <div className="font-label-lg text-label-lg uppercase opacity-80">Đối tác toàn cầu</div>
-            </div>
-          </div>
-
-          {/* Testimonial Teaser */}
-          <div className="mt-stack-lg bg-surface/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 max-w-3xl mx-auto text-center">
-            <div className="mb-6 flex justify-center">
-              <span className="material-symbols-outlined text-secondary text-[48px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                format_quote
-              </span>
-            </div>
-            <p className="font-body-lg text-body-lg italic mb-6 leading-relaxed">
-              "Dream Education không chỉ giảng dạy tiếng Anh mà còn tiếp thêm sự tự tin để em nộp hồ sơ học Tiến sĩ tại London. Điểm số của em đã bứt phá từ 6.0 lên 8.0 chỉ sau 8 tuần."
-            </p>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-secondary mb-3">
-                <img
-                  alt="Ahmed S."
-                  className="w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc1n-ebBqSL_y8kgIt5_Grt3H5BrG0Q4s_ooDM6Ehy_fEsxHH6h9wC_xjP8uRNSpKGXD1dJclfWT0U55wGKKULWw9gIOPD2Yp3bIq3M98MoyN3uJ8ZEpzgvQrfJcZsIssgAxsVLqwOwzNwkvlIOfJ5nwQH_qo98V5itnxLNrEmOCBEP_0zhZGSEmEAtBqTiW1mSBxBLh5MN9L90bFAycbsCpC7tejyVLqkleUDWhpcWGdHtfhk5RRSjO1LjQUrWgV4syszV8QUroU"
-                />
-              </div>
-              <div className="font-headline-sm text-headline-sm font-bold">Ahmed S.</div>
-              <div className="font-label-md text-label-md opacity-60">IELTS Band 8.0 | King's College London</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-stack-lg text-center">
