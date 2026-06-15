@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import campusImg from '../assets/campus_danang.jpg';
+
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -300,9 +302,9 @@ export default function Contact() {
               {/* Campus Location Preview */}
               <div className="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/30 tonal-elevation-1 overflow-hidden relative group">
                 <img
-                  alt="Sảnh trung tâm"
+                  alt="Mặt tiền cơ sở Đà Nẵng"
                   className="w-full h-48 object-cover rounded-lg mb-4 transition-transform duration-500 group-hover:scale-105"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0DSRioMEnKc3UZzdURnbAdmSbm7oTK4QgQqx7vmuR4wxpCmKGAFFXGo40joMtB7CooCKPSdqRpfIPHf6A-QbdDT8VgTEdgDQYa1BjsFDWK79lW1bD4k5ITgqkITzQ4cR-9-CykZEqMMY7XMIttlbEh5-_9ylDpQzEjKK415O7KYkC8Kk1-qqv_kGXBnUkZFjxXV09M6Qq3iT644iq3vML24SO3wQDql7f8eSkf6FyVdHYMUcdDFnnGC9xRq5__AOsLR_OpQPE1eg"
+                  src={campusImg}
                 />
                 <div className="flex items-start">
                   <span className="material-symbols-outlined text-primary mr-2">location_on</span>
