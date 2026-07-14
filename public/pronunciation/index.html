@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Pronunciation Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="app-header glass-nav">
+        <div class="container">
+            <div class="logo">
+                <span class="material-symbols-outlined text-gradient">record_voice_over</span>
+                <h1 class="text-gradient font-headline-sm">Dream Pronunciation Lab</h1>
+            </div>
+            <div class="header-actions">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+                    <span class="material-symbols-outlined">dark_mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- TEACHER VIEW: Input & Settings -->
+        <section id="view-teacher" class="view active fade-in">
+            <div class="hero-section">
+                <h2 class="font-headline-lg">AI-assisted English <br>Pronunciation Practice</h2>
+                <p class="font-body-lg text-muted">Generate interactive pronunciation quizzes instantly from any vocabulary list.</p>
+            </div>
+
+            <div class="card tonal-card input-card">
+                <div class="card-header">
+                    <h3 class="font-headline-sm">Teacher Input</h3>
+                    <div class="action-group">
+                        <button class="btn btn-secondary btn-sm" id="btn-paste">Paste Example</button>
+                        <button class="btn btn-secondary btn-sm" id="btn-clear">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <label for="vocab-input" class="font-label-lg">Enter Vocabulary List (one word per line)</label>
+                    <textarea id="vocab-input" class="font-body-md" rows="8" placeholder="study&#10;computer&#10;culture&#10;..."></textarea>
+                    
+                    <div class="settings-grid mt-4">
+                        <div class="setting-item">
+                            <label class="font-label-md">Accent</label>
+                            <select id="setting-accent" class="form-select">
+                                <option value="en-US">🇺🇸 American (US)</option>
+                                <option value="en-GB">🇬🇧 British (UK)</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label class="font-label-md">Question Type</label>
+                            <select id="setting-type" class="form-select">
+                                <option value="mixed">Mixed Review (Recommended)</option>
+                                <option value="vowels">Vowels</option>
+                                <option value="consonants">Consonants</option>
+                                <option value="stress">Word Stress</option>
+                                <option value="ed">-ed Endings</option>
+                                <option value="s">-s/-es Endings</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <button class="btn btn-primary btn-lg full-width" id="btn-generate">
+                        <span class="material-symbols-outlined">auto_awesome</span>
+                        Generate Quiz
+                    </button>
+                    <div id="generation-status" class="status-message hidden font-body-sm text-center mt-2">
+                        <span class="spinner"></span> Analyzing vocabulary and generating distractors...
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section mt-8 card tonal-card">
+                <h3 class="font-headline-sm">About this Tool</h3>
+                <p class="font-body-sm text-muted">This module implements Computer-Assisted Language Learning (CALL) principles. It promotes <strong>learner autonomy</strong> through self-paced interactive quizzes, provides <strong>immediate explanatory feedback</strong> rather than just right/wrong evaluation, and utilizes <strong>adaptive practice</strong> by dynamically analyzing teacher-provided vocabulary lists to target common pronunciation challenges.</p>
+            </div>
+        </section>
+
+        <!-- STUDENT VIEW: Quiz Execution -->
+        <section id="view-student" class="view hidden">
+            <div class="quiz-header">
+                <div class="progress-container">
+                    <div class="progress-bar-bg">
+                        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                    </div>
+                    <div class="progress-stats font-label-md">
+                        <span id="stat-progress">Question 1 / 10</span>
+                        <span id="stat-score">Score: 0</span>
+                    </div>
+                </div>
+                <button class="btn btn-text btn-sm" id="btn-quit">Exit Quiz</button>
+            </div>
+
+            <div class="card tonal-card question-card fade-in">
+                <div class="question-header">
+                    <h3 id="question-text" class="font-headline-md">Choose the word whose underlined part is pronounced differently.</h3>
+                </div>
+
+                <div class="options-grid" id="options-container">
+                    <!-- Options injected by JS -->
+                </div>
+
+                <div id="feedback-panel" class="feedback-panel hidden slide-up">
+                    <div class="feedback-header">
+                        <div id="feedback-icon" class="material-symbols-outlined"></div>
+                        <h4 id="feedback-title" class="font-headline-sm"></h4>
+                    </div>
+                    <div class="feedback-body font-body-md" id="feedback-body">
+                        <!-- Explanation injected here -->
+                    </div>
+                    <button id="btn-next" class="btn btn-primary full-width mt-4">Next Question</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS VIEW -->
+        <section id="view-results" class="view hidden fade-in">
+            <div class="card tonal-card results-card text-center">
+                <span class="material-symbols-outlined results-icon text-gradient">emoji_events</span>
+                <h2 class="font-headline-lg mt-2">Quiz Complete!</h2>
+                
+                <div class="results-stats mt-4">
+                    <div class="stat-box">
+                        <div class="font-headline-lg text-gradient" id="final-score">0/0</div>
+                        <div class="font-label-md">Final Score</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="font-headline-lg text-gradient" id="final-accuracy">0%</div>
+                        <div class="font-label-md">Accuracy</div>
+                    </div>
+                </div>
+
+                <div class="weak-areas-panel mt-4 text-left hidden" id="weak-areas-panel">
+                    <h4 class="font-label-lg mb-2">Areas for Review:</h4>
+                    <ul id="weak-areas-list" class="font-body-sm text-muted"></ul>
+                </div>
+
+                <div class="results-actions mt-6">
+                    <button class="btn btn-primary" id="btn-restart">Take Again</button>
+                    <button class="btn btn-secondary" id="btn-new-quiz">New Vocabulary</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="ipa-data.js"></script>
+    <script src="pronunciation-rules.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
