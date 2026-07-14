@@ -73,12 +73,19 @@ async function generateQuizFromWords(wordsList, preferredType) {
     let questionText = `Choose the word whose underlined part is pronounced differently.`;
     if (target.type === 'stress') questionText = `Choose the word with a different stress pattern.`;
     
+    let explanationText = "";
+    if (target.sound.startsWith("unknown_")) {
+        explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced differently from the others.<br><br><strong>Note:</strong> The exact pronunciation of this word is inferred.`;
+    } else {
+        explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the others are pronounced differently.<br><br><strong>Rule:</strong> ${target.rule}`;
+    }
+    
     questions.push({
         type: target.type,
         questionText: questionText,
         options: options,
         correctIndex: correctIndex,
-        explanation: `The targeted part in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the others are pronounced differently.<br><br><strong>Rule:</strong> ${target.rule}`
+        explanation: explanationText
     });
   }
 
