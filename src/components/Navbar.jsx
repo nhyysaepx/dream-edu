@@ -15,7 +15,7 @@ export default function Navbar() {
     { path: '/courses', label: 'Khóa học' },
     { path: '/teachers', label: 'Giáo viên' },
     { path: '/success-stories', label: 'Học viên tiêu biểu' },
-    { path: '/pronunciation/', label: 'Phòng Lab' },
+    { path: '/pronunciation/', label: 'Phòng Lab', isExternal: true },
     { path: '/contact', label: 'Liên hệ' },
   ];
 
@@ -30,19 +30,29 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6 lg:gap-8">
           {navLinks.map((link) => (
-            <NavLink
-              key={link.path}
-              to={link.path}
-              className={({ isActive }) =>
-                `font-label-lg text-label-lg pb-1 transition-all ${
-                  isActive
-                    ? 'text-primary border-b-2 border-secondary'
-                    : 'text-on-surface-variant hover:text-primary'
-                }`
-              }
-            >
-              {link.label}
-            </NavLink>
+            link.isExternal ? (
+              <a
+                key={link.path}
+                href={link.path}
+                className="font-label-lg text-label-lg pb-1 transition-all text-on-surface-variant hover:text-primary"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                className={({ isActive }) =>
+                  `font-label-lg text-label-lg pb-1 transition-all ${
+                    isActive
+                      ? 'text-primary border-b-2 border-secondary'
+                      : 'text-on-surface-variant hover:text-primary'
+                  }`
+                }
+              >
+                {link.label}
+              </NavLink>
+            )
           ))}
         </div>
 
@@ -75,18 +85,29 @@ export default function Navbar() {
         }`}
       >
         {navLinks.map((link) => (
-          <NavLink
-            key={link.path}
-            to={link.path}
-            onClick={() => setIsMenuOpen(false)}
-            className={({ isActive }) =>
-              `font-label-lg text-label-lg py-2 w-fit ${
-                isActive ? 'text-primary border-b-2 border-secondary font-semibold' : 'text-on-surface-variant'
-              }`
-            }
-          >
-            {link.label}
-          </NavLink>
+          link.isExternal ? (
+            <a
+              key={link.path}
+              href={link.path}
+              onClick={() => setIsMenuOpen(false)}
+              className="font-label-lg text-label-lg py-2 w-fit text-on-surface-variant"
+            >
+              {link.label}
+            </a>
+          ) : (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              onClick={() => setIsMenuOpen(false)}
+              className={({ isActive }) =>
+                `font-label-lg text-label-lg py-2 w-fit ${
+                  isActive ? 'text-primary border-b-2 border-secondary font-semibold' : 'text-on-surface-variant'
+                }`
+              }
+            >
+              {link.label}
+            </NavLink>
+          )
         ))}
         <Link
           to="/contact"
