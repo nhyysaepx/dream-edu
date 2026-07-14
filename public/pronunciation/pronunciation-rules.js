@@ -19,8 +19,10 @@ async function generateQuizFromWords(wordsList, preferredType) {
             data = inferred;
             IPA_DICTIONARY[cleanWord] = data;
         } else {
-            // Fallback: If word is unknown, we just guess it's an 'a' vowel.
-            data = { ipa: "...", type: "vowel", focus: "a", sound: "ə", rule: "Pronunciation inferred." };
+            // Fallback: Find the first vowel to use as focus
+            let match = cleanWord.match(/[aeiou]/);
+            let focus = match ? match[0] : cleanWord.charAt(0);
+            data = { ipa: "...", type: "vowel", focus: focus, sound: "unknown_" + cleanWord, rule: "Pronunciation inferred." };
             IPA_DICTIONARY[cleanWord] = data;
         }
     }
