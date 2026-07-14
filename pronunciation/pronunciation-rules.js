@@ -3,6 +3,25 @@
 const API_BASE = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
 /**
+ * Fetch IPA from API for unknown words
+ */
+async function fetchIPAFromAPI(word) {
+    try {
+        const res = await fetch(API_BASE + word);
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (data && data[0] && data[0].phonetics) {
+            let phonetic = data[0].phonetics.find(p => p.text);
+            if (phonetic) return phonetic.text.replace(/\//g, '');
+            if (data[0].phonetic) return data[0].phonetic.replace(/\//g, '');
+        }
+    } catch (e) {
+        console.error("API error", e);
+    }
+    return null;
+}
+
+/**
  * Main AI function: Takes a list of words and generates a full quiz array
  */
 async function generateQuizFromWords(wordsList, preferredType) {
@@ -22,7 +41,18 @@ async function generateQuizFromWords(wordsList, preferredType) {
             // Fallback: Find the first vowel to use as focus
             let match = cleanWord.match(/[aeiou]/);
             let focus = match ? match[0] : cleanWord.charAt(0);
-            data = { ipa: "...", type: "vowel", focus: focus, sound: "unknown_" + cleanWord, rule: "Pronunciation inferred." };
+            
+            // Try to get real IPA for a better explanation
+            let realIpa = await fetchIPAFromAPI(cleanWord);
+            
+            data = { 
+                ipa: realIpa || "...", 
+                type: "vowel", 
+                focus: focus, 
+                sound: "unknown_" + cleanWord, 
+                rule: "Pronunciation inferred.",
+                isFetched: !!realIpa
+            };
             IPA_DICTIONARY[cleanWord] = data;
         }
     }
@@ -75,7 +105,11 @@ async function generateQuizFromWords(wordsList, preferredType) {
     
     let explanationText = "";
     if (target.sound.startsWith("unknown_")) {
-        explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced differently from the others.<br><br><strong>Note:</strong> The exact pronunciation of this word is inferred.`;
+        if (target.isFetched && target.ipa !== "...") {
+            explanationText = `The word <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.ipa}/</span>. It has a different pronunciation pattern from the other options.`;
+        } else {
+            explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced differently from the others.<br><br><strong>Note:</strong> The exact pronunciation of this word is inferred.`;
+        }
     } else {
         explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the others are pronounced differently.<br><br><strong>Rule:</strong> ${target.rule}`;
     }
