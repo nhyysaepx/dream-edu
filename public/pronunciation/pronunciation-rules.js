@@ -9,18 +9,15 @@ const API_BASE = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 async function generateQuizFromWords(wordsList, questionCount, preferredType) {
   let validWords = [];
   
-  // 1. Enrich words with data (either from local dictionary or API fallback)
   for (let w of wordsList) {
     let cleanWord = w.toLowerCase().trim();
     if (!cleanWord) continue;
     
     let data = IPA_DICTIONARY[cleanWord];
     if (!data) {
-        // Try to infer rules for -ed and -s even if not in dictionary
         let inferred = inferSimpleRules(cleanWord);
         if (inferred) {
             data = inferred;
-            // add to dictionary to act as cache
             IPA_DICTIONARY[cleanWord] = data;
         }
     }
@@ -30,18 +27,33 @@ async function generateQuizFromWords(wordsList, questionCount, preferredType) {
     }
   }
 
-  // If we couldn't resolve enough words, pull random words from dictionary to pad
-  if (validWords.length < 4) {
-      let pool = Object.keys(IPA_DICTIONARY);
-      while(validWords.length < 8 && pool.length > 0) {
-          let randomWord = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-          if (!validWords.find(v => v.word === randomWord)) {
-              validWords.push({ word: randomWord, ...IPA_DICTIONARY[randomWord] });
+  function canFormQuestion(target) {
+      let possibleDistractors = Object.keys(IPA_DICTIONARY)
+          .map(k => ({word: k, ...IPA_DICTIONARY[k]}))
+          .filter(w => w.type === target.type && w.sound !== target.sound && w.word !== target.word && w.focus === target.focus);
+      let bySound = {};
+      for (let d of possibleDistractors) {
+          bySound[d.sound] = (bySound[d.sound] || 0) + 1;
+          if (bySound[d.sound] >= 3) return true;
+      }
+      return false;
+  }
+  
+  validWords = validWords.filter(w => canFormQuestion(w));
+
+  // If not enough words, pad from dictionary
+  if (validWords.length < questionCount) {
+      let pool = Object.keys(IPA_DICTIONARY)
+          .filter(k => canFormQuestion({word: k, ...IPA_DICTIONARY[k]}))
+          .sort(() => 0.5 - Math.random());
+          
+      for (let k of pool) {
+          if (!validWords.find(v => v.word === k)) {
+              validWords.push({ word: k, ...IPA_DICTIONARY[k] });
           }
       }
   }
 
-  // 2. Group words by type
   let grouped = {
       vowel: validWords.filter(w => w.type === 'vowel'),
       consonant: validWords.filter(w => w.type === 'consonant'),
@@ -52,23 +64,26 @@ async function generateQuizFromWords(wordsList, questionCount, preferredType) {
   };
 
   let questions = [];
-  
-  // 3. Generate Questions based on teacher preference
   let typesToUse = preferredType === 'mixed' ? Object.keys(grouped) : [preferredType];
   
-  for (let i = 0; i < questionCount; i++) {
-      // Pick a random available type
+  let attempts = 0;
+  while (questions.length < questionCount && attempts < 200) {
+      attempts++;
       let availableTypes = typesToUse.filter(t => grouped[t].length > 0);
       if (availableTypes.length === 0) {
-          // If strict preference failed, fallback to mixed
           availableTypes = Object.keys(grouped).filter(t => grouped[t].length > 0);
       }
-      if (availableTypes.length === 0) break; // Out of words
+      if (availableTypes.length === 0) break; 
       
       let type = availableTypes[Math.floor(Math.random() * availableTypes.length)];
       
       let q = createQuestionForType(type, grouped[type], validWords);
-      if (q) questions.push(q);
+      if (q) {
+          // Prevent exact duplicate questions
+          if (!questions.find(existing => existing.options[existing.correctIndex].word === q.options[q.correctIndex].word)) {
+              questions.push(q);
+          }
+      }
   }
 
   return questions;
