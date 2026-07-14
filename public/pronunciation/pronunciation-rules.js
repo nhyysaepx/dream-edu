@@ -104,14 +104,17 @@ async function generateQuizFromWords(wordsList, preferredType) {
     if (target.type === 'stress') questionText = `Choose the word with a different stress pattern.`;
     
     let explanationText = "";
+    let othersSoundText = selectedSound === "various sounds" || selectedSound === "different sound" ? "differently" : `<span class="ipa-text">/${selectedSound}/</span>`;
+    let letterText = target.type === 'stress' ? "stress pattern" : `letter <strong>'${target.focus}'</strong>`;
+
     if (target.sound.startsWith("unknown_")) {
         if (target.isFetched && target.ipa !== "...") {
-            explanationText = `The word <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.ipa}/</span>. It has a different pronunciation pattern from the other options.`;
+            explanationText = `The ${letterText} in <strong>${target.word}</strong> is pronounced differently (Whole word: <span class="ipa-text">/${target.ipa}/</span>), while the rest are pronounced ${othersSoundText}.`;
         } else {
-            explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced differently from the others.<br><br><strong>Note:</strong> The exact pronunciation of this word is inferred.`;
+            explanationText = `The ${letterText} in <strong>${target.word}</strong> is pronounced differently from the others.<br><br><strong>Note:</strong> The exact pronunciation of this word is inferred.`;
         }
     } else {
-        explanationText = `The targeted part in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the others are pronounced differently.<br><br><strong>Rule:</strong> ${target.rule}`;
+        explanationText = `The ${letterText} in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the rest are pronounced ${othersSoundText}.<br><br><strong>Rule:</strong> ${target.rule}`;
     }
     
     questions.push({

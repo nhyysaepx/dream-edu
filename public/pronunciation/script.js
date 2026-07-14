@@ -208,14 +208,8 @@ function showFeedback(isCorrect, question) {
         icon.innerText = 'cancel';
     }
     
-    let tip = ``;
-    if (!isCorrect) {
-        tip = `<div class="mistake-box"><strong>Common mistake:</strong> Vietnamese learners often struggle with ${question.type === 'ed' ? 'endings' : 'this sound'}. Pay close attention to the final consonant or vowel purity.</div>`;
-    }
-    
     body.innerHTML = `
         <p>${question.explanation}</p>
-        ${tip}
     `;
     
     // Auto scroll down to feedback
