@@ -49,8 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Simulate AI generation time for UX
         await new Promise(r => setTimeout(r, 800));
         
+        const questionCount = parseInt(document.getElementById('setting-count').value) || 10;
+        
         // Generate Questions
-        const questions = await generateQuizFromWords(words, 10, type);
+        const questions = await generateQuizFromWords(words, questionCount, type);
         
         if (questions.length === 0) {
             alert("Could not generate questions. Try pasting the example list to see supported words.");
@@ -249,8 +251,9 @@ function showResults() {
 // Simple text-to-speech fallback
 function playAudio(word) {
     if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Fix stuck speaker
         const utterance = new SpeechSynthesisUtterance(word);
-        utterance.lang = state.accent;
+        utterance.lang = state.accent || 'en-US';
         // Adjust properties for clearer pronunciation
         utterance.rate = 0.85; 
         window.speechSynthesis.speak(utterance);
