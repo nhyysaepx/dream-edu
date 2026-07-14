@@ -1,13 +1,12 @@
 // AI Rule Engine for Pronunciation Generation
-// Uses local IPA_DICTIONARY and common heuristics to categorize words
 
 const API_BASE = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
 /**
  * Main AI function: Takes a list of words and generates a full quiz array
  */
-async function generateQuizFromWords(wordsList, questionCount, preferredType) {
-  let validWords = [];
+async function generateQuizFromWords(wordsList, preferredType) {
+  let questions = [];
   
   for (let w of wordsList) {
     let cleanWord = w.toLowerCase().trim();
@@ -19,122 +18,69 @@ async function generateQuizFromWords(wordsList, questionCount, preferredType) {
         if (inferred) {
             data = inferred;
             IPA_DICTIONARY[cleanWord] = data;
+        } else {
+            // Fallback: If word is unknown, we just guess it's an 'a' vowel.
+            data = { ipa: "...", type: "vowel", focus: "a", sound: "ə", rule: "Pronunciation inferred." };
+            IPA_DICTIONARY[cleanWord] = data;
         }
     }
     
-    if (data) {
-        validWords.push({ word: cleanWord, ...data });
-    }
-  }
-
-  function canFormQuestion(target) {
-      let possibleDistractors = Object.keys(IPA_DICTIONARY)
-          .map(k => ({word: k, ...IPA_DICTIONARY[k]}))
-          .filter(w => w.type === target.type && w.sound !== target.sound && w.word !== target.word && w.focus === target.focus);
-      let bySound = {};
-      for (let d of possibleDistractors) {
-          bySound[d.sound] = (bySound[d.sound] || 0) + 1;
-          if (bySound[d.sound] >= 3) return true;
-      }
-      return false;
-  }
-  
-  validWords = validWords.filter(w => canFormQuestion(w));
-
-  // If not enough words, pad from dictionary
-  if (validWords.length < questionCount) {
-      let pool = Object.keys(IPA_DICTIONARY)
-          .filter(k => canFormQuestion({word: k, ...IPA_DICTIONARY[k]}))
-          .sort(() => 0.5 - Math.random());
-          
-      for (let k of pool) {
-          if (!validWords.find(v => v.word === k)) {
-              validWords.push({ word: k, ...IPA_DICTIONARY[k] });
-          }
-      }
-  }
-
-  let grouped = {
-      vowel: validWords.filter(w => w.type === 'vowel'),
-      consonant: validWords.filter(w => w.type === 'consonant'),
-      ed: validWords.filter(w => w.type === 'ed'),
-      s: validWords.filter(w => w.type === 's'),
-      silent: validWords.filter(w => w.type === 'silent'),
-      stress: validWords.filter(w => w.type === 'stress')
-  };
-
-  let questions = [];
-  let typesToUse = preferredType === 'mixed' ? Object.keys(grouped) : [preferredType];
-  
-  let attempts = 0;
-  while (questions.length < questionCount && attempts < 200) {
-      attempts++;
-      let availableTypes = typesToUse.filter(t => grouped[t].length > 0);
-      if (availableTypes.length === 0) {
-          availableTypes = Object.keys(grouped).filter(t => grouped[t].length > 0);
-      }
-      if (availableTypes.length === 0) break; 
-      
-      let type = availableTypes[Math.floor(Math.random() * availableTypes.length)];
-      
-      let q = createQuestionForType(type, grouped[type], validWords);
-      if (q) {
-          // Prevent exact duplicate questions
-          if (!questions.find(existing => existing.options[existing.correctIndex].word === q.options[q.correctIndex].word)) {
-              questions.push(q);
-          }
-      }
-  }
-
-  return questions;
-}
-
-/**
- * Creates a distractor-based question.
- * Needs 1 word of Sound A, and 3 words of Sound B (or vice versa).
- * The "odd one out" is the correct answer.
- */
-function createQuestionForType(type, typeWords, allWords) {
-    if (typeWords.length < 1) return null;
+    let target = { word: cleanWord, ...data };
     
-    // Pick a target word (the answer)
-    let target = typeWords[Math.floor(Math.random() * typeWords.length)];
-    
-    // Find distractors from the entire dictionary of the same type, but DIFFERENT sound
-    // Note: To make it a valid phonetic question, the other 3 MUST have the SAME sound as each other, and SAME focus.
+    // Find distractors based on target
     let possibleDistractors = Object.keys(IPA_DICTIONARY)
         .map(k => ({word: k, ...IPA_DICTIONARY[k]}))
-        .filter(w => w.type === type && w.sound !== target.sound && w.word !== target.word && w.focus === target.focus);
+        .filter(d => d.type === target.type && d.sound !== target.sound && d.word !== target.word && d.focus === target.focus);
         
-    if (possibleDistractors.length < 3) return null; // Not enough data to form question
-    
-    // Group distractors by sound
     let distractorsBySound = {};
     possibleDistractors.forEach(d => {
         if (!distractorsBySound[d.sound]) distractorsBySound[d.sound] = [];
         distractorsBySound[d.sound].push(d);
     });
     
-    // Find a sound group that has at least 3 words
+    // Find a group of exactly 3 distractors with the SAME sound
     let validSoundGroups = Object.keys(distractorsBySound).filter(s => distractorsBySound[s].length >= 3);
-    if (validSoundGroups.length === 0) return null;
     
-    let selectedSound = validSoundGroups[Math.floor(Math.random() * validSoundGroups.length)];
-    let distractors = distractorsBySound[selectedSound].sort(() => 0.5 - Math.random()).slice(0, 3);
+    let options = [];
+    let selectedSound = "different sound";
     
-    let options = [target, ...distractors].sort(() => 0.5 - Math.random());
+    if (validSoundGroups.length > 0) {
+        // Perfect scenario: 3 distractors with same sound
+        selectedSound = validSoundGroups[Math.floor(Math.random() * validSoundGroups.length)];
+        let distractors = distractorsBySound[selectedSound].sort(() => 0.5 - Math.random()).slice(0, 3);
+        options = [target, ...distractors].sort(() => 0.5 - Math.random());
+    } else {
+        // Fallback scenario: just pick ANY 3 distractors with same focus, regardless of matching sounds
+        if (possibleDistractors.length >= 3) {
+            let distractors = possibleDistractors.sort(() => 0.5 - Math.random()).slice(0, 3);
+            options = [target, ...distractors].sort(() => 0.5 - Math.random());
+            selectedSound = "various sounds";
+        } else {
+            // Absolute fallback: pick 3 random words from the whole dictionary
+            let anyDistractors = Object.keys(IPA_DICTIONARY)
+                .map(k => ({word: k, ...IPA_DICTIONARY[k]}))
+                .filter(d => d.word !== target.word)
+                .sort(() => 0.5 - Math.random())
+                .slice(0, 3);
+            options = [target, ...anyDistractors].sort(() => 0.5 - Math.random());
+        }
+    }
+    
     let correctIndex = options.findIndex(o => o.word === target.word);
     
     let questionText = `Choose the word whose underlined part is pronounced differently.`;
-    if (type === 'stress') questionText = `Choose the word with a different stress pattern.`;
+    if (target.type === 'stress') questionText = `Choose the word with a different stress pattern.`;
     
-    return {
-        type: type,
+    questions.push({
+        type: target.type,
         questionText: questionText,
         options: options,
         correctIndex: correctIndex,
-        explanation: `The targeted part in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the others are pronounced <span class="ipa-text">/${selectedSound}/</span>.<br><br><strong>Rule:</strong> ${target.rule}`
-    };
+        explanation: `The targeted part in <strong>${target.word}</strong> is pronounced <span class="ipa-text">/${target.sound}/</span>, while the others are pronounced differently.<br><br><strong>Rule:</strong> ${target.rule}`
+    });
+  }
+
+  return questions;
 }
 
 /**
@@ -144,21 +90,21 @@ function inferSimpleRules(word) {
     if (word.endsWith('ed')) {
         let base = word.slice(0, -2);
         if (base.endsWith('t') || base.endsWith('d')) {
-            return { ipa: "", type: "ed", focus: "ed", sound: "ɪd", rule: "'-ed' is pronounced /ɪd/ after 't' or 'd'." };
+            return { ipa: "", type: "ed", focus: "ed", sound: "ɪd", rule: "'-ed' is /ɪd/ after 't' or 'd'." };
         } else if (base.endsWith('p') || base.endsWith('k') || base.endsWith('f') || base.endsWith('sh') || base.endsWith('ch')) {
-            return { ipa: "", type: "ed", focus: "ed", sound: "t", rule: "'-ed' is pronounced /t/ after unvoiced consonants." };
+            return { ipa: "", type: "ed", focus: "ed", sound: "t", rule: "'-ed' is /t/ after unvoiced sounds." };
         } else {
-            return { ipa: "", type: "ed", focus: "ed", sound: "d", rule: "'-ed' is pronounced /d/ after voiced sounds." };
+            return { ipa: "", type: "ed", focus: "ed", sound: "d", rule: "'-ed' is /d/ after voiced sounds." };
         }
     }
-    if (word.endsWith('s') && !word.endsWith('ss')) {
+    if (word.endsWith('s') && !word.endsWith('ss') && !word.endsWith('ous')) {
         let base = word.slice(0, -1);
         if (base.endsWith('p') || base.endsWith('t') || base.endsWith('k') || base.endsWith('f')) {
-            return { ipa: "", type: "s", focus: "s", sound: "s", rule: "'-s' is pronounced /s/ after unvoiced consonants." };
+            return { ipa: "", type: "s", focus: "s", sound: "s", rule: "'-s' is /s/ after unvoiced consonants." };
         } else if (base.endsWith('s') || base.endsWith('z') || base.endsWith('sh') || base.endsWith('ch') || base.endsWith('ge')) {
-             return { ipa: "", type: "s", focus: "es", sound: "ɪz", rule: "'-es' is pronounced /ɪz/ after sibilant sounds." };
+             return { ipa: "", type: "s", focus: "es", sound: "ɪz", rule: "'-es' is /ɪz/ after sibilant sounds." };
         } else {
-            return { ipa: "", type: "s", focus: "s", sound: "z", rule: "'-s' is pronounced /z/ after voiced sounds and vowels." };
+            return { ipa: "", type: "s", focus: "s", sound: "z", rule: "'-s' is /z/ after voiced sounds." };
         }
     }
     return null;

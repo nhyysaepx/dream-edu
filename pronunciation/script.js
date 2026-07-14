@@ -49,10 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Simulate AI generation time for UX
         await new Promise(r => setTimeout(r, 800));
         
-        const questionCount = parseInt(document.getElementById('setting-count').value) || 10;
-        
         // Generate Questions
-        const questions = await generateQuizFromWords(words, questionCount, type);
+        const questions = await generateQuizFromWords(words, type);
         
         if (questions.length === 0) {
             alert("Could not generate questions. Try pasting the example list to see supported words.");
