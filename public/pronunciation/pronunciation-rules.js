@@ -86,10 +86,10 @@ function createQuestionForType(type, typeWords, allWords) {
     let target = typeWords[Math.floor(Math.random() * typeWords.length)];
     
     // Find distractors from the entire dictionary of the same type, but DIFFERENT sound
-    // Note: To make it a valid phonetic question, the other 3 MUST have the SAME sound as each other.
+    // Note: To make it a valid phonetic question, the other 3 MUST have the SAME sound as each other, and SAME focus.
     let possibleDistractors = Object.keys(IPA_DICTIONARY)
         .map(k => ({word: k, ...IPA_DICTIONARY[k]}))
-        .filter(w => w.type === type && w.sound !== target.sound && w.word !== target.word);
+        .filter(w => w.type === type && w.sound !== target.sound && w.word !== target.word && w.focus === target.focus);
         
     if (possibleDistractors.length < 3) return null; // Not enough data to form question
     

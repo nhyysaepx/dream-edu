@@ -43,7 +43,22 @@ const IPA_DICTIONARY = {
   "pens": { ipa: "penz", type: "s", focus: "s", sound: "z", rule: "'-s' is pronounced /z/ after voiced consonants." },
   "buses": { ipa: "ˈbʌsɪz", type: "s", focus: "es", sound: "ɪz", rule: "'-es' is pronounced /ɪz/ after sibilant sounds." },
   "know": { ipa: "noʊ", type: "silent", focus: "k", sound: "", rule: "'k' is silent before 'n'." },
-  "ghost": { ipa: "ɡoʊst", type: "silent", focus: "h", sound: "", rule: "'h' is silent after 'g'." }
+  "ghost": { ipa: "ɡoʊst", type: "silent", focus: "h", sound: "", rule: "'h' is silent after 'g'." },
+
+  // New Distractors for SAME FOCUS logic
+  "cat": { ipa: "kæt", type: "vowel", focus: "a", sound: "æ", rule: "Short 'a'." },
+  "make": { ipa: "meɪk", type: "vowel", focus: "a", sound: "eɪ", rule: "Long 'a'." },
+  "about": { ipa: "əˈbaʊt", type: "vowel", focus: "a", sound: "ə", rule: "Schwa sound." },
+  "water": { ipa: "ˈwɔːtər", type: "vowel", focus: "a", sound: "ɔː", rule: "Pronounced /ɔː/." },
+  "car": { ipa: "kɑːr", type: "vowel", focus: "a", sound: "ɑː", rule: "Pronounced /ɑː/." },
+  "bear": { ipa: "ber", type: "vowel", focus: "ea", sound: "eə", rule: "Pronounced /eə/." },
+  "head": { ipa: "hed", type: "vowel", focus: "ea", sound: "e", rule: "Short 'e'." },
+  "great": { ipa: "ɡreɪt", type: "vowel", focus: "ea", sound: "eɪ", rule: "Long 'a'." },
+  "heart": { ipa: "hɑːrt", type: "vowel", focus: "ea", sound: "ɑː", rule: "Pronounced /ɑː/." },
+  "dog": { ipa: "dɔːɡ", type: "vowel", focus: "o", sound: "ɔː", rule: "Pronounced /ɔː/." },
+  "go": { ipa: "ɡoʊ", type: "vowel", focus: "o", sound: "oʊ", rule: "Long 'o'." },
+  "do": { ipa: "duː", type: "vowel", focus: "o", sound: "uː", rule: "Pronounced /uː/." },
+  "love": { ipa: "lʌv", type: "vowel", focus: "o", sound: "ʌ", rule: "Short 'u'." }
 };
 
 // Helper to find words by type
