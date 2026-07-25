@@ -156,13 +156,13 @@ def convert_to_base64(text_content, filename, is_rtf):
                 URL.revokeObjectURL(downloadUrl);
                 
                 setIsProcessing(false);
-                setResult({ show: true, success: true, message: \`Success! File converted and downloaded as: \${downloadName}\` });
+                setResult({ show: true, success: true, message: `Success! File converted and downloaded as: ${downloadName}` });
             } catch (error) {
                 console.error("Conversion error:", error);
                 setIsProcessing(false);
                 let errorMsg = error.message || "Failed to convert file.";
                 if (errorMsg.includes('Text2qtiError')) {
-                    errorMsg = errorMsg.split('Text2qtiError:')[1].split('\\n')[0].trim();
+                    errorMsg = errorMsg.split('Text2qtiError:')[1].split('\n')[0].trim();
                 }
                 setResult({ show: true, success: false, message: "Error: " + errorMsg });
             }
@@ -218,7 +218,7 @@ def convert_to_base64(text_content, filename, is_rtf):
 
                 {!isProcessing && !result.show && (
                     <section 
-                        className={\`drop-zone \${isDragOver ? 'dragover' : ''}\`}
+                        className={`drop-zone ${isDragOver ? 'dragover' : ''}`}
                         onDragEnter={handleDragEnter}
                         onDragLeave={handleDragLeave}
                         onDragOver={handleDragOver}
