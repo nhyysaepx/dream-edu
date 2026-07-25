@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="public/pronunciation/ipa-data.js"></script>
+<script src="public/pronunciation/pronunciation-rules.js"></script>
+<script>
+  async function test() {
+      const words = ["study", "computer", "culture", "music", "understand"];
+      const questions = await generateQuizFromWords(words, 'mixed');
+      console.log("Q Count:", questions.length);
+      console.log(JSON.stringify(questions, null, 2));
+  }
+  test();
+</script>
+</body>
+</html>

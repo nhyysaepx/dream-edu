@@ -15,7 +15,13 @@ export default function Navbar() {
     { path: '/courses', label: 'Khóa học' },
     { path: '/teachers', label: 'Giáo viên' },
     { path: '/success-stories', label: 'Học viên tiêu biểu' },
-    { path: '/pronunciation/', label: 'Phòng Lab', isExternal: true },
+    { 
+      label: 'Phòng Lab', 
+      subLinks: [
+        { path: '/pronunciation/', label: 'Pronunciation', isExternal: true },
+        { path: '/text2qti', label: 'Text2QTI' }
+      ] 
+    },
     { path: '/contact', label: 'Liên hệ' },
   ];
 
@@ -30,7 +36,41 @@ export default function Navbar() {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6 lg:gap-8">
           {navLinks.map((link) => (
-            link.isExternal ? (
+            link.subLinks ? (
+              <div key={link.label} className="relative group py-2">
+                <button className="font-label-lg text-label-lg pb-1 transition-all text-on-surface-variant hover:text-primary flex items-center gap-1 focus:outline-none">
+                  {link.label}
+                  <span className="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-180">expand_more</span>
+                </button>
+                <div className="absolute top-full left-0 mt-0 w-48 bg-surface-container-lowest border border-outline-variant/30 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 flex flex-col overflow-hidden">
+                  {link.subLinks.map((subLink) => (
+                    subLink.isExternal ? (
+                      <a
+                        key={subLink.path}
+                        href={subLink.path}
+                        className="px-4 py-3 font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors border-b border-outline-variant/10 last:border-0"
+                      >
+                        {subLink.label}
+                      </a>
+                    ) : (
+                      <NavLink
+                        key={subLink.path}
+                        to={subLink.path}
+                        className={({ isActive }) =>
+                          `px-4 py-3 font-label-lg text-label-lg transition-colors border-b border-outline-variant/10 last:border-0 ${
+                            isActive
+                              ? 'bg-surface-container text-primary font-semibold'
+                              : 'text-on-surface-variant hover:bg-surface-container hover:text-primary'
+                          }`
+                        }
+                      >
+                        {subLink.label}
+                      </NavLink>
+                    )
+                  ))}
+                </div>
+              </div>
+            ) : link.isExternal ? (
               <a
                 key={link.path}
                 href={link.path}
@@ -80,12 +120,45 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       <div
-        className={`md:hidden absolute top-full left-0 w-full bg-surface-container-lowest border-b border-outline-variant/30 p-margin-mobile flex flex-col gap-stack-md transition-all duration-300 shadow-md ${
+        className={`md:hidden absolute top-full left-0 w-full bg-surface-container-lowest border-b border-outline-variant/30 p-margin-mobile flex flex-col gap-stack-md transition-all duration-300 shadow-md max-h-[80vh] overflow-y-auto ${
           isMenuOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-4 invisible'
         }`}
       >
         {navLinks.map((link) => (
-          link.isExternal ? (
+          link.subLinks ? (
+            <div key={link.label} className="flex flex-col gap-2">
+              <span className="font-label-lg text-label-lg py-2 w-fit text-on-surface font-semibold">
+                {link.label}
+              </span>
+              <div className="flex flex-col gap-2 pl-4 border-l-2 border-outline-variant/30 ml-2">
+                {link.subLinks.map((subLink) => (
+                  subLink.isExternal ? (
+                    <a
+                      key={subLink.path}
+                      href={subLink.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="font-label-lg text-label-lg py-1 w-fit text-on-surface-variant hover:text-primary"
+                    >
+                      {subLink.label}
+                    </a>
+                  ) : (
+                    <NavLink
+                      key={subLink.path}
+                      to={subLink.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={({ isActive }) =>
+                        `font-label-lg text-label-lg py-1 w-fit ${
+                          isActive ? 'text-primary font-semibold' : 'text-on-surface-variant hover:text-primary'
+                        }`
+                      }
+                    >
+                      {subLink.label}
+                    </NavLink>
+                  )
+                ))}
+              </div>
+            </div>
+          ) : link.isExternal ? (
             <a
               key={link.path}
               href={link.path}
