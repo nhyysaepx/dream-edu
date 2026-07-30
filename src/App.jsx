@@ -8,7 +8,6 @@ import Courses from './pages/Courses';
 import Teachers from './pages/Teachers';
 import SuccessStories from './pages/SuccessStories';
 import Contact from './pages/Contact';
-import Text2QTI from './pages/Text2QTI';
 import ReadingApp from './pages/ReadingApp';
 
 // Helper component to reset scroll position to top on page change
@@ -36,7 +35,6 @@ function App() {
             <Route path="/teachers" element={<Teachers />} />
             <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/text2qti" element={<Text2QTI />} />
             <Route path="/reading-app" element={<ReadingApp />} />
           </Routes>
         </main>

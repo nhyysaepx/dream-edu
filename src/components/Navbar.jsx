@@ -19,7 +19,7 @@ export default function Navbar() {
       label: 'Phòng Lab', 
       subLinks: [
         { path: '/pronunciation/', label: 'Pronunciation', isExternal: true },
-        { path: '/text2qti', label: 'Text2QTI' },
+        { path: '/text2qti/', label: 'Text2QTI', isExternal: true },
         { path: '/reading-app', label: 'Reading App' }
       ] 
     },
