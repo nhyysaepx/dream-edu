@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DreamLexi - English Collocation Graph</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#1d3557",
+                      "inverse-primary": "#b0c7f1",
+                      "surface-container-low": "#edf6ea",
+                      "surface-container": "#e7f0e5",
+                      "on-secondary-container": "#6f5100",
+                      "tertiary-fixed-dim": "#98cdf2",
+                      "on-tertiary-container": "#6fa4c7",
+                      "on-primary-fixed": "#001b3c",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#2a322b",
+                      "on-secondary-fixed": "#261a00",
+                      "tertiary-fixed": "#c7e7ff",
+                      "on-background": "#161d16",
+                      "secondary": "#795900",
+                      "on-surface-variant": "#44474e",
+                      "tertiary-container": "#003953",
+                      "surface-tint": "#485f84",
+                      "on-surface": "#161d16",
+                      "outline-variant": "#c4c6cf",
+                      "primary-fixed-dim": "#b0c7f1",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "tertiary": "#002234",
+                      "primary": "#031f41",
+                      "on-secondary-fixed-variant": "#5c4300",
+                      "background": "#f3fcf0",
+                      "surface-dim": "#d4ddd1",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-container": "#fec330",
+                      "on-primary-fixed-variant": "#30476a",
+                      "inverse-on-surface": "#eaf3e7",
+                      "on-tertiary-fixed": "#001e2e",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#dce5d9",
+                      "outline": "#74777f",
+                      "on-primary-container": "#879ec6",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#064c6b",
+                      "surface-container-high": "#e2ebdf",
+                      "primary-fixed": "#d5e3ff",
+                      "surface": "#f3fcf0",
+                      "surface-bright": "#f3fcf0",
+                      "secondary-fixed": "#ffdfa0",
+                      "surface-container-highest": "#dce5d9",
+                      "secondary-fixed-dim": "#f8bd2a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-mobile": "16px",
+                      "container-max": "1280px",
+                      "unit": "4px",
+                      "margin-desktop": "48px"
+              },
+              "fontFamily": {
+                      "label-sm": [
+                              "Geist"
+                      ],
+                      "label-lg": [
+                              "Geist"
+                      ],
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Geist"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ],
+                      "headline-sm": [
+                              "Geist"
+                      ],
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "headline-lg-mobile": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-sans">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim w-full top-0 sticky z-40">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-[1280px] mx-auto">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-lowest transition-colors active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">DreamLexi</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer hover:bg-surface-container-low dark:hover:bg-surface-container-lowest transition-colors">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a young woman with glasses, smiling warmly. She is wearing a modern, dark navy blazer over a light blouse. The background is a slightly blurred modern office setting with soft, high-key white lighting typical of a bright, modern corporate environment. The image feels trustworthy and academic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDxqAyLWGEUPuhviA2c-6tk-GHf9eO08vby0jBK0rm9kQ2FL19__eQwIPtaHwBoRUpftoOZFELblhldYSK7eyHQ_xHDNCLZ_JkhZi-DTpx_g5m5Ml1wR3biD3ZSKFqeMWEb7Hrxx_xH8QcB3TDNJ2sajktVTwtbhT0lpGKzoVUI5DzZ7QRKhlpBlXU4ikTw3pvqaIL5ys4FH5JK5xCxqarlLEplEuvahyxBEaMycIFrCcoIVo4TCZM"/>
+</div>
+</div>
+</header>
+<main class="flex-grow max-w-[1280px] w-full mx-auto px-4 md:px-gutter py-8 pb-32 md:pb-8 flex flex-col gap-8">
+<!-- Graph Area Header -->
+<div class="flex flex-col gap-2">
+<h2 class="font-headline-lg text-headline-lg md:text-headline-lg text-primary">Collocation Network</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Exploring verb-noun pairings for the lemma "<span class="font-bold text-primary">present</span>". Line thickness indicates corpus frequency.</p>
+</div>
+<!-- The Graph Area -->
+<div class="relative w-full h-[500px] bg-surface-container-lowest border border-outline-variant/30 rounded-xl overflow-hidden flex items-center justify-center shadow-sm">
+<!-- Simulated Lines (SVG) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 0;">
+<!-- Center to Top Right (Award) - Thickest -->
+<line stroke="#1d3557" stroke-opacity="0.8" stroke-width="6" x1="50%" x2="70%" y1="50%" y2="25%"></line>
+<!-- Center to Bottom Right (Proposal) - Medium -->
+<line stroke="#1d3557" stroke-opacity="0.6" stroke-width="4" x1="50%" x2="75%" y1="50%" y2="70%"></line>
+<!-- Center to Bottom Left (Gift) - Medium-Thick -->
+<line stroke="#1d3557" stroke-opacity="0.7" stroke-width="5" x1="50%" x2="30%" y1="50%" y2="75%"></line>
+<!-- Center to Top Left (Meeting) - Thin -->
+<line stroke="#1d3557" stroke-opacity="0.4" stroke-width="2" x1="50%" x2="25%" y1="50%" y2="30%"></line>
+</svg>
+<!-- Nodes -->
+<!-- Central Node -->
+<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+<div class="bg-primary text-on-primary font-headline-md text-headline-md px-6 py-3 rounded-full shadow-[0_4px_20px_rgba(29,53,87,0.15)] ring-4 ring-primary-container/20 cursor-default">
+                    present
+                </div>
+</div>
+<!-- Peripheral Nodes -->
+<!-- Award -->
+<div class="absolute top-[25%] left-[70%] transform -translate-x-1/2 -translate-y-1/2 z-10 group">
+<div class="bg-surface-container-lowest border border-outline-variant text-primary font-headline-sm text-headline-sm px-5 py-2 rounded-full shadow-sm hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)] hover:-translate-y-1 transition-all cursor-pointer flex items-center gap-2">
+                    award
+                    <button class="opacity-0 group-hover:opacity-100 transition-opacity bg-secondary-container text-on-secondary-container rounded-full p-1 ml-1" title="View Context">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Proposal -->
+<div class="absolute top-[70%] left-[75%] transform -translate-x-1/2 -translate-y-1/2 z-10 group">
+<div class="bg-surface-container-lowest border border-outline-variant text-primary font-headline-sm text-headline-sm px-5 py-2 rounded-full shadow-sm hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)] hover:-translate-y-1 transition-all cursor-pointer flex items-center gap-2">
+                    proposal
+                    <button class="opacity-0 group-hover:opacity-100 transition-opacity bg-secondary-container text-on-secondary-container rounded-full p-1 ml-1" title="View Context">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Gift -->
+<div class="absolute top-[75%] left-[30%] transform -translate-x-1/2 -translate-y-1/2 z-10 group">
+<div class="bg-surface-container-lowest border border-outline-variant text-primary font-headline-sm text-headline-sm px-5 py-2 rounded-full shadow-sm hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)] hover:-translate-y-1 transition-all cursor-pointer flex items-center gap-2">
+                    gift
+                    <button class="opacity-0 group-hover:opacity-100 transition-opacity bg-secondary-container text-on-secondary-container rounded-full p-1 ml-1" title="View Context">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Meeting -->
+<div class="absolute top-[30%] left-[25%] transform -translate-x-1/2 -translate-y-1/2 z-10 group">
+<div class="bg-surface-container-lowest border border-outline-variant text-primary font-headline-sm text-headline-sm px-5 py-2 rounded-full shadow-sm hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)] hover:-translate-y-1 transition-all cursor-pointer flex items-center gap-2">
+                    meeting
+                    <button class="opacity-0 group-hover:opacity-100 transition-opacity bg-secondary-container text-on-secondary-container rounded-full p-1 ml-1" title="View Context">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">open_in_new</span>
+</button>
+</div>
+</div>
+<!-- Floating Controls -->
+<div class="absolute bottom-4 right-4 flex gap-2">
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant p-2 rounded-lg shadow-sm hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant p-2 rounded-lg shadow-sm hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">zoom_out</span>
+</button>
+<button class="bg-surface-container-lowest border border-outline-variant text-on-surface-variant p-2 rounded-lg shadow-sm hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">fit_screen</span>
+</button>
+</div>
+</div>
+<!-- AI Insight Card -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-6 shadow-sm flex flex-col md:flex-row gap-6 items-start relative overflow-hidden">
+<!-- Decorative accent line -->
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary-container"></div>
+<div class="flex-shrink-0 bg-surface-container p-3 rounded-full text-secondary">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-2">Lexical Insight</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-4">
+                    The verb <strong>present</strong> heavily strongly collocates with formal nouns in academic and corporate registers (e.g., <em>award, proposal</em>). When paired with <em>gift</em>, it often retains a formal nuance compared to the more ubiquitous <em>give a gift</em>.
+                </p>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-3 py-1 rounded-full">Academic Register</span>
+<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-3 py-1 rounded-full">High Frequency</span>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-3 py-1 rounded-full border border-outline-variant/20">Formal Tone</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface dark:bg-surface-container-lowest fixed bottom-0 w-full z-50 shadow-sm">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-surface dark:bg-surface-container-lowest px-4">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed-dim active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</button>
+<!-- Active Tab: Explore -->
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-5 py-1 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-sm text-label-sm">Explore</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed-dim active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed-dim active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">book_5</span>
+<span class="font-label-sm text-label-sm">Notebook</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1 hover:text-primary dark:hover:text-primary-fixed-dim active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1">analytics</span>
+<span class="font-label-sm text-label-sm">Analytics</span>
+</button>
+</div>
+</nav>
+</body></html>

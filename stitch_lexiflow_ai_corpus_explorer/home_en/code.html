@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DreamLexi - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#1d3557",
+                        "inverse-primary": "#b0c7f1",
+                        "surface-container-low": "#edf6ea",
+                        "surface-container": "#e7f0e5",
+                        "on-secondary-container": "#6f5100",
+                        "tertiary-fixed-dim": "#98cdf2",
+                        "on-tertiary-container": "#6fa4c7",
+                        "on-primary-fixed": "#001b3c",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2a322b",
+                        "on-secondary-fixed": "#261a00",
+                        "tertiary-fixed": "#c7e7ff",
+                        "on-background": "#161d16",
+                        "secondary": "#795900",
+                        "on-surface-variant": "#44474e",
+                        "tertiary-container": "#003953",
+                        "surface-tint": "#485f84",
+                        "on-surface": "#161d16",
+                        "outline-variant": "#c4c6cf",
+                        "primary-fixed-dim": "#b0c7f1",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#002234",
+                        "primary": "#031f41",
+                        "on-secondary-fixed-variant": "#5c4300",
+                        "background": "#f3fcf0",
+                        "surface-dim": "#d4ddd1",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fec330",
+                        "on-primary-fixed-variant": "#30476a",
+                        "inverse-on-surface": "#eaf3e7",
+                        "on-tertiary-fixed": "#001e2e",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#dce5d9",
+                        "outline": "#74777f",
+                        "on-primary-container": "#879ec6",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#064c6b",
+                        "surface-container-high": "#e2ebdf",
+                        "primary-fixed": "#d5e3ff",
+                        "surface": "#f3fcf0",
+                        "surface-bright": "#f3fcf0",
+                        "secondary-fixed": "#ffdfa0",
+                        "surface-container-highest": "#dce5d9",
+                        "secondary-fixed-dim": "#f8bd2a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "label-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- Desktop Navigation Drawer (Hidden on Mobile) -->
+<aside class="hidden md:flex flex-col h-full w-80 rounded-r-xl bg-surface-container-low shadow-lg p-4 gap-2 sticky top-0 h-screen overflow-y-auto">
+<div class="flex items-center gap-4 mb-8 p-2">
+<img class="w-12 h-12 rounded-full object-cover border-2 border-primary-container/20" data-alt="A professional headshot of a young adult learner with glasses, looking thoughtful, set against a modern, bright educational background with soft lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdCQaAGzwa2RsLl9k9P7lkmlqubme__IUbq0tQOPTfw2oYo9dMA-jbyTg4ouyP3RVIMmVNhx7mp0eGbhO_8KQ6MOzEPdNNFybpIYcoxCCtMrCgHmkHuGBOXw-m0YcKOn0YbSJ148RqhSNCMBj5VqAxl-Woo-wNbfxvyV-WMnLRtNki5nHq5xM9HTlhdtaeB6_WSkjbxybDyjz179Ub4U4elNyj9Hhbfx83IsSHZhtW9zDkbmLX_2-_"/>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">DreamLexi</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Academic Explorer</p>
+<p class="font-label-sm text-label-sm text-secondary-container">1,240 Words Mastered</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 p-3 bg-primary-container text-on-primary-container font-bold rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span>Profile</span>
+</a>
+<a class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Preferences</span>
+</a>
+<a class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">database</span>
+<span>Corpus Settings</span>
+</a>
+<a class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span>AI Tutor History</span>
+</a>
+<a class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span>Achievements</span>
+</a>
+</nav>
+<div class="mt-auto pt-4">
+<a class="flex items-center gap-4 p-3 text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col pb-24 md:pb-8 w-full max-w-container-max mx-auto">
+<!-- Mobile TopAppBar (Hidden on Desktop) -->
+<header class="md:hidden flex justify-between items-center px-gutter h-16 w-full top-0 sticky bg-surface z-40">
+<button class="text-primary hover:bg-surface-container-low transition-colors rounded-full p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">DreamLexi</h1>
+<img class="w-8 h-8 rounded-full bg-surface-variant object-cover" data-alt="A small circular avatar placeholder showing a generic profile silhouette in a light modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUHrseOlhJbm_08vjUUxW4gpkJiFkFFllyqh4RVNUyszu6UctlEp59EMMv0DoMVnygGKrT77P2S35DE2PFp4zn_ANz6QIv1MUawpsiAbRP9C7W0HHHSqsUlsO6zt6u8D4gMwp6hpVmDmnqYvxl6AsVa4NdmQedv4-0A9TxPzRlkpaWbI8mVYgzYDDjd7nUz_xvcbvM1fH8D_woeTYCw5VllW6Xs0eOX03HhIqFpXCYRY8x_e5RRzQt"/>
+</header>
+<!-- Scrollable Content Canvas -->
+<div class="flex-1 px-margin-mobile md:px-margin-desktop py-6 space-y-8">
+<!-- Welcome Header -->
+<section class="space-y-2">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-primary">Welcome back, Scholar</h2>
+<p class="font-body-lg text-on-surface-variant">Ready to expand your academic lexicon today?</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Today's Discovery (Hero Card) -->
+<article class="col-span-1 md:col-span-8 bg-surface-container-lowest rounded-xl border border-primary-container/10 p-6 md:p-8 hover:shadow-[0px_4px_20px_rgba(29,53,87,0.08)] transition-shadow relative overflow-hidden group">
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at top right, var(--color-primary-container), transparent 50%);"></div>
+<div class="relative z-10 flex flex-col h-full">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-primary-container text-on-primary-container font-label-sm px-3 py-1 rounded-full uppercase tracking-wider">Today's Discovery</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">bookmark_border</span>
+</button>
+</div>
+<div class="mb-8">
+<h3 class="text-5xl md:text-6xl font-bold text-primary mb-2 tracking-tight">Empirical</h3>
+<p class="font-body-lg text-secondary-container mb-4">/əmˈpirik(ə)l/</p>
+<p class="font-body-md text-on-surface-variant italic mb-4">Adjective</p>
+<p class="font-body-lg text-on-surface max-w-2xl leading-relaxed">Based on, concerned with, or verifiable by observation or experience rather than theory or pure logic.</p>
+</div>
+<div class="mt-auto">
+<h4 class="font-label-lg text-primary mb-2">Usage in Context:</h4>
+<div class="bg-surface-variant/50 p-4 rounded-lg border-l-4 border-secondary-container">
+<p class="font-body-md text-on-surface italic">"The researchers provided strong <span class="font-bold text-primary">empirical</span> evidence to support their hypothesis regarding climate change patterns."</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Active Learning Progress -->
+<article class="col-span-1 md:col-span-4 bg-surface-container-lowest rounded-xl border border-primary-container/10 p-6 flex flex-col hover:shadow-[0px_4px_20px_rgba(29,53,87,0.08)] transition-shadow">
+<h3 class="font-headline-sm text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container">trending_up</span>
+                        Active Learning
+                    </h3>
+<div class="flex-1 flex flex-col justify-center items-center">
+<div class="relative w-32 h-32 mb-4">
+<!-- Circular Progress Indicator -->
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-primary-container/10" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
+<path class="text-secondary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-headline-lg text-primary">75%</span>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant text-center">Module: Advanced Methodology</p>
+<p class="font-label-sm text-primary-container/60 mt-1 text-center">3 lessons remaining</p>
+</div>
+<button class="mt-6 w-full bg-primary-container text-on-primary-container font-label-lg py-3 rounded-lg hover:bg-primary-container/90 transition-colors flex justify-center items-center gap-2">
+                        Resume Lesson
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</article>
+<!-- Suggested Expressions -->
+<article class="col-span-1 md:col-span-6 bg-surface-container-lowest rounded-xl border border-primary-container/10 p-6 hover:shadow-[0px_4px_20px_rgba(29,53,87,0.08)] transition-shadow">
+<h3 class="font-headline-sm text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container">lightbulb</span>
+                        Suggested Expressions
+                    </h3>
+<div class="space-y-3">
+<div class="p-3 bg-surface rounded-lg border border-primary-container/5 hover:border-primary-container/20 transition-colors cursor-pointer group">
+<div class="flex justify-between items-center mb-1">
+<h4 class="font-label-lg text-primary group-hover:text-secondary-container transition-colors">In light of</h4>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm px-2 py-0.5 rounded text-[10px]">Transition</span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">Considering or taking into account.</p>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-primary-container/5 hover:border-primary-container/20 transition-colors cursor-pointer group">
+<div class="flex justify-between items-center mb-1">
+<h4 class="font-label-lg text-primary group-hover:text-secondary-container transition-colors">Notwithstanding</h4>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm px-2 py-0.5 rounded text-[10px]">Concession</span>
+</div>
+<p class="font-body-md text-on-surface-variant text-sm">In spite of; despite.</p>
+</div>
+</div>
+</article>
+<!-- Call to Action -->
+<article class="col-span-1 md:col-span-6 bg-primary text-on-primary rounded-xl p-6 flex flex-col justify-center items-center text-center relative overflow-hidden group">
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px);"></div>
+<div class="relative z-10 w-full max-w-sm">
+<h3 class="font-headline-md mb-2">Dive Deeper</h3>
+<p class="font-body-md text-inverse-primary mb-6">Search our extensive academic corpus to find precise vocabulary for your next paper.</p>
+<button class="w-full bg-secondary-container text-on-secondary-container font-label-lg py-3 rounded-lg hover:bg-secondary-container/90 transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined">search</span>
+                            Continue Exploring
+                        </button>
+</div>
+</article>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-surface px-4 z-50 shadow-sm border-t-0">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-[10px] mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-5 py-1" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-sm text-[10px] mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-5 py-1" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-[10px] mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-5 py-1" href="#">
+<span class="material-symbols-outlined">book_5</span>
+<span class="font-label-sm text-[10px] mt-1">Notebook</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors px-5 py-1" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-[10px] mt-1">Analytics</span>
+</a>
+</nav>
+</body></html>

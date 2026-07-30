@@ -1,0 +1,291 @@
+[
+  {
+    "id": 1,
+    "keyword": "research",
+    "mwe": "carry out research",
+    "mwe_type": "collocation",
+    "sentence": "The scientists decided to carry out research on the new virus variant.",
+    "left_context": "The scientists decided to ",
+    "right_context": " on the new virus variant.",
+    "translation": "tiến hành nghiên cứu",
+    "definition": "To do or complete a detailed study of a subject.",
+    "collocates": ["carry out", "conduct", "extensive", "previous", "future"],
+    "meaning_options": [
+      { "text": "Hủy bỏ một dự án", "isCorrect": false },
+      { "text": "Tiến hành nghiên cứu", "isCorrect": true },
+      { "text": "Sao chép tài liệu", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 2,
+    "keyword": "research",
+    "mwe": "conduct research",
+    "mwe_type": "collocation",
+    "sentence": "It is necessary to conduct research before making a final decision.",
+    "left_context": "It is necessary to ",
+    "right_context": " before making a final decision.",
+    "translation": "thực hiện nghiên cứu",
+    "definition": "To organize and perform a particular activity (research).",
+    "collocates": ["conduct", "carry out", "extensive", "previous", "future"],
+    "meaning_options": [
+      { "text": "Thực hiện nghiên cứu", "isCorrect": true },
+      { "text": "Đưa ra quyết định", "isCorrect": false },
+      { "text": "Lên lịch họp", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 3,
+    "keyword": "research",
+    "mwe": "extensive research",
+    "mwe_type": "collocation",
+    "sentence": "After extensive research, the team published their findings in a major journal.",
+    "left_context": "After ",
+    "right_context": ", the team published their findings in a major journal.",
+    "translation": "nghiên cứu sâu rộng",
+    "definition": "Research covering a large area; having a great range.",
+    "collocates": ["extensive", "carry out", "conduct", "previous", "future"],
+    "meaning_options": [
+      { "text": "Nghiên cứu qua loa", "isCorrect": false },
+      { "text": "Trì hoãn nghiên cứu", "isCorrect": false },
+      { "text": "Nghiên cứu sâu rộng", "isCorrect": true }
+    ]
+  },
+  {
+    "id": 4,
+    "keyword": "conclusions",
+    "mwe": "draw conclusions",
+    "mwe_type": "collocation",
+    "sentence": "We cannot draw conclusions until all the data has been analyzed.",
+    "left_context": "We cannot ",
+    "right_context": " until all the data has been analyzed.",
+    "translation": "rút ra kết luận",
+    "definition": "To consider the facts of a situation and make a decision about what is true.",
+    "collocates": ["draw", "reach", "jump to", "logical", "valid"],
+    "meaning_options": [
+      { "text": "Bỏ qua dữ liệu", "isCorrect": false },
+      { "text": "Rút ra kết luận", "isCorrect": true },
+      { "text": "Vẽ một bức tranh", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 5,
+    "keyword": "conclusions",
+    "mwe": "reach conclusions",
+    "mwe_type": "collocation",
+    "sentence": "The committee will reach conclusions by the end of the week.",
+    "left_context": "The committee will ",
+    "right_context": " by the end of the week.",
+    "translation": "đạt được kết luận",
+    "definition": "To arrive at a decision or judgment.",
+    "collocates": ["reach", "draw", "jump to", "logical", "valid"],
+    "meaning_options": [
+      { "text": "Đạt được kết luận", "isCorrect": true },
+      { "text": "Phá vỡ thỏa thuận", "isCorrect": false },
+      { "text": "Kết thúc cuộc họp", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 6,
+    "keyword": "consideration",
+    "mwe": "take into consideration",
+    "mwe_type": "phrasal verb",
+    "sentence": "You must take into consideration the cost of living in the city.",
+    "left_context": "You must ",
+    "right_context": " the cost of living in the city.",
+    "translation": "cân nhắc",
+    "definition": "To think carefully about a particular fact when deciding or judging something.",
+    "collocates": ["take into", "careful", "serious", "special", "due"],
+    "meaning_options": [
+      { "text": "Từ chối xem xét", "isCorrect": false },
+      { "text": "Cân nhắc, suy nghĩ kỹ", "isCorrect": true },
+      { "text": "Chấp nhận vô điều kiện", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 7,
+    "keyword": "impact",
+    "mwe": "significant impact",
+    "mwe_type": "collocation",
+    "sentence": "The new policy had a significant impact on the company's revenue.",
+    "left_context": "The new policy had a ",
+    "right_context": " on the company's revenue.",
+    "translation": "tác động đáng kể",
+    "definition": "A powerful or major effect that something has on a situation or person.",
+    "collocates": ["significant", "major", "profound", "positive", "negative"],
+    "meaning_options": [
+      { "text": "Không có ảnh hưởng", "isCorrect": false },
+      { "text": "Tác động tiêu cực", "isCorrect": false },
+      { "text": "Tác động đáng kể", "isCorrect": true }
+    ]
+  },
+  {
+    "id": 8,
+    "keyword": "impact",
+    "mwe": "profound impact",
+    "mwe_type": "collocation",
+    "sentence": "Her mentor had a profound impact on her career choices.",
+    "left_context": "Her mentor had a ",
+    "right_context": " on her career choices.",
+    "translation": "tác động sâu sắc",
+    "definition": "A very great or intense effect.",
+    "collocates": ["profound", "significant", "major", "positive", "negative"],
+    "meaning_options": [
+      { "text": "Tác động sâu sắc", "isCorrect": true },
+      { "text": "Gây hấn", "isCorrect": false },
+      { "text": "Ảnh hưởng tạm thời", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 9,
+    "keyword": "thumb",
+    "mwe": "rule of thumb",
+    "mwe_type": "idioms",
+    "sentence": "A good rule of thumb is to measure twice and cut once.",
+    "left_context": "A good ",
+    "right_context": " is to measure twice and cut once.",
+    "translation": "nguyên tắc chung",
+    "definition": "A broadly accurate guide or principle, based on experience or practice rather than theory.",
+    "collocates": ["good", "general", "basic", "useful", "apply"],
+    "meaning_options": [
+      { "text": "Quy tắc ngón tay", "isCorrect": false },
+      { "text": "Luật lệ nghiêm ngặt", "isCorrect": false },
+      { "text": "Nguyên tắc chung (dựa trên kinh nghiệm)", "isCorrect": true }
+    ]
+  },
+  {
+    "id": 10,
+    "keyword": "decision",
+    "mwe": "make a decision",
+    "mwe_type": "light verb construction",
+    "sentence": "The committee needs to make a decision by Friday.",
+    "left_context": "The committee needs to ",
+    "right_context": " by Friday.",
+    "translation": "đưa ra quyết định",
+    "definition": "To decide on something.",
+    "collocates": ["make", "final", "important", "difficult", "tough"],
+    "meaning_options": [
+      { "text": "Tạo ra một thứ gì đó", "isCorrect": false },
+      { "text": "Đưa ra quyết định", "isCorrect": true },
+      { "text": "Làm việc chăm chỉ", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 11,
+    "keyword": "change",
+    "mwe": "climate change",
+    "mwe_type": "nominal compounds",
+    "sentence": "Climate change is one of the most pressing issues of our time.",
+    "left_context": "",
+    "right_context": " is one of the most pressing issues of our time.",
+    "translation": "biến đổi khí hậu",
+    "definition": "Long-term shifts in temperatures and weather patterns.",
+    "collocates": ["global", "combat", "address", "impact", "effects"],
+    "meaning_options": [
+      { "text": "Sự thay đổi thời tiết", "isCorrect": false },
+      { "text": "Biến đổi khí hậu", "isCorrect": true },
+      { "text": "Nhiệt độ toàn cầu", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 12,
+    "keyword": "hand",
+    "mwe": "on the other hand",
+    "mwe_type": "fixed/institutionalized phrases",
+    "sentence": "He is very smart, but on the other hand, he is quite lazy.",
+    "left_context": "He is very smart, but ",
+    "right_context": ", he is quite lazy.",
+    "translation": "mặt khác",
+    "definition": "Used to introduce a contrasting point of view, fact, or situation.",
+    "collocates": ["however", "but", "although", "while", "whereas"],
+    "meaning_options": [
+      { "text": "Nắm lấy tay", "isCorrect": false },
+      { "text": "Về mặt này", "isCorrect": false },
+      { "text": "Mặt khác (đưa ra ý trái ngược)", "isCorrect": true }
+    ]
+  },
+  {
+    "id": 13,
+    "keyword": "investigation",
+    "mwe": "carry out an investigation",
+    "mwe_type": "collocation",
+    "sentence": "The police will carry out a thorough investigation into the incident.",
+    "left_context": "The police will ",
+    "right_context": " into the incident.",
+    "translation": "tiến hành điều tra",
+    "definition": "To do a detailed or careful examination in order to discover the facts.",
+    "collocates": ["thorough", "police", "independent", "criminal"],
+    "meaning_options": [
+      { "text": "Hủy bỏ điều tra", "isCorrect": false },
+      { "text": "Tiến hành điều tra", "isCorrect": true },
+      { "text": "Che giấu sự việc", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 14,
+    "keyword": "plan",
+    "mwe": "carry out a plan",
+    "mwe_type": "collocation",
+    "sentence": "It took them months to carry out the complex plan successfully.",
+    "left_context": "It took them months to ",
+    "right_context": " successfully.",
+    "translation": "thực hiện kế hoạch",
+    "definition": "To put a plan into action.",
+    "collocates": ["complex", "original", "ambitious", "successfully"],
+    "meaning_options": [
+      { "text": "Lập kế hoạch", "isCorrect": false },
+      { "text": "Phá hỏng kế hoạch", "isCorrect": false },
+      { "text": "Thực hiện kế hoạch", "isCorrect": true }
+    ]
+  },
+  {
+    "id": 15,
+    "keyword": "instructions",
+    "mwe": "carry out instructions",
+    "mwe_type": "collocation",
+    "sentence": "Employees are expected to carry out the manager's instructions without delay.",
+    "left_context": "Employees are expected to ",
+    "right_context": " without delay.",
+    "translation": "thực hiện chỉ thị",
+    "definition": "To do what someone has told you to do.",
+    "collocates": ["manager's", "strict", "explicit", "carefully"],
+    "meaning_options": [
+      { "text": "Bỏ qua hướng dẫn", "isCorrect": false },
+      { "text": "Thực hiện chỉ thị", "isCorrect": true },
+      { "text": "Đưa ra lời khuyên", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 16,
+    "keyword": "threat",
+    "mwe": "carry out a threat",
+    "mwe_type": "collocation",
+    "sentence": "The terrorists threatened to kill the hostages, and tragically, they carried out the threat.",
+    "left_context": "The terrorists threatened to kill the hostages, and tragically, they ",
+    "right_context": ".",
+    "translation": "thực hiện lời đe dọa",
+    "definition": "To do something bad that you have promised or threatened to do.",
+    "collocates": ["empty", "idle", "serious", "terrorist"],
+    "meaning_options": [
+      { "text": "Thực hiện lời đe dọa", "isCorrect": true },
+      { "text": "Rút lại lời đe dọa", "isCorrect": false },
+      { "text": "Bảo vệ nạn nhân", "isCorrect": false }
+    ]
+  },
+  {
+    "id": 17,
+    "keyword": "attack",
+    "mwe": "carry out an attack",
+    "mwe_type": "collocation",
+    "sentence": "The rebel group claimed responsibility for carrying out the devastating attack.",
+    "left_context": "The rebel group claimed responsibility for ",
+    "right_context": " the devastating attack.",
+    "translation": "tiến hành cuộc tấn công",
+    "definition": "To attack somewhere or someone.",
+    "collocates": ["devastating", "terrorist", "surprise", "unprovoked"],
+    "meaning_options": [
+      { "text": "Phòng thủ căn cứ", "isCorrect": false },
+      { "text": "Tiến hành cuộc tấn công", "isCorrect": true },
+      { "text": "Kêu gọi hòa bình", "isCorrect": false }
+    ]
+  }
+]

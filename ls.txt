@@ -1,0 +1,10 @@
+.
+..
+.DS_Store
+dreamlexi-universal
+example data
+git-remote.txt
+ls.txt
+mddl-app
+reading-app
+stitch_lexiflow_ai_corpus_explorer

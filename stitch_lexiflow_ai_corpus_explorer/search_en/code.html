@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DreamLexi - Search</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#1d3557",
+                        "inverse-primary": "#b0c7f1",
+                        "surface-container-low": "#edf6ea",
+                        "surface-container": "#e7f0e5",
+                        "on-secondary-container": "#6f5100",
+                        "tertiary-fixed-dim": "#98cdf2",
+                        "on-tertiary-container": "#6fa4c7",
+                        "on-primary-fixed": "#001b3c",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2a322b",
+                        "on-secondary-fixed": "#261a00",
+                        "tertiary-fixed": "#c7e7ff",
+                        "on-background": "#161d16",
+                        "secondary": "#795900",
+                        "on-surface-variant": "#44474e",
+                        "tertiary-container": "#003953",
+                        "surface-tint": "#485f84",
+                        "on-surface": "#161d16",
+                        "outline-variant": "#c4c6cf",
+                        "primary-fixed-dim": "#b0c7f1",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#002234",
+                        "primary": "#031f41",
+                        "on-secondary-fixed-variant": "#5c4300",
+                        "background": "#f3fcf0",
+                        "surface-dim": "#d4ddd1",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fec330",
+                        "on-primary-fixed-variant": "#30476a",
+                        "inverse-on-surface": "#eaf3e7",
+                        "on-tertiary-fixed": "#001e2e",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#dce5d9",
+                        "outline": "#74777f",
+                        "on-primary-container": "#879ec6",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#064c6b",
+                        "surface-container-high": "#e2ebdf",
+                        "primary-fixed": "#d5e3ff",
+                        "surface": "#f3fcf0",
+                        "surface-bright": "#f3fcf0",
+                        "secondary-fixed": "#ffdfa0",
+                        "surface-container-highest": "#dce5d9",
+                        "secondary-fixed-dim": "#f8bd2a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist", "sans-serif"],
+                        "label-lg": ["Geist", "sans-serif"],
+                        "headline-md": ["Geist", "sans-serif"],
+                        "headline-lg": ["Geist", "sans-serif"],
+                        "body-lg": ["Geist", "sans-serif"],
+                        "headline-sm": ["Geist", "sans-serif"],
+                        "body-md": ["Geist", "sans-serif"],
+                        "headline-lg-mobile": ["Geist", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen pb-24 md:pb-0">
+<!-- Desktop Sidebar Drawer (NavigationDrawer) -->
+<aside class="hidden md:flex flex-col h-screen fixed left-0 top-0 w-80 rounded-r-xl shadow-lg bg-surface-container-low dark:bg-surface-container-highest p-4 gap-2 z-50">
+<!-- Header -->
+<div class="flex items-center gap-4 mb-6 pt-4 px-2">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Professional headshot of an academic researcher, lit with soft natural light, against a blurred university library background. Modern corporate academic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFivgpQwQBEcB0vIbXbWi1SEgHF63xwQG3eNoyaC1dcBAa6Js3Jit7vmWije6K033xcxREpnNH_OlUQp4Q1nAvqUGERF0xZpGb4m52i3rdVSnkRqjNj2Y-rasmL5-4KoO7yOn5kUSiLNXGOCYQR8jpUiz2jlp8DlU9if6k977D76e44GKuTaHsMNry3wp_EUz6Y3x1-3b38UBAUSaBS1PpyuyZtDZNEZuTxovi5x2MSxvFD-d3AXOk"/>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary">Academic Explorer</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Advanced Level</span>
+<span class="font-label-sm text-label-sm text-outline">1,240 Words Mastered</span>
+</div>
+</div>
+<!-- Navigation Items -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+                Profile
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+                Preferences
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">database</span>
+                Corpus Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">psychology</span>
+                AI Tutor History
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">military_tech</span>
+                Achievements
+            </a>
+<div class="flex-grow"></div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md mt-auto" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+                Logout
+            </a>
+</nav>
+</aside>
+<div class="md:ml-80 flex flex-col min-h-screen">
+<!-- TopAppBar (Mobile) -->
+<header class="md:hidden w-full top-0 sticky bg-surface flex justify-between items-center px-gutter h-16 z-40">
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors p-2 rounded-full active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">DreamLexi</h1>
+<button class="w-8 h-8 rounded-full overflow-hidden hover:bg-surface-container-low transition-colors active:opacity-80 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="Small circular avatar of a professional academic, clean modern lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaNT7l8cy1cwKnMC-QIsRtQr1SVMs98CTlA4wZlVLcYdLn6UvVl23OtIhKHFucxrLh9PblbU2QXzkU_WVOh1yUeXeXrotVenvCmZ7kugGe8MpWDJylb9ysVsiREH2BfAte77k1G-MEYwO-ralQ1LArK8O762CIj3-M807E73oL9aKvUQ4vLlSFBziLOB10iz8BLDgcg8fPnMymBxF5648m8LEQBuqu5PE1BwiNSJ-chUELno9HRKSm"/>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-margin-mobile md:px-margin-desktop py-8 max-w-container-max mx-auto w-full">
+<!-- Hero Search Area -->
+<section class="mb-12 text-center md:text-left flex flex-col items-center md:items-start pt-4 md:pt-12">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-6">Explore the Lexicon</h2>
+<div class="w-full max-w-2xl relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-lowest border-outline-variant/30 rounded-xl font-body-lg text-body-lg text-on-surface placeholder:text-outline focus:ring-2 focus:ring-secondary-container focus:border-secondary-container transition-all shadow-[0_4px_20px_rgba(29,53,87,0.04)] focus:shadow-[0_4px_20px_rgba(29,53,87,0.08)] outline-none" placeholder="Search terminology, concepts, or roots..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-lg text-label-lg hover:bg-primary/90 transition-colors">Search</button>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Left Column: Filters -->
+<aside class="md:col-span-4 flex flex-col gap-6">
+<!-- Academic Focus -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-primary/10">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">category</span>
+                            Academic Focus
+                        </h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full font-label-sm text-label-sm transition-colors border border-primary">Life Sciences</button>
+<button class="px-4 py-2 bg-primary/5 text-on-surface rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors border border-transparent">Social Sciences</button>
+<button class="px-4 py-2 bg-primary/5 text-on-surface rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors border border-transparent">Humanities</button>
+<button class="px-4 py-2 bg-primary/5 text-on-surface rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors border border-transparent">Engineering</button>
+<button class="px-4 py-2 bg-primary/5 text-on-surface rounded-full font-label-sm text-label-sm hover:bg-surface-variant transition-colors border border-transparent">Mathematics</button>
+</div>
+</div>
+<!-- Difficulty Level -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-primary/10">
+<h3 class="font-headline-sm text-headline-sm text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">tune</span>
+                            Complexity Level
+                        </h3>
+<div class="flex flex-col gap-3">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest checked:bg-primary transition-colors" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Undergraduate</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest checked:bg-primary transition-colors" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Graduate / Master</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-outline-variant bg-surface-container-lowest checked:bg-primary transition-colors" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Doctoral / Post-Doc</span>
+</label>
+</div>
+</div>
+</aside>
+<!-- Right Column: Recent & Trending -->
+<div class="md:col-span-8 flex flex-col gap-6">
+<!-- Recent Searches (Bento Style) -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-primary/10">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+                                Recent Searches
+                            </h3>
+<button class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors">Clear All</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Recent Item 1 -->
+<a class="group flex items-start gap-4 p-4 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors border border-transparent hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)]" href="#">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors shrink-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">correlate</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1 mt-1">v. to have a mutual relationship or connection, in which one thing affects or depends on another.</p>
+</div>
+</a>
+<!-- Recent Item 2 -->
+<a class="group flex items-start gap-4 p-4 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors border border-transparent hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)]" href="#">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors shrink-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">hypothesis</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1 mt-1">n. a supposition or proposed explanation made on the basis of limited evidence.</p>
+</div>
+</a>
+<!-- Recent Item 3 -->
+<a class="group flex items-start gap-4 p-4 rounded-lg bg-surface-container hover:bg-surface-variant transition-colors border border-transparent hover:shadow-[0_4px_20px_rgba(29,53,87,0.08)]" href="#">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors shrink-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div>
+<h4 class="font-label-lg text-label-lg text-on-surface">empirical</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1 mt-1">adj. based on, concerned with, or verifiable by observation or experience.</p>
+</div>
+</a>
+</div>
+</div>
+<!-- Trending / Discovery Card -->
+<div class="relative overflow-hidden rounded-xl bg-primary text-on-primary p-8 flex flex-col justify-end min-h-[240px] group cursor-pointer hover:shadow-[0_8px_30px_rgba(29,53,87,0.2)] transition-shadow">
+<!-- Abstract Background Decoration -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary-container/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 group-hover:scale-110 transition-transform duration-700"></div>
+<div class="absolute bottom-0 left-0 w-48 h-48 bg-tertiary-container/30 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4 group-hover:scale-110 transition-transform duration-700"></div>
+<div class="relative z-10">
+<span class="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container font-label-sm text-label-sm rounded-full mb-4">Trending Concept</span>
+<h3 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg mb-2">Epistemology</h3>
+<p class="font-body-lg text-body-lg text-inverse-primary max-w-lg mb-6">The theory of knowledge, especially with regard to its methods, validity, and scope, and the distinction between justified belief and opinion.</p>
+<div class="flex items-center gap-2 font-label-lg text-label-lg text-secondary-fixed hover:text-secondary-fixed-dim transition-colors w-max">
+                                Explore Concept <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-surface shadow-sm z-50 px-4 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">hub</span>
+<span class="font-label-sm text-label-sm mt-1">Explore</span>
+</a>
+<!-- Active Search Tab -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">book_5</span>
+<span class="font-label-sm text-label-sm mt-1">Notebook</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Analytics</span>
+</a>
+</nav>
+<!-- Support for safe area padding on modern mobile browsers -->
+<style>
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+    </style>
+</body></html>

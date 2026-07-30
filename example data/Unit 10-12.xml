@@ -1,0 +1,2842 @@
+<text id="dialogue1">
+  <s>
+    <w pos="UH">﻿Hello</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Grandma</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="UH">Oh</w>
+    <w pos="UH">hi</w>
+    <w pos=",">,</w>
+    <w pos="NP1">Mark</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Im</w>
+    <w pos="JJ">glad</w>
+    <w pos="NN1">youre</w>
+    <w pos="RL">here</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="VM">Can</w>
+    <w pos="PPY">you</w>
+    <w pos="VVI">help</w>
+    <w pos="PPIO1">me</w>
+    <w pos="NN1">increase</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">font</w>
+    <w pos="NN1">size</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="DD1">this</w>
+    <w pos="NN1">text</w>
+    <w pos="II">on</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">laptop</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="APPGE">Its</w>
+    <w pos="RG">too</w>
+    <w pos="JJ">small</w>
+    <w pos="IF">for</w>
+    <w pos="PPIO1">me</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">read</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Let</w>
+    <w pos="PPIO1">me</w>
+    <w pos="VVI">show</w>
+    <w pos="PPY">you</w>
+    <w pos="PPY">You</w>
+    <w pos="VV0">need</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">press</w>
+    <w pos="DD2">these</w>
+  </s>
+  <s>
+    <w pos="MC">two</w>
+    <w pos="NN2">keys</w>
+    <w pos="RL">together</w>
+    <w pos="VV0">See</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="APPGE">Its</w>
+    <w pos="JJ">easy</w>
+    <w pos=",">,</w>
+    <w pos="VV0">isnt</w>
+    <w pos="PPH1">it</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="PPH1">It</w>
+    <w pos="VVZ">works</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="NN2">Everythings</w>
+    <w pos="RG">so</w>
+    <w pos="JJ">easy</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">read</w>
+    <w pos="RT">now</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NN2">Thanks</w>
+    <w pos=",">,</w>
+    <w pos="UH">dear</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS1">I</w>
+    <w pos="RR">still</w>
+    <w pos="VH0">have</w>
+    <w pos="NN1">trouble</w>
+    <w pos="VVG">using</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">laptop</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VV0">know</w>
+    <w pos=",">,</w>
+    <w pos="APPGE">its</w>
+    <w pos="JJ">taken</w>
+    <w pos="PPIO1">me</w>
+    <w pos="RG">so</w>
+    <w pos="DA1">much</w>
+    <w pos="NNT1">time</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">learn</w>
+    <w pos="NN1">computer</w>
+    <w pos="NN2">skills</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VVZ">Thats</w>
+    <w pos="JJ">fine</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Grandma</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="APPGE">My</w>
+    <w pos="NN1">teacher</w>
+    <w pos="VVZ">says</w>
+    <w pos="APPGE">its</w>
+    <w pos="RR">never</w>
+    <w pos="RG">too</w>
+    <w pos="JJ">late</w>
+    <w pos="TO">to</w>
+  </s>
+  <s>
+    <w pos="VVI">learn</w>
+    <w pos="PN1">something</w>
+    <w pos="JJ">new</w>
+    <w pos=",">,</w>
+    <w pos="RR">especially</w>
+    <w pos="JJ">new</w>
+    <w pos="NN1">technology</w>
+    <w pos=",">,</w>
+  </s>
+  <s>
+    <w pos="CS">because</w>
+    <w pos="APPGE">its</w>
+    <w pos="RR">rapidly</w>
+    <w pos="VVG">developing</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NN1">Grandma</w>
+    <w pos=",">,</w>
+    <w pos="NN1">youve</w>
+    <w pos="VVD">typed</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">lot</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">text</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="DDQ">What</w>
+    <w pos="VBR">are</w>
+    <w pos="PPY">you</w>
+    <w pos="VVG">working</w>
+    <w pos="RP">on</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="RR">Well</w>
+    <w pos=",">,</w>
+    <w pos="VV0">Im</w>
+    <w pos="VVG">writing</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">summary</w>
+    <w pos="IO">of</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">book</w>
+    <w pos="NN1">Ive</w>
+  </s>
+  <s>
+    <w pos="VVD">read</w>
+    <w pos="RR">recently</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VV0">see</w>
+    <w pos=",">,</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">doctor</w>
+    <w pos="VVD">advised</w>
+    <w pos="PPIO1">me</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">read</w>
+  </s>
+  <s>
+    <w pos="AT1">every</w>
+    <w pos="NNT1">day</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">boost</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">memory</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CC">And</w>
+    <w pos="PPIS1">I</w>
+    <w pos="VV0">want</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">brush</w>
+    <w pos="RP">up</w>
+    <w pos="II">on</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">French</w>
+  </s>
+  <s>
+    <w pos="CS">before</w>
+    <w pos="PPIS1">I</w>
+    <w pos="VV0">visit</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">friend</w>
+    <w pos="II">in</w>
+    <w pos="NP1">Paris</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Youre</w>
+    <w pos="JJ">amazing</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Grandma</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="VVG">Learning</w>
+    <w pos="NN2">languages</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">improve</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">thinking</w>
+  </s>
+  <s>
+    <w pos="NN2">skills</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="APPGE">Our</w>
+    <w pos="NN1">language</w>
+    <w pos="NN1">teacher</w>
+    <w pos="VHZ">has</w>
+    <w pos="RR">also</w>
+    <w pos="VVN">asked</w>
+    <w pos="PPIO2">us</w>
+    <w pos="TO">to</w>
+  </s>
+  <s>
+    <w pos="VVI">try</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">maintain</w>
+    <w pos="APPGE">our</w>
+    <w pos="NN1">language</w>
+    <w pos="NN2">skills</w>
+    <w pos="II">after</w>
+  </s>
+  <s>
+    <w pos="VVG">leaving</w>
+    <w pos="NN1">school</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VD0">Do</w>
+    <w pos="PPY">you</w>
+    <w pos="VVI">know</w>
+    <w pos="CST">that</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">use</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">Internet</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">learn</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">language</w>
+    <w pos="CC">or</w>
+    <w pos="VV0">watch</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">news</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="RR">Really</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="DD1">This</w>
+    <w pos="VM">could</w>
+    <w pos="VVI">help</w>
+    <w pos="PPIO1">me</w>
+    <w pos="NN1">stay</w>
+    <w pos="VVN">informed</w>
+    <w pos="II">about</w>
+    <w pos="JJ">current</w>
+  </s>
+  <s>
+    <w pos="NN2">events</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VM">Can</w>
+    <w pos="PPY">you</w>
+    <w pos="VVI">show</w>
+    <w pos="PPIO1">me</w>
+    <w pos="DD">some</w>
+    <w pos="NN1">news</w>
+    <w pos="NN2">sites</w>
+    <w pos="CS">after</w>
+    <w pos="PPIS1">I</w>
+  </s>
+  <s>
+    <w pos="VV0">finish</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">book</w>
+    <w pos="NN1">summary</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="AT">No</w>
+    <w pos="NN1">problem</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Grandma</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CCB">But</w>
+    <w pos="RRQ">why</w>
+    <w pos="VD0">do</w>
+    <w pos="PPY">you</w>
+    <w pos="VHI">have</w>
+    <w pos="TO">to</w>
+    <w pos="NN1">type</w>
+    <w pos="PPH1">it</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="APPGE">Its</w>
+    <w pos="IF">for</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">reading</w>
+    <w pos="NN1">club</w>
+    <w pos="NN1">Ive</w>
+    <w pos="RR">just</w>
+    <w pos="VVN">joined</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="AT">The</w>
+    <w pos="NN1">club</w>
+    <w pos="NN1">leader</w>
+    <w pos="VVZ">encourages</w>
+    <w pos="PPIO2">us</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">prepare</w>
+    <w pos="APPGE">our</w>
+  </s>
+  <s>
+    <w pos="NN1">book</w>
+    <w pos="NN2">reports</w>
+    <w pos="CC">and</w>
+    <w pos="VVI">share</w>
+    <w pos="PPHO2">them</w>
+    <w pos="IW">with</w>
+    <w pos="DB">all</w>
+    <w pos="NN2">members</w>
+  </s>
+  <s>
+    <w pos="II">in</w>
+    <w pos="NN1">advance</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VBR">Are</w>
+    <w pos="DB">all</w>
+    <w pos="NN1">club</w>
+    <w pos="NN2">members</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">age</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="UH">No</w>
+    <w pos=",">,</w>
+    <w pos="NN1">therere</w>
+    <w pos="DD">some</w>
+    <w pos="JJ">young</w>
+    <w pos="NN">people</w>
+    <w pos="RR21">as</w>
+    <w pos="RR22">well</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VBR">Are</w>
+    <w pos="PPY">you</w>
+    <w pos="JJ">interested</w>
+    <w pos="II">in</w>
+    <w pos="VVG">joining</w>
+    <w pos="AT">the</w>
+    <w pos="MD">next</w>
+    <w pos="NN1">meeting</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="UH">Yes</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Id</w>
+    <w pos="NN1">love</w>
+    <w pos="II">to</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="RR">OK</w>
+    <w pos=",">,</w>
+    <w pos="NP1">Ill</w>
+    <w pos="VVD">put</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">name</w>
+    <w pos="II">on</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">list</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="NN2">attendees</w>
+    <w pos="RT">then</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II">After</w>
+    <w pos="VVG">typing</w>
+    <w pos="RP">up</w>
+    <w pos="APPGE">her</w>
+    <w pos="NN1">book</w>
+    <w pos="NN1">report</w>
+    <w pos=",">,</w>
+    <w pos="NP1">Marks</w>
+  </s>
+  <s>
+    <w pos="NN1">grandma</w>
+    <w pos="VM">will</w>
+    <w pos="VVI">learn</w>
+    <w pos="RRQ">how</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">make</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">text</w>
+    <w pos="NN1">size</w>
+  </s>
+  <s>
+    <w pos="JJR">bigger</w>
+    <w pos="II">on</w>
+    <w pos="APPGE">her</w>
+    <w pos="NN1">laptop</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Mark</w>
+    <w pos="VVZ">wants</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">attend</w>
+    <w pos="AT">the</w>
+    <w pos="MD">next</w>
+    <w pos="NN1">meeting</w>
+    <w pos="IO">of</w>
+    <w pos="APPGE">his</w>
+  </s>
+  <s>
+    <w pos="NN2">grandmas</w>
+    <w pos="VVG">reading</w>
+    <w pos="NN1">club</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">make</w>
+    <w pos="PN1">something</w>
+    <w pos="VVN">become</w>
+    <w pos="RRR">better</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">practise</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="RR">quickly</w>
+    <w pos="VVI">improve</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">skill</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">knowledge</w>
+    <w pos="IO">of</w>
+    <w pos="PN1">something</w>
+  </s>
+  <s>
+    <w pos="VVD">learnt</w>
+    <w pos="II">in</w>
+    <w pos="AT">the</w>
+    <w pos="JJ">past</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">make</w>
+    <w pos="PN1">something</w>
+    <w pos="VVI">continue</w>
+  </s>
+  <s>
+    <w pos="II">at</w>
+    <w pos="AT">the</w>
+    <w pos="DA">same</w>
+    <w pos="NN1">level</w>
+    <w pos="VHG">having</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">lot</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">knowledge</w>
+  </s>
+  <s>
+    <w pos="II">about</w>
+    <w pos="PN1">something</w>
+    <w pos="AT">The</w>
+    <w pos="NN1">doctor</w>
+    <w pos="IO">of</w>
+    <w pos="NP1">Marks</w>
+    <w pos="NN1">grandma</w>
+  </s>
+  <s>
+    <w pos="VVD">advised</w>
+    <w pos="PPHO1">her</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">read</w>
+    <w pos="AT1">every</w>
+    <w pos="NNT1">day</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">boost</w>
+  </s>
+  <s>
+    <w pos="APPGE">her</w>
+    <w pos="NN1">memory</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Marks</w>
+    <w pos="NN1">language</w>
+    <w pos="NN1">teacher</w>
+    <w pos="VHZ">has</w>
+    <w pos="VVN">asked</w>
+    <w pos="PPHO1">him</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">try</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">maintain</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">language</w>
+    <w pos="NN2">skills</w>
+    <w pos="II">after</w>
+    <w pos="VVG">leaving</w>
+  </s>
+  <s>
+    <w pos="NN1">school</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="AT">The</w>
+    <w pos="NN1">club</w>
+    <w pos="NN1">leader</w>
+    <w pos="VVZ">encourages</w>
+    <w pos="NN2">members</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">prepare</w>
+  </s>
+  <s>
+    <w pos="APPGE">their</w>
+    <w pos="NN1">book</w>
+    <w pos="VVZ">reports</w>
+    <w pos="II">in</w>
+    <w pos="NN1">advance</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Marks</w>
+    <w pos="NN1">grandma</w>
+    <w pos="VVD">offered</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">put</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">name</w>
+    <w pos="II">on</w>
+  </s>
+  <s>
+    <w pos="AT">the</w>
+    <w pos="NN1">list</w>
+    <w pos="IO">of</w>
+    <w pos="NNU">attendees.</w>
+    <w pos="NNT1">night</w>
+    <w pos=":">:</w>
+    <w pos="JJ">rounded</w>
+    <w pos=";">;</w>
+    <w pos="VHG">having</w>
+  </s>
+  <s>
+    <w pos="AT1">a</w>
+    <w pos="NN1">variety</w>
+    <w pos="IO">of</w>
+    <w pos="NN2">experiences</w>
+    <w pos="CC">and</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">range</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="NN2">skills</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">interests</w>
+    <w pos="NN1">distance</w>
+    <w pos=":">:</w>
+    <w pos="NN1">education</w>
+    <w pos=";">;</w>
+  </s>
+  <s>
+    <w pos="NN1">education</w>
+    <w pos="IF">for</w>
+    <w pos="NN2">adults</w>
+    <w pos="CST">that</w>
+    <w pos="VBZ">is</w>
+    <w pos="JJ">available</w>
+    <w pos="JJ">outside</w>
+  </s>
+  <s>
+    <w pos="NN2">schools</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">universities</w>
+    <w pos="RR">well</w>
+    <w pos=":">:</w>
+    <w pos="NN1">school</w>
+    <w pos=";">;</w>
+    <w pos="NN2">classes</w>
+  </s>
+  <s>
+    <w pos="IF">for</w>
+    <w pos="NN2">adults</w>
+    <w pos=",">,</w>
+    <w pos="VVN">held</w>
+    <w pos="II">in</w>
+    <w pos="AT">the</w>
+    <w pos="NNT1">evening</w>
+    <w pos="NN1">learning</w>
+    <w pos=":">:</w>
+  </s>
+  <s>
+    <w pos="NN1">learning</w>
+    <w pos=";">;</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">method</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">education</w>
+    <w pos="II">in</w>
+    <w pos="DDQ">which</w>
+  </s>
+  <s>
+    <w pos="NN">people</w>
+    <w pos="NN1">study</w>
+    <w pos="II">at</w>
+    <w pos="NN1">home</w>
+    <w pos="CC">and</w>
+    <w pos="VV0">send</w>
+    <w pos="APPGE">their</w>
+    <w pos="NN1">work</w>
+    <w pos="II">to</w>
+  </s>
+  <s>
+    <w pos="APPGE">their</w>
+    <w pos="NN2">teachers</w>
+    <w pos="NN1">adult</w>
+    <w pos=":">:</w>
+    <w pos="NN1">community</w>
+    <w pos=";">;</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">group</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="NN2">learners</w>
+    <w pos="PNQS">who</w>
+    <w pos="VV0">share</w>
+    <w pos="VVG">learning</w>
+    <w pos="NN2">goals</w>
+    <w pos="CC">and</w>
+    <w pos="RR">often</w>
+  </s>
+  <s>
+    <w pos="VV0">connect</w>
+    <w pos="IW">with</w>
+    <w pos="PPX121">one</w>
+    <w pos="PPX122">another</w>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="VM">can</w>
+  </s>
+  <s>
+    <w pos="VVI">help</w>
+    <w pos="PPY">you</w>
+    <w pos="VVI">become</w>
+    <w pos="AT1">a(n)</w>
+    <w pos="JJ">rounded</w>
+    <w pos="NN1">person</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Continuing</w>
+    <w pos="NN1">education</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">distance</w>
+    <w pos="NN1">learning</w>
+    <w pos="VVZ">helps</w>
+  </s>
+  <s>
+    <w pos="NN">people</w>
+    <w pos="VVI">keep</w>
+    <w pos="APPGE">their</w>
+    <w pos="NN1">knowledge</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">skills</w>
+    <w pos="JJ31">up</w>
+    <w pos="JJ32">to</w>
+  </s>
+  <s>
+    <w pos="JJ33">date</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CSA">As</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">mother</w>
+    <w pos="VVN">worked</w>
+    <w pos="II">during</w>
+    <w pos="AT">the</w>
+    <w pos="NNT1">day</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">she</w>
+  </s>
+  <s>
+    <w pos="VVD">went</w>
+    <w pos="II">to</w>
+    <w pos="NNT1">night</w>
+    <w pos="NN1">school</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">get</w>
+    <w pos="JJ">nursing</w>
+  </s>
+  <s>
+    <w pos="NN2">qualifications</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VVG">Joining</w>
+    <w pos="AT1">an</w>
+    <w pos="NN1">adult</w>
+    <w pos="NN1">learning</w>
+    <w pos="NN1">community</w>
+    <w pos="VBZ">is</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">great</w>
+  </s>
+  <s>
+    <w pos="NN1">way</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">meet</w>
+    <w pos="NN">people</w>
+    <w pos="IW">with</w>
+    <w pos="JJ">similar</w>
+    <w pos="NN2">interests</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II21">Thanks</w>
+    <w pos="II22">to</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">power</w>
+    <w pos="IO">of</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">Internet</w>
+    <w pos=",">,</w>
+    <w pos="JJ">remote</w>
+  </s>
+  <s>
+    <w pos="NN1">learning</w>
+    <w pos="VHZ">has</w>
+    <w pos="VVN">become</w>
+    <w pos="RG">very</w>
+    <w pos="JJ">popular</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II">In</w>
+    <w pos="AT1">a</w>
+    <w pos="DA2">few</w>
+    <w pos="NNT2">weeks</w>
+    <w pos="NNT1">time</w>
+    <w pos=",">,</w>
+    <w pos="VV0">youll</w>
+    <w pos="VV0">complete</w>
+    <w pos="APPGE">your</w>
+  </s>
+  <s>
+    <w pos="JJ">secondary</w>
+    <w pos="NN1">education</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="DD">Some</w>
+    <w pos="IO">of</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">may</w>
+    <w pos="VHI">have</w>
+    <w pos="RR">already</w>
+    <w pos="VVN">made</w>
+    <w pos="NN2">plans</w>
+    <w pos="IF">for</w>
+  </s>
+  <s>
+    <w pos="VVG">continuing</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN2">studies</w>
+    <w pos="II">at</w>
+    <w pos="NN1">university</w>
+    <w pos="CC">or</w>
+    <w pos="JJ">vocational</w>
+  </s>
+  <s>
+    <w pos="NN1">school</w>
+    <w pos=",">,</w>
+    <w pos="CS">while</w>
+    <w pos="NN2">others</w>
+    <w pos="VM">may</w>
+    <w pos="VVI">wish</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">start</w>
+    <w pos="VVG">working</w>
+  </s>
+  <s>
+    <w pos="RR">right</w>
+    <w pos="RL">away</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="DDQV">Whatever</w>
+    <w pos="NN1">choice</w>
+    <w pos="PPY">you</w>
+    <w pos="VV0">make</w>
+    <w pos=",">,</w>
+    <w pos="VV0">remember</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">keep</w>
+  </s>
+  <s>
+    <w pos="RP">on</w>
+    <w pos="VVG">learning</w>
+    <w pos="JJ">new</w>
+    <w pos="NN1">knowledge</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">skills</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Havent</w>
+    <w pos="PPIS2">we</w>
+    <w pos="VVD">learnt</w>
+    <w pos="RR">enough</w>
+    <w pos="II">in</w>
+    <w pos="JJ">secondary</w>
+    <w pos="NN1">school</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="DA2">many</w>
+    <w pos="VM">may</w>
+    <w pos="VVI">wonder</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II">In</w>
+    <w pos="NN1">fact</w>
+    <w pos=",">,</w>
+    <w pos="NN1">learning</w>
+    <w pos="VDZ">does</w>
+    <w pos="XX">not</w>
+    <w pos="VVI">stop</w>
+    <w pos="II">after</w>
+  </s>
+  <s>
+    <w pos="NN1">graduation</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPH1">It</w>
+    <w pos="VBZ">is</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">process</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPH1">It</w>
+    <w pos="VVZ">involves</w>
+    <w pos="VVG">creating</w>
+    <w pos="CC">and</w>
+    <w pos="VVG">maintaining</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">positive</w>
+  </s>
+  <s>
+    <w pos="NN1">attitude</w>
+    <w pos="II">to</w>
+    <w pos="VVG">learning</w>
+    <w pos="IF">for</w>
+    <w pos="DB2">both</w>
+    <w pos="JJ">professional</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="JJ">personal</w>
+    <w pos="NN1">development</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="VBZ">is</w>
+    <w pos="RR">especially</w>
+    <w pos="JJ">relevant</w>
+    <w pos="II">in</w>
+    <w pos="NN2">todays</w>
+  </s>
+  <s>
+    <w pos="VVG">changing</w>
+    <w pos="NN1">world</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPH1">It</w>
+    <w pos="VVZ">allows</w>
+    <w pos="PPY">you</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">adapt</w>
+    <w pos="II">to</w>
+    <w pos="NN2">changes</w>
+    <w pos="II">in</w>
+    <w pos="AT">the</w>
+  </s>
+  <s>
+    <w pos="JJ">modern</w>
+    <w pos="NN1">workplace</w>
+    <w pos="CC">and</w>
+    <w pos="VVZ">widens</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">employment</w>
+  </s>
+  <s>
+    <w pos="NN2">opportunities</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPH1">It</w>
+    <w pos="VVZ">helps</w>
+    <w pos="PPY">you</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">make</w>
+    <w pos="RRR">better</w>
+    <w pos=",">,</w>
+    <w pos="VVD">informed</w>
+  </s>
+  <s>
+    <w pos="NN2">decisions</w>
+    <w pos="CC">and</w>
+    <w pos="VVI">become</w>
+    <w pos="AT1">a</w>
+    <w pos="RGR">more</w>
+    <w pos="JJ">well-rounded</w>
+    <w pos="NN1">individual</w>
+  </s>
+  <s>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="RR21">In</w>
+    <w pos="RR22">addition</w>
+    <w pos=",">,</w>
+    <w pos="PPH1">it</w>
+    <w pos="VVZ">keeps</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">brain</w>
+    <w pos="JJ">healthy</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="VVZ">boosts</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">memory</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="RR">also</w>
+    <w pos="VVZ">helps</w>
+    <w pos="PPY">you</w>
+    <w pos="VVI">stay</w>
+    <w pos="JJ">connected</w>
+  </s>
+  <s>
+    <w pos="IW">with</w>
+    <w pos="JJ">modern</w>
+    <w pos="NN2">ideas</w>
+    <w pos="CC">and</w>
+    <w pos="VVI">meet</w>
+    <w pos="JJ">new</w>
+    <w pos="NN">people</w>
+    <w pos="CSA">as</w>
+    <w pos="PPY">you</w>
+  </s>
+  <s>
+    <w pos="VV0">participate</w>
+    <w pos="II">in</w>
+    <w pos="JJ">various</w>
+    <w pos="NN2">forms</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">adult</w>
+    <w pos="NN1">education</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VDZ">Does</w>
+    <w pos="DD1">that</w>
+    <w pos="JJ">mean</w>
+    <w pos="PPIS1">I</w>
+    <w pos="VH0">have</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">go</w>
+    <w pos="II">to</w>
+    <w pos="NN2">classes</w>
+  </s>
+  <s>
+    <w pos="RT">again</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="AT">The</w>
+    <w pos="NN1">answer</w>
+    <w pos="VBZ">is</w>
+    <w pos="UH">yes</w>
+    <w pos="CC">and</w>
+    <w pos="UH">no</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="UH">Yes</w>
+    <w pos=",">,</w>
+    <w pos="CS">because</w>
+    <w pos="CS">when</w>
+    <w pos="PPY">you</w>
+    <w pos="VV0">start</w>
+    <w pos="VVG">working</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">may</w>
+  </s>
+  <s>
+    <w pos="VVI">decide</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">go</w>
+    <w pos="II">to</w>
+    <w pos="NNT1">night</w>
+    <w pos="NN1">school</w>
+    <w pos="CC">or</w>
+    <w pos="VV0">enrol</w>
+    <w pos="II">on</w>
+  </s>
+  <s>
+    <w pos="AT1">a</w>
+    <w pos="NN1">distance</w>
+    <w pos="NN1">learning</w>
+    <w pos="NN1">course</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">learn</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">skill</w>
+  </s>
+  <s>
+    <w pos="CC">or</w>
+    <w pos="VV0">get</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">degree</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="AT">The</w>
+    <w pos="NN1">answer</w>
+    <w pos="VBZ">is</w>
+    <w pos="RR">also</w>
+    <w pos="UH">No</w>
+    <w pos=",">,</w>
+    <w pos="CS">because</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+  </s>
+  <s>
+    <w pos="VVZ">happens</w>
+    <w pos="DB">all</w>
+    <w pos="AT">the</w>
+    <w pos="NNT1">time</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CS31">As</w>
+    <w pos="CS32">long</w>
+    <w pos="CS33">as</w>
+    <w pos="PPY">you</w>
+    <w pos="VBR">are</w>
+    <w pos="VVN">motivated</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">can</w>
+  </s>
+  <s>
+    <w pos="VVI">learn</w>
+    <w pos="JJ">new</w>
+    <w pos="NN1">knowledge</w>
+    <w pos="CC">and</w>
+    <w pos="VVI">develop</w>
+    <w pos="JJ">new</w>
+    <w pos="NN2">skills</w>
+  </s>
+  <s>
+    <w pos="RL">anywhere</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NNB">Uncle</w>
+    <w pos="NP1">Ho</w>
+    <w pos="VBZ">is</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">great</w>
+    <w pos="NN1">role</w>
+    <w pos="NN1">model</w>
+    <w pos="IF">for</w>
+    <w pos="JJ">lifelong</w>
+  </s>
+  <s>
+    <w pos="NN1">learning</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPHS1">He</w>
+    <w pos="RR">never</w>
+    <w pos="VVD">stopped</w>
+    <w pos="VVG">learning</w>
+    <w pos="II">throughout</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">life</w>
+  </s>
+  <s>
+    <w pos="II">despite</w>
+    <w pos="DB">all</w>
+    <w pos="AT">the</w>
+    <w pos="NN2">hardships</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">challenges</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPHS1">He</w>
+    <w pos="VVD">learnt</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">speak</w>
+    <w pos="JJ">different</w>
+    <w pos="NN2">languages</w>
+    <w pos=",">,</w>
+  </s>
+  <s>
+    <w pos="II">including</w>
+    <w pos="NN1">English</w>
+    <w pos=",">,</w>
+    <w pos="NN1">French</w>
+    <w pos=",">,</w>
+    <w pos="JJ">Russian</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Italian</w>
+    <w pos=",">,</w>
+  </s>
+  <s>
+    <w pos="NN1">German</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+    <w pos="JJ">Chinese</w>
+    <w pos="RR">mainly</w>
+    <w pos="II">by</w>
+    <w pos="PPX1">himself</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPHS1">He</w>
+    <w pos="RR">even</w>
+    <w pos="VVD">wrote</w>
+    <w pos="NN2">poems</w>
+    <w pos="II">in</w>
+    <w pos="JJ">Chinese</w>
+    <w pos="CS">when</w>
+    <w pos="PPHS1">he</w>
+  </s>
+  <s>
+    <w pos="VBDZ">was</w>
+    <w pos="VVN">imprisoned</w>
+    <w pos="II">in</w>
+    <w pos="NP1">China</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">keep</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">mind</w>
+  </s>
+  <s>
+    <w pos="JJ">sharp</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPHS1">He</w>
+    <w pos="RR">also</w>
+    <w pos="VVD">took</w>
+    <w pos="JJ">regular</w>
+    <w pos="JJ">physical</w>
+    <w pos="NN1">exercise</w>
+    <w pos=",">,</w>
+    <w pos="VDD">did</w>
+  </s>
+  <s>
+    <w pos="JJ">traditional</w>
+    <w pos="JJ">martial</w>
+    <w pos="NN2">arts</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+    <w pos="VVD">enjoyed</w>
+    <w pos="NN2">activities</w>
+  </s>
+  <s>
+    <w pos="II21">such</w>
+    <w pos="II22">as</w>
+    <w pos="NN1">swimming</w>
+    <w pos="CC">and</w>
+    <w pos="NN1">mountain</w>
+    <w pos="VVG">climbing</w>
+    <w pos="II">throughout</w>
+  </s>
+  <s>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">life</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS2">We</w>
+    <w pos="VM">can</w>
+    <w pos="DB">all</w>
+    <w pos="VVI">learn</w>
+    <w pos="II">from</w>
+    <w pos="NNB">Uncle</w>
+    <w pos="NP1">Hos</w>
+    <w pos="JJ">lifelong</w>
+  </s>
+  <s>
+    <w pos="NN2">efforts</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">improve</w>
+    <w pos="PPX1">himself</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Remember</w>
+    <w pos="DD1">that</w>
+    <w pos="NN1">learning</w>
+    <w pos="VBZ">is</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">journey</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Enjoy</w>
+    <w pos="AT1">every</w>
+    <w pos="NN1">moment</w>
+    <w pos="IO">of</w>
+    <w pos="PPH1">it</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NNB">Mrs</w>
+    <w pos="NP1">Le</w>
+    <w pos="NP1">Minh</w>
+    <w pos="NP1">Ngoc</w>
+    <w pos="NN1">Head</w>
+    <w pos="NN1">teacher</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">think</w>
+    <w pos="II">about</w>
+  </s>
+  <s>
+    <w pos="PN1">something</w>
+    <w pos="CC">and</w>
+    <w pos="VVI">try</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">guess</w>
+    <w pos="DDQ">what</w>
+    <w pos="VBZ">is</w>
+    <w pos="JJ">true</w>
+    <w pos="CC">or</w>
+  </s>
+  <s>
+    <w pos="VM">will</w>
+    <w pos="VVI">happen</w>
+    <w pos="JJ">valuable</w>
+    <w pos="CC">and</w>
+    <w pos="JJ">useful</w>
+    <w pos="VVZ">makes</w>
+    <w pos="PN1">something</w>
+  </s>
+  <s>
+    <w pos="JJR">larger</w>
+    <w pos="II">in</w>
+    <w pos="NN1">degree</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">range</w>
+    <w pos="NN2">conditions</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">life</w>
+  </s>
+  <s>
+    <w pos="CST">that</w>
+    <w pos="VV0">cause</w>
+    <w pos="NN1">difficulty</w>
+    <w pos="CC">and</w>
+    <w pos="NN1">suffering</w>
+    <w pos="VVN">put</w>
+    <w pos="II">in</w>
+    <w pos="AT1">a</w>
+  </s>
+  <s>
+    <w pos="NN1">prison</w>
+    <w pos="NNB">Uncle</w>
+    <w pos="NP1">Ho</w>
+    <w pos="II">as</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learner</w>
+    <w pos="VVD">Managed</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">learn</w>
+    <w pos="AT1">every</w>
+    <w pos="NNT1">day</w>
+    <w pos="II">throughout</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">life</w>
+    <w pos="(">(</w>
+  </s>
+  <s>
+    <w pos="REX">e.g.</w>
+    <w pos="II">by</w>
+    <w pos="VVG">reading</w>
+    <w pos="CC">and</w>
+    <w pos="VVG">writing</w>
+    <w pos="II">until</w>
+    <w pos="NNT1">midnight</w>
+    <w pos="II">after</w>
+  </s>
+  <s>
+    <w pos="AT1">a</w>
+    <w pos="JJ">working</w>
+    <w pos="NNT1">day</w>
+    <w pos=")">)</w>
+    <w pos="VVD">Learnt</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">speak</w>
+    <w pos="NN1">French</w>
+    <w pos=",">,</w>
+  </s>
+  <s>
+    <w pos="NN1">English</w>
+    <w pos=",">,</w>
+    <w pos="JJ">Chinese</w>
+    <w pos=",">,</w>
+    <w pos="NN1">Italian</w>
+    <w pos=",">,</w>
+    <w pos="NN1">German</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="JJ">Russian</w>
+    <w pos="(">(</w>
+    <w pos="RR">mainly</w>
+    <w pos="II">through</w>
+    <w pos="NN1">self-study</w>
+    <w pos=",">,</w>
+    <w pos="VHD">had</w>
+    <w pos="AT1">an</w>
+  </s>
+  <s>
+    <w pos="JJ">effective</w>
+    <w pos="NN1">way</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">learn</w>
+    <w pos="JJ">new</w>
+    <w pos="NN2">words</w>
+    <w pos=":">:</w>
+    <w pos="VVG">writing</w>
+  </s>
+  <s>
+    <w pos="PPHO2">them</w>
+    <w pos="II">on</w>
+    <w pos="NN2">pieces</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">paper</w>
+    <w pos="CC">or</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN2">arms</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="VVG">revising</w>
+    <w pos="PPHO2">them</w>
+    <w pos="II">throughout</w>
+    <w pos="AT">the</w>
+    <w pos="NNT1">day</w>
+    <w pos=")">)</w>
+    <w pos="VVD">Kept</w>
+    <w pos="JJ">fit</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="JJ">healthy</w>
+    <w pos="(">(</w>
+    <w pos="REX">e.g.</w>
+    <w pos="II">by</w>
+    <w pos="VDG">doing</w>
+    <w pos="NN1">exercise</w>
+    <w pos="AT1">every</w>
+    <w pos="NNT1">day</w>
+  </s>
+  <s>
+    <w pos=",">,</w>
+    <w pos="VDG">doing</w>
+    <w pos="JJ">traditional</w>
+    <w pos="JJ">martial</w>
+    <w pos="NN2">arts</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+    <w pos="VVG">enjoying</w>
+  </s>
+  <s>
+    <w pos="JJ">physical</w>
+    <w pos="NN2">activities</w>
+    <w pos=")">)</w>
+    <w pos="NP1">Marie</w>
+    <w pos="NP1">Curie</w>
+    <w pos="II">as</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+  </s>
+  <s>
+    <w pos="NN1">learner</w>
+    <w pos="VVD">Managed</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">go</w>
+    <w pos="II">to</w>
+    <w pos="NN1">university</w>
+    <w pos="(">(</w>
+    <w pos="CS">because</w>
+  </s>
+  <s>
+    <w pos="EX">there</w>
+    <w pos="VBDR">were</w>
+    <w pos="AT">no</w>
+    <w pos="NN2">universities</w>
+    <w pos="VVG">accepting</w>
+    <w pos="NN2">women</w>
+    <w pos="II">in</w>
+  </s>
+  <s>
+    <w pos="APPGE">her</w>
+    <w pos="NN1">country</w>
+    <w pos=",">,</w>
+    <w pos="NP1">Poland</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">she</w>
+    <w pos="VVD">moved</w>
+    <w pos="II">to</w>
+    <w pos="NP1">France</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="JJ">studied</w>
+    <w pos="NN1">physics</w>
+    <w pos="CC">and</w>
+    <w pos="NN1">maths</w>
+    <w pos="II">at</w>
+    <w pos="NP1">Sorbonne</w>
+  </s>
+  <s>
+    <w pos="NN1">University</w>
+    <w pos=")">)</w>
+    <w pos="VVD">Spent</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">lot</w>
+    <w pos="IO">of</w>
+    <w pos="NNT1">time</w>
+    <w pos="VVG">studying</w>
+    <w pos="(">(</w>
+  </s>
+  <s>
+    <w pos="REX">e.g.</w>
+    <w pos="JJ">studied</w>
+    <w pos="II">on</w>
+    <w pos="APPGE">her</w>
+    <w pos="DA">own</w>
+    <w pos="CS">while</w>
+    <w pos="VVG">working</w>
+    <w pos="II">as</w>
+    <w pos="AT1">a</w>
+  </s>
+  <s>
+    <w pos="NN1">governess</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">tutor</w>
+    <w pos=",">,</w>
+    <w pos="VVD">borrowed</w>
+    <w pos="NN2">books</w>
+    <w pos="II">from</w>
+    <w pos="AT">the</w>
+  </s>
+  <s>
+    <w pos="NN1">library</w>
+    <w pos=",">,</w>
+    <w pos="VVN">registered</w>
+    <w pos="IF">for</w>
+    <w pos="DA2">many</w>
+    <w pos="JJ">different</w>
+    <w pos="NN2">courses</w>
+    <w pos="II">at</w>
+  </s>
+  <s>
+    <w pos="NN1">university</w>
+    <w pos=")">)</w>
+    <w pos="VVD">Won</w>
+    <w pos="NN2">prizes</w>
+    <w pos="(">(</w>
+    <w pos="VBDZ">was</w>
+    <w pos="AT">the</w>
+    <w pos="MD">first</w>
+    <w pos="NN1">woman</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">win</w>
+    <w pos="AT1">a</w>
+    <w pos="NP1">Nobel</w>
+    <w pos="NN1">Prize</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+    <w pos="AT">the</w>
+    <w pos="JJ">only</w>
+    <w pos="NN1">woman</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VVI">win</w>
+    <w pos="AT1">a</w>
+    <w pos="NP1">Nobel</w>
+    <w pos="NN1">Prize</w>
+    <w pos="RR">twice</w>
+    <w pos=",">,</w>
+    <w pos="VVD">won</w>
+    <w pos="AT1">a</w>
+    <w pos="NP1">Nobel</w>
+  </s>
+  <s>
+    <w pos="NN1">Prize</w>
+    <w pos="II">in</w>
+    <w pos="NN1">Physics</w>
+    <w pos="II">in</w>
+    <w pos="MC">1903</w>
+    <w pos="CC">and</w>
+    <w pos="DD1">another</w>
+    <w pos="NP1">Nobel</w>
+  </s>
+  <s>
+    <w pos="NN1">Prize</w>
+    <w pos="II">in</w>
+    <w pos="NN1">Chemistry</w>
+    <w pos="II">in</w>
+    <w pos="MC">1911</w>
+    <w pos=")">)</w>
+    <w pos="VVD">Managed</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">learn</w>
+  </s>
+  <s>
+    <w pos="AT1">every</w>
+    <w pos="NNT1">day</w>
+    <w pos="II">throughout</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">life</w>
+    <w pos="VVD">Learnt</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">speak</w>
+  </s>
+  <s>
+    <w pos="VVN">Kept</w>
+    <w pos="JJ">fit</w>
+    <w pos="CC">and</w>
+    <w pos="JJ">healthy</w>
+    <w pos="APPGE">Her</w>
+    <w pos="NN1">job</w>
+    <w pos="VBDZ">was</w>
+    <w pos="JJ">difficult</w>
+    <w pos=",">,</w>
+  </s>
+  <s>
+    <w pos="CCB">but</w>
+    <w pos="PPHS1">she</w>
+    <w pos="VDD">did</w>
+    <w pos="XX">nt</w>
+    <w pos="VVI">give</w>
+    <w pos="RP">up</w>
+    <w pos="CC">and</w>
+    <w pos="VVD">showed</w>
+    <w pos="JJ">great</w>
+  </s>
+  <s>
+    <w pos="NN1">determination</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">succeed</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="AT">The</w>
+    <w pos="NN1">ability</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">continue</w>
+    <w pos="VVG">trying</w>
+    <w pos="TO">to</w>
+    <w pos="VDI">do</w>
+    <w pos="PN1">something</w>
+  </s>
+  <s>
+    <w pos="CS21">even</w>
+    <w pos="CS22">when</w>
+    <w pos="PPH1">it</w>
+    <w pos="VBZ">is</w>
+    <w pos="JJ">difficult</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="APPGE">My</w>
+    <w pos="NN1">mother</w>
+    <w pos="VVD">managed</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">go</w>
+    <w pos="II">to</w>
+    <w pos="NN1">university</w>
+    <w pos="II">despite</w>
+  </s>
+  <s>
+    <w pos="DA2">many</w>
+    <w pos="NN2">obstacles</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Difficult</w>
+    <w pos="NN2">situations</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="EX">There</w>
+    <w pos="VBDR">were</w>
+    <w pos="RG">too</w>
+    <w pos="DA2">many</w>
+    <w pos="NN2">distractions</w>
+    <w pos="II">at</w>
+    <w pos="NN1">home</w>
+    <w pos=",">,</w>
+    <w pos="CS">so</w>
+  </s>
+  <s>
+    <w pos="PPIS1">I</w>
+    <w pos="VVD">started</w>
+    <w pos="VVG">going</w>
+    <w pos="II">to</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">library</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">study</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NN2">Things</w>
+    <w pos="CST">that</w>
+    <w pos="VV0">stop</w>
+    <w pos="PPY">you</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">cause</w>
+    <w pos="NN1">attention</w>
+    <w pos="TO">to</w>
+  </s>
+  <s>
+    <w pos="VBI">be</w>
+    <w pos="VVN">directed</w>
+    <w pos="II21">away</w>
+    <w pos="II22">from</w>
+    <w pos="DDQ">what</w>
+    <w pos="PPY">you</w>
+    <w pos="VBR">are</w>
+    <w pos="VVG">trying</w>
+  </s>
+  <s>
+    <w pos="TO">to</w>
+    <w pos="VDI">do</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS2">We</w>
+    <w pos="VVD">tried</w>
+    <w pos="RP">out</w>
+    <w pos="AT">the</w>
+    <w pos="JJ">new</w>
+    <w pos="NN1">knowledge</w>
+    <w pos="PPIS2">we</w>
+    <w pos="VHD">had</w>
+  </s>
+  <s>
+    <w pos="VVN">gained</w>
+    <w pos="II">by</w>
+    <w pos="VVG">putting</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">course</w>
+    <w pos="II">into</w>
+    <w pos="NN1">practice</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Applied</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS2">We</w>
+    <w pos="VV0">need</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">work</w>
+    <w pos="RL">together</w>
+    <w pos="BCL21">in</w>
+    <w pos="BCL22">order</w>
+    <w pos="TO">to</w>
+  </s>
+  <s>
+    <w pos="VVI">solve</w>
+    <w pos="JJ">complex</w>
+    <w pos="NN2">problems</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Deal</w>
+    <w pos="IW">with</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VV0">need</w>
+    <w pos="NN1">money</w>
+    <w pos=",">,</w>
+    <w pos="NNT1">time</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+    <w pos="NN1">space</w>
+    <w pos="TO">to</w>
+  </s>
+  <s>
+    <w pos="VVI">continue</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN1">pursuit</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">knowledge</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">skills</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VV0">need</w>
+    <w pos="TO">to</w>
+    <w pos="VHI">have</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">strong</w>
+    <w pos="NN1">motivation</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="NN1">determination</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">become</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learner</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="VBZ">is</w>
+    <w pos="JJ">effective</w>
+    <w pos="JJ">only</w>
+    <w pos="CS">when</w>
+    <w pos="PPY">you</w>
+    <w pos="VV0">put</w>
+  </s>
+  <s>
+    <w pos="DDQ">what</w>
+    <w pos="VV0">youve</w>
+    <w pos="VVN">learnt</w>
+    <w pos="II">into</w>
+    <w pos="NN1">practice</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN2">learners</w>
+    <w pos="VBR">are</w>
+    <w pos="VVN">motivated</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">expand</w>
+    <w pos="APPGE">their</w>
+  </s>
+  <s>
+    <w pos="NN1">knowledge</w>
+    <w pos="CC">and</w>
+    <w pos="VVI">develop</w>
+    <w pos="JJ">new</w>
+    <w pos="NN2">skills</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="TO">To</w>
+    <w pos="VVI">become</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learner</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VV0">need</w>
+    <w pos="TO">to</w>
+  </s>
+  <s>
+    <w pos="VBI">be</w>
+    <w pos="VVN">determined</w>
+    <w pos="CC">and</w>
+    <w pos="VV0">develop</w>
+    <w pos="JJ">new</w>
+    <w pos="NN2">skills</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Reading</w>
+    <w pos="NN2">books</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">articles</w>
+    <w pos="VBR">are</w>
+    <w pos="XX">not</w>
+    <w pos="RR">enough</w>
+    <w pos="IF">for</w>
+  </s>
+  <s>
+    <w pos="JJ">effective</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VM">must</w>
+    <w pos="VBI">be</w>
+    <w pos="JK">able</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">use</w>
+    <w pos="AT">the</w>
+    <w pos="JJ">new</w>
+    <w pos="NN1">knowledge</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="NN2">skills</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">find</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">solution</w>
+    <w pos="II">to</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">problem</w>
+  </s>
+  <s>
+    <w pos="CC">or</w>
+    <w pos="VV0">create</w>
+    <w pos="PN1">something</w>
+    <w pos="JJ">new</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="XX">Not</w>
+    <w pos="VHG">having</w>
+    <w pos="DD">enough</w>
+    <w pos="NN1">money</w>
+    <w pos=",">,</w>
+    <w pos="NNT1">time</w>
+    <w pos=",">,</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">space</w>
+  </s>
+  <s>
+    <w pos="VM">should</w>
+    <w pos="XX">not</w>
+    <w pos="VVI">prevent</w>
+    <w pos="PPY">you</w>
+    <w pos="II">from</w>
+    <w pos="JJ">continuing</w>
+    <w pos="NN1">learning</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="VVG">becoming</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">competent</w>
+    <w pos="NN1">person</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="VBZ">is</w>
+    <w pos="JJ">self-motivated</w>
+    <w pos="NN1">learning</w>
+    <w pos="CST">that</w>
+    <w pos="VBZ">is</w>
+  </s>
+  <s>
+    <w pos="VVN">focused</w>
+    <w pos="II">on</w>
+    <w pos="DB2">both</w>
+    <w pos="JJ">personal</w>
+    <w pos="CC">and</w>
+    <w pos="JJ">professional</w>
+    <w pos="NN1">development</w>
+  </s>
+  <s>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="DD1">This</w>
+    <w pos="NN1">type</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">learning</w>
+    <w pos="VBZ">is</w>
+    <w pos="JJ">essential</w>
+    <w pos="II">in</w>
+    <w pos="NN2">todays</w>
+  </s>
+  <s>
+    <w pos="RR">rapidly</w>
+    <w pos="JJ">changing</w>
+    <w pos="NN1">world</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPH1">It</w>
+    <w pos="VVZ">brings</w>
+    <w pos="DA2">many</w>
+    <w pos="NN2">benefits</w>
+    <w pos="CSA">as</w>
+    <w pos="PPH1">it</w>
+    <w pos="VVZ">helps</w>
+    <w pos="PPIO2">us</w>
+  </s>
+  <s>
+    <w pos="VVI">understand</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">world</w>
+    <w pos="II">around</w>
+    <w pos="PPIO2">us</w>
+    <w pos="CC">and</w>
+    <w pos="VVZ">promises</w>
+  </s>
+  <s>
+    <w pos="PPIO2">us</w>
+    <w pos="IW">with</w>
+    <w pos="JJR">better</w>
+    <w pos="NN2">opportunities</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN2">learners</w>
+    <w pos="VM">can</w>
+    <w pos="RR">also</w>
+    <w pos="VVI">face</w>
+    <w pos="NN2">challenges</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="RR">So</w>
+    <w pos=",">,</w>
+    <w pos="DDQ">what</w>
+    <w pos="VBR">are</w>
+    <w pos="DD2">these</w>
+    <w pos="NN2">benefits</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">challenges</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="VVZ">Lets</w>
+    <w pos="NN1">start</w>
+    <w pos="IW">with</w>
+    <w pos="AT">the</w>
+    <w pos="NN2">benefits</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VH0">have</w>
+    <w pos="AT1">a</w>
+    <w pos="JJR">better</w>
+    <w pos="NN1">understanding</w>
+    <w pos="IO">of</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">world</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">make</w>
+    <w pos="JJ">good</w>
+    <w pos="NN2">decisions</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="DDQ">What</w>
+    <w pos="II">about</w>
+    <w pos="AT">the</w>
+    <w pos="NN2">challenges</w>
+    <w pos="?">?</w>
+  </s>
+  <s>
+    <w pos="PPY">You</w>
+    <w pos="VV0">need</w>
+    <w pos="TO">to</w>
+    <w pos="VHI">have</w>
+    <w pos="JJ">strong</w>
+    <w pos="NN1">motivation</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="NN1">determination</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">become</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learner</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II">In</w>
+    <w pos="NN1">conclusion</w>
+    <w pos=",">,</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="VHZ">has</w>
+    <w pos="DA2">many</w>
+  </s>
+  <s>
+    <w pos="NN2">benefits</w>
+    <w pos=",">,</w>
+    <w pos="CCB">but</w>
+    <w pos="PPH1">it</w>
+    <w pos="VM">can</w>
+    <w pos="RR">also</w>
+    <w pos="VBI">be</w>
+    <w pos="VVG">challenging</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II">In</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">opinion</w>
+    <w pos=",">,</w>
+    <w pos="FW">Mai</w>
+    <w pos=",">,</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">information</w>
+    <w pos="II">about</w>
+  </s>
+  <s>
+    <w pos="AT">the</w>
+    <w pos="JJ">online</w>
+    <w pos="NN2">courses</w>
+    <w pos="VBZ">is</w>
+    <w pos="RG">very</w>
+    <w pos="JJ">useful</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">Thank</w>
+    <w pos="PPY">you</w>
+    <w pos="IF">for</w>
+    <w pos="VVG">presenting</w>
+    <w pos="PPH1">it</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS1">I</w>
+    <w pos="RR">really</w>
+    <w pos="VV0">appreciate</w>
+    <w pos="PPH1">it</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NNB">Ms</w>
+    <w pos="NP1">Lan</w>
+    <w pos=",">,</w>
+    <w pos="VV0">Im</w>
+    <w pos="JJ">glad</w>
+    <w pos="PPY">you</w>
+    <w pos="VVD">found</w>
+    <w pos="PPH1">it</w>
+    <w pos="JJ">useful</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Mark</w>
+    <w pos=",">,</w>
+    <w pos="PPIS1">I</w>
+    <w pos="VV0">like</w>
+    <w pos="AT">the</w>
+    <w pos="NN2">activities</w>
+    <w pos="IO">of</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">science</w>
+  </s>
+  <s>
+    <w pos="NN1">club</w>
+    <w pos="RG">very</w>
+    <w pos="DA1">much</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NN2">Thanks</w>
+    <w pos="IF">for</w>
+    <w pos="VVG">inviting</w>
+    <w pos="PPIO1">me</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">join</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">club</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Glad</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">help</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Bertie</w>
+    <w pos="NP1">Gladwin</w>
+    <w pos="VVD">became</w>
+    <w pos="MC1">one</w>
+    <w pos="IO">of</w>
+    <w pos="NN2">Britains</w>
+    <w pos="JJT">oldest</w>
+  </s>
+  <s>
+    <w pos="NN2">graduates</w>
+    <w pos="II">after</w>
+    <w pos="VVG">receiving</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN2">Masters</w>
+    <w pos="NN1">degree</w>
+    <w pos="II">in</w>
+  </s>
+  <s>
+    <w pos="NN1">intelligence</w>
+    <w pos="NN1">history</w>
+    <w pos="II">from</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">University</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="NP1">Buckingham</w>
+    <w pos="II">at</w>
+    <w pos="MC">91</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPHS1">He</w>
+    <w pos="VVD">started</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">degree</w>
+    <w pos="II">at</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">age</w>
+    <w pos="IO">of</w>
+    <w pos="MC">89</w>
+  </s>
+  <s>
+    <w pos="RL">together</w>
+    <w pos="IW">with</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">wife</w>
+    <w pos=",">,</w>
+    <w pos="PNQS">who</w>
+    <w pos="VBDZ">was</w>
+    <w pos="RT">then</w>
+    <w pos="II">aged</w>
+  </s>
+  <s>
+    <w pos="MC">77</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS1">I</w>
+    <w pos="VV0">feel</w>
+    <w pos="RG">very</w>
+    <w pos="JJ">satisfied</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">think</w>
+    <w pos="DD1">that</w>
+    <w pos="NN1">Ive</w>
+  </s>
+  <s>
+    <w pos="VDN">done</w>
+    <w pos="AT1">an</w>
+    <w pos="NN1">MA</w>
+    <w pos="II">at</w>
+    <w pos="APPGE">my</w>
+    <w pos="NN1">age</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">he</w>
+    <w pos="VVD">said</w>
+    <w pos="II">at</w>
+  </s>
+  <s>
+    <w pos="AT">the</w>
+    <w pos="NNT1">time</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CS">When</w>
+    <w pos="NN1">youre</w>
+    <w pos="MC">90</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VV0">sit</w>
+    <w pos="RP">around</w>
+    <w pos="CC">and</w>
+    <w pos="XX">not</w>
+    <w pos="RR21">a</w>
+  </s>
+  <s>
+    <w pos="RR22">lot</w>
+    <w pos="VVZ">happens</w>
+    <w pos=",">,</w>
+    <w pos="CS">so</w>
+    <w pos="APPGE">its</w>
+    <w pos="JJ">important</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">carry</w>
+    <w pos="RP">on</w>
+  </s>
+  <s>
+    <w pos="VVG">learning</w>
+    <w pos="CC">and</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">broaden</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN2">horizons</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Gladwin</w>
+    <w pos="JJ">left</w>
+    <w pos="NN1">school</w>
+    <w pos="II">at</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">age</w>
+    <w pos="IO">of</w>
+    <w pos="MC">14</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="RR">never</w>
+    <w pos="VVD">finished</w>
+    <w pos="APPGE">his</w>
+    <w pos="JJ">secondary</w>
+    <w pos="NN1">education</w>
+    <w pos="CC">or</w>
+    <w pos="VVD">went</w>
+  </s>
+  <s>
+    <w pos="II">to</w>
+    <w pos="NN1">university</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CCB">But</w>
+    <w pos="PPHS1">he</w>
+    <w pos="RR">still</w>
+    <w pos="VVD">found</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">satisfying</w>
+    <w pos="NN1">job</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CS">When</w>
+    <w pos="NP1">Gladwin</w>
+    <w pos="VVD">retired</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">he</w>
+    <w pos="VVD">became</w>
+    <w pos="RGR">less</w>
+    <w pos="JJ">active</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="VVD">thought</w>
+    <w pos="VVG">getting</w>
+    <w pos="RP">back</w>
+    <w pos="II">into</w>
+    <w pos="NN1">learning</w>
+    <w pos="VM">would</w>
+    <w pos="VVI">delay</w>
+  </s>
+  <s>
+    <w pos="AT">the</w>
+    <w pos="JJ">negative</w>
+    <w pos="NN2">symptoms</w>
+    <w pos="IO">of</w>
+    <w pos="JJ">old</w>
+    <w pos="NN1">age</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPHS1">He</w>
+    <w pos="VVD">wanted</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">keep</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN1">brain</w>
+    <w pos="JJ">active</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="VVI">learn</w>
+    <w pos="RRR">more</w>
+    <w pos="II">about</w>
+    <w pos="PN1">something</w>
+    <w pos="CST">that</w>
+    <w pos="VHD">had</w>
+    <w pos="RR">always</w>
+  </s>
+  <s>
+    <w pos="VVN">interested</w>
+    <w pos="PPHO1">him</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="RT">Then</w>
+    <w pos="II">at</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">age</w>
+    <w pos="IO">of</w>
+    <w pos="MC">60</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">he</w>
+    <w pos="VVD">earned</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">BA</w>
+  </s>
+  <s>
+    <w pos="II">in</w>
+    <w pos="NN1">Psychology</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="II">By</w>
+    <w pos="AT">the</w>
+    <w pos="NNT1">time</w>
+    <w pos="PPHS1">he</w>
+    <w pos="VBDZ">was</w>
+    <w pos="MC">70</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">he</w>
+    <w pos="VHD">had</w>
+    <w pos="RR">also</w>
+  </s>
+  <s>
+    <w pos="VVN">completed</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">BSc</w>
+    <w pos="II">in</w>
+    <w pos="JJ">Molecular</w>
+    <w pos="NN1">Biology</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Theyre</w>
+    <w pos="JJ">fascinating</w>
+    <w pos="NN2">subjects</w>
+    <w pos=",">,</w>
+    <w pos="PPHS1">he</w>
+    <w pos="VVD">said</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="PPIS1">I</w>
+    <w pos="VDD">did</w>
+    <w pos="PPHO2">them</w>
+    <w pos="RR">just</w>
+    <w pos="CS">because</w>
+    <w pos="PPIS1">I</w>
+    <w pos="VBDZ">was</w>
+    <w pos="JJ">interested</w>
+  </s>
+  <s>
+    <w pos="II">in</w>
+    <w pos="PPHO2">them</w>
+    <w pos="CC">and</w>
+    <w pos="VVD">wanted</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">know</w>
+    <w pos="RRR">more</w>
+    <w pos="II">about</w>
+    <w pos="PPHO2">them</w>
+  </s>
+  <s>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Left</w>
+    <w pos="NN1">school</w>
+    <w pos=",">,</w>
+    <w pos="VDD">did</w>
+    <w pos="XX">nt</w>
+    <w pos="VVI">finish</w>
+    <w pos="JJ">secondary</w>
+    <w pos="NN1">education</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VVN">Earned</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">BA</w>
+    <w pos="II">in</w>
+    <w pos="NN1">Psychology</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VVN">Completed</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">BSc</w>
+    <w pos="II">in</w>
+    <w pos="JJ">Molecular</w>
+    <w pos="NN1">Biology</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VVD">Started</w>
+    <w pos="APPGE">his</w>
+    <w pos="NN2">Masters</w>
+    <w pos="NN1">degree</w>
+    <w pos="II">in</w>
+    <w pos="NN1">intelligence</w>
+  </s>
+  <s>
+    <w pos="NN1">history</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VVN">Graduated</w>
+    <w pos="IW">with</w>
+    <w pos="AT1">a</w>
+    <w pos="NN2">Masters</w>
+    <w pos="NN1">degree</w>
+    <w pos="II">in</w>
+    <w pos="NN1">intelligence</w>
+  </s>
+  <s>
+    <w pos="NN1">history</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="JJ">Lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="VBZ">is</w>
+    <w pos="RR">especially</w>
+    <w pos="JJ">relevant</w>
+    <w pos="II">in</w>
+    <w pos="NN2">todays</w>
+  </s>
+  <s>
+    <w pos="RR">fast</w>
+    <w pos="JJ">changing</w>
+    <w pos="NN1">world</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="EX">There</w>
+    <w pos="VBR">are</w>
+    <w pos="DA2">many</w>
+    <w pos="NN2">ways</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">engage</w>
+    <w pos="II">in</w>
+    <w pos="JJ">lifelong</w>
+  </s>
+  <s>
+    <w pos="NN1">learning</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="MD">First</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">attend</w>
+    <w pos="NN2">courses</w>
+    <w pos="II">at</w>
+    <w pos="NN1">adult</w>
+  </s>
+  <s>
+    <w pos="NN1">education</w>
+    <w pos="NN2">institutions</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="MD">Second</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">can</w>
+    <w pos="RR">also</w>
+    <w pos="VVI">take</w>
+    <w pos="JJ">remote</w>
+    <w pos="CC">or</w>
+    <w pos="NN1">distance</w>
+  </s>
+  <s>
+    <w pos="NN1">learning</w>
+    <w pos="NN2">courses</w>
+    <w pos="IW">with</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">help</w>
+    <w pos="IO">of</w>
+    <w pos="NN1">technology</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="MD">Third</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">join</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">learning</w>
+    <w pos="NN1">community</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="NN">people</w>
+    <w pos="PNQS">who</w>
+    <w pos="VV0">share</w>
+    <w pos="JJ">common</w>
+    <w pos="NN1">learning</w>
+    <w pos="NN2">goals</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="CC">And</w>
+    <w pos="RR">finally</w>
+    <w pos=",">,</w>
+    <w pos="PPY">you</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">learn</w>
+    <w pos="II">by</w>
+    <w pos="VVG">reading</w>
+    <w pos="RR">widely</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="VVG">researching</w>
+    <w pos="NN2">topics</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="DD1">This</w>
+    <w pos="VM">will</w>
+    <w pos="VVI">help</w>
+    <w pos="PPY">you</w>
+    <w pos="VVI">become</w>
+    <w pos="JJ">well-rounded</w>
+    <w pos="CC">and</w>
+  </s>
+  <s>
+    <w pos="VV0">prepare</w>
+    <w pos="PPY">you</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">face</w>
+    <w pos="JJ">future</w>
+    <w pos="NN2">challenges</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="NP1">Reading</w>
+    <w pos="VVZ">broadens</w>
+    <w pos="APPGE">your</w>
+    <w pos="NN2">horizons</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="VV0">Start</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">reading</w>
+    <w pos="NN1">habit</w>
+    <w pos="NN2">Ways</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">develop</w>
+    <w pos="AT1">a</w>
+  </s>
+  <s>
+    <w pos="NN1">reading</w>
+    <w pos="NN1">habit</w>
+    <w pos="NN2">Benefits</w>
+    <w pos="IO">of</w>
+    <w pos="VVG">reading</w>
+    <w pos="NN2">Challenges</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="VVG">reading</w>
+    <w pos="RT">Today</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">reader</w>
+    <w pos=",">,</w>
+    <w pos="RT">tomorrow</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">leader</w>
+    <w pos="!">!</w>
+  </s>
+  <s>
+    <w pos="RT">Now</w>
+    <w pos="PPIS1">I</w>
+    <w pos="VM">can</w>
+    <w pos="VVI">use</w>
+    <w pos="JJ">appropriate</w>
+    <w pos="NN1">rising</w>
+    <w pos="CC">and</w>
+    <w pos="VVG">falling</w>
+  </s>
+  <s>
+    <w pos="NN1">intonation</w>
+    <w pos="II">in</w>
+    <w pos="NN2">questions</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">understand</w>
+    <w pos="CC">and</w>
+    <w pos="VV0">use</w>
+    <w pos="NN2">phrases</w>
+    <w pos="VVN">related</w>
+    <w pos="II">to</w>
+    <w pos="JJ">lifelong</w>
+  </s>
+  <s>
+    <w pos="NN1">learning</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">use</w>
+    <w pos="JJ">reported</w>
+    <w pos="NN1">speech</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">report</w>
+    <w pos="NN2">orders</w>
+    <w pos=",">,</w>
+    <w pos="NN2">requests</w>
+  </s>
+  <s>
+    <w pos=",">,</w>
+    <w pos="NN2">offers</w>
+    <w pos=",">,</w>
+    <w pos="CC">and</w>
+    <w pos="NN1">advice</w>
+    <w pos="RR">correctly</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">read</w>
+    <w pos="IF">for</w>
+    <w pos="JJ">main</w>
+    <w pos="NN2">ideas</w>
+    <w pos="CC">and</w>
+    <w pos="JJ">specific</w>
+    <w pos="NN1">information</w>
+    <w pos="II">in</w>
+  </s>
+  <s>
+    <w pos="AT1">a</w>
+    <w pos="JJ">head</w>
+    <w pos="NN2">teachers</w>
+    <w pos="NN1">message</w>
+    <w pos="II">to</w>
+    <w pos="JJ">school-leavers.</w>
+    <w pos="NN1">talk</w>
+  </s>
+  <s>
+    <w pos="II">about</w>
+    <w pos="JJ">great</w>
+    <w pos="NN1">role</w>
+    <w pos="NN2">models</w>
+    <w pos="IF">for</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">listen</w>
+    <w pos="IF">for</w>
+    <w pos="JJ">main</w>
+    <w pos="NN2">ideas</w>
+    <w pos="CC">and</w>
+    <w pos="JJ">specific</w>
+    <w pos="NN1">information</w>
+    <w pos="II">in</w>
+  </s>
+  <s>
+    <w pos="AT1">a</w>
+    <w pos="NN1">talk</w>
+    <w pos="II">about</w>
+    <w pos="AT">the</w>
+    <w pos="NN2">challenges</w>
+    <w pos="IO">of</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+  </s>
+  <s>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">synthesise</w>
+    <w pos="CC">and</w>
+    <w pos="VV0">summarise</w>
+    <w pos="NN1">information</w>
+    <w pos="TO">to</w>
+    <w pos="VVI">write</w>
+    <w pos="AT1">an</w>
+  </s>
+  <s>
+    <w pos="NN1">article</w>
+    <w pos="II">about</w>
+    <w pos="AT">the</w>
+    <w pos="NN2">benefits</w>
+    <w pos="CC">and</w>
+    <w pos="NN2">challenges</w>
+    <w pos="IO">of</w>
+  </s>
+  <s>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">thank</w>
+    <w pos="CC">and</w>
+    <w pos="VV0">accept</w>
+    <w pos="NN2">thanks</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">learn</w>
+    <w pos="II">about</w>
+    <w pos="MC1">one</w>
+    <w pos="IO">of</w>
+    <w pos="AT">the</w>
+    <w pos="JJT">oldest</w>
+    <w pos="NN1">university</w>
+  </s>
+  <s>
+    <w pos="NN2">graduates</w>
+    <w pos=".">.</w>
+  </s>
+  <s>
+    <w pos="VV0">design</w>
+    <w pos="AT1">a</w>
+    <w pos="NN1">leaflet</w>
+    <w pos="II">about</w>
+    <w pos="AT1">a</w>
+    <w pos="JJ">lifelong</w>
+    <w pos="NN1">learning</w>
+    <w pos="NN1">habit</w>
+  </s>
+  <s>
+    <w pos="CC">and</w>
+    <w pos="VV0">present</w>
+    <w pos="PPH1">it</w>
+    <w pos="II">to</w>
+    <w pos="AT">the</w>
+    <w pos="NN1">class</w>
+    <w pos=".">.</w>
+  </s>
+</text>

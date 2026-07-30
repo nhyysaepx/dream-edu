@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DreamLexi - Corpus Explorer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#1d3557",
+                        "inverse-primary": "#b0c7f1",
+                        "surface-container-low": "#edf6ea",
+                        "surface-container": "#e7f0e5",
+                        "on-secondary-container": "#6f5100",
+                        "tertiary-fixed-dim": "#98cdf2",
+                        "on-tertiary-container": "#6fa4c7",
+                        "on-primary-fixed": "#001b3c",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2a322b",
+                        "on-secondary-fixed": "#261a00",
+                        "tertiary-fixed": "#c7e7ff",
+                        "on-background": "#161d16",
+                        "secondary": "#795900",
+                        "on-surface-variant": "#44474e",
+                        "tertiary-container": "#003953",
+                        "surface-tint": "#485f84",
+                        "on-surface": "#161d16",
+                        "outline-variant": "#c4c6cf",
+                        "primary-fixed-dim": "#b0c7f1",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#002234",
+                        "primary": "#031f41",
+                        "on-secondary-fixed-variant": "#5c4300",
+                        "background": "#f3fcf0",
+                        "surface-dim": "#d4ddd1",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#fec330",
+                        "on-primary-fixed-variant": "#30476a",
+                        "inverse-on-surface": "#eaf3e7",
+                        "on-tertiary-fixed": "#001e2e",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#dce5d9",
+                        "outline": "#74777f",
+                        "on-primary-container": "#879ec6",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#064c6b",
+                        "surface-container-high": "#e2ebdf",
+                        "primary-fixed": "#d5e3ff",
+                        "surface": "#f3fcf0",
+                        "surface-bright": "#f3fcf0",
+                        "secondary-fixed": "#ffdfa0",
+                        "surface-container-highest": "#dce5d9",
+                        "secondary-fixed-dim": "#f8bd2a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-desktop": "48px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Geist"],
+                        "label-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .kwic-node {
+            background-color: rgba(254, 195, 48, 0.2); /* secondary-container with opacity */
+            border: 1px solid #fec330;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-full flex flex-col md:flex-row antialiased">
+<!-- Mobile TopAppBar (Hidden on md and up) -->
+<header class="md:hidden flex justify-between items-center px-margin-mobile h-16 w-full top-0 sticky bg-surface z-40">
+<button class="text-primary hover:bg-surface-container-low transition-colors rounded-full p-2 active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">DreamLexi</h1>
+<button class="text-primary hover:bg-surface-container-low transition-colors rounded-full p-2 active:opacity-80 transition-opacity">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A small, circular avatar portrait of a modern academic user. The image features a subtle, professional lighting scheme with a clean, light-mode background. The color palette emphasizes deep navy blue and soft white tones, reflecting a serious yet accessible corporate/academic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgNdtrwnoRedXTLHE-TPx2lchVAOyg2Urp_HY0XgkY7bsc9Ij43VlZsnITOTm0Cd8NKAALrslvl4-n1e8x9JlUtOZL8M8YqLOYL53ZNENG5H6DWftX0W1dSkZ0GAtpLB3D2vx0-PY38v1mtaGkrTGw41B1kGFMhhxvbTlP80NVAnY8mbJ8NDOOUfABbYAVUdojLZ6fftvUCfmLDb6hnVaA--yMg2qsIcuodrHXW8gyO2XB8C6aFJ44"/>
+</button>
+</header>
+<!-- NavigationDrawer (Visible on md and up) -->
+<nav class="hidden md:flex flex-col h-full w-80 rounded-r-xl shadow-lg bg-surface-container-low z-40 shrink-0 sticky top-0 p-4 gap-2">
+<div class="flex items-center gap-4 mb-6 p-2">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="A circular avatar portrait of a modern academic user. The image features a subtle, professional lighting scheme with a clean, light-mode background. The color palette emphasizes deep navy blue and soft white tones, reflecting a serious yet accessible corporate/academic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF1DQrnPNIicHTHLhe4hRM8UZcVHy91lSbmE1tMmx5bQK2jymoiiT6awSBE99tAOQD3kaRkrSAswP0JWrm6TGG1dtCY5XUDTl8A_S3nRLesubgebojKIbeFIiY070NsAOaKmjjt9h7HpzXgmAcZLPQpAYw3urN6G0ul3fXrE6YNMzjtGUYdI4fi6LLjQAq2OGE_MJ2uWDPMf65fYxndHDl3GIkU6A8NfNaofN9JEzKJeqvJC4Xn5SM"/>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Academic Explorer</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Advanced Level</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">1,240 Words Mastered</p>
+</div>
+</div>
+<!-- Drawer Links (Explore is Active via semantic mapping from Bottom Nav) -->
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+            Profile
+        </a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+            Preferences
+        </a>
+<!-- Mapping Corpus Explorer to Corpus Settings conceptually or just representing the active state in the main content canvas. Standard drawer items shown. -->
+<a class="flex items-center gap-3 p-3 rounded-lg bg-primary-container text-on-primary-container font-bold active:translate-x-1 transition-transform font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+            Corpus Settings
+        </a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+            AI Tutor History
+        </a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="military_tech">military_tech</span>
+            Achievements
+        </a>
+<div class="mt-auto">
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col w-full max-w-[1280px] mx-auto pb-20 md:pb-8">
+<!-- Header Section -->
+<div class="px-margin-mobile md:px-gutter pt-6 md:pt-12 pb-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-2">English Corpus Explorer</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Key Word in Context (KWIC) results for <span class="font-bold text-primary">"present"</span></p>
+</div>
+<div class="flex gap-3">
+<button class="bg-primary text-on-primary font-label-lg text-label-lg px-6 py-2.5 rounded-lg hover:bg-opacity-90 transition-all shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                        Compare with AI Tutor
+                    </button>
+<button class="border border-primary text-primary font-label-lg text-label-lg px-6 py-2.5 rounded-lg hover:bg-surface-container transition-all flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="bubble_chart">bubble_chart</span>
+                        Analyze Collocations
+                    </button>
+</div>
+</div>
+<!-- Filters/Meta -->
+<div class="mt-6 flex flex-wrap gap-2">
+<div class="bg-surface-container-high text-on-surface px-4 py-1.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]" data-icon="filter_list">filter_list</span>
+                    Corpus: Academic English
+                </div>
+<div class="bg-surface-container-high text-on-surface px-4 py-1.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]" data-icon="sort">sort</span>
+                    Sort: Right context
+                </div>
+<div class="bg-surface-container-high text-on-surface px-4 py-1.5 rounded-full font-label-sm text-label-sm flex items-center gap-1 border border-primary/10">
+<span class="material-symbols-outlined text-[16px]" data-icon="dataset">dataset</span>
+                    Freq: 1,420 hits
+                </div>
+</div>
+</div>
+<!-- KWIC Bento Grid Container -->
+<div class="px-margin-mobile md:px-gutter flex-1">
+<div class="bg-surface-container-lowest rounded-xl border border-primary/10 shadow-sm overflow-hidden flex flex-col h-full">
+<!-- Table Header -->
+<div class="grid grid-cols-12 gap-4 p-4 bg-surface-container-low border-b border-primary/10 font-label-lg text-label-lg text-primary sticky top-0">
+<div class="col-span-5 text-right pr-4">Left Context</div>
+<div class="col-span-2 text-center font-bold">Node</div>
+<div class="col-span-5 pl-4">Right Context</div>
+</div>
+<!-- Table Body -->
+<div class="overflow-y-auto flex-1 font-body-md text-body-md text-on-surface divide-y divide-surface-variant">
+<!-- Row 1 -->
+<div class="grid grid-cols-12 gap-4 p-3 hover:bg-surface transition-colors items-center group">
+<div class="col-span-5 text-right pr-4 text-on-surface-variant truncate" title="the findings of this study">
+                            ...the findings of this study
+                        </div>
+<div class="col-span-2 text-center">
+<span class="kwic-node px-3 py-1 rounded-md font-bold text-primary inline-block">present</span>
+</div>
+<div class="col-span-5 pl-4 text-on-surface-variant truncate" title="a compelling argument for...">
+                            a compelling argument for...
+                        </div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-12 gap-4 p-3 hover:bg-surface transition-colors items-center group">
+<div class="col-span-5 text-right pr-4 text-on-surface-variant truncate" title="at this particular moment in the">
+                            ...at this particular moment in the
+                        </div>
+<div class="col-span-2 text-center">
+<span class="kwic-node px-3 py-1 rounded-md font-bold text-primary inline-block">present</span>
+</div>
+<div class="col-span-5 pl-4 text-on-surface-variant truncate" title="time, we cannot ascertain...">
+                            time, we cannot ascertain...
+                        </div>
+</div>
+<!-- Row 3 -->
+<div class="grid grid-cols-12 gap-4 p-3 hover:bg-surface transition-colors items-center group">
+<div class="col-span-5 text-right pr-4 text-on-surface-variant truncate" title="the symptoms that patients typically">
+                            ...the symptoms that patients typically
+                        </div>
+<div class="col-span-2 text-center">
+<span class="kwic-node px-3 py-1 rounded-md font-bold text-primary inline-block">present</span>
+</div>
+<div class="col-span-5 pl-4 text-on-surface-variant truncate" title="with include fatigue and...">
+                            with include fatigue and...
+                        </div>
+</div>
+<!-- Row 4 -->
+<div class="grid grid-cols-12 gap-4 p-3 hover:bg-surface transition-colors items-center group">
+<div class="col-span-5 text-right pr-4 text-on-surface-variant truncate" title="we would like to formally">
+                            ...we would like to formally
+                        </div>
+<div class="col-span-2 text-center">
+<span class="kwic-node px-3 py-1 rounded-md font-bold text-primary inline-block">present</span>
+</div>
+<div class="col-span-5 pl-4 text-on-surface-variant truncate" title="these results to the committee...">
+                            these results to the committee...
+                        </div>
+</div>
+<!-- Row 5 -->
+<div class="grid grid-cols-12 gap-4 p-3 hover:bg-surface transition-colors items-center group">
+<div class="col-span-5 text-right pr-4 text-on-surface-variant truncate" title="all board members must be">
+                            ...all board members must be
+                        </div>
+<div class="col-span-2 text-center">
+<span class="kwic-node px-3 py-1 rounded-md font-bold text-primary inline-block">present</span>
+</div>
+<div class="col-span-5 pl-4 text-on-surface-variant truncate" title="during the voting process to...">
+                            during the voting process to...
+                        </div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile BottomNavBar (Hidden on md and up) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center py-2 bg-surface px-4 shadow-sm z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-5 py-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span class="font-label-sm text-label-sm mt-1">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="book_5">book_5</span>
+<span class="font-label-sm text-label-sm mt-1">Notebook</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Analytics</span>
+</a>
+</nav>
+</body></html>
