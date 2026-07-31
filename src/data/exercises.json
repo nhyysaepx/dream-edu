@@ -1,0 +1,906 @@
+[
+  {
+    "id": "u1-e1",
+    "unit": "Unit 1",
+    "title": "Exercise 1: Match the digital times with the times in words.",
+    "type": "matching",
+    "leftItems": [
+      "05:15",
+      "08:20",
+      "06:45",
+      "14:30",
+      "20:50",
+      "09:10",
+      "15:35",
+      "10:05",
+      "12:00",
+      "16:55"
+    ],
+    "rightItems": [
+      "It's a quarter past five.",
+      "It's twenty past eight.",
+      "It's a quarter to seven.",
+      "It's half past two.",
+      "It's ten to nine.",
+      "It's ten past nine.",
+      "It's twenty-five to four.",
+      "It's five past ten.",
+      "It's twelve o'clock.",
+      "It's five to five."
+    ]
+  },
+  {
+    "id": "u1-e2",
+    "unit": "Unit 1",
+    "title": "Exercise 2: Rearrange the letters in brackets to complete the text.",
+    "type": "fill-blank",
+    "text": "When I get up in the morning, the first thing that I do is {have|vahe} a shower. I then go to the kitchen and make breakfast. After breakfast, I {brush|hrbus} my teeth. Then I {meet|mtee} my friends and we {catch|atchc} the bus to the college. At college, we study all day, but we have a break for lunch at twelve o'clock. At four o'clock, we {leave|elave} and {go|og} home by bus. In the evenings, I usually {watch|htawc} TV, unless I have a lot of homework. I always {do|od} my homework in the evenings. At night, I {go|og} to bed and quickly {fall|lfal} asleep."
+  },
+  {
+    "id": "u1-e3",
+    "unit": "Unit 1",
+    "title": "Exercise 3: Complete the table using the words in the box.",
+    "type": "categorize",
+    "categories": [
+      "Make",
+      "Do"
+    ],
+    "items": [
+      {
+        "text": "the bed",
+        "category": "Make"
+      },
+      {
+        "text": "lunch",
+        "category": "Make"
+      },
+      {
+        "text": "a mess",
+        "category": "Make"
+      },
+      {
+        "text": "dinner",
+        "category": "Make"
+      },
+      {
+        "text": "a cake",
+        "category": "Make"
+      },
+      {
+        "text": "The cleaning",
+        "category": "Do"
+      },
+      {
+        "text": "the housework",
+        "category": "Do"
+      },
+      {
+        "text": "some homework",
+        "category": "Do"
+      },
+      {
+        "text": "the shopping",
+        "category": "Do"
+      },
+      {
+        "text": "the laundry",
+        "category": "Do"
+      }
+    ]
+  },
+  {
+    "id": "u1-e4",
+    "unit": "Unit 1",
+    "title": "Exercise 4: Complete the email. Use the words in the box.",
+    "type": "drag-drop-blanks",
+    "words": [
+      "Catch",
+      "finish",
+      "get up",
+      "go out",
+      "have",
+      "leave",
+      "live",
+      "meet",
+      "walk",
+      "work"
+    ],
+    "text": "Hi Sam, I'm having a great time here in France and I'm learning lots of French. My host family are very nice. They {live} in an apartment in an area called Pantin, and they both {work} as journalists. They {get up} very early and {leave} home before me. I {have} breakfast at about 8 a.m. and then go to the language school. I usually {walk} there, but if I'm late I {catch} a bus. Lessons at the school {finish} at 4 p.m. The other students are very nice and I have made lots of new friends. We {meet} after school in a café or {go out} in the evenings to the cinema. Harry"
+  },
+  {
+    "id": "u1-e5",
+    "unit": "Unit 1",
+    "title": "Exercise 5: Complete the sentences with the third person forms of the verbs in brackets.",
+    "type": "fill-blank",
+    "text": "1. My dad {washes|wash} his car every weekend.\n2. Jim {watches|watch} too much TV.\n3. Adrian's baby {cries|cry} a lot.\n4. My brother is good at chess and {practises|practise} every day.\n5. Olga {goes|go} jogging most evenings after work.\n6. Tom's wife cooks and Tom {does|do} the washing up.\n7. Anna {catches|catch} the 253 bus to college each morning.\n8. Nadia {relaxes|relax} by doing yoga.\n9. I think our teacher {gives|give} us too much homework.\n10. My brother {switches off|switch off} his light at about midnight."
+  },
+  {
+    "id": "u1-e6",
+    "unit": "Unit 1",
+    "title": "Exercise 6: Read the sentences and choose the correct answers.",
+    "type": "multiple-choice-inline",
+    "text": "1. My brother {works|work/works} for a computer company in the city.\n2. My friends and I often {play|play/plays} basketball together at the weekends.\n3. I go to a college where everyone {studies|study/studies} different languages.\n4. My grandparents {come|come/comes} from a small village in Germany.\n5. My lunch break {begins|begin/begins} at 12 p.m. and {finishes|finish/finishes} at 12:45 p.m.\n6. In the evenings, I {like|like/likes} to chat to my friends online.\n7. In my family, only my sister {gets up|get up/gets up} before 6 a.m.\n8. She {has|have/has} a dance class every Wednesday evening.\n9. My friend is good at baking and {makes|make/makes} amazing cakes.\n10. In Britain, most school students {wear|wear/wears} a uniform."
+  },
+  {
+    "id": "u1-e7",
+    "unit": "Unit 1",
+    "title": "Exercise 7: Put the words in the correct order to make sentences.",
+    "type": "ordering",
+    "sentences": [
+      {
+        "words": [
+          "Room",
+          "always",
+          "tidies",
+          "my",
+          "his",
+          "friend"
+        ],
+        "correct": [
+          "my",
+          "friend",
+          "always",
+          "tidies",
+          "his",
+          "room"
+        ]
+      },
+      {
+        "words": [
+          "At",
+          "play",
+          "weekend",
+          "the",
+          "I",
+          "football"
+        ],
+        "correct": [
+          "I",
+          "play",
+          "football",
+          "at",
+          "the",
+          "weekend"
+        ]
+      },
+      {
+        "words": [
+          "Sandwich",
+          "take",
+          "college",
+          "to",
+          "lunch",
+          "for",
+          "a",
+          "I"
+        ],
+        "correct": [
+          "I",
+          "take",
+          "a",
+          "sandwich",
+          "to",
+          "college",
+          "for",
+          "lunch"
+        ]
+      },
+      {
+        "words": [
+          "Phone",
+          "every",
+          "his",
+          "brother",
+          "checks",
+          "minuts",
+          "my",
+          "five"
+        ],
+        "correct": [
+          "my",
+          "brother",
+          "checks",
+          "his",
+          "phone",
+          "every",
+          "five",
+          "minutes"
+        ]
+      },
+      {
+        "words": [
+          "In",
+          "a",
+          "the",
+          "I",
+          "have",
+          "evening",
+          "shower"
+        ],
+        "correct": [
+          "I",
+          "have",
+          "a",
+          "shower",
+          "in",
+          "the",
+          "evening"
+        ]
+      },
+      {
+        "words": [
+          "Months",
+          "every",
+          "to",
+          "six",
+          "dentist",
+          "the",
+          "go",
+          "I"
+        ],
+        "correct": [
+          "I",
+          "go",
+          "to",
+          "the",
+          "dentist",
+          "every",
+          "six",
+          "months"
+        ]
+      },
+      {
+        "words": [
+          "Most",
+          "does",
+          "the",
+          "housework",
+          "of",
+          "mother",
+          "my"
+        ],
+        "correct": [
+          "my",
+          "mother",
+          "does",
+          "most",
+          "of",
+          "the",
+          "housework"
+        ]
+      },
+      {
+        "words": [
+          "At",
+          "I",
+          "family",
+          "my",
+          "the",
+          "weekend",
+          "visit"
+        ],
+        "correct": [
+          "I",
+          "visit",
+          "my",
+          "family",
+          "at",
+          "the",
+          "weekend"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "u1-e8",
+    "unit": "Unit 1",
+    "title": "Exercise 8: Complete the email. Use the words in the box.",
+    "type": "drag-drop-blanks",
+    "words": [
+      "Clean",
+      "enjoy",
+      "finish",
+      "gets",
+      "have",
+      "opens",
+      "shouts",
+      "start",
+      "tells",
+      "work"
+    ],
+    "text": "Hi Anna, I've got a new job! It's in a supermarket and I {work} there every Saturday. I {start} at 8am and the shop {opens} at 9 a.m. I tidy and fill the shelves, {clean} the floors and work at the checkout. My manager is very nice. She {tells} me what to do and never {shouts}. The other workers are really friendly, too. We {have} three breaks a day and {finish} at 4 p.m. It's hard work because the shop {gets} very busy, but I really {enjoy} it. Sarah"
+  },
+  {
+    "id": "u2-e1",
+    "unit": "Unit 2",
+    "title": "Exercise 1: Match the digital times with the times in words. (Locations in a house)",
+    "type": "matching",
+    "leftItems": [
+      "What do you call the place where you go to sleep every night?",
+      "What do you call the place where you can have a wash and brush your teeth?",
+      "What do you call the place where everyone sits together to talk, play games or watch TV?",
+      "What do you call the place where you keep the car?",
+      "What do you call the place that you walk through to move from one room to another?",
+      "What do you call the place where you can be outside and sit on the grass?"
+    ],
+    "rightItems": [
+      "bedroom",
+      "bathroom",
+      "living room",
+      "garage",
+      "hallway",
+      "garden"
+    ]
+  },
+  {
+    "id": "u2-e3",
+    "unit": "Unit 2",
+    "title": "Exercise 3: Match the questions with the answers in the box.",
+    "type": "matching",
+    "leftItems": [
+      "What do you like about your room?",
+      "Who do you live with?",
+      "Do you like to cook?",
+      "Where do you watch television?",
+      "Is it often sunny where you live?",
+      "Where do you do your homework?",
+      "Can you tell me where the bathroom is, please?",
+      "Why do you never go in the kitchen?"
+    ],
+    "rightItems": [
+      "My comfortable bed and my posters",
+      "My parents, my sister and my grandparents",
+      "Yes, and I think I'm quite good at it",
+      "Usually in the living room, sometimes in my bedroom",
+      "Yes. I like it because I can always relax in the garden",
+      "Usually in the study, sometimes in my bedroom",
+      "Go down the hall and it's next to the living room",
+      "Because I can't cook"
+    ]
+  },
+  {
+    "id": "u2-e5",
+    "unit": "Unit 2",
+    "title": "Exercise 5: Correct the underlined mistake in each sentence.",
+    "type": "fill-blank",
+    "text": "1. I really like my {curtains|certains} - they are red and black, and they make my bedroom very dark.\n2. I have a bright {table lamp|tabel lamb} that I turn on when I do my homework.\n3. I think {posters|potsers} make the walls look more interesting - don't you?\n4. It is good to sleep with two {pillows|billows} - it is very comfortable.\n5. My brother never cooks - the only thing he can do is turn on the {oven|uven}!\n6. Most of my clothes are in my {wardrobe|walldrobe} - the rest are in the drawers next to my bed."
+  },
+  {
+    "id": "u2-e6",
+    "unit": "Unit 2",
+    "title": "Exercise 6: Rewrite the sentences using question forms.",
+    "type": "fill-blank",
+    "text": "1. You help your parents with the housework.\n{Do you help your parents with the housework?}\n2. It is OK to come to your house this evening.\n{Is it OK to come to your house this evening?}\n3. You can check that the windows are all closed before we go out.\n{Can you check that the windows are all closed before we go out?}\n4. You are in the living room next to the kitchen.\n{Are you in the living room next to the kitchen?}\n5. You want to sit in the garden.\n{Do you want to sit in the garden?}\n6. The apartments in the UK are very different from the apartments in your country.\n{Are the apartments in the UK very different from the apartments in your country?}"
+  },
+  {
+    "id": "u2-e7",
+    "unit": "Unit 2",
+    "title": "Exercise 7: Find and rewrite the four mistakes in the sentences. Two sentences are correct.",
+    "type": "multiple-choice",
+    "questions": [
+      {
+        "question": "1. In my country, people live usually in apartments and not houses.",
+        "options": [
+          "Correct",
+          "In my country, people usually live in apartments and not houses."
+        ],
+        "answer": "In my country, people usually live in apartments and not houses."
+      },
+      {
+        "question": "2. My uncle keeps always his car in the garage because it is very expensive.",
+        "options": [
+          "Correct",
+          "My uncle always keeps his car in the garage because it is very expensive."
+        ],
+        "answer": "My uncle always keeps his car in the garage because it is very expensive."
+      },
+      {
+        "question": "3. Our sink sometimes makes a very strange noise.",
+        "options": [
+          "Correct",
+          "Our sink makes sometimes a very strange noise."
+        ],
+        "answer": "Correct"
+      },
+      {
+        "question": "4. I have a housemate but I don't see very often him - he is always studying.",
+        "options": [
+          "Correct",
+          "I have a housemate but I don't see him very often - he is always studying."
+        ],
+        "answer": "I have a housemate but I don't see him very often - he is always studying."
+      },
+      {
+        "question": "5. In your country, do people usually celebrate their 18th birthday with a party?",
+        "options": [
+          "Correct",
+          "In your country, usually do people celebrate their 18th birthday with a party?"
+        ],
+        "answer": "Correct"
+      },
+      {
+        "question": "6. Do you prefer do your homework in your bedroom?",
+        "options": [
+          "Correct",
+          "Do you prefer to do your homework in your bedroom?"
+        ],
+        "answer": "Do you prefer to do your homework in your bedroom?"
+      }
+    ]
+  },
+  {
+    "id": "u2-e8",
+    "unit": "Unit 2",
+    "title": "Exercise 8: Put the words in the correct order to make sentences and questions.",
+    "type": "ordering",
+    "sentences": [
+      {
+        "words": [
+          "the",
+          "never",
+          "up",
+          "does",
+          "he",
+          "washing"
+        ],
+        "correct": [
+          "he",
+          "never",
+          "does",
+          "the",
+          "washing",
+          "up"
+        ]
+      },
+      {
+        "words": [
+          "Give",
+          "some",
+          "advice",
+          "you",
+          "can",
+          "me"
+        ],
+        "correct": [
+          "can",
+          "you",
+          "give",
+          "me",
+          "some",
+          "advice"
+        ]
+      },
+      {
+        "words": [
+          "Leave",
+          "always",
+          "I",
+          "my",
+          "house",
+          "8a.m.",
+          "at"
+        ],
+        "correct": [
+          "I",
+          "always",
+          "leave",
+          "my",
+          "house",
+          "at",
+          "8a.m."
+        ]
+      },
+      {
+        "words": [
+          "Go",
+          "off",
+          "your",
+          "what",
+          "usually",
+          "time",
+          "alarm",
+          "does"
+        ],
+        "correct": [
+          "what",
+          "time",
+          "does",
+          "your",
+          "alarm",
+          "usually",
+          "go",
+          "off"
+        ]
+      },
+      {
+        "words": [
+          "My",
+          "cousin",
+          "to",
+          "my",
+          "house",
+          "often",
+          "for",
+          "dinner",
+          "comes"
+        ],
+        "correct": [
+          "My",
+          "cousin",
+          "often",
+          "comes",
+          "to",
+          "my",
+          "house",
+          "for",
+          "dinner"
+        ]
+      },
+      {
+        "words": [
+          "Live",
+          "to",
+          "do",
+          "you",
+          "want",
+          "in",
+          "the",
+          "future",
+          "where"
+        ],
+        "correct": [
+          "where",
+          "do",
+          "you",
+          "want",
+          "to",
+          "live",
+          "in",
+          "the",
+          "future"
+        ]
+      },
+      {
+        "words": [
+          "With",
+          "you",
+          "live",
+          "how",
+          "many",
+          "do",
+          "people"
+        ],
+        "correct": [
+          "how",
+          "many",
+          "people",
+          "do",
+          "you",
+          "live",
+          "with"
+        ]
+      },
+      {
+        "words": [
+          "Do",
+          "you",
+          "the",
+          "university",
+          "campus",
+          "live",
+          "on"
+        ],
+        "correct": [
+          "Do",
+          "you",
+          "live",
+          "on",
+          "the",
+          "university",
+          "campus"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "u3-e2",
+    "unit": "Unit 3",
+    "title": "Exercise 2: Complete the table using the words in the box.",
+    "type": "categorize",
+    "categories": [
+      "Play",
+      "Do",
+      "Go"
+    ],
+    "items": [
+      {
+        "text": "Chess",
+        "category": "Play"
+      },
+      {
+        "text": "volleyball",
+        "category": "Play"
+      },
+      {
+        "text": "football",
+        "category": "Play"
+      },
+      {
+        "text": "golf",
+        "category": "Play"
+      },
+      {
+        "text": "table tennis",
+        "category": "Play"
+      },
+      {
+        "text": "tennis",
+        "category": "Play"
+      },
+      {
+        "text": "hockey",
+        "category": "Play"
+      },
+      {
+        "text": "badminton",
+        "category": "Play"
+      },
+      {
+        "text": "karate",
+        "category": "Do"
+      },
+      {
+        "text": "athletics",
+        "category": "Do"
+      },
+      {
+        "text": "gymnastics",
+        "category": "Do"
+      },
+      {
+        "text": "taekwondo",
+        "category": "Do"
+      },
+      {
+        "text": "boxing",
+        "category": "Do"
+      },
+      {
+        "text": "judo",
+        "category": "Do"
+      },
+      {
+        "text": "swimming",
+        "category": "Go"
+      },
+      {
+        "text": "fishing",
+        "category": "Go"
+      },
+      {
+        "text": "hiking",
+        "category": "Go"
+      },
+      {
+        "text": "horse riding",
+        "category": "Go"
+      },
+      {
+        "text": "cycling",
+        "category": "Go"
+      },
+      {
+        "text": "sailing",
+        "category": "Go"
+      },
+      {
+        "text": "canoeing",
+        "category": "Go"
+      },
+      {
+        "text": "skiing",
+        "category": "Go"
+      }
+    ]
+  },
+  {
+    "id": "u3-e3",
+    "unit": "Unit 3",
+    "title": "Exercise 3: Complete the sentences. Use the verbs in the box.",
+    "type": "drag-drop-blanks",
+    "words": [
+      "beats",
+      "catch",
+      "hit",
+      "kicking",
+      "lose",
+      "play",
+      "scores",
+      "throwing",
+      "win"
+    ],
+    "text": "1. I'm playing in a tennis tournament tomorrow. I hope I {win} some of my matches.\n2. Our school football team is not doing well this term. Every team we play against {beats} us.\n3. I really want to learn how to {play} baseball but it's not a popular sport in Britain.\n4. It is quite difficult to learn how to {hit} the ball with the racket when you start playing tennis.\n5. When you {lose} a sports match, it's important to learn from your mistakes and do better next time.\n6. In rugby, players usually pass the ball to each other by {throwing} it.\n7. In football, players cannot hold the ball - they must move it by {kicking} it with their feet.\n8. In baseball, players wear a special glove on their hand to help them {catch} the ball.\n9. In football and handball, the team that {scores} the most goals is the winner."
+  },
+  {
+    "id": "u3-e4",
+    "unit": "Unit 3",
+    "title": "Exercise 4: Read the sentences and choose the correct answers.",
+    "type": "multiple-choice-inline",
+    "text": "1. Cricket is a {popular|favourite/good/popular} sport in several countries around the world, including India and Britain.\n2. There are 11 people in a cricket {team|group/set/team}.\n3. You play the sport by {hitting|hitting/kicking/throwing} a hard red ball with a bat.\n4. It can take five days to complete a cricket {match|goal/match/point}.\n5. People often {wear|put/use/wear} white clothes to play cricket."
+  },
+  {
+    "id": "u3-e6",
+    "unit": "Unit 3",
+    "title": "Exercise 6: Complete the table with the third person present simple and -ing forms of the verbs.",
+    "type": "fill-blank",
+    "text": "Verb: Snow -> {snows} -> {snowing}\nVerb: Fix -> {fixes} -> {fixing}\nVerb: Get -> {gets} -> {getting}\nVerb: Stop -> {stops} -> {stopping}\nVerb: Wash -> {washes} -> {washing}\nVerb: Make -> {makes} -> {making}\nVerb: Buy -> {buys} -> {buying}\nVerb: Copy -> {copies} -> {copying}\nVerb: travel -> {travels} -> {travelling}"
+  },
+  {
+    "id": "u3-e7",
+    "unit": "Unit 3",
+    "title": "Exercise 7: Match the sentence halves.",
+    "type": "matching",
+    "leftItems": [
+      "1. My mum's working",
+      "2. I often go to the cinema",
+      "3. I can't speak to you right now",
+      "4. What does your brother",
+      "5. In this photo, I'm climbing",
+      "6. What do you usually do",
+      "7. Why isn't Sam"
+    ],
+    "rightItems": [
+      "in Italy at the moment.",
+      "on a Saturday evening.",
+      "because I'm watching TV.",
+      "like doing in his free time?",
+      "a volcano with my uncle.",
+      "at the weekend?",
+      "eating his sandwich?"
+    ]
+  },
+  {
+    "id": "u3-e8",
+    "unit": "Unit 3",
+    "title": "Exercise 8: Read the sentences and choose the correct answers.",
+    "type": "multiple-choice-inline",
+    "text": "1. {I don't know|I don't know/I'm not knowing} how to play tennis, but I'd like to learn.\n2. I'm very sorry, {I can't remember|I can't remember/I'm not remembering} your name.\n3. Can you help me with my homework? {I don't understand|I don't understand/I'm not understanding} this problem.\n4. John {is having|has/is having} a great time on holiday. Look at these pictures on his blog!\n5. I'm afraid you can't borrow that book. {It belongs|It belongs/It is belonging} to my sister and she {is reading|reads/is reading} it at the moment.\n6. {I don't want to|I don't want to /I'm not wanting to} go out tonight. I'm too tired!\n7. My brother {has|has/is having} so many hobbies! At the moment, he {is taking|takes/is taking} photos in the garden.\n8. Sue {can't hear|can't hear/ isn't hearing} you at the moment. She {is having|has/is having} a shower."
+  },
+  {
+    "id": "u3-e9",
+    "unit": "Unit 3",
+    "title": "Exercise 9: Complete the email with the correct forms of the verbs in brackets.",
+    "type": "fill-blank",
+    "text": "Hi William, I {am having} (have) a great time here in Leeds. The city is really big and {has} (have) so many interesting places to visit. I {am enjoying} (enjoy) my course so far and I really {like} (like) my classmates. I {am staying} (stay) in one of the halls of residence this year, but next year I may move into an apartment with some friends. I {have got} (have got) a job in a local restaurant so I can earn some extra money. I {work} (work) there three evenings a week from 7:00 p.m. until midnight. It's fine, but at the moment I {am looking} (look) for another job. I {want} (want) one that {finishes} (finish) a bit earlier because I need more sleep! Katy"
+  },
+  {
+    "id": "u4-e2",
+    "unit": "Unit 4",
+    "title": "Exercise 2: Complete the table using the words in the box.",
+    "type": "categorize",
+    "categories": [
+      "City break",
+      "Adventure holiday",
+      "Beach holiday",
+      "Language exchange"
+    ],
+    "items": [
+      {
+        "text": "Go on cultural visits",
+        "category": "City break"
+      },
+      {
+        "text": "see local attractions",
+        "category": "City break"
+      },
+      {
+        "text": "see famous buildings",
+        "category": "City break"
+      },
+      {
+        "text": "try local food",
+        "category": "City break"
+      },
+      {
+        "text": "go mountain climbing",
+        "category": "Adventure holiday"
+      },
+      {
+        "text": "go on cycling tours",
+        "category": "Adventure holiday"
+      },
+      {
+        "text": "go horse riding",
+        "category": "Adventure holiday"
+      },
+      {
+        "text": "visit beach resorts",
+        "category": "Beach holiday"
+      },
+      {
+        "text": "swim in the sea",
+        "category": "Beach holiday"
+      },
+      {
+        "text": "stay with host families",
+        "category": "Language exchange"
+      },
+      {
+        "text": "learn new language",
+        "category": "Language exchange"
+      }
+    ]
+  },
+  {
+    "id": "u4-e3",
+    "unit": "Unit 4",
+    "title": "Exercise 3: Complete the sentences with the holiday activities in the box.",
+    "type": "drag-drop-blanks",
+    "words": [
+      "go horse riding",
+      "go mountain climbing",
+      "go on a beach holiday",
+      "go on a cultural trip",
+      "go on a cycling tour",
+      "go on day trips",
+      "go shopping",
+      "stay with a host family",
+      "visit local attractions",
+      "visit water parks"
+    ],
+    "text": "1. We often {go shopping} in the airport where you can buy things cheaper.\n2. When I visit my aunt on her farm, we often {go horse riding} in the countryside. I love animals.\n3. You can {visit local attractions} like an old castle in my town.\n4. Families like to {visit water parks} when the weather is hot so they can cool down.\n5. From the city, you can {go on day trips} by coach to the countryside.\n6. It is often cheaper to {stay with a host family} in their own home than in a hotel.\n7. If you are fit, a good way to see more of a country is to {go on a cycling tour}.\n8. You shouldn't {go mountain climbing} alone as it can be a dangerous sport.\n9. When you {go on a cultural trip} to a city, you have the chance to see museums and art galleries.\n10. If you {go on a beach holiday} , you can enjoy being by the sea and doing sports, like surfing and waterskiing."
+  },
+  {
+    "id": "u4-e4",
+    "unit": "Unit 4",
+    "title": "Exercise 4: Complete the sentences with the words in the box.",
+    "type": "drag-drop-blanks",
+    "words": [
+      "Boring",
+      "cultural",
+      "delicious",
+      "famous",
+      "fun",
+      "interesting",
+      "local",
+      "natural",
+      "popular",
+      "traditional"
+    ],
+    "text": "1. The USA is a very {popular} country to visit. Last year, it had over 70 million visitors.\n2. I think that it is more {fun} to go on holiday with friends than with family because you are interested in doing similar activities.\n3. I would prefer to see animals in their {natural} environment than in a zoo.\n4. If you go on a language exchange programme, you can learn a lot about the {local} area where your host family lives.\n5. A lot of people like to go to the beach for holidays, but I find it {boring} .\n6. I prefer to do {cultural} activities on holiday, like visiting museums and art galleries, than to spend all my time on the beach.\n7. Barcelona has a lot of {interesting} buildings. Many of them were designed by the artist Antoni Gaudí.\n8. On the last night of my holiday, I ate the most {delicious} meal in a restaurant by the sea.\n9. The Eiffel Tower is the most {famous} building in Paris – people all over the world know what it looks like.\n10. I love to eat {traditional} food when I go on holiday. I don't always like it, but it is fun to try it."
+  },
+  {
+    "id": "u4-e6",
+    "unit": "Unit 4",
+    "title": "Exercise 6: Complete the email with the correct forms of the verbs in brackets.",
+    "type": "fill-blank",
+    "text": "Hi Tony, I {went} (go) to Germany with my family in February last year. My family and I {don't like} (not/like) beach holidays, so we {decided} (decide) to go to Berlin for a weekend. Usually on holiday, I {enjoy} (enjoy) visiting lots of famous museums and monuments but we {didn't have} (not/have) time to see everything, so we just {saw} (see) the main ones, like the Berlin Wall and the Brandenburg Gate. In my opinion, I think they {are} (be) both very interesting monuments. I {learned} (learn) about them at school last year. Unfortunately, we {felt} (feel) cold a lot of the time because it {was} (be) the middle of winter. Where {do you like} (you/like) going on holiday? {Do you prefer} (you/prefer) city breaks in the winter or beach holidays in the summer? Take care, Sarah"
+  },
+  {
+    "id": "u4-e7",
+    "unit": "Unit 4",
+    "title": "Exercise 7: Match the sentence halves.",
+    "type": "matching",
+    "leftItems": [
+      "1. I go to French lessons",
+      "2. The weather in Stockholm",
+      "3. I'm not good at sport",
+      "4. Did you decide to",
+      "5. Are you good"
+    ],
+    "rightItems": [
+      "Twice a week.",
+      "wasn't very nice.",
+      "but I enjoy hiking and horse riding.",
+      "stay with a host family?",
+      "At sailing?"
+    ]
+  },
+  {
+    "id": "u4-e8",
+    "unit": "Unit 4",
+    "title": "Exercise 8: Choose the best words for the gaps.",
+    "type": "multiple-choice-inline",
+    "text": "1. I didn't go on the language exchange {because|because/so} my language level wasn't high enough.\n2. {As|As/So} we enjoy kayaking, we decided to go on an adventure holiday this year.\n3. The host family spoke English really well {so|because/so} I wasn't worried that we wouldn't be able to communicate.\n4. We prefer city breaks {because|because/so} we find laying on a beach for a week really boring.\n5. {As|As/So} my parents enjoy trying traditional food, they went on a food tour."
+  }
+]
