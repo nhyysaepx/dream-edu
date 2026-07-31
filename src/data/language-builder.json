@@ -1,0 +1,163 @@
+[
+  {
+    "id": "lb-u1-e3",
+    "unit": "Unit 1",
+    "title": "Exercise 3: Match the opposite words.",
+    "type": "matching",
+    "leftItems": ["1. far", "2. right", "3. late", "4. small", "5. closed", "6. empty"],
+    "rightItems": ["near", "left", "early", "large", "open", "full"]
+  },
+  {
+    "id": "lb-u1-e4",
+    "unit": "Unit 1",
+    "title": "Exercise 4: Complete the conversations. Use the words in the box.",
+    "type": "drag-drop-blanks",
+    "words": ["Big", "closed", "full", "late", "near", "right"],
+    "text": "1. A: Are there any spaces in the car park?\nB: No, it's usually {full} by nine o'clock in the morning.\n2. A: Is the cafeteria open now?\nB: No, it's always {closed} at this time.\n3. A: Are there any shops {near} the college?\nB: No, they are all about ten minutes away by bus.\n4. A: Are the toilets on the left?\nB: No, they're on the {right} .\n5. A: Is the library small?\nB: No, it's very {Big} .\n6. A: Am I {late} for the first lesson?\nB: No, you're five minutes early."
+  },
+  {
+    "id": "lb-u2-e1",
+    "unit": "Unit 2",
+    "title": "Exercise 1: Match the sentence halves.",
+    "type": "matching",
+    "leftItems": ["1. My grandfather", "2. My uncle", "3. My aunt", "4. My grandmother", "5. My cousin", "6. My brother", "7. My sister"],
+    "rightItems": ["is my mother's father.", "is my mother's brother.", "is my father's sister.", "is my father's mother.", "is the child of my aunt.", "is my mother's son.", "is my father's daughter."]
+  },
+  {
+    "id": "lb-u2-e2",
+    "unit": "Unit 2",
+    "title": "Exercise 2: Match the formal and informal family words.",
+    "type": "matching",
+    "leftItems": ["1. father", "2. mother", "3. grandmother", "4. grandfather", "5. aunt", "6. children"],
+    "rightItems": ["dad", "mum", "grandma", "grandpa", "Auntie", "kids"]
+  },
+  {
+    "id": "lb-u2-e4",
+    "unit": "Unit 2",
+    "title": "Exercise 4: Look at the family tree. Complete the sentences.",
+    "type": "drag-drop-blanks",
+    "words": ["Aunt", "baby brother", "brother", "children", "grandmother", "husband", "mother", "son", "wife"],
+    "text": "1. Martin is Sara's {brother} .\n2. Jimmie is Martin and Sara's {baby brother} .\n3. Martin, Sara and Jimmie are Sylvia and Tom's {children} .\n4. Sylvia is Tom's {wife} .\n5. Ivor is Lilian's {husband} .\n6. Lilian is Becky's {mother} .\n7. Becky is Sara's {Aunt} .\n8. Lilian is Martin's {grandmother} .\n9. Tom is Ivor and Lilian's {son} ."
+  },
+  {
+    "id": "lb-u2-e7",
+    "unit": "Unit 2",
+    "title": "Exercise 7: Match the questions with the answers.",
+    "type": "matching",
+    "leftItems": ["1. How old is your mum?", "2. How old are your cousins?", "3. Are you and your sister good friends?", "4. Is your sister older than you?", "5. Are your aunt and uncle in the photo?", "6. Is her husband Italian?"],
+    "rightItems": ["She's 39.", "They're 5 and 9.", "Yes, we are.", "No, she isn't.", "Yes, they are.", "No, he isn't."]
+  },
+  {
+    "id": "lb-u2-e8",
+    "unit": "Unit 2",
+    "title": "Exercise 8: Put the words in the correct order to complete the sentences.",
+    "type": "ordering",
+    "sentences": [
+      { "words": ["We're", "on", "beach", "all", "the"], "correct": ["We're", "all", "on", "the", "beach"] },
+      { "words": ["Really", "big", "you're", "family", "a"], "correct": ["you're", "a", "Really", "big", "family"] },
+      { "words": ["Are", "two", "brothers", "9", "now", "my"], "correct": ["my", "two", "brothers", "Are", "9", "now"] },
+      { "words": ["How", "brother", "your", "old", "other", "is"], "correct": ["How", "old", "is", "your", "other", "brother"] },
+      { "words": ["Four", "who", "the", "are", "children"], "correct": ["who", "are", "the", "Four", "children"] },
+      { "words": ["They're", "my", "grandchildren", "dad's", "four"], "correct": ["They're", "my", "dad's", "four", "grandchildren"] }
+    ]
+  },
+  {
+    "id": "lb-u2-e9",
+    "unit": "Unit 2",
+    "title": "Exercise 9: Rewrite the underlined words with the correct short forms.",
+    "type": "fill-blank",
+    "text": "1. You are a big family. -> {You're} a big family.\n2. They are my uncle's grandchildren. -> {They're} my uncle's grandchildren.\n3. We are not twins. -> We {aren't} twins.\n4. I am in the photo. -> {I'm} in the photo.\n5. He is the same age as me. -> {He's} the same age as me.\n6. She is not my brother's wife. -> She {isn't} my brother's wife."
+  },
+  {
+    "id": "lb-u3-e3",
+    "unit": "Unit 3",
+    "title": "Exercise 3: Match the words with the definitions.",
+    "type": "matching",
+    "leftItems": ["1. breakfast", "2. omelette", "3. picnic", "4. cereal", "5. sandwich", "6. dinner", "7. hungry"],
+    "rightItems": ["This is the first meal of the day.", "People make this meal with eggs.", "People eat this meal outside in good weather.", "People eat this with milk or yoghurt in the morning.", "This is two pieces of bread with something in the middle.", "This is the last meal of the day.", "How you feel when you want to eat."]
+  },
+  {
+    "id": "lb-u3-e7",
+    "unit": "Unit 3",
+    "title": "Exercise 7: Match the questions with the answers.",
+    "type": "matching",
+    "leftItems": ["1. How can I help you?", "2. Have you got any biscuits?", "3. Would you like a glass of milk?", "4. Could I have bowl of soup?", "5. Can I also have a sweet?", "6. How much is that, please?", "7. Can I pay by card?"],
+    "rightItems": ["I'd like a cup of coffee, please.", "No, sorry, we haven't.", "Yes, please.", "Yes, certainly. Onion or tomato?", "Yes, we have ice cream or cake.", "That's twenty pounds.", "No, sorry. Our machine is broken."]
+  },
+  {
+    "id": "lb-u3-e8",
+    "unit": "Unit 3",
+    "title": "Exercise 8: Put the words in the correct order to complete the sentences.",
+    "type": "ordering",
+    "sentences": [
+      { "words": ["Water,", "can", "a", "bottle", "I", "please", "have", "of"], "correct": ["can", "I", "have", "a", "bottle", "of", "Water,", "please"] },
+      { "words": ["Got", "sandwiches", "have", "you", "any"], "correct": ["have", "you", "Got", "any", "sandwiches"] },
+      { "words": ["Glass", "cola,", "I", "please", "a", "could", "have", "of"], "correct": ["could", "I", "have", "a", "Glass", "of", "cola,", "please"] },
+      { "words": ["Cup", "like", "with", "would", "coffee", "of", "a", "you", "milk"], "correct": ["would", "you", "like", "a", "Cup", "of", "coffee", "with", "milk"] },
+      { "words": ["Like", "I'd", "with", "cheese", "and", "onion", "an", "omelette"], "correct": ["I'd", "Like", "an", "omelette", "with", "cheese", "and", "onion"] },
+      { "words": ["Bowl", "a", "cereal", "I", "also", "of", "with", "yoghurt", "have", "can"], "correct": ["can", "I", "also", "have", "a", "Bowl", "of", "cereal", "with", "yoghurt"] },
+      { "words": ["The", "how", "much", "is", "and", "chips", "steak"], "correct": ["how", "much", "is", "The", "steak", "and", "chips"] },
+      { "words": ["Have", "ice", "got", "any", "cream", "you", "chocolate"], "correct": ["Have", "you", "got", "any", "chocolate", "ice", "cream"] }
+    ]
+  },
+  {
+    "id": "lb-u4-e2",
+    "unit": "Unit 4",
+    "title": "Exercise 2: Choose the correct answers to complete the sentences.",
+    "type": "multiple-choice-inline",
+    "text": "1. He likes {playing|plays/playing/play} football.\n2. They hate {listening|listen/listening/listens} to the radio in English.\n3. I {love|loving/loves/love} reading a book at home.\n4. She {hates|hating/hate/hates} shopping in the mall.\n5. We don't like {doing|do/doing/does} sport.\n6. Do you like {cooking|cooks/cooking/cook} for friends?\n7. Don't they hate {going|go/goes/going} for walks in bad weather?"
+  },
+  {
+    "id": "lb-u4-e3",
+    "unit": "Unit 4",
+    "title": "Exercise 3: Match the sentence halves.",
+    "type": "matching",
+    "leftItems": ["1. I like going", "2. I hate shopping", "3. I don't like going for", "4. I don't like listening", "5. I hate playing", "6. I don't like spending time", "7. I love cooking"],
+    "rightItems": ["to the gym with my friends.", "for clothes.", "walks in the rain.", "to the news on the radio.", "tennis.", "surfing the internet.", "dinner for my family."]
+  },
+  {
+    "id": "lb-u4-e4",
+    "unit": "Unit 4",
+    "title": "Exercise 4: Complete the sentences. Use the words in the box.",
+    "type": "drag-drop-blanks",
+    "words": ["Boring", "fit", "friendly", "funny", "happy", "interesting", "lazy", "sad"],
+    "text": "1. She does a lot of sport. She's very {fit} .\n2. He makes me laugh. He's really {funny} .\n3. They don't like working hard. They're {lazy} .\n4. They are always smiling. They're {happy} .\n5. She cries a lot. She's {sad} .\n6. He always tells the same stories. He's very {Boring} .\n7. My teacher explains things well and I want to learn more. She's {interesting} .\n8. The neighbours are very kind and helpful to us. They are very {friendly} ."
+  },
+  {
+    "id": "lb-u4-e5",
+    "unit": "Unit 4",
+    "title": "Exercise 5: Read about William and his friends. Complete the sentences with the correct adjectives.",
+    "type": "multiple-choice-inline",
+    "text": "Hello, my name's William. I'm an engineer and I work for a big company. I know lots of people at work and some of them are also my friends. My best friend is called Eddie. We work in the same office. He always makes me laugh because he's so {funny|boring/funny} . He loves playing tennis and football. He also likes swimming. Eddie is very {fit|fit/lazy} , because he does so much sport. My sister, Maxine, also likes playing tennis and she loves going for long walks, but her main interest is shopping for clothes! I often go with her to the shopping mall, but I hate shopping myself. For me, it's {boring|boring/friendly} to wait while someone chooses lots of clothes, so I normally sit and play games on my mobile phone while I wait for her. That's much more {interesting|interesting/sad} ! My other friends are all very different. John, for example, hates doing sport and is only {happy|funny/happy} when he's at home reading a book or watching TV. Another friend, called Dave, is a really nice guy who loves going out with friends. Dave hasn't got a job and he doesn't want one, because he doesn't like working. He's very {lazy|interesting/lazy} . Marta is my sister's best friend. She's very {friendly|friendly/sad} so loves chatting for hours on the internet. She has hundreds of online friends."
+  },
+  {
+    "id": "lb-u4-e6",
+    "unit": "Unit 4",
+    "title": "Exercise 6: Complete the sentences. Use the phrases in the box.",
+    "type": "drag-drop-blanks",
+    "words": ["Hate doing", "like going out", "likes playing", "loves going", "loves reading", "loves talking"],
+    "text": "1. My best friend {likes playing} football.\n2. Maxine {loves going} to the gym.\n3. John and Martin {Hate doing} sport.\n4. Thomas {loves reading} a book at home.\n5. I {like going out} to restaurants with my friends.\n6. Marta {loves talking} to friends on the internet."
+  },
+  {
+    "id": "lb-u4-e7",
+    "unit": "Unit 4",
+    "title": "Exercise 7: Read the profiles of the people from the internet. Choose True or False.",
+    "type": "multiple-choice-inline",
+    "text": "1. Kyra is German. {False|True/False}\n2. Kyra loves playing tennis. {False|True/False}\n3. Kyra is lazy. {True|True/False}\n4. Lars is Italian. {False|True/False}\n5. Lars loves cooking. {True|True/False}\n6. Lars loves playing video games. {False|True/False}\n7. Rachel enjoys swimming. {True|True/False}\n8. Rachel's friends are fit. {True|True/False}\n9. Rachel loves going for walks with her friends in the evening. {False|True/False}"
+  },
+  {
+    "id": "lb-u4-e8",
+    "unit": "Unit 4",
+    "title": "Exercise 8: Put the words in the correct order to complete the sentences.",
+    "type": "ordering",
+    "sentences": [
+      { "words": ["Cinema", "with", "going", "to", "the", "I", "love", "my", "friends"], "correct": ["I", "love", "going", "to", "the", "Cinema", "with", "my", "friends"] },
+      { "words": ["Hate", "I", "shopping", "clothes", "for"], "correct": ["I", "Hate", "shopping", "for", "clothes"] },
+      { "words": ["Like", "walks", "don't", "I", "long", "in", "going", "for", "the", "park"], "correct": ["I", "don't", "Like", "going", "for", "long", "walks", "in", "the", "park"] },
+      { "words": ["Listening", "I", "to", "radio", "like", "the"], "correct": ["I", "like", "Listening", "to", "the", "radio"] },
+      { "words": ["Internet", "on", "the", "chatting", "love", "I", "really"], "correct": ["I", "really", "love", "chatting", "on", "the", "Internet"] },
+      { "words": ["Guy", "really", "nice", "friend", "a", "is", "best", "my"], "correct": ["my", "best", "friend", "is", "a", "really", "nice", "Guy"] },
+      { "words": ["Is", "my", "wife", "friendly", "very"], "correct": ["my", "wife", "Is", "very", "friendly"] }
+    ]
+  }
+]
