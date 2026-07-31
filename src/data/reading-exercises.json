@@ -1,0 +1,331 @@
+[
+  {
+    "id": "read-u1-1",
+    "unit": "Unit 1",
+    "title": "A Day in the Life of a Student",
+    "passage": "My name is Tom, and I am a university student. I have a very busy daily routine. I usually wake up at half past six. I have a shower and then I eat breakfast. I always have cereal and milk for breakfast. At a quarter past seven, I catch the bus to the university. My first lesson begins at eight o'clock. I study computer science, so I spend a lot of time in the computer lab. I have a break for lunch at a quarter to one. I usually eat a sandwich in the cafeteria. My classes finish at four o'clock, and then I go to the library to do my homework. I leave the library at six o'clock and walk home. In the evening, I relax and watch television. I go to bed at half past ten.",
+    "exercises": [
+      {
+        "id": "read-u1-1-e1",
+        "title": "Choose the correct answer",
+        "type": "multiple-choice",
+        "questions": [
+          {
+            "question": "What time does Tom wake up?",
+            "options": ["6:30", "7:15", "8:00"],
+            "answer": "6:30"
+          },
+          {
+            "question": "How does Tom travel to the university?",
+            "options": ["He walks", "He drives", "He takes the bus"],
+            "answer": "He takes the bus"
+          }
+        ]
+      },
+      {
+        "id": "read-u1-1-e2",
+        "title": "Are these statements True, False, or Not Given?",
+        "type": "true-false-not-given",
+        "questions": [
+          {
+            "question": "Tom studies computer science.",
+            "answer": "True"
+          },
+          {
+            "question": "Tom eats lunch at home.",
+            "answer": "False"
+          },
+          {
+            "question": "Tom likes watching sports on television.",
+            "answer": "Not Given"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "read-u1-2",
+    "unit": "Unit 1",
+    "title": "My Hometown",
+    "passage": "I live in a small town called Riverdale. It is a very quiet place, but it has everything you need. In the town centre, there is a large supermarket where people buy their food. Next to the supermarket, there is a small post office and a bank. My favourite place in town is the sports centre. It is opposite the library. I go there every weekend to play basketball with my friends. We also have a lovely park near the river. When the weather is nice, families go there for a picnic. However, there isn't a cinema in our town. If we want to watch a film, we have to catch a train to the city.",
+    "exercises": [
+      {
+        "id": "read-u1-2-e1",
+        "title": "Fill in the blanks with words from the text",
+        "type": "fill-blank",
+        "text": "1. People buy their food at the {supermarket}.\n2. The sports centre is {opposite} the library.\n3. Families often have a {picnic} in the park when the weather is good.\n4. You have to travel to the {city} to watch a film."
+      }
+    ]
+  },
+  {
+    "id": "read-u2-1",
+    "unit": "Unit 2",
+    "title": "My Dream House",
+    "passage": "My family and I live in an apartment, but my dream is to live in a big house in the countryside. In my dream house, there is a huge garden with many trees and flowers. Inside the house, there is a spacious living room where the family can sit together and watch television. I want a large kitchen because I love cooking. My bedroom is upstairs. It has two big windows, so it is very bright. In my bedroom, there is a comfortable bed with four pillows, a wardrobe for all my clothes, and a desk where I can do my homework. Next to my bedroom, there is a modern bathroom with a shower and a large mirror.",
+    "exercises": [
+      {
+        "id": "read-u2-1-e1",
+        "title": "True, False, or Not Given?",
+        "type": "true-false-not-given",
+        "questions": [
+          {
+            "question": "The writer currently lives in a house.",
+            "answer": "False"
+          },
+          {
+            "question": "The writer likes cooking.",
+            "answer": "True"
+          },
+          {
+            "question": "There is a TV in the writer's bedroom.",
+            "answer": "Not Given"
+          }
+        ]
+      },
+      {
+        "id": "read-u2-1-e2",
+        "title": "Choose the correct word",
+        "type": "multiple-choice-inline",
+        "text": "The writer's bedroom is very {bright|bright/dark} because it has two large {windows|doors/windows}. Next to the bedroom is a {bathroom|living room/bathroom}."
+      }
+    ]
+  },
+  {
+    "id": "read-u2-2",
+    "unit": "Unit 2",
+    "title": "A Big Family",
+    "passage": "I come from a very big family. I live with my parents, my grandmother, and my three brothers. My grandmother is seventy years old, but she is very active. She loves walking in the park and visiting her friends. My eldest brother, Mark, is married. His wife's name is Sarah, and they have two children: a boy and a girl. They are my nephew and niece. My other two brothers are twins. They are fifteen years old and they go to the same school. We all live close to each other. Every Sunday, we go to my aunt's house for a big family dinner. My aunt is my father's sister. She is a fantastic cook.",
+    "exercises": [
+      {
+        "id": "read-u2-2-e1",
+        "title": "Family Members - Multiple Choice",
+        "type": "multiple-choice",
+        "questions": [
+          {
+            "question": "Who does the writer live with?",
+            "options": ["Parents, grandmother, and three brothers", "Parents, aunt, and three brothers", "Grandparents and three brothers"],
+            "answer": "Parents, grandmother, and three brothers"
+          },
+          {
+            "question": "Who is Sarah?",
+            "options": ["The writer's sister", "Mark's wife", "The writer's aunt"],
+            "answer": "Mark's wife"
+          },
+          {
+            "question": "How is the aunt related to the writer's father?",
+            "options": ["She is his mother", "She is his wife", "She is his sister"],
+            "answer": "She is his sister"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "read-u3-1",
+    "unit": "Unit 3",
+    "title": "Healthy Eating",
+    "passage": "Eating a healthy diet is very important for our bodies. A balanced meal should include vegetables, fruit, and some protein. For example, many people eat chicken or fish with rice and vegetables for dinner. For breakfast, a bowl of cereal with milk and an apple is a great start to the day. It is also important to drink plenty of water. You should try to drink at least eight glasses of water every day. Some people drink too much cola and fruit juice. These drinks have a lot of sugar in them, which is bad for your teeth. When you are hungry between meals, it is better to eat a piece of fruit instead of biscuits or chocolate cake.",
+    "exercises": [
+      {
+        "id": "read-u3-1-e1",
+        "title": "True, False, or Not Given?",
+        "type": "true-false-not-given",
+        "questions": [
+          {
+            "question": "A balanced meal only needs vegetables and fruit.",
+            "answer": "False"
+          },
+          {
+            "question": "Fruit juice contains a lot of sugar.",
+            "answer": "True"
+          },
+          {
+            "question": "You should drink coffee in the morning.",
+            "answer": "Not Given"
+          }
+        ]
+      },
+      {
+        "id": "read-u3-1-e2",
+        "title": "Fill in the blanks",
+        "type": "fill-blank",
+        "text": "1. You should drink at least eight glasses of {water} daily.\n2. Cola is bad for your {teeth} because of the sugar.\n3. Instead of eating {biscuits} or cake, you should eat fruit."
+      }
+    ]
+  },
+  {
+    "id": "read-u3-2",
+    "unit": "Unit 3",
+    "title": "At the Café",
+    "passage": "Waitress: Hello, can I help you?\nCustomer: Yes, I'd like a chicken sandwich, please.\nWaitress: Would you like brown bread or white bread?\nCustomer: Brown bread, please. And could I have a bowl of tomato soup?\nWaitress: I'm sorry, we haven't got any tomato soup today. We only have onion soup.\nCustomer: That's fine. I'll have the onion soup.\nWaitress: Would you like anything to drink?\nCustomer: Can I have a glass of orange juice?\nWaitress: Certainly. Anything else? A sweet or some cake?\nCustomer: No, thank you. How much is that?\nWaitress: That's twelve pounds, fifty pence.\nCustomer: Can I pay by card?\nWaitress: Yes, of course.",
+    "exercises": [
+      {
+        "id": "read-u3-2-e1",
+        "title": "Multiple Choice",
+        "type": "multiple-choice",
+        "questions": [
+          {
+            "question": "What kind of bread does the customer want?",
+            "options": ["White bread", "Brown bread", "No bread"],
+            "answer": "Brown bread"
+          },
+          {
+            "question": "Why doesn't the customer get tomato soup?",
+            "options": ["He doesn't like it.", "It is too expensive.", "The café doesn't have it today."],
+            "answer": "The café doesn't have it today."
+          },
+          {
+            "question": "How will the customer pay?",
+            "options": ["By card", "By cash", "With his phone"],
+            "answer": "By card"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "read-u3-3",
+    "unit": "Unit 3",
+    "title": "Sporting Activities",
+    "passage": "My friends and I love playing sports. Right now, we are playing football in the park. We play football every Saturday morning. It is a great way to stay fit and have fun together. My sister doesn't like football. She is at the swimming pool at the moment. She loves swimming and goes there three times a week. Our parents also like to be active. In the evenings, they usually go for a long walk. Today, however, they are relaxing in the garden because it is very hot. Next week, I want to try a new sport. I am thinking about playing tennis.",
+    "exercises": [
+      {
+        "id": "read-u3-3-e1",
+        "title": "Present Simple vs Continuous (Fill in the blanks)",
+        "type": "multiple-choice-inline",
+        "text": "1. We {play|play/are playing} football every Saturday.\n2. Right now, we {are playing|play/are playing} football in the park.\n3. My sister {goes|goes/is going} to the pool three times a week.\n4. Today, our parents {are relaxing|relax/are relaxing} in the garden."
+      },
+      {
+        "id": "read-u3-3-e2",
+        "title": "True, False, or Not Given?",
+        "type": "true-false-not-given",
+        "questions": [
+          {
+            "question": "The writer's sister is playing football with him.",
+            "answer": "False"
+          },
+          {
+            "question": "The parents are walking in the park today.",
+            "answer": "False"
+          },
+          {
+            "question": "The writer is good at tennis.",
+            "answer": "Not Given"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "read-u4-1",
+    "unit": "Unit 4",
+    "title": "Holiday Preferences",
+    "passage": "Everyone in my family likes different types of holidays. I love going to the beach. I enjoy swimming in the sea and reading a book on the sand. For me, a beach holiday is very relaxing. My brother, however, hates sitting on the beach. He says it is boring. He prefers adventure holidays. He loves climbing mountains and sleeping in a tent. My parents usually prefer city breaks. They like visiting museums and eating in nice restaurants. Last year, we went to Paris. My parents loved the art, but my brother thought it was lazy. Next year, we are planning to go to a holiday resort that has a beach and mountains nearby, so everyone will be happy.",
+    "exercises": [
+      {
+        "id": "read-u4-1-e1",
+        "title": "Match the preferences (Multiple Choice)",
+        "type": "multiple-choice",
+        "questions": [
+          {
+            "question": "What does the writer love doing on holiday?",
+            "options": ["Climbing mountains", "Visiting museums", "Going to the beach"],
+            "answer": "Going to the beach"
+          },
+          {
+            "question": "Why does the brother hate beach holidays?",
+            "options": ["Because he can't swim", "Because he thinks they are boring", "Because it is too hot"],
+            "answer": "Because he thinks they are boring"
+          },
+          {
+            "question": "Where did the family go last year?",
+            "options": ["To the beach", "To the mountains", "To Paris"],
+            "answer": "To Paris"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "read-u4-2",
+    "unit": "Unit 4",
+    "title": "My Friends' Personalities",
+    "passage": "I have a group of very good friends, but they all have very different personalities. Lisa is very funny. She always tells great jokes and makes everyone laugh. However, she can be a bit lazy when it comes to doing her homework. Mark is the opposite. He is very hardworking and always finishes his work early. He is also very fit because he goes to the gym every day. Sarah is incredibly friendly. She loves talking to new people and she is never sad. Then there is Paul. Paul is very interesting because he has travelled to many countries and knows lots of amazing stories. I like spending time with all of them.",
+    "exercises": [
+      {
+        "id": "read-u4-2-e1",
+        "title": "Adjectives of personality (Fill in the blanks)",
+        "type": "fill-blank",
+        "text": "1. Lisa tells jokes and makes people laugh; she is {funny}.\n2. Mark goes to the gym every day; he is very {fit}.\n3. Sarah loves talking to new people; she is very {friendly}.\n4. Paul knows lots of amazing stories; he is {interesting}."
+      },
+      {
+        "id": "read-u4-2-e2",
+        "title": "True, False, or Not Given?",
+        "type": "true-false-not-given",
+        "questions": [
+          {
+            "question": "Lisa always does her homework on time.",
+            "answer": "False"
+          },
+          {
+            "question": "Mark likes playing computer games.",
+            "answer": "Not Given"
+          },
+          {
+            "question": "Sarah is never sad.",
+            "answer": "True"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "read-u4-3",
+    "unit": "Unit 4",
+    "title": "A Disastrous Weekend",
+    "passage": "Last weekend, I decided to go camping with my friends. It was a terrible experience. First, we got lost because my friend forgot the map. We drove for three hours before we found the campsite. When we finally arrived, it started to rain heavily. We tried to put up our tent, but the wind was too strong, and the tent broke. We couldn't make a fire to cook our food, so we only ate cold sandwiches for dinner. During the night, it was freezing cold, and none of us could sleep. In the morning, we packed our things and went home early. We were very sad and tired. I don't think I will go camping again anytime soon!",
+    "exercises": [
+      {
+        "id": "read-u4-3-e1",
+        "title": "Multiple Choice",
+        "type": "multiple-choice",
+        "questions": [
+          {
+            "question": "Why did they get lost?",
+            "options": ["The map was wrong.", "They forgot the map.", "The driver was bad."],
+            "answer": "They forgot the map."
+          },
+          {
+            "question": "What did they eat for dinner?",
+            "options": ["Hot soup", "Cooked meat", "Cold sandwiches"],
+            "answer": "Cold sandwiches"
+          },
+          {
+            "question": "How did they feel in the morning?",
+            "options": ["Happy and relaxed", "Sad and tired", "Hungry and thirsty"],
+            "answer": "Sad and tired"
+          }
+        ]
+      },
+      {
+        "id": "read-u4-3-e2",
+        "title": "True, False, or Not Given?",
+        "type": "true-false-not-given",
+        "questions": [
+          {
+            "question": "It rained when they arrived at the campsite.",
+            "answer": "True"
+          },
+          {
+            "question": "They slept very well in the tent.",
+            "answer": "False"
+          },
+          {
+            "question": "They stopped at a café on the way home.",
+            "answer": "Not Given"
+          }
+        ]
+      }
+    ]
+  }
+]
