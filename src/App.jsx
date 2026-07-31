@@ -9,6 +9,8 @@ import Teachers from './pages/Teachers';
 import SuccessStories from './pages/SuccessStories';
 import Contact from './pages/Contact';
 import ReadingApp from './pages/ReadingApp';
+import DEBeginnerHome from './pages/DEBeginnerHome';
+import DEBeginnerExercise from './pages/DEBeginnerExercise';
 
 // Helper component to reset scroll position to top on page change
 function ScrollToTop() {
@@ -36,6 +38,8 @@ function App() {
             <Route path="/success-stories" element={<SuccessStories />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/reading-app" element={<ReadingApp />} />
+            <Route path="/de-beginner" element={<DEBeginnerHome />} />
+            <Route path="/de-beginner/exercise/:id" element={<DEBeginnerExercise />} />
           </Routes>
         </main>
         <Footer />
