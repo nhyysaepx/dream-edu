@@ -6,89 +6,98 @@ export default function Courses() {
 
   const categories = [
     { key: 'All', label: 'Tất cả lộ trình' },
-    { key: 'IELTS Prep', label: 'Luyện thi IELTS' },
-    { key: 'Academic English', label: 'Tiếng Anh học thuật' },
-    { key: 'Specialized', label: 'Kỹ năng chuyên sâu' },
+    { key: 'Luyện thi IELTS', label: 'Luyện thi IELTS' },
+    { key: 'Tiếng Anh Thiếu Niên', label: 'Tiếng Anh Thiếu Niên' },
+    { key: 'Tiếng Anh Mất Gốc', label: 'Tiếng Anh Mất Gốc' },
   ];
 
   const courses = [
+    // Nhóm 1: Luyện thi IELTS
+    {
+      id: 'ielts-beginner',
+      title: 'IELTS Beginner',
+      category: 'Luyện thi IELTS',
+      badge: '0 - 3.0',
+      icon: 'flag',
+      description: 'Xây dựng nền tảng từ vựng - ngữ pháp, làm quen với cấu trúc bài thi IELTS.',
+      stats: [
+        { label: '36 buổi', icon: 'schedule' },
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
+    },
+    {
+      id: 'pre-ielts',
+      title: 'Pre IELTS',
+      category: 'Luyện thi IELTS',
+      badge: '3.0 - 4.5',
+      icon: 'auto_stories',
+      description: 'Làm quen với các dạng bài tập IELTS đơn giản, kích thích sự tìm tòi và hứng thú khi học tiếng Anh.',
+      stats: [
+        { label: '36 buổi', icon: 'schedule' },
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
+    },
     {
       id: 'ielts-foundation',
       title: 'IELTS Foundation',
-      category: 'IELTS Prep',
-      tag: 'Cơ bản',
-      icon: 'auto_stories',
-      description: 'Xây dựng nền tảng ngôn ngữ vững chắc ở cả 4 kỹ năng cho học viên mới bắt đầu lộ trình IELTS.',
+      category: 'Luyện thi IELTS',
+      badge: '4.5 - 5.5',
+      icon: 'trending_up',
+      description: 'Thực chiến với các dạng bài trung bình - khá, tiếp cận dần với đề thi và format thực tế.',
       stats: [
         { label: '36 buổi', icon: 'schedule' },
-        { label: 'Tối đa 8 học sinh', icon: 'group' }
-      ],
-      isElite: false
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
     },
     {
       id: 'ielts-advanced',
       title: 'IELTS Advanced',
-      category: 'IELTS Prep',
-      tag: 'Nâng cao',
+      category: 'Luyện thi IELTS',
+      badge: '5.5 - 6.5',
       icon: 'speed',
-      description: 'Chương trình chuyên sâu dành cho học viên mục tiêu điểm số cao. Tập trung tối ưu hóa các kỹ năng khó và nâng band điểm vượt trội.',
+      description: 'Hoàn thiện toàn bộ 4 kỹ năng, làm chủ các dạng đề khó và chuẩn bị sẵn sàng cho kỳ thi IELTS.',
       stats: [
         { label: '36 buổi', icon: 'schedule' },
-        { label: 'Tối đa 8 học sinh', icon: 'group' }
-      ],
-      isElite: false
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
     },
     {
-      id: 'ielts-6-5',
-      title: 'IELTS 6.5+',
-      category: 'IELTS Prep',
-      tag: 'Trung cấp',
-      icon: 'star',
-      description: 'Thiết kế đáp ứng yêu cầu tuyển sinh đại học, tập trung vào Viết học thuật và Nghe chuyên sâu.',
+      id: 'luyen-de-ielts',
+      title: 'Luyện đề IELTS',
+      category: 'Luyện thi IELTS',
+      badge: '6.0 - 7.0+',
+      icon: 'fact_check',
+      description: 'Bồi dưỡng, nâng cao các kỹ năng chuyên sâu và chiến thuật phòng thi, sẵn sàng tối ưu điểm bài thi thật.',
       stats: [
-        { label: '8 Tuần / Có Lớp Cuối Tuần', icon: 'schedule' },
-        { label: 'Làm chủ Kỹ năng Viết học thuật', icon: 'edit_note' }
-      ],
-      isElite: false
+        { label: '24 buổi', icon: 'schedule' },
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
     },
+    // Nhóm 2: Tiếng Anh Thiếu Niên
     {
-      id: 'ielts-beginner',
-      title: 'IELTS Beginner',
-      category: 'IELTS Prep',
-      tag: 'Mới bắt đầu',
-      icon: 'military_tech',
-      description: 'Dành cho người mới bắt đầu hoặc mất gốc tiếng Anh. Tập trung xây dựng nền tảng ngữ pháp, từ vựng và làm quen cấu trúc bài thi.',
+      id: 'tieng-anh-thieu-nien',
+      title: 'Tiếng Anh Thiếu Niên',
+      category: 'Tiếng Anh Thiếu Niên',
+      badge: 'Level A2 - C1',
+      icon: 'diversity_3',
+      description: 'Lộ trình bài bản từ chuẩn A2 đến C1, phát triển toàn diện 4 kỹ năng, phù hợp cho học sinh cấp 2.',
       stats: [
-        { label: '36 buổi', icon: 'schedule' },
-        { label: 'Tối đa 8 học sinh', icon: 'group' }
-      ],
-      isElite: false
+        { label: 'Lớp tiêu chuẩn', icon: 'tune' },
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
     },
+    // Nhóm 3: Tiếng Anh Mất Gốc
     {
-      id: 'academic-english',
-      title: 'Tiếng Anh Học Thuật',
-      category: 'Academic English',
-      tag: 'Chuẩn bị Đại học',
-      icon: 'school',
-      description: 'Làm chủ kỹ năng nghiên cứu, trích dẫn tài liệu và tư duy học thuật phục vụ cho việc học tập quốc tế.',
+      id: 'tieng-anh-mat-goc',
+      title: 'Tiếng Anh Mất Gốc',
+      category: 'Tiếng Anh Mất Gốc',
+      badge: 'Nền tảng căn bản',
+      icon: 'foundation',
+      description: 'Bồi dưỡng vững chắc nền tảng từ vựng và ngữ pháp cốt lõi, lấy lại tự tin cho người mới bắt đầu hoặc người mất gốc tiếng Anh.',
       stats: [
-        { label: 'Kỹ năng Nghiên cứu & Trích dẫn', icon: 'history_edu' },
-        { label: 'Chuyên đề Tư duy Phản biện', icon: 'psychology' }
-      ],
-      isElite: false
-    },
-    {
-      id: 'public-speaking',
-      title: 'Public Speaking',
-      category: 'Specialized',
-      tag: 'Giao tiếp',
-      icon: 'record_voice_over',
-      description: 'Rèn luyện sự tự tin để trình bày ý tưởng một cách cuốn hút và rõ ràng trong mọi môi trường chuyên nghiệp.',
-      stats: [
-        { label: 'Ngôn ngữ Cơ thể & Biểu cảm', icon: 'mic' },
-        { label: 'Hướng dẫn Thực hành Trực tiếp', icon: 'groups' }
-      ],
-      isElite: false
+        { label: 'Lớp tiêu chuẩn', icon: 'tune' },
+        { label: 'Tối đa 8 học viên', icon: 'groups' }
+      ]
     }
   ];
 
@@ -99,36 +108,26 @@ export default function Courses() {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="max-w-container-max mx-auto px-6 md:px-margin-desktop py-12 md:py-16 text-left">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center">
-          <div className="space-y-stack-sm">
-            <span className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md text-label-md uppercase tracking-wider font-semibold">
-              Học thuật Xuất sắc
-            </span>
-            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary leading-tight font-bold">
-              Nâng tầm tiềm năng của bạn cùng <span className="text-secondary">Giảng viên Chuyên gia</span>.
-            </h1>
-            <p className="text-on-surface-variant font-body-lg text-body-lg max-w-lg">
-              Giáo trình được thiết kế bài bản cho những học viên đầy hoài bão. Từ IELTS nền tảng đến Tiếng Anh Học thuật nâng cao, chúng tôi đồng hành cùng bạn trên con đường chinh phục thành công toàn cầu.
-            </p>
-          </div>
-          <div className="relative hidden lg:block h-[400px] rounded-xl overflow-hidden shadow-xl">
-            <img
-              alt="Thành công Giáo dục"
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNAnodpyFDI7O8GlSbCL-OfEvYPPJlXD8mCqSHNULThjnZGh5SB1h26nqzMHvuGMEVsB0IGW6g_stnWYKgNWTv43mrtr4ET19jC9VBK7WTvTXputnNU9JkD6hq34FdCGl81oKED8fhBtN3RaIdryRRpnjprm3-AHeleOSQUayHJu87D4lDQb1qMAre7CuQmheSwp-EnBgcR0N8huvMoDSly89GKp7Cvk4Lwt-c8EO6mLm8Tp1xQCUAm-O_E031EIK4ReCwPK3bIDw"
-            />
-            <div className="absolute inset-0 bg-primary/10 mix-blend-multiply"></div>
-          </div>
+      <section className="max-w-container-max mx-auto px-6 md:px-margin-desktop py-12 md:py-16 text-center">
+        <div className="max-w-3xl mx-auto space-y-4">
+          <span className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-md text-label-md uppercase tracking-wider font-semibold border border-secondary/20">
+            Học thuật Xuất sắc
+          </span>
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary leading-tight font-bold">
+            Nâng tầm tiềm năng của bạn cùng <span className="text-secondary">Giảng viên Chuyên gia</span>.
+          </h1>
+          <p className="text-on-surface-variant font-body-lg text-body-lg max-w-2xl mx-auto leading-relaxed">
+            Giáo trình được thiết kế bài bản cho những học viên đầy hoài bão. Từ nền tảng vững chắc đến luyện thi chuyên sâu, chúng tôi đồng hành cùng bạn trên con đường chinh phục thành công toàn cầu.
+          </p>
         </div>
       </section>
 
-      {/* Course Filters & Bento Grid */}
+      {/* Course Filters & Grid */}
       <section className="max-w-container-max mx-auto px-6 md:px-margin-desktop pb-stack-lg text-left">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-gutter mb-stack-md pb-6 border-b border-outline-variant/20">
           <div>
-            <h2 className="font-headline-md text-headline-md text-primary font-bold mb-2">Khóa học được Thiết kế Riêng</h2>
-            <p className="text-on-surface-variant">Lựa chọn lộ trình phù hợp nhất với năng lực và mục tiêu của bạn.</p>
+            <h2 className="font-headline-md text-headline-md text-primary font-bold mb-1">Khóa học được Thiết kế Riêng</h2>
+            <p className="text-on-surface-variant text-sm">Lựa chọn lộ trình phù hợp nhất với năng lực và mục tiêu của bạn.</p>
           </div>
           
           {/* Filtering Tabs */}
@@ -137,7 +136,7 @@ export default function Courses() {
               <button
                 key={cat.key}
                 onClick={() => setActiveFilter(cat.key)}
-                className={`px-4 py-2 rounded-lg font-label-md text-label-md transition-all cursor-pointer font-semibold ${
+                className={`px-4 py-2 rounded-xl font-label-md text-sm transition-all cursor-pointer font-bold ${
                   activeFilter === cat.key
                     ? 'bg-primary text-on-primary shadow-sm'
                     : 'bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed hover:text-on-primary-fixed'
@@ -149,56 +148,49 @@ export default function Courses() {
           </div>
         </div>
 
-        {/* Course Cards Grid */}
+        {/* Course Cards Grid: 3 cols desktop, 2 cols tablet, 1 col mobile */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
           {filteredCourses.map((course) => (
             <div
               key={course.id}
-              className={`p-6 rounded-xl border card-shadow flex flex-col justify-between transition-all duration-300 ${
-                course.isElite
-                  ? 'bg-primary-container text-on-primary border-primary/20 hover:scale-[1.02]'
-                  : 'bg-surface-container-lowest border-outline-variant/30 hover:scale-[1.02] hover:-translate-y-1'
-              }`}
+              className="bg-surface-container-lowest border border-outline-variant/30 rounded-2xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:border-primary/40 shadow-xs hover:shadow-xl group relative overflow-hidden"
             >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary-container to-secondary-container opacity-80" />
+              
               <div>
                 <div className="flex justify-between items-start mb-4">
-                  <span
-                    className={`px-3 py-1 rounded-full font-label-md text-label-md font-bold ${
-                      course.isElite
-                        ? 'bg-secondary text-on-secondary'
-                        : 'bg-secondary-container text-on-secondary-container'
-                    }`}
-                  >
-                    {course.tag}
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container border border-secondary/20 tracking-wide">
+                    {course.badge}
                   </span>
-                  <span
-                    className={`material-symbols-outlined ${
-                      course.isElite ? 'text-secondary-fixed text-3xl' : 'text-secondary text-3xl'
-                    }`}
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    {course.icon}
-                  </span>
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span
+                      className="material-symbols-outlined text-2xl"
+                      style={{ fontVariationSettings: "'FILL' 1" }}
+                    >
+                      {course.icon}
+                    </span>
+                  </div>
                 </div>
-                <h3 className={`font-headline-sm text-headline-sm font-bold mb-4 ${
-                  course.isElite ? 'text-on-primary' : 'text-primary'
-                }`}>
+
+                <div className="text-[11px] font-bold text-secondary uppercase tracking-wider mb-1">
+                  {course.category}
+                </div>
+
+                <h3 className="font-headline-sm text-headline-sm font-bold mb-3 text-primary">
                   {course.title}
                 </h3>
-                <p className={`text-body-sm font-body-sm mb-6 leading-relaxed ${
-                  course.isElite ? 'text-primary-fixed-dim' : 'text-on-surface-variant'
-                }`}>
+                
+                <p className="text-body-sm font-body-sm mb-6 leading-relaxed text-on-surface-variant min-h-[44px]">
                   {course.description}
                 </p>
-                <div className="space-y-4 mb-8">
+
+                <div className="space-y-3 mb-8 pt-4 border-t border-outline-variant/20">
                   {course.stats.map((stat, idx) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <span className={`material-symbols-outlined text-[20px] ${
-                        course.isElite ? 'text-secondary-fixed' : 'text-primary'
-                      }`}>
+                    <div key={idx} className="flex items-center gap-3 text-on-surface">
+                      <span className="material-symbols-outlined text-[18px] text-primary shrink-0">
                         {stat.icon}
                       </span>
-                      <span className="text-label-lg font-label-lg font-semibold">{stat.label}</span>
+                      <span className="text-label-md font-semibold text-xs">{stat.label}</span>
                     </div>
                   ))}
                 </div>
@@ -206,11 +198,7 @@ export default function Courses() {
               
               <Link
                 to="/contact"
-                className={`w-full py-3 rounded-lg font-label-lg text-label-lg text-center font-bold transition-all ${
-                  course.isElite
-                    ? 'bg-secondary-container text-on-secondary-container hover:bg-white hover:text-primary'
-                    : 'bg-primary text-on-primary hover:bg-primary-container'
-                }`}
+                className="w-full py-3.5 rounded-xl font-label-lg text-sm text-center font-bold transition-all bg-primary text-on-primary hover:bg-primary-container shadow-xs hover:shadow-md active:scale-95"
               >
                 Đăng ký học ngay
               </Link>
@@ -246,7 +234,7 @@ export default function Courses() {
         </div>
       </section>
 
-      {/* Floating Action Button for Contact (Zalo/Messenger mockup) */}
+      {/* Floating Action Button for Contact */}
       <div className="fixed bottom-8 right-8 z-40 hidden md:block">
         <Link
           to="/contact"
