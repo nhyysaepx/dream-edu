@@ -249,15 +249,19 @@ export default function Contact() {
               <div className="bg-primary text-on-primary p-6 rounded-xl tonal-elevation-1">
                 <h3 className="font-headline-sm text-headline-sm mb-6 text-secondary-container font-bold">Liên hệ trực tiếp</h3>
                 <div className="space-y-6">
-                  <a className="flex items-center group transition-all" href="tel:0777466838">
+                  <div className="flex items-center group transition-all">
                     <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mr-4 group-hover:bg-secondary-container transition-colors shrink-0">
                       <span className="material-symbols-outlined text-on-primary-container group-hover:text-on-secondary-container">call</span>
                     </div>
                     <div>
                       <p className="font-label-md opacity-70">Số điện thoại</p>
-                      <p className="font-label-lg font-bold text-on-primary group-hover:text-secondary-container transition-colors">077 746 6838</p>
+                      <div className="font-label-lg font-bold text-on-primary flex flex-wrap gap-x-1.5">
+                        <a href="tel:0772486838" className="hover:text-secondary-container transition-colors">077 248 6838</a>
+                        <span>/</span>
+                        <a href="tel:0777466838" className="hover:text-secondary-container transition-colors">077 746 6838</a>
+                      </div>
                     </div>
-                  </a>
+                  </div>
                   <a className="flex items-center group transition-all" href="mailto:dreameducation.dn@gmail.com">
                     <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center mr-4 group-hover:bg-secondary-container transition-colors shrink-0">
                       <span className="material-symbols-outlined text-on-primary-container group-hover:text-on-secondary-container">mail</span>
