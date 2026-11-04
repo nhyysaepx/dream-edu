@@ -15,6 +15,8 @@ import DEBeginnerReview from './pages/DEBeginnerReview';
 import DEBeginnerLBReview from './pages/DEBeginnerLBReview';
 import DEBeginnerReadingReview from './pages/DEBeginnerReadingReview';
 import TestPlatform from './pages/TestPlatform';
+import TestDetail from './pages/TestDetail';
+import TestRoom from './pages/TestRoom';
 
 // Helper component to reset scroll position to top on page change
 function ScrollToTop() {
@@ -27,31 +29,42 @@ function ScrollToTop() {
   return null;
 }
 
+function MainLayout() {
+  const { pathname } = useLocation();
+  const isExamRoom = pathname.includes('/exam');
+
+  return (
+    <div className="flex flex-col min-h-screen bg-background text-on-surface">
+      {!isExamRoom && <Navbar />}
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/teachers" element={<Teachers />} />
+          <Route path="/success-stories" element={<SuccessStories />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/reading-app" element={<ReadingApp />} />
+          <Route path="/de-beginner" element={<DEBeginnerHome />} />
+          <Route path="/de-beginner/exercise/:id" element={<DEBeginnerExercise />} />
+          <Route path="/de-beginner/review" element={<DEBeginnerReview />} />
+          <Route path="/de-beginner/language-builder" element={<DEBeginnerLBReview />} />
+          <Route path="/de-beginner/reading-review" element={<DEBeginnerReadingReview />} />
+          <Route path="/test-platform" element={<TestPlatform />} />
+          <Route path="/tests/:id" element={<TestDetail />} />
+          <Route path="/tests/:id/exam" element={<TestRoom />} />
+        </Routes>
+      </main>
+      {!isExamRoom && <Footer />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-background text-on-surface">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/teachers" element={<Teachers />} />
-            <Route path="/success-stories" element={<SuccessStories />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/reading-app" element={<ReadingApp />} />
-            <Route path="/de-beginner" element={<DEBeginnerHome />} />
-            <Route path="/de-beginner/exercise/:id" element={<DEBeginnerExercise />} />
-            <Route path="/de-beginner/review" element={<DEBeginnerReview />} />
-            <Route path="/de-beginner/language-builder" element={<DEBeginnerLBReview />} />
-            <Route path="/de-beginner/reading-review" element={<DEBeginnerReadingReview />} />
-            <Route path="/test-platform" element={<TestPlatform />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <MainLayout />
     </Router>
   );
 }
