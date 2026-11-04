@@ -1,10 +1,35 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import teacherHeroImg from '../assets/teacher_presentation.jpg';
+import teacherPresentationImg from '../assets/teacher_presentation.jpg';
+import teacherGraduationImg from '../assets/teacher_graduation.jpg';
 import teacherQuynhImg from '../assets/teacher_quynh.jpg';
 
 export default function Teachers() {
   const [activeTab, setActiveTab] = useState('all');
+  const [currentHeroImage, setCurrentHeroImage] = useState(0);
+
+  const heroImages = [
+    {
+      src: teacherPresentationImg,
+      alt: 'Thầy Nguyễn Tương Quỳnh thuyết trình và giảng dạy thực tế',
+      caption: 'Hội thảo & Giảng dạy chuyên môn thực tế',
+      tag: 'Hoạt động học thuật'
+    },
+    {
+      src: teacherGraduationImg,
+      alt: 'Lễ tốt nghiệp Thạc sĩ MA TESOL - Nottingham Trent University',
+      caption: 'Lễ tốt nghiệp Thạc sĩ MA TESOL – Nottingham Trent University',
+      tag: 'Tốt nghiệp Xuất sắc (Distinction)'
+    }
+  ];
+
+  const handlePrevHeroImage = () => {
+    setCurrentHeroImage((prev) => (prev === 0 ? heroImages.length - 1 : prev - 1));
+  };
+
+  const handleNextHeroImage = () => {
+    setCurrentHeroImage((prev) => (prev === heroImages.length - 1 ? 0 : prev + 1));
+  };
 
   const tabs = [
     { key: 'all', label: 'Tất cả hồ sơ' },
@@ -29,12 +54,80 @@ export default function Teachers() {
               Các nhà giáo của chúng tôi không chỉ giảng dạy; họ là những chuyên gia ngôn ngữ và nhà sư phạm tâm huyết, giàu kinh nghiệm giúp hàng ngàn học viên đỗ vào các trường đại học hàng đầu thế giới.
             </p>
           </div>
-          <div className="flex-shrink-0 w-full md:w-5/12 aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border-4 border-white">
-            <img
-              alt="Giảng dạy thực tế tại Dream Education"
-              className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-              src={teacherHeroImg}
-            />
+
+          {/* Interactive Image Gallery / Slider */}
+          <div className="flex-shrink-0 w-full md:w-5/12 space-y-3">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border-4 border-white group bg-surface-container-high">
+              <img
+                alt={heroImages[currentHeroImage].alt}
+                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                src={heroImages[currentHeroImage].src}
+              />
+              
+              {/* Badge Overlay */}
+              <div className="absolute top-3 left-3 bg-primary/90 text-on-primary text-[11px] font-bold px-3 py-1 rounded-full shadow-md backdrop-blur-xs flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+                {heroImages[currentHeroImage].tag}
+              </div>
+
+              {/* Caption Overlay */}
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-3.5 pt-8 text-white text-xs font-medium flex items-center justify-between">
+                <span className="truncate pr-2 font-semibold">
+                  {heroImages[currentHeroImage].caption}
+                </span>
+                <span className="text-[10px] text-white/90 shrink-0 bg-white/20 px-2 py-0.5 rounded-full font-bold">
+                  {currentHeroImage + 1} / {heroImages.length}
+                </span>
+              </div>
+
+              {/* Navigation Arrows */}
+              <button
+                type="button"
+                onClick={handlePrevHeroImage}
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/85 hover:bg-white text-primary flex items-center justify-center shadow-md transition-all opacity-85 hover:opacity-100 hover:scale-110 cursor-pointer"
+                aria-label="Ảnh trước"
+              >
+                <span className="material-symbols-outlined text-lg">chevron_left</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleNextHeroImage}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/85 hover:bg-white text-primary flex items-center justify-center shadow-md transition-all opacity-85 hover:opacity-100 hover:scale-110 cursor-pointer"
+                aria-label="Ảnh tiếp theo"
+              >
+                <span className="material-symbols-outlined text-lg">chevron_right</span>
+              </button>
+            </div>
+
+            {/* Thumbnail Preview Strip */}
+            <div className="grid grid-cols-2 gap-2.5">
+              {heroImages.map((img, idx) => (
+                <button
+                  type="button"
+                  key={idx}
+                  onClick={() => setCurrentHeroImage(idx)}
+                  className={`flex items-center gap-2 p-1.5 rounded-xl border transition-all cursor-pointer text-left ${
+                    currentHeroImage === idx
+                      ? 'border-primary bg-primary/5 shadow-xs ring-2 ring-primary/20'
+                      : 'border-outline-variant/30 bg-white hover:bg-surface-container-low opacity-75 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-12 h-10 object-cover rounded-lg shrink-0 border border-outline-variant/20"
+                  />
+                  <div className="min-w-0 flex-1 pr-1">
+                    <p className={`text-[11px] font-bold truncate ${currentHeroImage === idx ? 'text-primary' : 'text-on-surface'}`}>
+                      {img.tag}
+                    </p>
+                    <p className="text-[10px] text-on-surface-variant truncate">
+                      {idx === 0 ? 'Giảng dạy lớp học' : 'Lễ tốt nghiệp UK'}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
