@@ -63,11 +63,6 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link to="/success-stories" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
-                Học viên tiêu biểu
-              </Link>
-            </li>
-            <li>
               <Link to="/courses" className="text-on-surface-variant hover:text-primary transition-colors hover:translate-x-1 inline-block text-body-sm">
                 Thi thử miễn phí
               </Link>

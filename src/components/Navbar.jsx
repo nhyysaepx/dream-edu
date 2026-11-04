@@ -14,13 +14,10 @@ export default function Navbar() {
     { path: '/about', label: 'Giới thiệu' },
     { path: '/courses', label: 'Khóa học' },
     { path: '/teachers', label: 'Giáo viên' },
-    { path: '/success-stories', label: 'Học viên tiêu biểu' },
     { 
       label: 'Phòng Lab', 
       subLinks: [
-        { path: '/pronunciation/', label: 'Pronunciation', isExternal: true },
-        { path: '/text2qti/', label: 'Text2QTI', isExternal: true },
-        { path: '/reading-app', label: 'Reading App' }
+        { path: '/pronunciation/', label: 'Pronunciation', isExternal: true }
       ] 
     },
     { path: '/contact', label: 'Liên hệ' },
