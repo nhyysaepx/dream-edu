@@ -17,6 +17,8 @@ import DEBeginnerReadingReview from './pages/DEBeginnerReadingReview';
 import TestPlatform from './pages/TestPlatform';
 import TestDetail from './pages/TestDetail';
 import TestRoom from './pages/TestRoom';
+import Homework from './pages/Homework';
+import HomeworkDetail from './pages/HomeworkDetail';
 
 // Helper component to reset scroll position to top on page change
 function ScrollToTop() {
@@ -53,6 +55,8 @@ function MainLayout() {
           <Route path="/test-platform" element={<TestPlatform />} />
           <Route path="/tests/:id" element={<TestDetail />} />
           <Route path="/tests/:id/exam" element={<TestRoom />} />
+          <Route path="/homework" element={<Homework />} />
+          <Route path="/homework/:id" element={<HomeworkDetail />} />
         </Routes>
       </main>
       {!isExamRoom && <Footer />}
