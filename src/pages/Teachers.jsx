@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import teacherHeroImg from '../assets/teacher_presentation.jpg';
 
 export default function Teachers() {
   const [activeSpecialist, setActiveSpecialist] = useState('All');
@@ -88,23 +89,23 @@ export default function Teachers() {
     <div className="pt-20">
       {/* Hero Section */}
       <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 text-left">
-        <div className="flex flex-col md:flex-row items-center gap-gutter bg-surface-container-low rounded-3xl p-8 md:p-12">
+        <div className="flex flex-col md:flex-row items-center gap-gutter bg-surface-container-low rounded-3xl p-8 md:p-12 border border-outline-variant/30 shadow-xs">
           <div className="flex-1">
-            <span className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1 rounded-full font-label-md text-label-md mb-4 font-semibold">
-              ĐỘI NGŨ GIẢNG VIÊN ĐẤNG CẤP
+            <span className="inline-block bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-md text-label-md mb-4 font-semibold border border-secondary/20">
+              ĐỘI NGŨ GIẢNG VIÊN ĐẲNG CẤP
             </span>
-            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary font-bold mb-6">
+            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary font-bold mb-6 leading-tight">
               Học hỏi từ những kiến trúc sư của thành công học thuật
             </h1>
-            <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
               Các nhà giáo của chúng tôi không chỉ giảng dạy; họ là những chuyên gia ngôn ngữ và nhà sư phạm tâm huyết, giàu kinh nghiệm giúp hàng ngàn học viên đỗ vào các trường đại học hàng đầu thế giới.
             </p>
           </div>
-          <div className="flex-shrink-0 w-full md:w-1/3 aspect-square rounded-2xl overflow-hidden shadow-md">
+          <div className="flex-shrink-0 w-full md:w-5/12 aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border-4 border-white">
             <img
-              alt="Học thuật Xuất sắc"
+              alt="Học hỏi từ những kiến trúc sư của thành công học thuật"
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuByGSOI89FWgW3bNGOEebZlrq0TFmmKor9yXiWZMsoo8HmYeRnkHvYtK6oXTsbVV2nszaahX12M0qnuoDRcWeTrKgP5CS-rWa3-vz03l0fgGbS6-FLySRd402Elg5DqqM0F5w2nGDA_2vmVFf0dNtGAfSqjajQpFONT3_l4UpT3M4EUP-fKvLq-7pdX-vPDIRogpG16vo0pcE9beMW1Cze8jf8FbWOVPKH9iYQHKPTvIVBj6LO1fhYbtvJoIqXn019MOMeR3Ltf0z4"
+              src={teacherHeroImg}
             />
           </div>
         </div>
