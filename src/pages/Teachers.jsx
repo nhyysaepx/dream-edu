@@ -1,89 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import teacherHeroImg from '../assets/teacher_presentation.jpg';
+import teacherQuynhImg from '../assets/teacher_quynh.jpg';
 
 export default function Teachers() {
-  const [activeSpecialist, setActiveSpecialist] = useState('All');
+  const [activeTab, setActiveTab] = useState('all');
 
-  const categories = [
-    { key: 'All', label: 'Tất cả chuyên gia' },
-    { key: 'IELTS Academic', label: 'IELTS Học thuật' },
-    { key: 'Business English', label: 'Tiếng Anh thương mại' },
-    { key: 'General English', label: 'Tiếng Anh giao tiếp' },
+  const tabs = [
+    { key: 'all', label: 'Tất cả hồ sơ' },
+    { key: 'education', label: 'Học vấn & Bằng cấp' },
+    { key: 'experience', label: 'Kinh nghiệm giảng dạy' },
+    { key: 'research', label: 'Nghiên cứu & Kỹ năng' },
   ];
-
-  const teachers = [
-    {
-      id: 'sarah-jenkins',
-      name: 'Dr. Sarah Jenkins',
-      role: 'Trưởng ban IELTS',
-      badge: 'Chuyên gia IELTS 9.0',
-      qualification: 'Tiến sĩ Ngôn ngữ học Ứng dụng',
-      experience: 'Hơn 15 năm',
-      specialization: 'Kỹ năng Viết Task 2',
-      specialtyGroup: 'IELTS Academic',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAhPoP-waErZkP6WwY4dt8GOQsxAJWuDLibJmPc4b2s_osP6ZV7j8wvC13eLW3NG9pEiN_Uhdcu0FXfDmkupG3lcHTEbiMqzW5iyUi4dwaB33lbEmLLUV9pO34ZVNlepfeiYb8tsgPbSSdtosZULqbfwBU1nBeow8C8z9Q-aPlPMs_GSB6ay2OO9u3RSihzGoPb_50NH04P3gQxy2DfcDKFVPfSNEIwnxxVIO1XyPNdsm4thWASn93aGs0SBlWUmZjh06tGU-wv_QI'
-    },
-    {
-      id: 'james-miller',
-      name: 'James Miller',
-      role: 'Giảng viên Cao cấp',
-      badge: 'Chuyên gia IELTS 8.5',
-      qualification: 'Thạc sĩ TESOL (Đại học Oxford)',
-      experience: '12 năm',
-      specialization: 'Phản xạ Nói trôi chảy',
-      specialtyGroup: 'IELTS Academic',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXAxqnZGEc_Jx9UDT0nvU6CSPmqzrblMl5agob0if-WCMDoAzpNdZaaJxOA5ey36vbdwU4R_h2BI328cyUXNyiAlW1cxM0769UJE5CryJjWt4wi87gZZVNOWZf9QgtMvfnW2LvlFbWKzMnDa_fVmN_QIdanXkD907xavD4XvC5FcnRCj5CnLDut3Ww-FSyObvgkOnOTiBola-9ETXhB_GqO2U_QxhHbfmHMuhjeLnCwFZ7_UWg5eeYOWUdNxBii78ZFk1yewNapII'
-    },
-    {
-      id: 'elena-rodriguez',
-      name: 'Elena Rodriguez',
-      role: 'Chuyên gia Chiến lược Ngôn ngữ',
-      badge: 'Chuyên gia IELTS 8.5',
-      qualification: 'Chứng chỉ CELTA & DELTA',
-      experience: '8 năm',
-      specialization: 'Ngữ pháp phục vụ kỹ năng Viết',
-      specialtyGroup: 'General English',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCWuZ7KUAww7hFpUINVtc6KGY6meXowDvpog2ybNQaIgNm8NKrqnBz-6tfcJFct5JIxHjKqh24GVv8aSZOaGaJQaN2sB4pqgOrY89rxlXbnZE5w5NefzjUK5pEXX4QslmJ15yVHLZr5mY6MrT2c04mSVQkRTKj3GsH7tQ8mNbVmRU7Xw6_waTrp8FJlMXkyVZbOcfgwaB74iR_h5NGdvOCCLK0fXH96q8Ci0mfkw3PeUQxb5IIJWn7aubAwmNQ3BFAKaHLtDK42QCs'
-    },
-    {
-      id: 'arthur-vance',
-      name: 'Dr. Arthur Vance',
-      role: 'Chuyên gia Phát triển Chương trình',
-      badge: 'Chuyên gia IELTS 9.0',
-      qualification: 'Tiến sĩ Chính sách Giáo dục',
-      experience: 'Hơn 20 năm',
-      specialization: 'Tâm lý học phòng thi',
-      specialtyGroup: 'IELTS Academic',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCPFZkYOJ2RisaGo31jI0GihaV1HlDQBNYlOZW7rTCrKfnKma4XF7TgbtuxwgAMTsDOSoIR9xuYYC2fHkuTmtxKfDA7na9vKRXwUgX9qrDGzADA-QyPwBzj4CyDytfSo26hNjkzJ9kaBL8bTGn7tCgM3sYc190C7XmxnlLNp2rk2U3VYP7anYYbWYGNvVq6cnqfDNt396mgt0iHDmkm0WsIFRv1whuANVy0Mv8MjHZ2it7vS_j-qaQ66XhGf6M-_yTuA7HVeHn0itI'
-    },
-    {
-      id: 'sophia-chen',
-      name: 'Sophia Chen',
-      role: 'Điều phối viên IELTS',
-      badge: 'Chuyên gia IELTS 8.5',
-      qualification: 'Thạc sĩ Văn học Anh',
-      experience: '10 năm',
-      specialization: 'Chiến thuật làm bài Đọc',
-      specialtyGroup: 'General English',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBHOPzGl5OG0--ro42__aXlAFjuvlFd0gK1UyTsZq4oKmeqwP9TMwgC3OEamWD8wHlPgpC2uZoWF0xydPBmP698aS8UuA9VWQIOG1bIGly8qlAKdrRzS4m1uleYufD6ax4U6uVBmkpy4sb4IPGzCJDIngPCmtwFptun-5appaa5e-9QknCYU7T6ukVFGm8dhOJJDH96mnAsWftIyOT3i40u-7zSbwc_eg2R0DYFX32rpsZNizIne0J-nCl2sHaEGcDof4n-c2291Hw'
-    },
-    {
-      id: 'marcus-thorne',
-      name: 'Marcus Thorne',
-      role: 'Chuyên gia Từ vựng',
-      badge: 'Huấn luyện viên IELTS 8.5',
-      qualification: 'Thạc sĩ Ngôn ngữ học Ứng dụng',
-      experience: '7 năm',
-      specialization: 'Từ vựng Học thuật',
-      specialtyGroup: 'Business English',
-      image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAEJ4RL91LrEBlk9ayqf3hJLOpbkTG-4YwN7UVQZMvjZf4j7jgeOYsOZ80N0yHBjIcHpObwp-E1z9E4qv03eEFR3ENpb5Oi2Yp6GZjaMzgkbGFyM6tLEvcXmROZDE8nYPgsNXFZ8m5DQdu7PgBngsh1J646qgAAIoEaIZK4Sc3BwvV0ZDSfPIOh7TOxL0jIiKWnQkBB5eIsfHd9kCvoT8DihNY0s93kXLGc9RHWsfiSVBX-F9VsVQb1UATWy_CXUC0lEC7uv2TGHx0'
-    }
-  ];
-
-  const filteredTeachers = activeSpecialist === 'All' 
-    ? teachers 
-    : teachers.filter(t => t.specialtyGroup === activeSpecialist);
 
   return (
     <div className="pt-20">
@@ -103,7 +31,7 @@ export default function Teachers() {
           </div>
           <div className="flex-shrink-0 w-full md:w-5/12 aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border-4 border-white">
             <img
-              alt="Học hỏi từ những kiến trúc sư của thành công học thuật"
+              alt="Giảng dạy thực tế tại Dream Education"
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               src={teacherHeroImg}
             />
@@ -111,110 +39,393 @@ export default function Teachers() {
         </div>
       </section>
 
-      {/* Search & Filter */}
-      <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-stack-md text-left">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-outline-variant/30 pb-4">
-          <h2 className="font-headline-md text-headline-md text-primary font-bold">Giảng viên ưu tú</h2>
-          <div className="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto">
-            {categories.map((cat) => (
+      {/* Main Profile Section */}
+      <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pb-stack-lg text-left">
+        {/* Section Heading & Filter Tabs */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-outline-variant/30 pb-6 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 text-secondary font-bold text-xs uppercase tracking-wider mb-1">
+              <span className="material-symbols-outlined text-[18px]">verified</span>
+              Giảng viên & Nhà sáng lập
+            </div>
+            <h2 className="font-headline-md text-headline-md text-primary font-bold">
+              Hồ sơ Chuyên gia Học thuật
+            </h2>
+          </div>
+
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {tabs.map((tab) => (
               <button
-                key={cat.key}
-                onClick={() => setActiveSpecialist(cat.key)}
-                className={`whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md transition-colors cursor-pointer font-semibold ${
-                  activeSpecialist === cat.key
-                    ? 'bg-primary text-on-primary shadow-sm'
-                    : 'bg-surface-container-high text-on-surface-variant hover:bg-outline-variant'
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`whitespace-nowrap px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+                  activeTab === tab.key
+                    ? 'bg-primary text-on-primary shadow-sm scale-105'
+                    : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container'
                 }`}
               >
-                {cat.label}
+                {tab.label}
               </button>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Instructor Grid */}
-      <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pb-stack-lg text-left">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-          {filteredTeachers.map((teacher) => (
-            <div
-              key={teacher.id}
-              className="bg-surface-container-lowest rounded-xl p-6 teacher-card-shadow transition-all duration-300 hover:-translate-y-1 border border-outline-variant/20 flex flex-col h-full group"
-            >
-              <div className="flex items-start gap-gutter mb-6">
-                <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                  <img
-                    alt={teacher.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    src={teacher.image}
-                  />
+        {/* Profile Card & Dossier Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Portrait & Key Info */}
+          <div className="lg:col-span-4 bg-white rounded-3xl border border-outline-variant/30 p-6 sm:p-8 shadow-sm text-center relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary via-secondary-container to-primary" />
+            
+            {/* Portrait Image */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 mx-auto mb-6 rounded-2xl overflow-hidden shadow-lg border-4 border-surface-container-low group">
+              <img
+                src={teacherQuynhImg}
+                alt="Thầy Nguyễn Tương Quỳnh - Founder & Lead Instructor"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute top-2.5 right-2.5 bg-emerald-500 text-white p-1 rounded-full shadow-md" title="Đang giảng dạy & nhận học viên">
+                <span className="material-symbols-outlined text-[16px] block">check</span>
+              </div>
+            </div>
+
+            {/* Name & Titles */}
+            <h3 className="font-headline-md text-headline-md text-primary font-bold mb-1">
+              Nguyễn Tương Quỳnh
+            </h3>
+            <p className="text-secondary font-bold text-sm uppercase tracking-wider mb-2">
+              Founder & Giám đốc Học thuật
+            </p>
+            <p className="text-on-surface-variant text-xs mb-6">
+              Dream Education • Đà Nẵng, Việt Nam
+            </p>
+
+            {/* Key Metric Badges */}
+            <div className="grid grid-cols-2 gap-2.5 mb-6 text-left">
+              <div className="bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase block">Chứng chỉ</span>
+                <span className="text-base font-black text-primary">IELTS 7.5</span>
+              </div>
+              <div className="bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase block">Thạc sĩ UK</span>
+                <span className="text-base font-black text-secondary">Distinction</span>
+              </div>
+              <div className="bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase block">ĐH Ngoại Ngữ</span>
+                <span className="text-xs font-bold text-primary">Thủ khoa đầu ra</span>
+              </div>
+              <div className="bg-surface-container-low p-3 rounded-xl border border-outline-variant/20">
+                <span className="text-[10px] font-bold text-on-surface-variant uppercase block">ĐH USTH</span>
+                <span className="text-xs font-bold text-primary">Cử nhân CNTT</span>
+              </div>
+            </div>
+
+            {/* Contact & Links */}
+            <div className="space-y-2.5 text-xs text-left mb-6 pt-4 border-t border-outline-variant/20 text-on-surface-variant">
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-primary shrink-0">mail</span>
+                <a href="mailto:ngtquynh2001@gmail.com" className="hover:text-primary transition-colors font-medium">
+                  ngtquynh2001@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-primary shrink-0">phone_iphone</span>
+                <a href="tel:+84772486838" className="hover:text-primary transition-colors font-medium">
+                  +84 772486838
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="material-symbols-outlined text-[18px] text-primary shrink-0">location_on</span>
+                <span>58 Sơn Thủy 3, Ngũ Hành Sơn, Đà Nẵng</span>
+              </div>
+            </div>
+
+            {/* CTAs */}
+            <div className="space-y-2.5">
+              <Link
+                to="/contact"
+                className="w-full py-3.5 rounded-xl font-label-lg text-sm text-center font-bold transition-all bg-primary text-on-primary hover:bg-primary-container shadow-xs hover:shadow-md block active:scale-95"
+              >
+                Đăng ký học cùng Thầy Quỳnh
+              </Link>
+              <Link
+                to="/contact"
+                className="w-full py-3 rounded-xl font-label-lg text-sm text-center font-bold transition-all border-2 border-primary text-primary hover:bg-primary/5 block"
+              >
+                Nhận tư vấn lộ trình học
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Column: Detailed CV Dossier */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* Bio Summary Card */}
+            {(activeTab === 'all' || activeTab === 'education') && (
+              <div className="bg-white rounded-3xl border border-outline-variant/30 p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2.5 mb-4 text-primary">
+                  <span className="material-symbols-outlined text-2xl">format_quote</span>
+                  <h3 className="font-headline-sm text-headline-sm font-bold">Giới thiệu & Triết lý Giảng dạy</h3>
                 </div>
-                <div className="flex-1 text-left">
-                  <h3 className="font-headline-sm text-headline-sm text-primary font-bold">{teacher.name}</h3>
-                  <p className="font-label-md text-label-md text-secondary-container bg-primary px-2 py-0.5 rounded inline-block mt-1 font-semibold">
-                    {teacher.role}
-                  </p>
-                  <div className="flex items-center gap-1 mt-2 text-secondary">
-                    <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      stars
-                    </span>
-                    <span className="font-label-lg text-label-lg font-bold">{teacher.badge}</span>
+                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-4">
+                  Thầy <strong>Nguyễn Tương Quỳnh</strong> là Giảng viên Tiếng Anh và Nhà sáng lập tại Dream Education với định hướng nghiên cứu sâu về <strong>thụ đắc từ vựng (Vocabulary Acquisition)</strong> và <strong>ứng dụng công nghệ trong giáo dục ngôn ngữ (Technology-Enhanced Learning)</strong>.
+                </p>
+                <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                  Bằng việc kết hợp nền tảng học thuật quốc tế vững vàng từ Vương quốc Anh với tư duy công nghệ liên ngành, thầy chú trọng triển khai các phương pháp sư phạm dựa trên dữ liệu ngữ liệu (Corpus-driven learning), mang đến trải nghiệm học tiếng Anh khoa học, thực tế, giúp học sinh Việt Nam bứt phá điểm số và phát triển năng lực ngôn ngữ toàn diện.
+                </p>
+              </div>
+            )}
+
+            {/* Education & Academic Honors */}
+            {(activeTab === 'all' || activeTab === 'education') && (
+              <div className="bg-white rounded-3xl border border-outline-variant/30 p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2.5 mb-6 text-primary">
+                  <span className="material-symbols-outlined text-2xl">school</span>
+                  <h3 className="font-headline-sm text-headline-sm font-bold">Học vấn & Bằng cấp Danh giá</h3>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Master Degree */}
+                  <div className="relative pl-6 border-l-2 border-primary space-y-2">
+                    <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-xs" />
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-secondary bg-secondary-container/30 px-2.5 py-0.5 rounded-full border border-secondary/20">
+                        Tháng 9/2024 – Tháng 10/2025
+                      </span>
+                      <span className="text-xs font-black text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">
+                        Tốt nghiệp Xuất sắc (Distinction)
+                      </span>
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-primary">
+                      Thạc sĩ Giảng dạy tiếng Anh (Master of Arts in TESOL)
+                    </h4>
+                    <p className="text-sm font-semibold text-on-surface">
+                      Nottingham Trent University — Nottingham, Vương Quốc Anh 🇬🇧
+                    </p>
+                    <div className="bg-surface-container-low/60 rounded-xl p-3.5 text-xs text-on-surface-variant space-y-1.5 mt-2">
+                      <p>
+                        <strong>Luận văn Thạc sĩ:</strong> <em>"A Corpus-Driven Study and Learner Knowledge Investigation of Phrasal Verbs in Vietnamese High School EFL Textbooks"</em> (Khảo sát dựa trên ngữ liệu về cụm động từ trong sách giáo khoa tiếng Anh THPT Việt Nam — Người hướng dẫn: PGS. TS. David Wright).
+                      </p>
+                      <p>
+                        <strong>Học phần chuyên sâu:</strong> Phân tích thụ đắc ngôn ngữ thứ hai (Second Language Learning), Phương pháp nghiên cứu khoa học, Giảng dạy và Kiểm tra đánh giá từ vựng (Teaching and Assessing Vocabulary).
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bachelor of Arts in English */}
+                  <div className="relative pl-6 border-l-2 border-primary space-y-2">
+                    <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-secondary-container border-4 border-white shadow-xs" />
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant bg-surface-container px-2.5 py-0.5 rounded-full">
+                        2022 – 2026
+                      </span>
+                      <span className="text-xs font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20">
+                        Thủ khoa niên khóa • GPA 3.38/4.0
+                      </span>
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-primary">
+                      Cử nhân Ngôn ngữ Anh (Bachelor of Arts, English Language)
+                    </h4>
+                    <p className="text-sm font-semibold text-on-surface">
+                      Đại học Đà Nẵng (University of Da Nang) 🇻🇳
+                    </p>
+                    <p className="text-xs text-on-surface-variant">
+                      Nhận Giấy khen tốt nghiệp với danh hiệu <strong>Thủ khoa (Valedictorian)</strong> ngành Ngôn ngữ Anh khóa 2022 - 2026.
+                    </p>
+                  </div>
+
+                  {/* Bachelor of Science in ICT */}
+                  <div className="relative pl-6 border-l-2 border-outline-variant/40 space-y-2">
+                    <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-surface-container-high border-4 border-white shadow-xs" />
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-on-surface-variant bg-surface-container px-2.5 py-0.5 rounded-full">
+                        2019 – 2022
+                      </span>
+                      <span className="text-xs font-medium text-on-surface-variant bg-surface-container px-2.5 py-0.5 rounded-full">
+                        GPA: 15.03/20 (tương đương 3.2/4.0)
+                      </span>
+                    </div>
+                    <h4 className="text-base sm:text-lg font-bold text-primary">
+                      Cử nhân Khoa học & Công nghệ Thông tin (BSc. ICT)
+                    </h4>
+                    <p className="text-sm font-semibold text-on-surface">
+                      Trường Đại học Khoa học và Công nghệ Hà Nội (USTH) 🇻🇳
+                    </p>
+                    <p className="text-xs text-on-surface-variant">
+                      Luận văn tốt nghiệp: <em>Evaluation Fairness In Mix IEEE 802.11ax and Legacy IEEE 802.11</em>.
+                    </p>
                   </div>
                 </div>
               </div>
-              
-              <div className="space-y-4 mb-8 flex-1">
-                <div className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
-                  <span className="font-body-sm text-body-sm text-on-surface-variant">Học vị / Chứng chỉ</span>
-                  <span className="font-label-lg text-label-lg font-bold text-primary">{teacher.qualification}</span>
+            )}
+
+            {/* Teaching & Leadership Experience */}
+            {(activeTab === 'all' || activeTab === 'experience') && (
+              <div className="bg-white rounded-3xl border border-outline-variant/30 p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2.5 mb-6 text-primary">
+                  <span className="material-symbols-outlined text-2xl">work_history</span>
+                  <h3 className="font-headline-sm text-headline-sm font-bold">Kinh nghiệm Giảng dạy & Lãnh đạo</h3>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
-                  <span className="font-body-sm text-body-sm text-on-surface-variant">Kinh nghiệm giảng dạy</span>
-                  <span className="font-label-lg text-label-lg font-bold text-primary">{teacher.experience}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-surface-container-low rounded-lg">
-                  <span className="font-body-sm text-body-sm text-on-surface-variant">Chuyên môn sâu</span>
-                  <span className="font-label-lg text-label-lg font-bold text-primary">{teacher.specialization}</span>
+
+                <div className="space-y-6">
+                  {/* Dream Education */}
+                  <div className="bg-surface-container-low/40 rounded-2xl p-5 border border-outline-variant/20 space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h4 className="text-base sm:text-lg font-bold text-primary">
+                        Sáng lập & Giám đốc Học thuật (Founder & Academic Director)
+                      </h4>
+                      <span className="text-xs font-bold bg-primary text-on-primary px-3 py-1 rounded-full">
+                        Tháng 5/2025 – Hiện tại
+                      </span>
+                    </div>
+                    <p className="text-xs font-bold text-secondary uppercase tracking-wider">
+                      Dream Education
+                    </p>
+                    <ul className="text-xs sm:text-sm text-on-surface-variant space-y-1.5 list-disc list-inside leading-relaxed">
+                      <li>Trực tiếp thiết kế và chỉ đạo hệ thống chương trình đào tạo IELTS và Tiếng Anh học thuật chuẩn hóa.</li>
+                      <li>Điều phối các chu kỳ kiểm định, đánh giá định kỳ và phân tích dữ liệu học tập của học viên.</li>
+                      <li>Trực tiếp huấn luyện, cố vấn phương pháp cho các giáo viên và giám sát chất lượng từng lớp học.</li>
+                    </ul>
+                  </div>
+
+                  {/* IELTS Fighter */}
+                  <div className="bg-surface-container-low/40 rounded-2xl p-5 border border-outline-variant/20 space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h4 className="text-base sm:text-lg font-bold text-primary">
+                        Giảng viên IELTS (IELTS Instructor)
+                      </h4>
+                      <span className="text-xs font-bold bg-surface-container text-on-surface-variant px-3 py-1 rounded-full">
+                        Tháng 3/2023 – Tháng 10/2024
+                      </span>
+                    </div>
+                    <p className="text-xs font-bold text-secondary uppercase tracking-wider">
+                      IELTS Fighter
+                    </p>
+                    <ul className="text-xs sm:text-sm text-on-surface-variant space-y-1.5 list-disc list-inside leading-relaxed">
+                      <li>Trực tiếp giảng dạy các lớp IELTS và General English cho học sinh THPT và sinh viên đại học (cấp độ A2 đến C1).</li>
+                      <li>Hỗ trợ tối ưu hóa phương pháp học từ vựng và kỹ năng làm bài thi thực chiến cho học viên.</li>
+                    </ul>
+                  </div>
+
+                  {/* TEDx */}
+                  <div className="bg-surface-container-low/40 rounded-2xl p-5 border border-outline-variant/20 space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h4 className="text-base sm:text-lg font-bold text-primary">
+                        Đồng sáng lập (Co-Founder)
+                      </h4>
+                      <span className="text-xs font-bold bg-surface-container text-on-surface-variant px-3 py-1 rounded-full">
+                        Tháng 12/2018 – Tháng 7/2019
+                      </span>
+                    </div>
+                    <p className="text-xs font-bold text-secondary uppercase tracking-wider">
+                      TEDxYouth@TruongThiSt
+                    </p>
+                    <ul className="text-xs sm:text-sm text-on-surface-variant space-y-1.5 list-disc list-inside leading-relaxed">
+                      <li>Xây dựng cơ cấu tổ chức và trực tiếp đàm phán thành công bản quyền chính thức từ tổ chức TED quốc tế.</li>
+                      <li>Điều phối các ban chức năng về nội dung, hậu cần sự kiện, truyền thông và đào tạo diễn giả (speaker curation).</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-              
-              <Link
-                to="/contact"
-                className="w-full py-3 border-2 border-primary text-primary rounded-lg font-label-lg text-label-lg hover:bg-primary hover:text-on-primary transition-all text-center font-bold"
-              >
-                Xem hồ sơ chi tiết
-              </Link>
-            </div>
-          ))}
+            )}
+
+            {/* Research & Technical Specialization */}
+            {(activeTab === 'all' || activeTab === 'research') && (
+              <div className="bg-white rounded-3xl border border-outline-variant/30 p-6 sm:p-8 shadow-sm">
+                <div className="flex items-center gap-2.5 mb-6 text-primary">
+                  <span className="material-symbols-outlined text-2xl">psychology</span>
+                  <h3 className="font-headline-sm text-headline-sm font-bold">Nghiên cứu Chuyên sâu & Năng lực Công nghệ</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-surface-container-low/50 p-4 rounded-2xl border border-outline-variant/20">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined text-2xl">dataset</span>
+                    </div>
+                    <h5 className="font-bold text-primary text-sm mb-1">Ngôn ngữ học Ngữ liệu (Corpus Linguistics)</h5>
+                    <p className="text-xs text-on-surface-variant leading-relaxed">
+                      Khai thác kho dữ liệu ngôn ngữ thực tế (Corpora) để phân tích tần suất cụm động từ và collocations, giúp học viên học đúng từ vựng tự nhiên nhất.
+                    </p>
+                  </div>
+
+                  <div className="bg-surface-container-low/50 p-4 rounded-2xl border border-outline-variant/20">
+                    <div className="w-10 h-10 rounded-xl bg-secondary-container/30 text-secondary flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined text-2xl">laptop_chromebook</span>
+                    </div>
+                    <h5 className="font-bold text-primary text-sm mb-1">Công nghệ trong Giáo dục (EdTech)</h5>
+                    <p className="text-xs text-on-surface-variant leading-relaxed">
+                      Tích hợp công cụ phần mềm và AI vào trải nghiệm học tập, xây dựng các ứng dụng hỗ trợ luyện đọc, phát âm và kiểm tra trực tuyến.
+                    </p>
+                  </div>
+
+                  <div className="bg-surface-container-low/50 p-4 rounded-2xl border border-outline-variant/20">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined text-2xl">quiz</span>
+                    </div>
+                    <h5 className="font-bold text-primary text-sm mb-1">Khảo thí & Đánh giá Năng lực (Testing)</h5>
+                    <p className="text-xs text-on-surface-variant leading-relaxed">
+                      Thiết kế các đề kiểm tra chuẩn hóa theo khung tham chiếu châu Âu (CEFR) và IELTS, đánh giá chuẩn xác tiến trình thụ đắc ngôn ngữ.
+                    </p>
+                  </div>
+
+                  <div className="bg-surface-container-low/50 p-4 rounded-2xl border border-outline-variant/20">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3">
+                      <span className="material-symbols-outlined text-2xl">terminal</span>
+                    </div>
+                    <h5 className="font-bold text-primary text-sm mb-1">Kỹ thuật & Công cụ Nghiên cứu</h5>
+                    <p className="text-xs text-on-surface-variant leading-relaxed">
+                      Thành thạo các phần mềm phân tích chuyên dụng: <strong>AntConc, LancsBox, SPSS</strong> và lập trình phân tích dữ liệu <strong>Python Machine Learning, JS, HTML/CSS</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-primary/5 rounded-2xl p-4 border border-primary/15 flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary text-xl">translate</span>
+                    <span className="text-xs font-bold text-primary">Ngôn ngữ thành thạo:</span>
+                    <span className="text-xs text-on-surface">Tiếng Việt (Bản ngữ) • Tiếng Anh (IELTS 7.5)</span>
+                  </div>
+                  <span className="text-[11px] font-semibold text-primary bg-white px-3 py-1 rounded-full border border-primary/20">
+                    Nghiên cứu liên ngành: Ngôn ngữ học & Công nghệ
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* Trust Section */}
+      {/* Trust & Educational Philosophy */}
       <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pb-stack-lg text-left">
         <div className="bg-primary-container rounded-3xl p-8 md:p-12 text-center text-on-primary">
+          <span className="inline-block bg-secondary-container text-on-secondary-container px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
+            Triết lý đào tạo tại Dream Education
+          </span>
           <h2 className="font-headline-lg text-headline-lg text-on-primary mb-6 font-bold">
-            Tiêu chuẩn tuyển chọn cực kỳ khắt khe
+            Chất lượng bảo chứng từ Chuyên gia Học thuật
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter text-left mt-8">
-            <div className="bg-surface/10 p-6 rounded-xl backdrop-blur-sm border border-white/10">
-              <span className="material-symbols-outlined text-secondary-container text-[48px] mb-4">verified</span>
-              <h4 className="font-headline-sm text-on-primary mb-2 font-bold">Top 1% xuất sắc</h4>
-              <p className="font-body-sm text-on-primary/80 leading-relaxed">
-                Tất cả giảng viên bắt buộc phải sở hữu điểm số IELTS chính thức từ 8.5 trở lên trước khi gia nhập đội ngũ.
+          <p className="text-primary-fixed-dim text-sm sm:text-base max-w-2xl mx-auto mb-8">
+            Chúng tôi tin rằng việc làm chủ ngôn ngữ không chỉ dựa trên luyện đề rập khuôn, mà cần một nền tảng khoa học thực chứng vững chắc cùng sự dẫn dắt tận tâm từ những người thầy giàu chuyên môn.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter text-left">
+            <div className="bg-surface/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-surface/15 transition-all">
+              <span className="material-symbols-outlined text-secondary-container text-[40px] mb-3">menu_book</span>
+              <h4 className="font-headline-sm text-on-primary mb-2 font-bold">Giáo trình Thực chứng (Corpus-driven)</h4>
+              <p className="font-body-sm text-on-primary/80 leading-relaxed text-xs sm:text-sm">
+                Nội dung bài giảng được tinh chỉnh dựa trên dữ liệu ngôn ngữ thực tế, sát sườn với kỳ thi và phù hợp nhất với tư duy học sinh Việt Nam.
               </p>
             </div>
-            <div className="bg-surface/10 p-6 rounded-xl backdrop-blur-sm border border-white/10">
-              <span className="material-symbols-outlined text-secondary-container text-[48px] mb-4">school</span>
-              <h4 className="font-headline-sm text-on-primary mb-2 font-bold">Nền tảng học thuật cao</h4>
-              <p className="font-body-sm text-on-primary/80 leading-relaxed">
-                90% đội ngũ giảng viên sở hữu bằng Thạc sĩ trở lên chuyên ngành TESOL, Ngôn ngữ học hoặc Giáo dục từ các đại học danh tiếng thế giới.
+            <div className="bg-surface/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-surface/15 transition-all">
+              <span className="material-symbols-outlined text-secondary-container text-[40px] mb-3">school</span>
+              <h4 className="font-headline-sm text-on-primary mb-2 font-bold">Chuẩn mực Quốc tế (MA TESOL UK)</h4>
+              <p className="font-body-sm text-on-primary/80 leading-relaxed text-xs sm:text-sm">
+                Được đào tạo và tốt nghiệp xuất sắc (Distinction) tại Vương quốc Anh, bảo chứng tính chuẩn mực và sư phạm tiên tiến trong từng tiết học.
               </p>
             </div>
-            <div className="bg-surface/10 p-6 rounded-xl backdrop-blur-sm border border-white/10">
-              <span className="material-symbols-outlined text-secondary-container text-[48px] mb-4">clinical_notes</span>
-              <h4 className="font-headline-sm text-on-primary mb-2 font-bold">Đào tạo liên tục</h4>
-              <p className="font-body-sm text-on-primary/80 leading-relaxed">
-                Giảng viên tham gia hơn 50 giờ tập huấn chuyên môn hàng năm để cập nhật liên tục mọi thay đổi trong cấu trúc đề thi.
+            <div className="bg-surface/10 p-6 rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-surface/15 transition-all">
+              <span className="material-symbols-outlined text-secondary-container text-[40px] mb-3">monitoring</span>
+              <h4 className="font-headline-sm text-on-primary mb-2 font-bold">Cá nhân hóa & Đồng hành</h4>
+              <p className="font-body-sm text-on-primary/80 leading-relaxed text-xs sm:text-sm">
+                Theo dõi sát sao từng tiến bộ của học viên thông qua hệ thống đánh giá khoa học, cam kết hỗ trợ tận tâm đến khi đạt band điểm mục tiêu.
               </p>
             </div>
           </div>
