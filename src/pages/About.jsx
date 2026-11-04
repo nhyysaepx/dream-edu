@@ -312,227 +312,115 @@ export default function About() {
 
       {/* Why Choose Us */}
       <section className="py-stack-lg max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
-        <div className="flex flex-col md:flex-row gap-stack-lg items-center">
-          <div className="md:w-1/2 space-y-6">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-secondary-container/30 text-secondary px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-3 border border-secondary/20">
-                <span className="material-symbols-outlined text-[16px]">verified</span>
-                Giá trị vượt trội
-              </div>
-              <h2 className="font-headline-lg text-headline-lg text-primary leading-tight">
-                Tại sao những học viên xuất sắc nhất lựa chọn chúng tôi?
-              </h2>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex gap-4 p-5 rounded-2xl bg-white border border-outline-variant/30 hover:border-secondary-container hover:shadow-md transition-all group">
-                <div className="w-12 h-12 shrink-0 rounded-xl bg-secondary-fixed/20 flex items-center justify-center text-secondary group-hover:bg-secondary-container group-hover:text-on-secondary-container transition-all">
-                  <span className="material-symbols-outlined text-2xl">record_voice_over</span>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Giảng viên bản xứ</h4>
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-surface-container-low text-on-surface-variant px-2 py-0.5 rounded">100% Native</span>
-                  </div>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    Học tập cùng giáo viên đến từ Anh, Mỹ và Úc để làm chủ phát âm chuẩn và cách diễn đạt tự nhiên.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 p-5 rounded-2xl bg-white border border-outline-variant/30 hover:border-primary/50 hover:shadow-md transition-all group">
-                <div className="w-12 h-12 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-all">
-                  <span className="material-symbols-outlined text-2xl">emoji_events</span>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Học thuật xuất sắc</h4>
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-primary/10 text-primary px-2 py-0.5 rounded">Oxford Standard</span>
-                  </div>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    Giáo trình đào tạo được thiết kế bởi cựu sinh viên Oxford, đảm bảo tính chuẩn mực và tối ưu kết quả học tập.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 p-5 rounded-2xl bg-white border border-outline-variant/30 hover:border-secondary-container hover:shadow-md transition-all group">
-                <div className="w-12 h-12 shrink-0 rounded-xl bg-secondary-fixed/20 flex items-center justify-center text-secondary group-hover:bg-secondary-container group-hover:text-on-secondary-container transition-all">
-                  <span className="material-symbols-outlined text-2xl">verified_user</span>
-                </div>
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Cam kết điểm số</h4>
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Đầu ra 94%+</span>
-                  </div>
-                  <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    94% học viên của chúng tôi đạt điểm số mục tiêu ngay trong lần thi đầu tiên.
-                  </p>
-                </div>
-              </div>
-            </div>
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 bg-secondary-container/30 text-secondary px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-3 border border-secondary/20">
+            <span className="material-symbols-outlined text-[16px]">verified</span>
+            Giá trị vượt trội
           </div>
-          
-          {/* Visual Data & Infographic Metrics Panel (Replacing image) */}
-          <div className="md:w-1/2 w-full">
-            <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-              {/* Decorative subtle background accents */}
-              <div className="absolute -top-12 -right-12 w-48 h-48 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+          <h2 className="font-headline-lg text-headline-lg text-primary leading-tight mb-4 font-bold">
+            Tại sao những học viên xuất sắc nhất lựa chọn chúng tôi?
+          </h2>
+          <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
+            Chúng tôi kết hợp chuyên môn sư phạm vững vàng, học thuật chuẩn mực quốc tế và cam kết đầu ra minh bạch để kiến tạo thành công cho học viên.
+          </p>
+        </div>
 
-              {/* Panel Header */}
-              <div className="flex items-center justify-between gap-3 mb-6 relative z-10 border-b border-outline-variant/20 pb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                    <span className="material-symbols-outlined text-[20px]">insights</span>
-                  </div>
-                  <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-primary block">Chỉ số năng lực</span>
-                    <h3 className="text-sm font-bold text-on-surface">Minh chứng qua dữ liệu đào tạo</h3>
-                  </div>
+        {/* 3 Cards Grid - Full Width & Balanced */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {/* Card 1: Đội ngũ giảng viên chất lượng cao */}
+          <div className="bg-white rounded-3xl border border-outline-variant/30 hover:border-primary/50 hover:shadow-xl transition-all duration-300 p-8 flex flex-col justify-between group relative overflow-hidden shadow-xs hover:-translate-y-1.5">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-primary-container" />
+            
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform border border-primary/20">
+                  <span className="material-symbols-outlined text-3xl">school</span>
                 </div>
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                  Dữ liệu thực tế
+                <span className="text-[11px] font-bold uppercase tracking-wider bg-primary/10 text-primary px-3 py-1 rounded-full border border-primary/15">
+                  100% CHUYÊN MÔN SƯ PHẠM
                 </span>
               </div>
 
-              {/* Big Stat Feature: 15k+ Global Alumni */}
-              <div className="bg-gradient-to-br from-secondary-container via-amber-400 to-amber-500 text-on-secondary-container rounded-2xl p-6 mb-5 shadow-md relative overflow-hidden">
-                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-display-lg text-4xl sm:text-5xl font-black tracking-tight text-on-secondary-container">
-                        15k+
-                      </span>
-                      <span className="text-xs font-bold uppercase tracking-wider bg-black/10 px-2.5 py-0.5 rounded-full">
-                        Toàn cầu
-                      </span>
-                    </div>
-                    <p className="font-bold text-base mt-1 text-on-secondary-container">
-                      Cựu học viên toàn cầu
-                    </p>
-                    <p className="text-xs text-on-secondary-container/85 mt-1 max-w-xs leading-relaxed">
-                      Cộng đồng học viên hiện đang du học, làm việc và định cư thành công trên 15 quốc gia.
-                    </p>
-                  </div>
+              <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-3">
+                Đội ngũ giảng viên chất lượng cao
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Đồng hành cùng đội ngũ giáo viên tốt nghiệp Sư phạm Anh, Thạc sĩ Giảng dạy tiếng Anh (TESOL/Applied Linguistics) với phương pháp sư phạm vững vàng, tận tâm và thấu hiểu học viên.
+              </p>
+            </div>
 
-                  {/* Destination Country Tags */}
-                  <div className="flex sm:flex-col gap-1.5 flex-wrap shrink-0">
-                    <span className="text-[11px] font-bold bg-white/90 backdrop-blur-xs text-on-surface px-2.5 py-1 rounded-lg text-center shadow-xs">
-                      🇬🇧 Anh Quốc
-                    </span>
-                    <span className="text-[11px] font-bold bg-white/90 backdrop-blur-xs text-on-surface px-2.5 py-1 rounded-lg text-center shadow-xs">
-                      🇺🇸 Hoa Kỳ
-                    </span>
-                    <span className="text-[11px] font-bold bg-white/90 backdrop-blur-xs text-on-surface px-2.5 py-1 rounded-lg text-center shadow-xs">
-                      🇦🇺 Úc & Canada
-                    </span>
-                  </div>
+            <div className="mt-8 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
+              <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
+                Thạc sĩ TESOL
+              </span>
+              <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
+                Sư phạm vững vàng
+              </span>
+            </div>
+          </div>
+
+          {/* Card 2: Học thuật xuất sắc */}
+          <div className="bg-white rounded-3xl border border-outline-variant/30 hover:border-secondary-container hover:shadow-xl transition-all duration-300 p-8 flex flex-col justify-between group relative overflow-hidden shadow-xs hover:-translate-y-1.5">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-secondary-container to-amber-500" />
+
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center group-hover:scale-110 transition-transform border border-amber-200/60">
+                  <span className="material-symbols-outlined text-3xl">emoji_events</span>
                 </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-200">
+                  OXFORD STANDARD
+                </span>
               </div>
 
-              {/* Metric 2: 94% Pass Rate with Circular Ring & Comparative Bar */}
-              <div className="bg-surface-container-low/60 border border-outline-variant/30 rounded-2xl p-5 mb-5 relative">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-primary text-[18px]">military_tech</span>
-                      <span className="text-[11px] font-bold text-primary uppercase tracking-wider">Hiệu quả đầu ra</span>
-                    </div>
-                    <h4 className="text-base font-bold text-primary">
-                      94% Đạt điểm số mục tiêu ngay lần thi đầu
-                    </h4>
-                    <p className="text-xs text-on-surface-variant leading-relaxed">
-                      Lộ trình cá nhân hóa dựa trên học thuật chuẩn mực, giúp tiết kiệm thời gian và chi phí luyện thi.
-                    </p>
+              <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-3">
+                Học thuật xuất sắc
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                Giáo trình đào tạo được thiết kế bởi cựu sinh viên Oxford, đảm bảo tính chuẩn mực và tối ưu kết quả học tập.
+              </p>
+            </div>
 
-                    {/* Comparative benchmark bars */}
-                    <div className="pt-2 space-y-1.5">
-                      <div>
-                        <div className="flex justify-between text-[11px] font-semibold text-on-surface mb-1">
-                          <span className="flex items-center gap-1">
-                            <span className="w-2 h-2 rounded-full bg-primary"></span> Dream Education
-                          </span>
-                          <span className="text-primary font-bold">94%</span>
-                        </div>
-                        <div className="h-2 w-full bg-outline-variant/20 rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style={{ width: '94%' }} />
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex justify-between text-[11px] text-on-surface-variant mb-1">
-                          <span className="flex items-center gap-1">
-                            <span className="w-2 h-2 rounded-full bg-outline-variant"></span> Trung bình ngành
-                          </span>
-                          <span>62%</span>
-                        </div>
-                        <div className="h-1.5 w-full bg-outline-variant/20 rounded-full overflow-hidden">
-                          <div className="h-full bg-outline-variant rounded-full" style={{ width: '62%' }} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            <div className="mt-8 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
+              <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
+                Chuẩn Oxford
+              </span>
+              <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
+                Tối ưu lộ trình
+              </span>
+            </div>
+          </div>
 
-                  {/* Circular Radial Gauge */}
-                  <div className="relative w-24 h-24 shrink-0 flex items-center justify-center">
-                    <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                      <path
-                        className="text-outline-variant/25"
-                        strokeWidth="3.5"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                      <path
-                        className="text-primary"
-                        strokeDasharray="94, 100"
-                        strokeWidth="3.5"
-                        strokeLinecap="round"
-                        stroke="currentColor"
-                        fill="none"
-                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      />
-                    </svg>
-                    <div className="absolute text-center">
-                      <span className="text-xl font-black text-primary font-headline-sm block leading-none">94%</span>
-                      <span className="text-[9px] font-bold text-on-surface-variant uppercase">Đạt chuẩn</span>
-                    </div>
-                  </div>
+          {/* Card 3: Cam kết điểm số */}
+          <div className="bg-white rounded-3xl border border-outline-variant/30 hover:border-emerald-500/50 hover:shadow-xl transition-all duration-300 p-8 flex flex-col justify-between group relative overflow-hidden shadow-xs hover:-translate-y-1.5">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 to-emerald-600" />
+
+            <div>
+              <div className="flex items-center justify-between gap-2 mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-800 flex items-center justify-center group-hover:scale-110 transition-transform border border-emerald-200/60">
+                  <span className="material-symbols-outlined text-3xl">verified_user</span>
                 </div>
+                <span className="text-[11px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border border-emerald-200">
+                  ĐẦU RA 94%+
+                </span>
               </div>
 
-              {/* Bottom 2-Column Specs: Oxford & Native Instructors */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-surface-container-low/40 border border-outline-variant/20 rounded-xl p-3.5 flex flex-col justify-between">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-2">
-                    <span className="material-symbols-outlined text-[18px]">school</span>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-primary block">Giáo trình Oxford</span>
-                    <p className="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-                      Thiết kế chuẩn mực bởi cựu sinh viên Đại học Oxford.
-                    </p>
-                  </div>
-                </div>
+              <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-3">
+                Cam kết điểm số
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                94% học viên đạt điểm số mục tiêu ngay trong lần thi đầu tiên.
+              </p>
+            </div>
 
-                <div className="bg-surface-container-low/40 border border-outline-variant/20 rounded-xl p-3.5 flex flex-col justify-between">
-                  <div className="w-8 h-8 rounded-lg bg-secondary-fixed/30 text-secondary flex items-center justify-center mb-2">
-                    <span className="material-symbols-outlined text-[18px]">record_voice_over</span>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-on-surface block">Giảng viên bản xứ</span>
-                    <p className="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-                      Đến từ Anh, Mỹ & Úc với chứng chỉ giảng dạy quốc tế.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quality Guarantee Strip */}
-              <div className="flex items-center gap-2.5 bg-emerald-50 border border-emerald-200/80 rounded-xl px-4 py-2.5 text-xs text-emerald-900 font-medium">
-                <span className="material-symbols-outlined text-emerald-700 text-[18px] shrink-0">verified</span>
-                <span>Cam kết điểm số minh bạch: đồng hành và đào tạo lại miễn phí đến khi đạt target.</span>
-              </div>
+            <div className="mt-8 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
+              <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
+                Đạt target lần 1
+              </span>
+              <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
+                Cam kết minh bạch
+              </span>
             </div>
           </div>
         </div>
