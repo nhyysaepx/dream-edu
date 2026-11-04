@@ -370,7 +370,7 @@ export default function About() {
                   <span className="material-symbols-outlined text-3xl">emoji_events</span>
                 </div>
                 <span className="text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-3 py-1 rounded-full border border-amber-200">
-                  OXFORD STANDARD
+                  TINH CHỈNH CHUYÊN SÂU
                 </span>
               </div>
 
@@ -378,16 +378,16 @@ export default function About() {
                 Học thuật xuất sắc
               </h3>
               <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                Giáo trình đào tạo được thiết kế bởi cựu sinh viên Oxford, đảm bảo tính chuẩn mực và tối ưu kết quả học tập.
+                Nội dung bài giảng được tinh chỉnh phù hợp với học sinh Việt Nam, bởi giáo viên có nhiều năm kinh nghiệm.
               </p>
             </div>
 
             <div className="mt-8 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
               <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
-                Chuẩn Oxford
+                Phù hợp học sinh Việt
               </span>
               <span className="text-xs font-medium bg-surface-container-low text-on-surface-variant px-3 py-1 rounded-full border border-outline-variant/30">
-                Tối ưu lộ trình
+                Giàu kinh nghiệm
               </span>
             </div>
           </div>
