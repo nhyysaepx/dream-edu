@@ -15,9 +15,10 @@ export default function Navbar() {
     { path: '/courses', label: 'Khóa học' },
     { path: '/teachers', label: 'Giáo viên' },
     { 
-      label: 'Phòng Lab', 
+      label: 'Phòng học', 
       subLinks: [
-        { path: '/pronunciation/', label: 'Pronunciation', isExternal: true }
+        { path: '/pronunciation/', label: 'Pronunciation', isExternal: true },
+        { path: '/test-platform', label: 'Test Platform' }
       ] 
     },
     { path: '/contact', label: 'Liên hệ' },
