@@ -1,8 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import startupImg from '../assets/timeline_startup.png';
-import partnershipImg from '../assets/timeline_partnership.png';
-import nowImg from '../assets/timeline_now.png';
 
 export default function About() {
   return (
@@ -103,74 +100,210 @@ export default function About() {
         </div>
       </section>
 
-      {/* Timeline Section */}
-      <section className="py-stack-lg bg-surface-container-lowest text-left">
-        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-          <div className="text-center mb-16">
-            <h2 className="font-headline-lg text-headline-lg text-primary mb-4">Hành trình phát triển</h2>
+      {/* Timeline / Roadmap Diagram Section */}
+      <section className="py-stack-lg bg-surface-container-low/50 text-left relative overflow-hidden">
+        {/* Subtle decorative background light */}
+        <div className="absolute top-10 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-secondary-container/15 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">
+              <span className="material-symbols-outlined text-[16px]">account_tree</span>
+              Sơ đồ lộ trình phát triển
+            </div>
+            <h2 className="font-headline-lg text-headline-lg text-primary mb-3 font-bold">Hành trình phát triển</h2>
             <p className="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto">
               Từ một trung tâm bồi dưỡng nhỏ đến một tổ chức giáo dục và tư vấn du học quốc tế hàng đầu.
             </p>
           </div>
           
-          <div className="relative timeline-line space-y-16">
-            {/* 2025 */}
-            <div className="flex flex-col md:flex-row items-center gap-gutter relative">
-              <div className="md:w-1/2 md:text-right">
-                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Khởi đầu</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                  Dream Education được thành lập với sứ mệnh mang đến chương trình luyện thi chất lượng cao.
-                </p>
-              </div>
-              <div className="z-10 w-12 h-12 rounded-full bg-secondary-container border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-container shrink-0">
-                2025
-              </div>
-              <div className="md:w-1/2 w-full">
-                <img
-                  className="rounded-lg shadow-sm w-full h-48 object-cover"
-                  src={startupImg}
-                  alt="Khởi đầu của Dream Education năm 2025"
-                />
+          {/* Main Diagram Canvas */}
+          <div className="bg-surface-container-lowest border border-outline-variant/30 rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm relative">
+            {/* Desktop Visual Progression Axis */}
+            <div className="hidden md:block mb-10 relative">
+              <div className="relative flex items-center justify-between max-w-3xl mx-auto px-8">
+                {/* Connecting track line */}
+                <div className="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-secondary-container via-primary to-secondary-container rounded-full z-0" />
+
+                {/* Arrow connectors on the line */}
+                <div className="absolute left-1/3 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white border border-outline-variant/40 rounded-full p-1 text-primary shadow-xs">
+                  <span className="material-symbols-outlined text-[18px] block">arrow_forward</span>
+                </div>
+                <div className="absolute left-2/3 top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white border border-outline-variant/40 rounded-full p-1 text-primary shadow-xs">
+                  <span className="material-symbols-outlined text-[18px] block">arrow_forward</span>
+                </div>
+
+                {/* Node 1 */}
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-14 h-14 rounded-full bg-secondary-container border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-container text-base">
+                    2025
+                  </div>
+                  <span className="text-xs font-bold text-primary mt-2 uppercase tracking-wide">Khởi đầu</span>
+                </div>
+
+                {/* Node 2 */}
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-14 h-14 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center font-bold text-on-primary text-base">
+                    2026
+                  </div>
+                  <span className="text-xs font-bold text-primary mt-2 uppercase tracking-wide">Hội đồng Anh</span>
+                </div>
+
+                {/* Node 3 */}
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-14 h-14 rounded-full bg-secondary-container border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-container text-base relative">
+                    Nay
+                    <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+                    </span>
+                  </div>
+                  <span className="text-xs font-bold text-primary mt-2 uppercase tracking-wide">Việt Nam</span>
+                </div>
               </div>
             </div>
 
-            {/* 2026 */}
-            <div className="flex flex-col md:flex-row-reverse items-center gap-gutter relative">
-              <div className="md:w-1/2 text-left">
-                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Đối tác Hội đồng Anh</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                  Đối tác thi với Hội đồng Anh (British Council)
-                </p>
+            {/* 3 Diagram Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+              {/* Card 1: 2025 */}
+              <div className="bg-surface-container-low/30 rounded-2xl border border-outline-variant/30 hover:border-secondary-container hover:shadow-lg transition-all duration-300 p-6 flex flex-col justify-between group relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-secondary-container to-amber-500" />
+                
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <span className="text-xs font-bold text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-md uppercase tracking-wider">
+                      Cột mốc 01
+                    </span>
+                    <span className="md:hidden inline-flex items-center justify-center font-bold text-xs bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full border border-secondary/20">
+                      2025
+                    </span>
+                  </div>
+
+                  <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-2xl">rocket_launch</span>
+                  </div>
+
+                  <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-2">
+                    Khởi đầu
+                  </h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Dream Education được thành lập với sứ mệnh mang đến chương trình luyện thi chất lượng cao.
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
+                  <span className="text-[11px] font-medium bg-white text-on-surface-variant px-2.5 py-1 rounded-full border border-outline-variant/30">
+                    Sứ mệnh giáo dục
+                  </span>
+                  <span className="text-[11px] font-medium bg-white text-on-surface-variant px-2.5 py-1 rounded-full border border-outline-variant/30">
+                    Chất lượng cao
+                  </span>
+                </div>
               </div>
-              <div className="z-10 w-12 h-12 rounded-full bg-primary border-4 border-white shadow-md flex items-center justify-center font-bold text-on-primary shrink-0">
-                2026
+
+              {/* Mobile Connector between 1 and 2 */}
+              <div className="flex md:hidden justify-center -my-2 text-primary">
+                <span className="material-symbols-outlined text-2xl animate-bounce">arrow_downward</span>
               </div>
-              <div className="md:w-1/2 w-full">
-                <img
-                  className="rounded-lg shadow-sm w-full h-48 object-cover"
-                  src={partnershipImg}
-                  alt="Đối tác chính thức với British Council"
-                />
+
+              {/* Card 2: 2026 */}
+              <div className="bg-surface-container-low/30 rounded-2xl border-2 border-primary/20 hover:border-primary hover:shadow-xl transition-all duration-300 p-6 flex flex-col justify-between group relative overflow-hidden shadow-xs">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary to-primary-container" />
+
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <span className="text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-md uppercase tracking-wider">
+                      Cột mốc 02 • Đối tác
+                    </span>
+                    <span className="md:hidden inline-flex items-center justify-center font-bold text-xs bg-primary text-on-primary px-3 py-1 rounded-full">
+                      2026
+                    </span>
+                  </div>
+
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-2xl">handshake</span>
+                  </div>
+
+                  <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-2">
+                    Đối tác Hội đồng Anh
+                  </h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Đối tác thi với Hội đồng Anh (British Council)
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
+                  <span className="text-[11px] font-medium bg-primary/5 text-primary px-2.5 py-1 rounded-full border border-primary/15">
+                    British Council
+                  </span>
+                  <span className="text-[11px] font-medium bg-primary/5 text-primary px-2.5 py-1 rounded-full border border-primary/15">
+                    Khảo thí quốc tế
+                  </span>
+                </div>
+              </div>
+
+              {/* Mobile Connector between 2 and 3 */}
+              <div className="flex md:hidden justify-center -my-2 text-primary">
+                <span className="material-symbols-outlined text-2xl animate-bounce">arrow_downward</span>
+              </div>
+
+              {/* Card 3: Nay */}
+              <div className="bg-surface-container-low/30 rounded-2xl border border-outline-variant/30 hover:border-emerald-500/50 hover:shadow-lg transition-all duration-300 p-6 flex flex-col justify-between group relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-secondary-container via-amber-500 to-emerald-500" />
+
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-4">
+                    <span className="text-xs font-bold text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-md uppercase tracking-wider">
+                      Cột mốc 03 • Hiện tại
+                    </span>
+                    <span className="md:hidden inline-flex items-center justify-center font-bold text-xs bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full border border-secondary/20">
+                      Nay
+                    </span>
+                  </div>
+
+                  <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span className="material-symbols-outlined text-2xl">groups</span>
+                  </div>
+
+                  <h3 className="font-headline-sm text-headline-sm text-primary font-bold mb-2">
+                    Hỗ trợ học sinh Việt Nam
+                  </h3>
+                  <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    Hỗ trợ hơn 100 học sinh khắp Việt Nam
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-outline-variant/20 flex flex-wrap gap-2">
+                  <span className="text-[11px] font-medium bg-white text-on-surface-variant px-2.5 py-1 rounded-full border border-outline-variant/30">
+                    100+ Học sinh
+                  </span>
+                  <span className="text-[11px] font-medium bg-white text-on-surface-variant px-2.5 py-1 rounded-full border border-outline-variant/30">
+                    Toàn quốc
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Nay */}
-            <div className="flex flex-col md:flex-row items-center gap-gutter relative">
-              <div className="md:w-1/2 md:text-right">
-                <h4 className="font-headline-sm text-headline-sm text-primary font-bold">Hỗ trợ học sinh Việt Nam</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                  Hỗ trợ hơn 100 học sinh khắp Việt Nam
-                </p>
+            {/* Bottom Diagram Flow Summary */}
+            <div className="mt-8 pt-6 border-t border-outline-variant/20 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-[18px]">hub</span>
+                <span className="font-semibold text-primary">Tiến trình liên tục:</span>
+                <span>Khởi tạo nền tảng vững chắc ➔ Hợp tác chuẩn khảo thí quốc tế ➔ Lan tỏa giá trị giáo dục toàn quốc</span>
               </div>
-              <div className="z-10 w-12 h-12 rounded-full bg-secondary-container border-4 border-white shadow-md flex items-center justify-center font-bold text-on-secondary-container shrink-0">
-                Nay
-              </div>
-              <div className="md:w-1/2 w-full">
-                <img
-                  className="rounded-lg shadow-sm w-full h-48 object-cover"
-                  src={nowImg}
-                  alt="Hỗ trợ học sinh khắp Việt Nam học tập hiệu quả"
-                />
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="inline-flex items-center gap-1.5 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-amber-400"></span> 2025
+                </span>
+                <span className="text-outline-variant">•</span>
+                <span className="inline-flex items-center gap-1.5 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span> 2026
+                </span>
+                <span className="text-outline-variant">•</span>
+                <span className="inline-flex items-center gap-1.5 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Hiện tại
+                </span>
               </div>
             </div>
           </div>

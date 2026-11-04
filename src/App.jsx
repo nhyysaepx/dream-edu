@@ -14,6 +14,7 @@ import DEBeginnerExercise from './pages/DEBeginnerExercise';
 import DEBeginnerReview from './pages/DEBeginnerReview';
 import DEBeginnerLBReview from './pages/DEBeginnerLBReview';
 import DEBeginnerReadingReview from './pages/DEBeginnerReadingReview';
+import TestPlatform from './pages/TestPlatform';
 
 // Helper component to reset scroll position to top on page change
 function ScrollToTop() {
@@ -46,6 +47,7 @@ function App() {
             <Route path="/de-beginner/review" element={<DEBeginnerReview />} />
             <Route path="/de-beginner/language-builder" element={<DEBeginnerLBReview />} />
             <Route path="/de-beginner/reading-review" element={<DEBeginnerReadingReview />} />
+            <Route path="/test-platform" element={<TestPlatform />} />
           </Routes>
         </main>
         <Footer />
