@@ -17,6 +17,7 @@ export default function Navbar() {
     { 
       label: 'Phòng học', 
       subLinks: [
+        { path: '/vocab', label: 'Học từ vựng' },
         { path: '/pronunciation/', label: 'Pronunciation', isExternal: true },
         { path: '/test-platform', label: 'Test Platform' },
         { path: '/homework', label: 'Homework' }

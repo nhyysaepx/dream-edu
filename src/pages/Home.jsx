@@ -224,6 +224,39 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Featured Vocabulary / Quizlet Free Section */}
+      <section className="py-stack-lg bg-surface-container-low text-left">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+          <div className="bg-gradient-to-r from-primary to-primary-container rounded-3xl p-8 md:p-12 text-white shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="space-y-4 max-w-2xl">
+              <div className="inline-flex items-center gap-2 bg-secondary-container text-on-secondary-container px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                <span className="material-symbols-outlined text-[16px]">school</span>
+                <span>Phòng học • Học từ vựng thông minh</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
+                Ôn luyện từ vựng miễn phí với công nghệ Flashcard & Quizlet Free
+              </h2>
+              <p className="text-blue-100 text-sm md:text-base leading-relaxed">
+                Trọn bộ tính năng tương tự Quizlet: Thẻ ghi nhớ 3D, Chế độ học thích ứng (Learn), Trò chơi ghép từ kịch tính (Match) và Kiểm tra tự luận/trắc nghiệm (Test). Khám phá ngay bộ 74 từ vựng chuẩn Unit 1 SGK Tiếng Anh 10 Global Success!
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto">
+              <Link
+                to="/vocab"
+                className="bg-secondary text-on-secondary hover:bg-secondary/90 px-8 py-4 rounded-xl font-headline-sm text-center font-bold shadow-lg transition-all active:scale-95 whitespace-nowrap"
+              >
+                Vào Phòng Học Từ Vựng
+              </Link>
+              <Link
+                to="/vocab/unit-1-global-success-10"
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-xl text-xs font-bold text-center transition-all whitespace-nowrap"
+              >
+                Học ngay Unit 1 Lớp 10 (74 từ)
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-stack-lg text-center">

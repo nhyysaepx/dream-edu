@@ -19,6 +19,8 @@ import TestDetail from './pages/TestDetail';
 import TestRoom from './pages/TestRoom';
 import Homework from './pages/Homework';
 import HomeworkDetail from './pages/HomeworkDetail';
+import VocabHub from './pages/VocabHub';
+import VocabStudySet from './pages/VocabStudySet';
 
 // Helper component to reset scroll position to top on page change
 function ScrollToTop() {
@@ -57,6 +59,8 @@ function MainLayout() {
           <Route path="/tests/:id/exam" element={<TestRoom />} />
           <Route path="/homework" element={<Homework />} />
           <Route path="/homework/:id" element={<HomeworkDetail />} />
+          <Route path="/vocab" element={<VocabHub />} />
+          <Route path="/vocab/:setId" element={<VocabStudySet />} />
         </Routes>
       </main>
       {!isExamRoom && <Footer />}
