@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import PasswordGate from './components/PasswordGate';
+import { AuthProvider } from './context/AuthContext';
 import Home from './pages/Home';
 import About from './pages/About';
 import Courses from './pages/Courses';
@@ -56,13 +58,16 @@ function MainLayout() {
           <Route path="/de-beginner/review" element={<DEBeginnerReview />} />
           <Route path="/de-beginner/language-builder" element={<DEBeginnerLBReview />} />
           <Route path="/de-beginner/reading-review" element={<DEBeginnerReadingReview />} />
-          <Route path="/test-platform" element={<TestPlatform />} />
-          <Route path="/tests/:id" element={<TestDetail />} />
-          <Route path="/tests/:id/exam" element={<TestRoom />} />
-          <Route path="/homework" element={<Homework />} />
-          <Route path="/homework/:id" element={<HomeworkDetail />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/practice/:id" element={<PracticeDetail />} />
+          {/* Protected Learning Areas: Practice, Homework, Test Platform */}
+          <Route element={<PasswordGate />}>
+            <Route path="/test-platform" element={<TestPlatform />} />
+            <Route path="/tests/:id" element={<TestDetail />} />
+            <Route path="/tests/:id/exam" element={<TestRoom />} />
+            <Route path="/homework" element={<Homework />} />
+            <Route path="/homework/:id" element={<HomeworkDetail />} />
+            <Route path="/practice" element={<Practice />} />
+            <Route path="/practice/:id" element={<PracticeDetail />} />
+          </Route>
           <Route path="/vocab" element={<VocabHub />} />
           <Route path="/vocab/:setId" element={<VocabStudySet />} />
         </Routes>
@@ -74,10 +79,12 @@ function MainLayout() {
 
 function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <MainLayout />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <MainLayout />
+      </Router>
+    </AuthProvider>
   );
 }
 
