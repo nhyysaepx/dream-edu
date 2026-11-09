@@ -12,6 +12,37 @@ export default function SetCreatorModal({ isOpen, onClose, onCreated }) {
   // Import raw text state
   const [rawText, setRawText] = useState('');
   const [delimiter, setDelimiter] = useState('tab'); // 'tab' | 'comma' | 'dash'
+  const [fileError, setFileError] = useState('');
+
+  // Handle JSON file upload
+  const handleFileUpload = (e) => {
+    setFileError('');
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (parsed.title) setTitle(parsed.title);
+        if (parsed.description) setDescription(parsed.description);
+        if (parsed.grade) setGrade(parsed.grade);
+        if (parsed.book) setBook(parsed.book);
+
+        if (Array.isArray(parsed.terms) && parsed.terms.length > 0) {
+          const formatted = parsed.terms.map(t => `${t.term}\t${t.definition}`).join('\n');
+          setRawText(formatted);
+          setDelimiter('tab');
+          setActiveTab('import');
+        } else {
+          setFileError('File không chứa danh sách từ vựng hợp lệ.');
+        }
+      } catch (err) {
+        setFileError('Lỗi định dạng file JSON. Vui lòng chọn đúng file sao lưu.');
+      }
+    };
+    reader.readAsText(file);
+  };
 
   // Manual list state
   const [manualTerms, setManualTerms] = useState([
@@ -189,6 +220,12 @@ export default function SetCreatorModal({ isOpen, onClose, onCreated }) {
             </div>
           </div>
 
+          {/* Storage notice banner */}
+          <div className="bg-blue-50/70 border border-blue-200/70 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-blue-900">
+            <span className="font-bold text-primary mt-0.5">💾 Tự động lưu trữ:</span>
+            <span>Bộ từ bạn tạo sẽ được lưu trực tiếp trên trình duyệt của bạn (Local Storage). Lần sau mở web bạn sẽ thấy ngay mà không bị mất.</span>
+          </div>
+
           {/* Mode Switch Tabs */}
           <div className="flex border-b border-gray-200 gap-4">
             <button
@@ -200,7 +237,7 @@ export default function SetCreatorModal({ isOpen, onClose, onCreated }) {
               }`}
             >
               <Upload size={14} />
-              <span>Dán văn bản hàng loạt (Import nhanh)</span>
+              <span>Dán văn bản hàng loạt</span>
             </button>
             <button
               onClick={() => setActiveTab('manual')}
@@ -213,7 +250,40 @@ export default function SetCreatorModal({ isOpen, onClose, onCreated }) {
               <Plus size={14} />
               <span>Nhập từng thẻ thủ công</span>
             </button>
+            <button
+              onClick={() => setActiveTab('file')}
+              className={`pb-2.5 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
+                activeTab === 'file'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              <FileText size={14} />
+              <span>Nhập từ file sao lưu (.json)</span>
+            </button>
           </div>
+
+          {/* TAB: FILE BACKUP IMPORT */}
+          {activeTab === 'file' && (
+            <div className="p-6 border-2 border-dashed border-gray-300 rounded-2xl text-center space-y-3 bg-gray-50/50">
+              <div className="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mx-auto">
+                <Upload size={24} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-gray-900">Chọn file sao lưu (.json)</p>
+                <p className="text-xs text-gray-500 mt-0.5">Hỗ trợ file xuất ra từ trang học từ vựng Dream Education</p>
+              </div>
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleFileUpload}
+                className="text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary file:text-white hover:file:bg-primary-container cursor-pointer"
+              />
+              {fileError && (
+                <p className="text-xs text-rose-600 font-semibold">{fileError}</p>
+              )}
+            </div>
+          )}
 
           {/* TAB 1: BATCH IMPORT */}
           {activeTab === 'import' && (

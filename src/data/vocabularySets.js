@@ -245,3 +245,96 @@ export function recordMatchScore(setId, scoreInSeconds) {
     return [];
   }
 }
+
+/**
+ * UTF-8 safe Base64 encoder/decoder for sharing sets across devices
+ */
+function toBase64Utf8(str) {
+  return window.btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+}
+
+function fromBase64Utf8(b64) {
+  return decodeURIComponent(Array.prototype.map.call(window.atob(b64), (c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+}
+
+/**
+ * Generate a shareable link that works on any phone/PC without a server
+ */
+export function generateShareableLink(vocabSet) {
+  if (typeof window === 'undefined') return '';
+  const baseUrl = `${window.location.origin}${window.location.pathname}`;
+
+  if (vocabSet.isOfficial) {
+    return `${baseUrl}#/vocab/${vocabSet.id}`;
+  }
+
+  try {
+    const compact = {
+      t: vocabSet.title,
+      s: vocabSet.subtitle || '',
+      d: vocabSet.description || '',
+      g: vocabSet.grade || 'Lớp 10',
+      b: vocabSet.book || 'Tự tạo',
+      items: vocabSet.terms.map(t => [t.term, t.definition])
+    };
+    const b64 = encodeURIComponent(toBase64Utf8(JSON.stringify(compact)));
+    return `${baseUrl}#/vocab?sharedData=${b64}`;
+  } catch (err) {
+    console.error('Error generating share link:', err);
+    return `${baseUrl}#/vocab/${vocabSet.id}`;
+  }
+}
+
+/**
+ * Parse a shared set from URL query string and save it to localStorage
+ */
+export function importSharedSetFromUrl(sharedDataStr) {
+  try {
+    const jsonStr = fromBase64Utf8(decodeURIComponent(sharedDataStr));
+    const compact = JSON.parse(jsonStr);
+
+    const newSet = {
+      id: `shared-${Date.now()}`,
+      title: compact.t,
+      subtitle: compact.s || `${compact.g} - ${compact.b}`,
+      description: compact.d || `Bộ từ vựng gồm ${compact.items.length} thuật ngữ được chia sẻ.`,
+      grade: compact.g || 'Lớp 10',
+      book: compact.b || 'Chia sẻ',
+      author: 'Được chia sẻ',
+      tags: [compact.g || 'Lớp 10', 'Được chia sẻ'],
+      isOfficial: false,
+      terms: compact.items.map((item, idx) => ({
+        id: `shared-term-${Date.now()}-${idx}`,
+        term: item[0],
+        definition: item[1]
+      }))
+    };
+
+    saveCustomVocabSet(newSet);
+    return newSet;
+  } catch (err) {
+    console.error('Error importing shared set:', err);
+    return null;
+  }
+}
+
+/**
+ * Download a vocabulary set as a JSON file backup
+ */
+export function downloadSetAsBackupFile(vocabSet) {
+  try {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(vocabSet, null, 2));
+    const downloadAnchor = document.createElement('a');
+    const filename = `${vocabSet.title.replace(/[^a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF]/g, '_')}_dream_vocab.json`;
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', filename);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    return true;
+  } catch (e) {
+    console.error('Download error:', e);
+    return false;
+  }
+}
+

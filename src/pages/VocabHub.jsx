@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Layers, 
   Brain, 
@@ -16,22 +16,27 @@ import {
   Trash2,
   ArrowRight,
   GraduationCap,
-  Volume2
+  Volume2,
+  CheckCircle2,
+  HardDrive
 } from 'lucide-react';
 import { 
   getAllVocabSets, 
   deleteCustomVocabSet, 
   getMasteryData, 
-  getStarredTerms 
+  getStarredTerms,
+  importSharedSetFromUrl
 } from '../data/vocabularySets';
 import SetCreatorModal from '../components/vocabulary/SetCreatorModal';
 
 export default function VocabHub() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [sets, setSets] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreatorOpen, setIsCreatorOpen] = useState(false);
+  const [importedNotice, setImportedNotice] = useState(null);
 
   // Reload sets from local storage
   const reloadSets = () => {
@@ -41,6 +46,19 @@ export default function VocabHub() {
   useEffect(() => {
     reloadSets();
   }, []);
+
+  // Check if opening via a shared link
+  useEffect(() => {
+    const sharedData = searchParams.get('sharedData');
+    if (sharedData) {
+      const imported = importSharedSetFromUrl(sharedData);
+      if (imported) {
+        reloadSets();
+        setImportedNotice(imported);
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleDeleteSet = (e, id) => {
     e.stopPropagation();
@@ -84,6 +102,40 @@ export default function VocabHub() {
           <span>/</span>
           <span className="text-primary font-bold">Học từ vựng</span>
         </div>
+
+        {/* Imported Notification Banner */}
+        {importedNotice && (
+          <div className="bg-emerald-50 border border-emerald-300 rounded-3xl p-5 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-pop-in shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 size={24} />
+              </div>
+              <div>
+                <h4 className="text-sm font-extrabold text-emerald-950">
+                  Đã nhận bộ từ mới: "{importedNotice.title}"
+                </h4>
+                <p className="text-xs text-emerald-800 mt-0.5">
+                  Bộ từ gồm <strong>{importedNotice.terms.length} thuật ngữ</strong> đã được tự động lưu vĩnh viễn vào thiết bị của bạn.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-end sm:self-center">
+              <button
+                onClick={() => setImportedNotice(null)}
+                className="px-3 py-1.5 text-xs text-gray-500 hover:text-gray-800 font-semibold"
+              >
+                Đóng
+              </button>
+              <button
+                onClick={() => navigate(`/vocab/${importedNotice.id}`)}
+                className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
+              >
+                Vào học ngay
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
@@ -208,10 +260,16 @@ export default function VocabHub() {
           {/* Section title & Filters */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight">
-                Kho bộ thẻ từ vựng
-              </h2>
-              <p className="text-xs text-gray-500 mt-0.5">Chọn bộ thẻ để bắt đầu ôn luyện</p>
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+                  Kho bộ thẻ từ vựng
+                </h2>
+                <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
+                  <HardDrive size={12} />
+                  <span>Tự động lưu vĩnh viễn</span>
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">Chọn bộ thẻ để bắt đầu ôn luyện (mọi bộ từ bạn tạo đều được lưu lại cho lần học sau)</p>
             </div>
 
             {/* Filter pills */}

@@ -25,7 +25,9 @@ import {
   toggleStarredTerm, 
   getMasteryData, 
   updateTermMastery, 
-  resetMastery 
+  resetMastery,
+  generateShareableLink,
+  downloadSetAsBackupFile
 } from '../data/vocabularySets';
 import { speakWord } from '../utils/speechUtils';
 
@@ -84,9 +86,14 @@ export default function VocabStudySet() {
   };
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
+    const shareUrl = generateShareableLink(vocabSet);
+    navigator.clipboard.writeText(shareUrl);
     setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+    setTimeout(() => setCopiedLink(false), 2500);
+  };
+
+  const handleDownloadBackup = () => {
+    downloadSetAsBackupFile(vocabSet);
   };
 
   // Filtered term list for the bottom browser
@@ -160,15 +167,24 @@ export default function VocabStudySet() {
               </p>
             </div>
 
-            {/* Quick Actions (Share, Export) */}
-            <div className="flex items-center gap-2 self-start md:self-center">
+            {/* Quick Actions (Share, Export, Backup) */}
+            <div className="flex flex-wrap items-center gap-2 self-start md:self-center">
               <button
                 onClick={handleShare}
                 className="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-200 flex items-center gap-1.5 transition-colors"
-                title="Sao chép liên kết chia sẻ bộ từ"
+                title="Sao chép liên kết chia sẻ bộ từ (Mở được trên mọi thiết bị)"
               >
                 {copiedLink ? <Check size={14} className="text-emerald-600" /> : <Share2 size={14} />}
-                <span>{copiedLink ? 'Đã chép link!' : 'Chia sẻ'}</span>
+                <span>{copiedLink ? 'Đã chép link chia sẻ!' : 'Chia sẻ link'}</span>
+              </button>
+
+              <button
+                onClick={handleDownloadBackup}
+                className="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-200 flex items-center gap-1.5 transition-colors"
+                title="Tải file dữ liệu .json để lưu trữ hoặc chuyển sang máy khác"
+              >
+                <Download size={14} />
+                <span>Tải file sao lưu</span>
               </button>
 
               <button
@@ -176,8 +192,8 @@ export default function VocabStudySet() {
                 className="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-200 flex items-center gap-1.5 transition-colors"
                 title="In hoặc xuất danh sách từ"
               >
-                <Download size={14} />
-                <span>Xuất / In</span>
+                <FileText size={14} />
+                <span>In / Xuất</span>
               </button>
             </div>
           </div>
