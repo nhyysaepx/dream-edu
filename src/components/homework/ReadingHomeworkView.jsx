@@ -77,12 +77,76 @@ function unwrapElement(el) {
   parent.removeChild(el);
 }
 
+// Clean passage HTML by removing corrupt, empty, or orphan mark tags
+function cleanPassageHtml(rawHtml, origContent, origTitle) {
+  const fallback = formatPassageToHtml(origContent, origTitle);
+  if (!rawHtml) return fallback;
+
+  try {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = rawHtml;
+
+    // Remove any mark tags that have no text or only whitespace
+    tempDiv.querySelectorAll('mark').forEach(m => {
+      if (!m.textContent || !m.textContent.trim()) {
+        unwrapElement(m);
+      }
+    });
+
+    // Remove any legacy temporary selection marks
+    tempDiv.querySelectorAll('#active-selection-mark').forEach(unwrapElement);
+
+    // Remove any orphan mark that is directly a child of container and outside paragraphs
+    Array.from(tempDiv.children).forEach(child => {
+      if (child.tagName === 'MARK') {
+        unwrapElement(child);
+      }
+    });
+
+    // Verify text content integrity
+    const origTextLen = origContent.replace(/\s+/g, ' ').trim().length;
+    const savedTextLen = (tempDiv.textContent || '').replace(/\s+/g, ' ').trim().length;
+    if (Math.abs(origTextLen - savedTextLen) > 30) {
+      console.warn('Restoring passage HTML due to text loss');
+      return fallback;
+    }
+
+    return tempDiv.innerHTML || fallback;
+  } catch (err) {
+    console.error('Error cleaning passage HTML:', err);
+    return fallback;
+  }
+}
+
+// Memoized Passage Renderer so parent state updates (like selectionPopup) do NOT re-render passage DOM
+const PassageRenderer = React.memo(function PassageRenderer({
+  html,
+  fontClass,
+  onClick,
+  onMouseUp,
+  containerRef
+}) {
+  return (
+    <div
+      id="passage-container"
+      ref={containerRef}
+      onClick={onClick}
+      onMouseUp={onMouseUp}
+      className={`text-gray-800 ${fontClass} font-normal space-y-4 leading-relaxed select-text`}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+});
+
 export default function ReadingHomeworkView({ homework }) {
   const navigate = useNavigate();
   const homeworkId = homework.id;
 
   // Active Passage Tab (p1 or p2)
   const [activePassageId, setActivePassageId] = useState('p1');
+
+  // Dedicated Notes Column Visibility (User requested dedicated 3rd column on the right)
+  const [isNotesColumnOpen, setIsNotesColumnOpen] = useState(true);
   
   // Answers state: { [qId]: string }
   const [answers, setAnswers] = useState(() => {
@@ -103,7 +167,7 @@ export default function ReadingHomeworkView({ homework }) {
   // Ref to the passage container for text selection
   const passageContainerRef = useRef(null);
   // Ref to store cloned range across events
-  const currentRangeRef = useRef(null);
+  const savedRangeRef = useRef(null);
 
   // Text selection popup state: { text, x, y }
   const [selectionPopup, setSelectionPopup] = useState(null);
@@ -119,35 +183,17 @@ export default function ReadingHomeworkView({ homework }) {
     }
   });
 
-  // Active note opened in the sidebar
+  // Active note opened in the right-hand Notes column
   const [activeNoteId, setActiveNoteId] = useState(null);
   const [draftNoteContent, setDraftNoteContent] = useState('');
-  const [showNotesDrawer, setShowNotesDrawer] = useState(false);
   const [noteSuccessToast, setNoteSuccessToast] = useState(false);
 
   // Stored HTML for each passage (including rendered highlights/notes)
   const [passageHtmls, setPassageHtmls] = useState(() => {
     const initial = {};
     homework.passages.forEach(p => {
-      try {
-        const saved = localStorage.getItem(`dream_hw_${homeworkId}_${p.id}_html`);
-        if (saved) {
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = saved;
-          tempDiv.querySelectorAll('#active-selection-mark').forEach(unwrapElement);
-          tempDiv.querySelectorAll('mark').forEach(m => {
-            if (!m.textContent.trim()) unwrapElement(m);
-          });
-          Array.from(tempDiv.children).forEach(child => {
-            if (child.tagName === 'MARK') unwrapElement(child);
-          });
-          initial[p.id] = tempDiv.innerHTML || formatPassageToHtml(p.content, p.title);
-        } else {
-          initial[p.id] = formatPassageToHtml(p.content, p.title);
-        }
-      } catch {
-        initial[p.id] = formatPassageToHtml(p.content, p.title);
-      }
+      const saved = localStorage.getItem(`dream_hw_${homeworkId}_${p.id}_html`);
+      initial[p.id] = cleanPassageHtml(saved, p.content, p.title);
     });
     return initial;
   });
@@ -159,39 +205,8 @@ export default function ReadingHomeworkView({ homework }) {
       try {
         const val = localStorage.getItem(key);
         if (val) {
-          const cleanP = formatPassageToHtml(p.content, p.title);
-          const tempDiv = document.createElement('div');
-          tempDiv.innerHTML = val;
-
-          let hasChanges = false;
-          tempDiv.querySelectorAll('#active-selection-mark').forEach(m => {
-            hasChanges = true;
-            unwrapElement(m);
-          });
-          tempDiv.querySelectorAll('mark').forEach(m => {
-            if (!m.textContent.trim()) {
-              hasChanges = true;
-              unwrapElement(m);
-            }
-          });
-          Array.from(tempDiv.children).forEach(child => {
-            if (child.tagName === 'MARK') {
-              hasChanges = true;
-              unwrapElement(child);
-            }
-          });
-
-          // Check if text content lost words compared to original passage
-          const origTextLen = p.content.replace(/\s+/g, ' ').trim().length;
-          const savedTextLen = (tempDiv.textContent || '').replace(/\s+/g, ' ').trim().length;
-          const isTextLost = Math.abs(origTextLen - savedTextLen) > 30;
-
-          if (isTextLost) {
-            console.warn(`Restoring damaged passage HTML for ${p.id}`);
-            localStorage.setItem(key, cleanP);
-            setPassageHtmls(prev => ({ ...prev, [p.id]: cleanP }));
-          } else if (hasChanges) {
-            const cleaned = tempDiv.innerHTML;
+          const cleaned = cleanPassageHtml(val, p.content, p.title);
+          if (cleaned !== val) {
             localStorage.setItem(key, cleaned);
             setPassageHtmls(prev => ({ ...prev, [p.id]: cleaned }));
           }
@@ -277,15 +292,10 @@ export default function ReadingHomeworkView({ homework }) {
     }));
   };
 
-  // Save current passage HTML to state and localStorage (safely excludes temporary active selection)
+  // Save current passage HTML to state and localStorage
   const saveCurrentPassageHtml = useCallback(() => {
     if (passageContainerRef.current) {
-      const clone = passageContainerRef.current.cloneNode(true);
-      clone.querySelectorAll('#active-selection-mark').forEach(unwrapElement);
-      clone.querySelectorAll('mark').forEach(m => {
-        if (!m.textContent.trim()) unwrapElement(m);
-      });
-      const currentHtml = clone.innerHTML;
+      const currentHtml = passageContainerRef.current.innerHTML;
       setPassageHtmls(prev => ({
         ...prev,
         [activePassageId]: currentHtml
@@ -298,15 +308,14 @@ export default function ReadingHomeworkView({ homework }) {
     }
   }, [activePassageId, homeworkId]);
 
-  // Text selection listener on the passage: wraps in active selection mark to preserve visual highlight
-  const handlePassageMouseUp = (e) => {
+  // Text selection listener on the passage
+  const handlePassageMouseUp = useCallback((e) => {
     // Only proceed on primary mouse button
     if (e.button !== undefined && e.button !== 0) return;
 
-    // If clicking popup or note sidebar or button, do nothing
+    // If clicking popup or buttons or input, do nothing
     if (
       e.target.closest('#selection-popup') || 
-      e.target.closest('#note-sidebar') || 
       e.target.closest('button') ||
       e.target.closest('input') ||
       e.target.closest('textarea')
@@ -316,12 +325,8 @@ export default function ReadingHomeworkView({ homework }) {
 
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed || !selection.toString().trim()) {
-      // If user clicked without text selection, remove any existing active selection mark
-      const prevActive = passageContainerRef.current?.querySelector('#active-selection-mark');
-      if (prevActive) {
-        unwrapElement(prevActive);
-      }
       setSelectionPopup(null);
+      savedRangeRef.current = null;
       return;
     }
 
@@ -330,78 +335,29 @@ export default function ReadingHomeworkView({ homework }) {
       const text = selection.toString().trim();
       if (!text) {
         setSelectionPopup(null);
+        savedRangeRef.current = null;
         return;
       }
 
-      // Remove any prior active selection mark first
-      const prevActive = passageContainerRef.current.querySelector('#active-selection-mark');
-      if (prevActive) {
-        unwrapElement(prevActive);
-      }
-
       const range = selection.getRangeAt(0);
+      savedRangeRef.current = range.cloneRange();
+      const rect = range.getBoundingClientRect();
 
-      // Keep selection within a single paragraph to preserve document structure
-      const startP = (range.startContainer.nodeType === Node.TEXT_NODE 
-        ? range.startContainer.parentElement 
-        : range.startContainer)?.closest('p');
-      const endP = (range.endContainer.nodeType === Node.TEXT_NODE 
-        ? range.endContainer.parentElement 
-        : range.endContainer)?.closest('p');
-
-      if (startP && endP && startP !== endP) {
-        try {
-          range.setEnd(startP, startP.childNodes.length);
-        } catch (err) {
-          // ignore
-        }
-      }
-
-      const activeMark = document.createElement('mark');
-      activeMark.id = 'active-selection-mark';
-      activeMark.className = 'active-selection bg-sky-200/90 text-sky-950 border-b-2 border-sky-600 rounded px-0.5 font-medium inline transition-all';
-
-      let wrapped = false;
-      try {
-        range.surroundContents(activeMark);
-        wrapped = true;
-      } catch (wrapErr) {
-        try {
-          const fragment = range.extractContents();
-          activeMark.appendChild(fragment);
-          range.insertNode(activeMark);
-          wrapped = true;
-        } catch (err2) {
-          console.error('Wrap failed:', err2);
-        }
-      }
-
-      if (wrapped) {
-        // Clear native browser selection since our activeMark maintains visual highlight
-        selection.removeAllRanges();
-
-        const rect = activeMark.getBoundingClientRect();
-        setSelectionPopup({
-          text: activeMark.textContent.trim(),
-          x: rect.left + rect.width / 2,
-          y: rect.top - 8
-        });
-      } else {
-        setSelectionPopup(null);
-      }
+      setSelectionPopup({
+        text,
+        x: Math.max(120, Math.min(window.innerWidth - 120, rect.left + rect.width / 2)),
+        y: Math.max(70, rect.top - 8)
+      });
     } else {
       setSelectionPopup(null);
+      savedRangeRef.current = null;
     }
-  };
+  }, []);
 
-  // Close popup if clicking elsewhere & unwrap any pending active selection mark
+  // Close popup if clicking elsewhere
   useEffect(() => {
     const handleDocumentMouseDown = (e) => {
       if (!e.target.closest('#selection-popup') && !e.target.closest('#passage-container')) {
-        const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
-        if (activeMark) {
-          unwrapElement(activeMark);
-        }
         setSelectionPopup(null);
       }
     };
@@ -413,9 +369,8 @@ export default function ReadingHomeworkView({ homework }) {
   useEffect(() => {
     const handleKeyDown = async (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
-        const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
         const selection = window.getSelection();
-        const text = activeMark?.textContent?.trim() || (!selection?.isCollapsed ? selection?.toString().trim() : '');
+        const text = !selection?.isCollapsed ? selection?.toString().trim() : '';
         if (text) {
           try {
             await navigator.clipboard.writeText(text);
@@ -431,43 +386,144 @@ export default function ReadingHomeworkView({ homework }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // 1. Apply Color Highlight (converts the active selection mark directly to yellow highlight)
+  // 1. Apply Color Highlight (paints the text yellow)
   const applyHighlight = (color = 'yellow') => {
-    const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
-    if (!activeMark) {
+    let range = null;
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+      range = selection.getRangeAt(0);
+    } else if (savedRangeRef.current) {
+      range = savedRangeRef.current;
+    }
+
+    if (!range || range.collapsed || !range.toString().trim()) {
       setSelectionPopup(null);
+      savedRangeRef.current = null;
       return;
     }
 
     const highlightId = `hl-${Date.now()}`;
-    activeMark.id = highlightId;
-    activeMark.dataset.highlightId = highlightId;
-    activeMark.dataset.annotationType = 'highlight';
-    activeMark.className = 'annotation-mark bg-yellow-200 text-gray-900 rounded px-1 py-0.5 cursor-pointer font-medium hover:bg-yellow-300 transition-colors shadow-2xs inline';
-    activeMark.title = 'Bấm để xóa tô màu';
+    const mark = document.createElement('mark');
+    mark.id = highlightId;
+    mark.dataset.highlightId = highlightId;
+    mark.dataset.annotationType = 'highlight';
+    mark.className = 'annotation-mark';
+    mark.setAttribute(
+      'style',
+      'background-color: #fef08a !important; color: #111827 !important; padding: 2px 4px !important; border-radius: 4px !important; cursor: pointer !important; display: inline !important; -webkit-box-decoration-break: clone; box-decoration-break: clone;'
+    );
+    mark.title = 'Bấm để xóa tô màu';
 
+    let success = false;
+    try {
+      range.surroundContents(mark);
+      success = true;
+    } catch (wrapErr) {
+      try {
+        const fragment = range.extractContents();
+        if (fragment.textContent && fragment.textContent.trim()) {
+          mark.appendChild(fragment);
+          range.insertNode(mark);
+          success = true;
+        }
+      } catch (e2) {
+        console.error('Highlight failed:', e2);
+      }
+    }
+
+    if (success && mark.textContent && mark.textContent.trim() && passageContainerRef.current) {
+      const newHtml = passageContainerRef.current.innerHTML;
+      setPassageHtmls(prev => ({
+        ...prev,
+        [activePassageId]: newHtml
+      }));
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_${activePassageId}_html`, newHtml);
+      } catch (e) {
+        console.error(e);
+      }
+    } else if (!success || !mark.textContent || !mark.textContent.trim()) {
+      unwrapElement(mark);
+    }
+
+    window.getSelection()?.removeAllRanges();
+    savedRangeRef.current = null;
     setSelectionPopup(null);
-    saveCurrentPassageHtml();
   };
 
-  // 2. Apply Note (converts the active selection mark directly to amber note)
+  // 2. Apply Note (marks text in amber and focuses the dedicated Notes Column on the right)
   const applyNote = () => {
-    const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
-    if (!activeMark) {
+    let range = null;
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
+      range = selection.getRangeAt(0);
+    } else if (savedRangeRef.current) {
+      range = savedRangeRef.current;
+    }
+
+    if (!range || range.collapsed || !range.toString().trim()) {
       setSelectionPopup(null);
+      savedRangeRef.current = null;
+      return;
+    }
+
+    const selectedText = selectionPopup?.text || range.toString().trim();
+    if (!selectedText) {
+      setSelectionPopup(null);
+      savedRangeRef.current = null;
       return;
     }
 
     const noteId = `note-${Date.now()}`;
-    const selectedText = activeMark.textContent.trim();
+    const mark = document.createElement('mark');
+    mark.id = noteId;
+    mark.dataset.noteId = noteId;
+    mark.dataset.annotationId = noteId;
+    mark.dataset.annotationType = 'note';
+    mark.className = 'annotation-note';
+    mark.setAttribute(
+      'style',
+      'background-color: #fde68a !important; color: #451a03 !important; border-bottom: 2px solid #d97706 !important; padding: 2px 4px !important; border-radius: 4px !important; font-weight: 600 !important; cursor: pointer !important; display: inline !important; -webkit-box-decoration-break: clone; box-decoration-break: clone;'
+    );
+    mark.title = 'Bấm để xem/sửa ghi chú';
 
-    activeMark.id = noteId;
-    activeMark.dataset.noteId = noteId;
-    activeMark.dataset.annotationId = noteId;
-    activeMark.dataset.annotationType = 'note';
-    activeMark.className = 'annotation-note bg-amber-200 text-amber-950 border-b-2 border-amber-600 rounded px-1 py-0.5 cursor-pointer font-semibold hover:bg-amber-300 transition-colors inline';
-    activeMark.title = 'Bấm để xem/sửa ghi chú';
+    let success = false;
+    try {
+      range.surroundContents(mark);
+      success = true;
+    } catch (wrapErr) {
+      try {
+        const fragment = range.extractContents();
+        if (fragment.textContent && fragment.textContent.trim()) {
+          mark.appendChild(fragment);
+          range.insertNode(mark);
+          success = true;
+        }
+      } catch (e2) {
+        console.error('Note wrap failed:', e2);
+      }
+    }
 
+    if (success && mark.textContent && mark.textContent.trim() && passageContainerRef.current) {
+      const newHtml = passageContainerRef.current.innerHTML;
+      setPassageHtmls(prev => ({
+        ...prev,
+        [activePassageId]: newHtml
+      }));
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_${activePassageId}_html`, newHtml);
+      } catch (e) {
+        console.error(e);
+      }
+    } else if (!success || !mark.textContent || !mark.textContent.trim()) {
+      unwrapElement(mark);
+      setSelectionPopup(null);
+      savedRangeRef.current = null;
+      return;
+    }
+
+    window.getSelection()?.removeAllRanges();
+    savedRangeRef.current = null;
     setSelectionPopup(null);
 
     // Create note record
@@ -481,21 +537,23 @@ export default function ReadingHomeworkView({ homework }) {
 
     setNotes(prev => {
       const updated = { ...prev, [noteId]: newNote };
-      localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
       return updated;
     });
 
+    // Automatically expand the right-hand Notes Column and focus editor
+    setIsNotesColumnOpen(true);
     setActiveNoteId(noteId);
     setDraftNoteContent('');
-    setShowNotesDrawer(true);
-
-    saveCurrentPassageHtml();
   };
 
   // 3. Copy selected text to clipboard
   const handleCopySelectedText = async () => {
-    const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
-    const textToCopy = activeMark?.textContent?.trim() || selectionPopup?.text;
+    const textToCopy = selectionPopup?.text || window.getSelection()?.toString().trim();
     if (!textToCopy) return;
 
     try {
@@ -506,14 +564,11 @@ export default function ReadingHomeworkView({ homework }) {
       console.error('Copy failed:', err);
     }
 
-    if (activeMark) {
-      unwrapElement(activeMark);
-    }
     setSelectionPopup(null);
   };
 
   // Click on existing highlight or note inside the passage container
-  const handlePassageClick = (e) => {
+  const handlePassageClick = useCallback((e) => {
     const mark = e.target.closest('mark');
     if (!mark) return;
 
@@ -523,26 +578,22 @@ export default function ReadingHomeworkView({ homework }) {
 
     if (type === 'note' || (noteId && noteId.startsWith('note-'))) {
       e.stopPropagation();
+      setIsNotesColumnOpen(true);
       setActiveNoteId(noteId);
       if (notes[noteId]) {
         setDraftNoteContent(notes[noteId].content || '');
       }
-      setShowNotesDrawer(true);
     } else if (highlightId || type === 'highlight') {
       e.stopPropagation();
       const confirmRemove = window.confirm('Bạn có muốn xóa đoạn tô màu (highlight) này không?');
       if (confirmRemove) {
-        const parent = mark.parentNode;
-        while (mark.firstChild) {
-          parent.insertBefore(mark.firstChild, mark);
-        }
-        parent.removeChild(mark);
+        unwrapElement(mark);
         saveCurrentPassageHtml();
       }
     }
-  };
+  }, [notes, saveCurrentPassageHtml]);
 
-  // Save Note Content and immediately show the list of notes on the right
+  // Save Note Content in the right-hand Notes Column
   const handleSaveNoteContent = () => {
     if (!activeNoteId) return;
 
@@ -554,13 +605,15 @@ export default function ReadingHomeworkView({ homework }) {
           content: draftNoteContent
         }
       };
-      localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
       return updated;
     });
 
-    // Close the edit form and switch to the list of notes in the drawer!
     setActiveNoteId(null);
-    setShowNotesDrawer(true);
     setNoteSuccessToast(true);
     setTimeout(() => setNoteSuccessToast(false), 2500);
   };
@@ -570,26 +623,63 @@ export default function ReadingHomeworkView({ homework }) {
     const confirmDelete = window.confirm('Bạn có muốn xóa ghi chú này và hủy đánh dấu trong bài đọc?');
     if (!confirmDelete) return;
 
-    // Un-wrap the mark in DOM if present
     const mark = passageContainerRef.current?.querySelector(`mark[data-note-id="${noteId}"]`);
     if (mark) {
-      const parent = mark.parentNode;
-      while (mark.firstChild) {
-        parent.insertBefore(mark.firstChild, mark);
-      }
-      parent.removeChild(mark);
+      unwrapElement(mark);
       saveCurrentPassageHtml();
     }
 
     setNotes(prev => {
       const next = { ...prev };
       delete next[noteId];
-      localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
       return next;
     });
 
     if (activeNoteId === noteId) {
       setActiveNoteId(null);
+    }
+  };
+
+  // Clear all notes for active passage
+  const handleClearAllNotes = () => {
+    const confirmClear = window.confirm('Bạn có chắc chắn muốn xóa toàn bộ ghi chú của bài đọc này?');
+    if (!confirmClear) return;
+
+    if (passageContainerRef.current) {
+      passageContainerRef.current.querySelectorAll('mark[data-annotation-type="note"], mark[data-note-id]').forEach(unwrapElement);
+      saveCurrentPassageHtml();
+    }
+
+    setNotes(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(k => {
+        if (next[k].passageId === activePassageId) delete next[k];
+      });
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+
+    setActiveNoteId(null);
+  };
+
+  // Scroll to note mark in passage from Notes Column
+  const handleScrollToNoteMark = (noteId) => {
+    if (passageContainerRef.current) {
+      const mark = passageContainerRef.current.querySelector(`mark[data-note-id="${noteId}"]`);
+      if (mark) {
+        mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        mark.classList.add('animate-correct-glow');
+        setTimeout(() => mark.classList.remove('animate-correct-glow'), 1200);
+      }
     }
   };
 
@@ -621,7 +711,6 @@ export default function ReadingHomeworkView({ homework }) {
     }
 
     setActiveNoteId(null);
-    setShowNotesDrawer(false);
   };
 
   // Save Draft
@@ -867,13 +956,13 @@ export default function ReadingHomeworkView({ homework }) {
           )}
         </div>
 
-        {/* MAIN IELTS 2-COLUMN SPLIT SCREEN */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-auto lg:h-[calc(100vh-210px)] min-h-[650px]">
+        {/* MAIN IELTS 3-COLUMN SPLIT SCREEN (Passage | Questions | Dedicated Notes Column) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-auto lg:h-[calc(100vh-210px)] min-h-[650px]">
           
           {/* ============================================================== */}
-          {/* LEFT COLUMN: READING PASSAGE TEXT WITH HIGHLIGHT & NOTE        */}
+          {/* COLUMN 1: READING PASSAGE TEXT WITH LIVE HIGHLIGHT & NOTE       */}
           {/* ============================================================== */}
-          <div className="lg:col-span-6 bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden relative">
+          <div className={`${isNotesColumnOpen ? 'lg:col-span-5' : 'lg:col-span-6'} bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden relative transition-all duration-300`}>
             
             {/* Passage Selector Tabs, Annotation Tools & Font Controls */}
             <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
@@ -885,8 +974,6 @@ export default function ReadingHomeworkView({ homework }) {
                     <button
                       key={p.id}
                       onClick={() => {
-                        const existing = passageContainerRef.current?.querySelector('#active-selection-mark');
-                        if (existing) unwrapElement(existing);
                         setActivePassageId(p.id);
                         setActiveNoteId(null);
                         setSelectionPopup(null);
@@ -911,18 +998,20 @@ export default function ReadingHomeworkView({ homework }) {
 
               {/* Annotation Indicators & Font Controls */}
               <div className="flex items-center gap-2 flex-wrap">
-                {/* Notes Drawer Toggle */}
-                {currentPassageNotes.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setShowNotesDrawer(!showNotesDrawer)}
-                    className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
-                    title="Mở danh sách ghi chú của bài đọc này"
-                  >
-                    <StickyNote size={13} className="text-amber-600" />
-                    <span>{currentPassageNotes.length} Ghi chú</span>
-                  </button>
-                )}
+                {/* Dedicated Notes Column Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setIsNotesColumnOpen(!isNotesColumnOpen)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer border ${
+                    isNotesColumnOpen
+                      ? 'bg-amber-100/80 text-amber-900 border-amber-300'
+                      : 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200 shadow-2xs'
+                  }`}
+                  title={isNotesColumnOpen ? "Ẩn cột ghi chú bên phải" : "Hiện cột ghi chú bên phải"}
+                >
+                  <StickyNote size={13} className="text-amber-600" />
+                  <span>{currentPassageNotes.length} Ghi chú</span>
+                </button>
 
                 {/* Clear All Annotations for this passage */}
                 <button
@@ -971,10 +1060,7 @@ export default function ReadingHomeworkView({ homework }) {
             </div>
 
             {/* Passage Body Text with Live Mouse Selection */}
-            <div 
-              className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-4 text-justify select-text relative"
-              onMouseUp={handlePassageMouseUp}
-            >
+            <div className="flex-1 overflow-y-auto p-6 sm:p-7 space-y-4 text-justify select-text relative">
               {/* Highlight helper tip */}
               <div className="flex items-center gap-1.5 text-[11px] text-gray-400 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 mb-2 select-none">
                 <Highlighter size={12} className="text-amber-500" />
@@ -990,19 +1076,17 @@ export default function ReadingHomeworkView({ homework }) {
                 </h2>
               </div>
 
-              {/* Passage HTML Container (supports dynamic marks and notes) */}
-              <div 
-                id="passage-container"
-                ref={passageContainerRef}
+              {/* Memoized Passage Content Container */}
+              <PassageRenderer 
+                html={passageHtmls[activePassageId] || ''}
+                fontClass={passageFontClass}
                 onClick={handlePassageClick}
-                className={`text-gray-800 ${passageFontClass} font-normal space-y-4 leading-relaxed`}
-                dangerouslySetInnerHTML={{ __html: passageHtmls[activePassageId] || '' }}
+                onMouseUp={handlePassageMouseUp}
+                containerRef={passageContainerRef}
               />
             </div>
 
-            {/* ========================================================== */}
-            {/* FLOATING POPUP WHEN SELECTING TEXT (Like Test Platform)   */}
-            {/* ========================================================== */}
+            {/* FLOATING POPUP WHEN SELECTING TEXT */}
             {selectionPopup && (
               <div 
                 id="selection-popup"
@@ -1056,189 +1140,12 @@ export default function ReadingHomeworkView({ homework }) {
                 </button>
               </div>
             )}
-
-            {/* ========================================================== */}
-            {/* NOTE SIDEBAR / DRAWER (Right drawer for notes)            */}
-            {/* ========================================================== */}
-            {showNotesDrawer && (
-              <aside 
-                id="note-sidebar" 
-                className="absolute right-0 top-0 bottom-0 w-80 sm:w-96 max-w-full bg-white border-l border-gray-200 shadow-2xl z-30 flex flex-col text-left animate-pop-in"
-              >
-                {/* Sidebar Header */}
-                <div className="p-3.5 bg-gradient-to-r from-primary to-[#18316c] text-white flex items-center justify-between flex-shrink-0">
-                  <div className="flex items-center gap-2">
-                    {activeNoteId ? (
-                      <button
-                        type="button"
-                        onClick={() => setActiveNoteId(null)}
-                        className="px-2 py-1 bg-white/15 hover:bg-white/25 rounded-lg text-white text-xs font-bold transition-colors cursor-pointer flex items-center gap-1"
-                        title="Quay lại danh sách ghi chú"
-                      >
-                        <ArrowLeft size={13} />
-                        <span>Danh sách</span>
-                      </button>
-                    ) : (
-                      <StickyNote size={16} />
-                    )}
-                    <span className="font-extrabold text-xs sm:text-sm">
-                      {activeNoteId ? 'Chỉnh sửa ghi chú' : `Ghi chú bài đọc ${activePassage.number}`}
-                    </span>
-                    {!activeNoteId && (
-                      <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                        {currentPassageNotes.length}
-                      </span>
-                    )}
-                  </div>
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      setShowNotesDrawer(false);
-                      setActiveNoteId(null);
-                    }} 
-                    className="p-1 hover:bg-white/20 rounded-lg text-white/80 hover:text-white transition-colors cursor-pointer"
-                    title="Đóng ghi chú"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-
-                {/* Sidebar Body */}
-                <div className="p-4 flex-1 flex flex-col overflow-y-auto space-y-4">
-                  {noteSuccessToast && (
-                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2 animate-pop-in">
-                      <CheckCircle2 size={15} className="text-emerald-600 flex-shrink-0" />
-                      <span>Đã lưu ghi chú thành công!</span>
-                    </div>
-                  )}
-
-                  {activeNoteId && notes[activeNoteId] ? (
-                    <div className="flex-1 flex flex-col space-y-3">
-                      <div>
-                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
-                          Đoạn trích dẫn:
-                        </span>
-                        <blockquote className="p-2.5 bg-amber-50 rounded-xl border border-amber-200/80 text-xs italic text-gray-800 leading-snug">
-                          "{notes[activeNoteId].text}"
-                        </blockquote>
-                      </div>
-
-                      <div className="flex-1 flex flex-col">
-                        <label className="text-[11px] font-bold text-gray-600 mb-1">
-                          Nội dung ghi chú của bạn:
-                        </label>
-                        <textarea
-                          autoFocus
-                          rows={6}
-                          value={draftNoteContent}
-                          onChange={(e) => setDraftNoteContent(e.target.value)}
-                          placeholder="Nhập ghi chú hoặc suy luận của bạn tại đây..."
-                          className="w-full flex-1 p-3 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                        />
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteNote(activeNoteId)}
-                          className="text-xs font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer"
-                        >
-                          <Trash2 size={13} />
-                          <span>Xóa</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={handleSaveNoteContent}
-                          className="px-4 py-2 bg-primary hover:bg-primary-container text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
-                        >
-                          <Save size={13} />
-                          <span>Lưu ghi chú</span>
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-bold text-gray-700">
-                          Danh sách ghi chú ({currentPassageNotes.length}):
-                        </p>
-                      </div>
-
-                      {currentPassageNotes.length === 0 ? (
-                        <div className="p-6 text-center bg-gray-50 rounded-2xl border border-gray-100 space-y-2">
-                          <StickyNote size={28} className="mx-auto text-gray-300" />
-                          <p className="text-xs text-gray-500 font-medium">Chưa có ghi chú nào cho bài đọc này.</p>
-                          <p className="text-[11px] text-gray-400">Bôi đen chữ bất kỳ trong bài đọc rồi chọn <strong>Ghi chú</strong> để thêm.</p>
-                        </div>
-                      ) : (
-                        currentPassageNotes.map(n => (
-                          <div 
-                            key={n.id}
-                            className="p-3.5 rounded-2xl border border-amber-200/90 bg-amber-50/50 hover:bg-amber-50 transition-all shadow-2xs space-y-2"
-                          >
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="flex items-start gap-1.5 text-xs font-bold text-amber-950 flex-1">
-                                <Quote size={13} className="text-amber-600 flex-shrink-0 mt-0.5" />
-                                <span className="italic leading-snug line-clamp-2">"{n.text}"</span>
-                              </div>
-                              <span className="text-[10px] text-gray-400 font-medium flex-shrink-0">
-                                {n.createdAt || ''}
-                              </span>
-                            </div>
-
-                            {n.content ? (
-                              <p className="text-xs text-gray-800 leading-relaxed bg-white/80 p-2.5 rounded-xl border border-amber-100/80 whitespace-pre-wrap">
-                                {n.content}
-                              </p>
-                            ) : (
-                              <p className="text-xs text-amber-700/60 italic bg-white/50 p-2 rounded-xl">
-                                (Chưa nhập nội dung - Bấm Chỉnh sửa để thêm)
-                              </p>
-                            )}
-
-                            <div className="flex items-center justify-between pt-1 border-t border-amber-200/50 text-xs">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setActiveNoteId(n.id);
-                                  setDraftNoteContent(n.content || '');
-                                }}
-                                className="text-primary hover:text-primary-container font-bold flex items-center gap-1 cursor-pointer"
-                              >
-                                <Edit3 size={12} />
-                                <span>Chỉnh sửa</span>
-                              </button>
-
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteNote(n.id)}
-                                className="text-gray-400 hover:text-rose-600 font-semibold flex items-center gap-1 cursor-pointer transition-colors"
-                              >
-                                <Trash2 size={12} />
-                                <span>Xóa</span>
-                              </button>
-                            </div>
-                          </div>
-                        ))
-                      )}
-
-                      <div className="pt-2 text-center">
-                        <p className="text-[11px] text-gray-400">
-                          Mẹo: Bôi đen thêm từ hoặc câu trong bài đọc để tạo ghi chú mới.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </aside>
-            )}
           </div>
 
           {/* ============================================================== */}
-          {/* RIGHT COLUMN: SHORT-ANSWER QUESTIONS (50% on desktop)           */}
+          {/* COLUMN 2: SHORT-ANSWER QUESTIONS                              */}
           {/* ============================================================== */}
-          <div className="lg:col-span-6 bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden">
+          <div className={`${isNotesColumnOpen ? 'lg:col-span-4' : 'lg:col-span-6'} bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden transition-all duration-300`}>
             
             {/* Right Pane Navigation Header */}
             <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
@@ -1518,6 +1425,200 @@ export default function ReadingHomeworkView({ homework }) {
               </div>
             </div>
           </div>
+
+          {/* ============================================================== */}
+          {/* COLUMN 3: DEDICATED NOTES COLUMN ON THE FAR RIGHT OF WEBPAGE    */}
+          {/* ============================================================== */}
+          {isNotesColumnOpen && (
+            <div className="lg:col-span-3 bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden text-left transition-all duration-300">
+              {/* Header */}
+              <div className="p-3 sm:p-4 border-b border-gray-100 bg-amber-50/70 flex items-center justify-between gap-2 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                  {activeNoteId ? (
+                    <button
+                      type="button"
+                      onClick={() => setActiveNoteId(null)}
+                      className="px-2 py-1 bg-white hover:bg-amber-100 rounded-lg text-amber-900 border border-amber-200 text-xs font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                      title="Quay lại danh sách ghi chú"
+                    >
+                      <ArrowLeft size={13} />
+                      <span>Danh sách</span>
+                    </button>
+                  ) : (
+                    <span className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      <StickyNote size={15} />
+                    </span>
+                  )}
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-extrabold text-gray-900 flex items-center gap-1.5">
+                      <span>{activeNoteId ? 'Sửa ghi chú' : `Ghi chú bài đọc ${activePassage.number}`}</span>
+                      {!activeNoteId && (
+                        <span className="bg-amber-200/80 text-amber-900 text-[10px] px-2 py-0.5 rounded-full font-bold">
+                          {currentPassageNotes.length}
+                        </span>
+                      )}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  {currentPassageNotes.length > 0 && !activeNoteId && (
+                    <button
+                      type="button"
+                      onClick={handleClearAllNotes}
+                      className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                      title="Xóa tất cả ghi chú của bài đọc này"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsNotesColumnOpen(false)}
+                    className="p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                    title="Thu gọn cột ghi chú"
+                  >
+                    <X size={15} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-4 flex-1 flex flex-col overflow-y-auto space-y-3">
+                {noteSuccessToast && (
+                  <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2 animate-pop-in">
+                    <CheckCircle2 size={14} className="text-emerald-600 flex-shrink-0" />
+                    <span>Đã lưu ghi chú thành công!</span>
+                  </div>
+                )}
+
+                {activeNoteId && notes[activeNoteId] ? (
+                  /* Editor mode */
+                  <div className="flex-1 flex flex-col space-y-3">
+                    <div>
+                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
+                        ĐOẠN TRÍCH DẪN:
+                      </span>
+                      <blockquote className="p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-xs italic text-gray-800 leading-snug">
+                        "{notes[activeNoteId].text}"
+                      </blockquote>
+                    </div>
+
+                    <div className="flex-1 flex flex-col">
+                      <label className="text-[11px] font-bold text-gray-600 mb-1">
+                        Nội dung ghi chú của bạn:
+                      </label>
+                      <textarea
+                        autoFocus
+                        rows={7}
+                        value={draftNoteContent}
+                        onChange={(e) => setDraftNoteContent(e.target.value)}
+                        placeholder="Nhập ghi chú hoặc suy luận của bạn tại đây..."
+                        className="w-full flex-1 p-3 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteNote(activeNoteId)}
+                        className="text-xs font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer"
+                      >
+                        <Trash2 size={13} />
+                        <span>Xóa</span>
+                      </button>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setActiveNoteId(null)}
+                          className="px-3 py-1.5 rounded-xl border border-gray-200 text-xs font-bold text-gray-600 hover:bg-gray-50 cursor-pointer"
+                        >
+                          Hủy
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleSaveNoteContent}
+                          className="px-3.5 py-1.5 bg-primary hover:bg-primary-container text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                        >
+                          <Save size={13} />
+                          <span>Lưu ghi chú</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* List mode */
+                  <div className="space-y-3">
+                    {currentPassageNotes.length === 0 ? (
+                      <div className="p-6 text-center bg-gray-50 rounded-2xl border border-gray-100 space-y-2 mt-4">
+                        <StickyNote size={30} className="mx-auto text-gray-300" />
+                        <p className="text-xs text-gray-600 font-bold">Chưa có ghi chú nào cho bài đọc này.</p>
+                        <p className="text-[11px] text-gray-400 leading-relaxed">
+                          Bôi đen đoạn văn bản trong bài đọc rồi nhấn <strong>Ghi chú</strong> để lưu lại suy luận của bạn.
+                        </p>
+                      </div>
+                    ) : (
+                      currentPassageNotes.map(n => (
+                        <div
+                          key={n.id}
+                          className="p-3 rounded-2xl border border-amber-200/90 bg-amber-50/50 hover:bg-amber-50/90 transition-all shadow-2xs space-y-2"
+                        >
+                          <div className="flex items-start justify-between gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleScrollToNoteMark(n.id)}
+                              className="flex items-start gap-1 text-xs font-bold text-amber-950 text-left hover:text-primary transition-colors cursor-pointer flex-1"
+                              title="Bấm để cuộn đến đoạn này trong bài đọc"
+                            >
+                              <Quote size={12} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                              <span className="italic leading-snug line-clamp-2">"{n.text}"</span>
+                            </button>
+                            <span className="text-[10px] text-gray-400 font-medium flex-shrink-0">
+                              {n.createdAt || ''}
+                            </span>
+                          </div>
+
+                          {n.content ? (
+                            <p className="text-xs text-gray-800 leading-relaxed bg-white/80 p-2.5 rounded-xl border border-amber-100 whitespace-pre-wrap">
+                              {n.content}
+                            </p>
+                          ) : (
+                            <p className="text-xs text-amber-700/70 italic bg-white/50 p-2 rounded-xl">
+                              (Chưa nhập nội dung - Bấm Sửa để thêm)
+                            </p>
+                          )}
+
+                          <div className="flex items-center justify-between pt-1 border-t border-amber-200/50 text-xs">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setActiveNoteId(n.id);
+                                setDraftNoteContent(n.content || '');
+                              }}
+                              className="text-primary hover:text-primary-container font-bold flex items-center gap-1 cursor-pointer"
+                            >
+                              <Edit3 size={12} />
+                              <span>Sửa</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteNote(n.id)}
+                              className="text-gray-400 hover:text-rose-600 font-semibold flex items-center gap-1 cursor-pointer transition-colors"
+                            >
+                              <Trash2 size={12} />
+                              <span>Xóa</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
         </div>
 

@@ -233,3 +233,54 @@
 .animate-correct-glow {
   animation: correctGlow 0.8s ease-out;
 }
+
+/* Reading passage text selection highlight */
+#passage-container,
+#passage-container * {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+#passage-container::selection,
+#passage-container *::selection {
+  background-color: #38bdf8 !important;
+  color: #082f49 !important;
+}
+
+::selection {
+  background-color: #bae6fd;
+  color: #0c4a6e;
+}
+
+/* Annotation marks in reading passage */
+.annotation-mark {
+  background-color: #fef08a !important;
+  color: #111827 !important;
+  padding: 1px 4px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  display: inline !important;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.annotation-mark:hover {
+  background-color: #fde047 !important;
+}
+
+.annotation-note {
+  background-color: #fde68a !important;
+  color: #451a03 !important;
+  border-bottom: 2px solid #d97706 !important;
+  padding: 1px 4px !important;
+  border-radius: 4px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: inline !important;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.annotation-note:hover {
+  background-color: #fcd34d !important;
+}
