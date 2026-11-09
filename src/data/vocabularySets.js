@@ -1,11 +1,23 @@
 // Vocabulary sets data and storage helpers
 
+export const CATEGORIES = {
+  SCHOOL: 'school',
+  IELTS: 'ielts',
+  CEFR: 'cefr',
+  CUSTOM: 'custom'
+};
+
 export const DEFAULT_VOCAB_SETS = [
+  // ==========================================
+  // TIẾNG ANH PHỔ THÔNG (LỚP 6 - 12)
+  // ==========================================
   {
     id: 'unit-1-global-success-10',
     title: 'Unit 1: Family Life',
     subtitle: 'Tiếng Anh 10 - Global Success',
     description: 'Trọn bộ 74 từ vựng và cụm từ trọng tâm Unit 1 SGK Tiếng Anh 10 Global Success về chủ đề cuộc sống gia đình, thói quen và trách nhiệm.',
+    category: 'school',
+    gradeLevel: 'grade-10',
     grade: 'Lớp 10',
     book: 'Global Success',
     author: 'Dream Education Team',
@@ -86,6 +98,410 @@ export const DEFAULT_VOCAB_SETS = [
       { id: 'u1-72', term: 'washing machine', definition: 'máy giặt' },
       { id: 'u1-73', term: 'be away on business', definition: 'đi công tác xa' },
       { id: 'u1-74', term: 'untidy', definition: 'bừa bộn' }
+    ]
+  },
+  {
+    id: 'unit-2-global-success-10',
+    title: 'Unit 2: Humans and the Environment',
+    subtitle: 'Tiếng Anh 10 - Global Success',
+    description: 'Từ vựng trọng điểm về môi trường, lối sống xanh và phát triển bền vững.',
+    category: 'school',
+    gradeLevel: 'grade-10',
+    grade: 'Lớp 10',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 10', 'Global Success', 'Unit 2', 'Environment'],
+    isOfficial: true,
+    terms: [
+      { id: 'u2-1', term: 'carbon footprint', definition: 'vết carbon, lượng phát thải khí nhà kính' },
+      { id: 'u2-2', term: 'eco-friendly', definition: 'thân thiện với môi trường' },
+      { id: 'u2-3', term: 'sustainable lifestyle', definition: 'lối sống bền vững' },
+      { id: 'u2-4', term: 'green living', definition: 'lối sống xanh' },
+      { id: 'u2-5', term: 'energy consumption', definition: 'mức tiêu thụ năng lượng' },
+      { id: 'u2-6', term: 'renewable energy', definition: 'năng lượng tái tạo' },
+      { id: 'u2-7', term: 'organic food', definition: 'thực phẩm hữu cơ' },
+      { id: 'u2-8', term: 'reduce, reuse, recycle', definition: 'giảm thiểu, tái sử dụng, tái chế' },
+      { id: 'u2-9', term: 'solar panel', definition: 'tấm pin năng lượng mặt trời' },
+      { id: 'u2-10', term: 'global warming', definition: 'sự nóng lên toàn cầu' },
+      { id: 'u2-11', term: 'greenhouse gas emissions', definition: 'khí thải nhà kính' },
+      { id: 'u2-12', term: 'conserve electricity', definition: 'tiết kiệm điện năng' },
+      { id: 'u2-13', term: 'pollute the water', definition: 'làm ô nhiễm nguồn nước' },
+      { id: 'u2-14', term: 'single-use plastic', definition: 'nhựa dùng một lần' },
+      { id: 'u2-15', term: 'protect nature', definition: 'bảo vệ tự nhiên' }
+    ]
+  },
+  {
+    id: 'unit-1-global-success-6',
+    title: 'Unit 1: My New School',
+    subtitle: 'Tiếng Anh 6 - Global Success',
+    description: 'Từ vựng khởi đầu về trường lớp, dụng cụ học tập và bạn bè.',
+    category: 'school',
+    gradeLevel: 'grade-6',
+    grade: 'Lớp 6',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 6', 'Global Success', 'Unit 1'],
+    isOfficial: true,
+    terms: [
+      { id: 'g6-1', term: 'school bag', definition: 'cặp sách, balo đi học' },
+      { id: 'g6-2', term: 'calculator', definition: 'máy tính cầm tay' },
+      { id: 'g6-3', term: 'compass', definition: 'com-pa' },
+      { id: 'g6-4', term: 'school uniform', definition: 'đồng phục học sinh' },
+      { id: 'g6-5', term: 'classmate', definition: 'bạn cùng lớp' },
+      { id: 'g6-6', term: 'boarding school', definition: 'trường nội trú' },
+      { id: 'g6-7', term: 'playground', definition: 'sân chơi' },
+      { id: 'g6-8', term: 'do homework', definition: 'làm bài tập về nhà' },
+      { id: 'g6-9', term: 'international school', definition: 'trường quốc tế' },
+      { id: 'g6-10', term: 'pencil sharpener', definition: 'gọt bút chì' }
+    ]
+  },
+  {
+    id: 'unit-1-global-success-7',
+    title: 'Unit 1: Hobbies',
+    subtitle: 'Tiếng Anh 7 - Global Success',
+    description: 'Từ vựng các sở thích, hoạt động thư giãn sáng tạo.',
+    category: 'school',
+    gradeLevel: 'grade-7',
+    grade: 'Lớp 7',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 7', 'Global Success', 'Unit 1'],
+    isOfficial: true,
+    terms: [
+      { id: 'g7-1', term: 'make pottery', definition: 'làm đồ gốm' },
+      { id: 'g7-2', term: 'collect coins', definition: 'sưu tầm đồng xu' },
+      { id: 'g7-3', term: 'dollhouse', definition: 'nhà búp bê' },
+      { id: 'g7-4', term: 'horse riding', definition: 'cưỡi ngựa' },
+      { id: 'g7-5', term: 'gardening', definition: 'làm vườn' },
+      { id: 'g7-6', term: 'patience', definition: 'sự kiên nhẫn' },
+      { id: 'g7-7', term: 'build models', definition: 'lắp ráp mô hình' },
+      { id: 'g7-8', term: 'valuable', definition: 'có giá trị' },
+      { id: 'g7-9', term: 'creative', definition: 'sáng tạo' },
+      { id: 'g7-10', term: 'take photos', definition: 'chụp ảnh' }
+    ]
+  },
+  {
+    id: 'unit-1-global-success-8',
+    title: 'Unit 1: Leisure Time',
+    subtitle: 'Tiếng Anh 8 - Global Success',
+    description: 'Từ vựng thời gian rảnh rỗi, các hoạt động DIY và giải trí hiện đại.',
+    category: 'school',
+    gradeLevel: 'grade-8',
+    grade: 'Lớp 8',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 8', 'Global Success', 'Unit 1'],
+    isOfficial: true,
+    terms: [
+      { id: 'g8-1', term: 'leisure activity', definition: 'hoạt động giải trí' },
+      { id: 'g8-2', term: 'origami', definition: 'nghệ thuật gấp giấy Nhật Bản' },
+      { id: 'g8-3', term: 'hanging out with friends', definition: 'đi chơi với bạn bè' },
+      { id: 'g8-4', term: 'doing DIY', definition: 'tự làm đồ thủ công (Do It Yourself)' },
+      { id: 'g8-5', term: 'surfing the internet', definition: 'lướt mạng Internet' },
+      { id: 'g8-6', term: 'relaxing', definition: 'thư giãn' },
+      { id: 'g8-7', term: 'be hooked on', definition: 'đam mê, say mê điều gì' },
+      { id: 'g8-8', term: 'knit a scarf', definition: 'đan khăn quàng' },
+      { id: 'g8-9', term: 'improve physical health', definition: 'cải thiện sức khỏe thể chất' },
+      { id: 'g8-10', term: 'play board games', definition: 'chơi cờ, trò chơi bàn cờ' }
+    ]
+  },
+  {
+    id: 'unit-1-global-success-9',
+    title: 'Unit 1: Local Community',
+    subtitle: 'Tiếng Anh 9 - Global Success',
+    description: 'Từ vựng về cộng đồng địa phương, làng nghề truyền thống và đời sống xã hội.',
+    category: 'school',
+    gradeLevel: 'grade-9',
+    grade: 'Lớp 9',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 9', 'Global Success', 'Unit 1'],
+    isOfficial: true,
+    terms: [
+      { id: 'g9-1', term: 'craft village', definition: 'làng nghề thủ công' },
+      { id: 'g9-2', term: 'artisan', definition: 'thợ thủ công, nghệ nhân' },
+      { id: 'g9-3', term: 'conical hat', definition: 'nón lá' },
+      { id: 'g9-4', term: 'pottery workshop', definition: 'xưởng làm gốm' },
+      { id: 'g9-5', term: 'preserve cultural heritage', definition: 'bảo tồn di sản văn hóa' },
+      { id: 'g9-6', term: 'authentic product', definition: 'sản phẩm chính gốc, xác thực' },
+      { id: 'g9-7', term: 'suburb', definition: 'vùng ngoại ô' },
+      { id: 'g9-8', term: 'pass down through generations', definition: 'truyền qua nhiều thế hệ' },
+      { id: 'g9-9', term: 'attract tourists', definition: 'thu hút khách du lịch' },
+      { id: 'g9-10', term: 'community center', definition: 'trung tâm cộng đồng' }
+    ]
+  },
+  {
+    id: 'unit-1-global-success-11',
+    title: 'Unit 1: A Long and Healthy Life',
+    subtitle: 'Tiếng Anh 11 - Global Success',
+    description: 'Từ vựng học thuật về sức khỏe, tuổi thọ, hệ miễn dịch và dinh dưỡng.',
+    category: 'school',
+    gradeLevel: 'grade-11',
+    grade: 'Lớp 11',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 11', 'Global Success', 'Unit 1'],
+    isOfficial: true,
+    terms: [
+      { id: 'g11-1', term: 'life expectancy', definition: 'tuổi thọ trung bình' },
+      { id: 'g11-2', term: 'immune system', definition: 'hệ thống miễn dịch' },
+      { id: 'g11-3', term: 'balanced diet', definition: 'chế độ ăn uống cân bằng' },
+      { id: 'g11-4', term: 'antibiotics', definition: 'thuốc kháng sinh' },
+      { id: 'g11-5', term: 'infectious disease', definition: 'bệnh truyền nhiễm' },
+      { id: 'g11-6', term: 'longevity', definition: 'sự trường thọ, sống lâu' },
+      { id: 'g11-7', term: 'nutritious food', definition: 'thực phẩm giàu dinh dưỡng' },
+      { id: 'g11-8', term: 'physical fitness', definition: 'thể lực, sự cân đối thể chất' },
+      { id: 'g11-9', term: 'relieve stress', definition: 'giảm bớt căng thẳng' },
+      { id: 'g11-10', term: 'regular exercise', definition: 'tập thể dục đều đặn' }
+    ]
+  },
+  {
+    id: 'unit-1-global-success-12',
+    title: 'Unit 1: Life Stories We Admire',
+    subtitle: 'Tiếng Anh 12 - Global Success',
+    description: 'Từ vựng nâng cao về tiểu sử danh nhân, nghị lực sống và di sản để lại.',
+    category: 'school',
+    gradeLevel: 'grade-12',
+    grade: 'Lớp 12',
+    book: 'Global Success',
+    author: 'Dream Education Team',
+    tags: ['Lớp 12', 'Global Success', 'Unit 1'],
+    isOfficial: true,
+    terms: [
+      { id: 'g12-1', term: 'biography', definition: 'tiểu sử, lý lịch' },
+      { id: 'g12-2', term: 'perseverance', definition: 'sự kiên trì, bền bỉ' },
+      { id: 'g12-3', term: 'dedication', definition: 'sự cống hiến, tận tụy' },
+      { id: 'g12-4', term: 'inspirational figure', definition: 'nhân vật truyền cảm hứng' },
+      { id: 'g12-5', term: 'leave a lasting legacy', definition: 'để lại di sản lâu dài' },
+      { id: 'g12-6', term: 'overcome hardship', definition: 'vượt qua khó khăn thử thách' },
+      { id: 'g12-7', term: 'visionary leader', definition: 'nhà lãnh đạo có tầm nhìn xa' },
+      { id: 'g12-8', term: 'historical milestone', definition: 'cột mốc lịch sử' },
+      { id: 'g12-9', term: 'pioneer in the field', definition: 'người tiên phong trong lĩnh vực' },
+      { id: 'g12-10', term: 'noble purpose', definition: 'mục đích cao quý' }
+    ]
+  },
+
+  // ==========================================
+  // LỘ TRÌNH IELTS - DREAM EDUCATION
+  // ==========================================
+  {
+    id: 'ielts-beginner-core',
+    title: 'IELTS Beginner (3.0 - 4.0): Core Vocabulary',
+    subtitle: 'Lộ trình IELTS Dream Education • Band 3.0 - 4.0',
+    description: 'Xây dựng nền tảng từ vựng cơ bản theo chuẩn Dream Education cho người mới bắt đầu.',
+    category: 'ielts',
+    ieltsLevel: 'ielts-beginner',
+    grade: 'IELTS Beginner',
+    book: 'Dream IELTS 3.0-4.0',
+    author: 'Dream Education Team',
+    tags: ['IELTS', 'IELTS Beginner', 'Band 3.0 - 4.0'],
+    isOfficial: true,
+    terms: [
+      { id: 'ib-1', term: 'daily routine', definition: 'lịch trình sinh hoạt hàng ngày' },
+      { id: 'ib-2', term: 'accommodation', definition: 'chỗ ở, nơi lưu trú' },
+      { id: 'ib-3', term: 'hometown', definition: 'quê hương, nơi sinh sống' },
+      { id: 'ib-4', term: 'occupation', definition: 'nghề nghiệp, công việc' },
+      { id: 'ib-5', term: 'leisure pursuits', definition: 'các thú vui giải trí' },
+      { id: 'ib-6', term: 'public transport', definition: 'phương tiện giao thông công cộng' },
+      { id: 'ib-7', term: 'neighborhood', definition: 'khu phố, vùng lân cận' },
+      { id: 'ib-8', term: 'commute to work', definition: 'đi lại hàng ngày đi làm' },
+      { id: 'ib-9', term: 'favorite dish', definition: 'món ăn yêu thích' },
+      { id: 'ib-10', term: 'personal preference', definition: 'sở thích cá nhân' },
+      { id: 'ib-11', term: 'spending habit', definition: 'thói quen chi tiêu' },
+      { id: 'ib-12', term: 'weekend getaway', definition: 'chuyến nghỉ ngắn cuối tuần' }
+    ]
+  },
+  {
+    id: 'pre-ielts-core',
+    title: 'Pre-IELTS (4.0 - 5.0): Academic Foundations',
+    subtitle: 'Lộ trình IELTS Dream Education • Band 4.0 - 5.0',
+    description: 'Từ vựng học thuật cơ bản và các chủ đề xã hội phổ biến trong kỳ thi IELTS.',
+    category: 'ielts',
+    ieltsLevel: 'pre-ielts',
+    grade: 'Pre IELTS',
+    book: 'Dream IELTS 4.0-5.0',
+    author: 'Dream Education Team',
+    tags: ['IELTS', 'Pre IELTS', 'Band 4.0 - 5.0'],
+    isOfficial: true,
+    terms: [
+      { id: 'pi-1', term: 'academic performance', definition: 'thành tích học tập' },
+      { id: 'pi-2', term: 'urbanization', definition: 'quá trình đô thị hóa' },
+      { id: 'pi-3', term: 'school curriculum', definition: 'chương trình giảng dạy học đường' },
+      { id: 'pi-4', term: 'environmental impact', definition: 'tác động môi trường' },
+      { id: 'pi-5', term: 'infrastructure', definition: 'cơ sở hạ tầng' },
+      { id: 'pi-6', term: 'tourist attraction', definition: 'điểm thu hút khách du lịch' },
+      { id: 'pi-7', term: 'job satisfaction', definition: 'sự hài lòng trong công việc' },
+      { id: 'pi-8', term: 'extracurricular activities', definition: 'hoạt động ngoại khóa' },
+      { id: 'pi-9', term: 'higher education', definition: 'giáo dục bậc đại học' },
+      { id: 'pi-10', term: 'cultural diversity', definition: 'sự đa dạng văn hóa' },
+      { id: 'pi-11', term: 'traffic congestion', definition: 'tình trạng tắc nghẽn giao thông' },
+      { id: 'pi-12', term: 'technological device', definition: 'thiết bị công nghệ' }
+    ]
+  },
+  {
+    id: 'ielts-foundation-core',
+    title: 'IELTS Foundation (5.0 - 6.0): Core Collocations',
+    subtitle: 'Lộ trình IELTS Dream Education • Band 5.0 - 6.0',
+    description: 'Tập hợp collocations và cụm từ theo chủ đề thường gặp trong Writing & Speaking.',
+    category: 'ielts',
+    ieltsLevel: 'ielts-foundation',
+    grade: 'IELTS Foundation',
+    book: 'Dream IELTS 5.0-6.0',
+    author: 'Dream Education Team',
+    tags: ['IELTS', 'Foundation', 'Band 5.0 - 6.0'],
+    isOfficial: true,
+    terms: [
+      { id: 'if-1', term: 'technological advancement', definition: 'sự tiến bộ vượt bậc về công nghệ' },
+      { id: 'if-2', term: 'sustainable economic growth', definition: 'tăng trưởng kinh tế bền vững' },
+      { id: 'if-3', term: 'sedentary lifestyle', definition: 'lối sống thụ động, ít vận động' },
+      { id: 'if-4', term: 'natural habitat destruction', definition: 'sự phá hủy môi trường sống tự nhiên' },
+      { id: 'if-5', term: 'career prospects', definition: 'triển vọng nghề nghiệp tương lai' },
+      { id: 'if-6', term: 'preserve cultural identity', definition: 'gìn giữ bản sắc văn hóa' },
+      { id: 'if-7', term: 'renewable energy sources', definition: 'nguồn năng lượng tái tạo' },
+      { id: 'if-8', term: 'gain competitive edge', definition: 'đạt được lợi thế cạnh tranh' },
+      { id: 'if-9', term: 'foster creativity', definition: 'nuôi dưỡng và phát triển sự sáng tạo' },
+      { id: 'if-10', term: 'pose a serious threat to', definition: 'gây ra mối đe dọa nghiêm trọng cho' },
+      { id: 'if-11', term: 'broaden horizons', definition: 'mở rộng tầm nhìn và hiểu biết' },
+      { id: 'if-12', term: 'bridge the gap between', definition: 'thu hẹp khoảng cách giữa' }
+    ]
+  },
+  {
+    id: 'ielts-advanced-core',
+    title: 'IELTS Advanced (6.5+): High-Band Lexicon',
+    subtitle: 'Lộ trình IELTS Dream Education • Band 6.5 - 7.5+',
+    description: 'Từ vựng cao cấp, cấu trúc diễn đạt mang tính học thuật cao nhằm bứt phá điểm số.',
+    category: 'ielts',
+    ieltsLevel: 'ielts-advanced',
+    grade: 'IELTS Advanced',
+    book: 'Dream IELTS 6.5-7.5+',
+    author: 'Dream Education Team',
+    tags: ['IELTS', 'Advanced', 'Band 6.5 - 7.5+'],
+    isOfficial: true,
+    terms: [
+      { id: 'ia-1', term: 'ubiquitous presence', definition: 'sự hiện diện ở khắp mọi nơi' },
+      { id: 'ia-2', term: 'unprecedented scale', definition: 'quy mô chưa từng có tiền lệ' },
+      { id: 'ia-3', term: 'exacerbate the problem', definition: 'làm trầm trọng thêm vấn đề' },
+      { id: 'ia-4', term: 'substantiate an argument', definition: 'chứng minh, củng cố luận điểm bằng bằng chứng' },
+      { id: 'ia-5', term: 'of paramount importance', definition: 'có tầm quan trọng tối thượng, hàng đầu' },
+      { id: 'ia-6', term: 'detrimental impact', definition: 'tác động gây hại, có hại' },
+      { id: 'ia-7', term: 'paradigm shift', definition: 'sự chuyển dịch căn bản về tư duy/mô hình' },
+      { id: 'ia-8', term: 'disseminate information', definition: 'phổ biến, truyền bá thông tin rộng rãi' },
+      { id: 'ia-9', term: 'circumvent restrictions', definition: 'lách qua hoặc né tránh các hạn chế' },
+      { id: 'ia-10', term: 'foster innovation', definition: 'thúc đẩy tinh thần đổi mới sáng tạo' },
+      { id: 'ia-11', term: 'render something obsolete', definition: 'khiến cái gì trở nên lỗi thời' },
+      { id: 'ia-12', term: 'profound implications', definition: 'những hệ lụy / tác động sâu sắc' }
+    ]
+  },
+
+  // ==========================================
+  // KHUNG CHUẨN CHÂU ÂU CEFR (LEVEL A2 -> C1)
+  // ==========================================
+  {
+    id: 'cefr-a2-essentials',
+    title: 'CEFR A2: Pre-Intermediate Essentials',
+    subtitle: 'Khung chuẩn Châu Âu • Trình độ A2',
+    description: 'Từ vựng giao tiếp thường ngày về mua sắm, chỉ đường, du lịch và thông tin cá nhân.',
+    category: 'cefr',
+    cefrLevel: 'a2',
+    grade: 'Level A2',
+    book: 'CEFR A2',
+    author: 'Dream Education Team',
+    tags: ['CEFR', 'A2', 'Sơ cấp'],
+    isOfficial: true,
+    terms: [
+      { id: 'a2-1', term: 'appointment', definition: 'cuộc hẹn' },
+      { id: 'a2-2', term: 'convenient', definition: 'thuận tiện, tiện lợi' },
+      { id: 'a2-3', term: 'destination', definition: 'điểm đến' },
+      { id: 'a2-4', term: 'discount', definition: 'sự giảm giá' },
+      { id: 'a2-5', term: 'invitation', definition: 'lời mời' },
+      { id: 'a2-6', term: 'luggage', definition: 'hành lý' },
+      { id: 'a2-7', term: 'passenger', definition: 'hành khách' },
+      { id: 'a2-8', term: 'recipe', definition: 'công thức nấu ăn' },
+      { id: 'a2-9', term: 'reliable', definition: 'đáng tin cậy' },
+      { id: 'a2-10', term: 'delicious', definition: 'ngon miệng' },
+      { id: 'a2-11', term: 'direction', definition: 'phương hướng, chỉ đường' },
+      { id: 'a2-12', term: 'weather forecast', definition: 'dự báo thời tiết' }
+    ]
+  },
+  {
+    id: 'cefr-b1-intermediate',
+    title: 'CEFR B1: Intermediate Vocabulary',
+    subtitle: 'Khung chuẩn Châu Âu • Trình độ B1',
+    description: 'Từ vựng trung cấp phục vụ công việc, học tập, trải nghiệm và bày tỏ quan điểm.',
+    category: 'cefr',
+    cefrLevel: 'b1',
+    grade: 'Level B1',
+    book: 'CEFR B1',
+    author: 'Dream Education Team',
+    tags: ['CEFR', 'B1', 'Trung cấp'],
+    isOfficial: true,
+    terms: [
+      { id: 'b1-1', term: 'ambitious', definition: 'tham vọng, có nhiều hoài bão' },
+      { id: 'b1-2', term: 'consequence', definition: 'hậu quả, kết quả' },
+      { id: 'b1-3', term: 'contribute to', definition: 'đóng góp vào' },
+      { id: 'b1-4', term: 'deliberate', definition: 'có chủ ý, thận trọng' },
+      { id: 'b1-5', term: 'flexible schedule', definition: 'lịch trình linh hoạt' },
+      { id: 'b1-6', term: 'hesitate', definition: 'do dự, ngập ngừng' },
+      { id: 'b1-7', term: 'prioritize tasks', definition: 'ưu tiên các nhiệm vụ' },
+      { id: 'b1-8', term: 'temporary solution', definition: 'giải pháp tạm thời' },
+      { id: 'b1-9', term: 'efficient method', definition: 'phương pháp hiệu quả' },
+      { id: 'b1-10', term: 'express opinion', definition: 'bày tỏ quan điểm' },
+      { id: 'b1-11', term: 'achieve a target', definition: 'đạt được mục tiêu' },
+      { id: 'b1-12', term: 'solve a problem', definition: 'giải quyết vấn đề' }
+    ]
+  },
+  {
+    id: 'cefr-b2-upper-intermediate',
+    title: 'CEFR B2: Upper-Intermediate Vocabulary',
+    subtitle: 'Khung chuẩn Châu Âu • Trình độ B2',
+    description: 'Từ vựng nâng cao phục vụ đọc hiểu chuyên sâu, tranh luận và viết luận mạch lạc.',
+    category: 'cefr',
+    cefrLevel: 'b2',
+    grade: 'Level B2',
+    book: 'CEFR B2',
+    author: 'Dream Education Team',
+    tags: ['CEFR', 'B2', 'Trung cao cấp'],
+    isOfficial: true,
+    terms: [
+      { id: 'b2-1', term: 'advocate for', definition: 'công khai ủng hộ, tán thành' },
+      { id: 'b2-2', term: 'collaborate effectively', definition: 'hợp tác hiệu quả' },
+      { id: 'b2-3', term: 'comprehensive analysis', definition: 'phân tích toàn diện' },
+      { id: 'b2-4', term: 'diverse perspectives', definition: 'những góc nhìn đa dạng' },
+      { id: 'b2-5', term: 'evaluate performance', definition: 'đánh giá hiệu suất' },
+      { id: 'b2-6', term: 'tangible benefit', definition: 'lợi ích hữu hình, rõ ràng' },
+      { id: 'b2-7', term: 'subtle difference', definition: 'sự khác biệt tinh tế, nhỏ' },
+      { id: 'b2-8', term: 'sustainable development', definition: 'phát triển bền vững' },
+      { id: 'b2-9', term: 'smooth transition', definition: 'sự chuyển tiếp suôn sẻ' },
+      { id: 'b2-10', term: 'substantial growth', definition: 'sự tăng trưởng đáng kể' },
+      { id: 'b2-11', term: 'underlying cause', definition: 'nguyên nhân sâu xa' },
+      { id: 'b2-12', term: 'feasible approach', definition: 'cách tiếp cận khả thi' }
+    ]
+  },
+  {
+    id: 'cefr-c1-advanced',
+    title: 'CEFR C1: Advanced Academic Lexicon',
+    subtitle: 'Khung chuẩn Châu Âu • Trình độ C1',
+    description: 'Từ vựng học thuật đỉnh cao, phục vụ nghiên cứu, diễn thuyết và tư duy phản biện.',
+    category: 'cefr',
+    cefrLevel: 'c1',
+    grade: 'Level C1',
+    book: 'CEFR C1',
+    author: 'Dream Education Team',
+    tags: ['CEFR', 'C1', 'Cao cấp'],
+    isOfficial: true,
+    terms: [
+      { id: 'c1-1', term: 'articulate thoughts', definition: 'diễn đạt suy nghĩ một cách lưu loát và gãy gọn' },
+      { id: 'c1-2', term: 'cohesive structure', definition: 'cấu trúc chặt chẽ, gắn kết' },
+      { id: 'c1-3', term: 'discrepancy in data', definition: 'sự sai lệch, bất nhất trong dữ liệu' },
+      { id: 'c1-4', term: 'inherent quality', definition: 'phẩm chất vốn có, bẩm sinh' },
+      { id: 'c1-5', term: 'plausible explanation', definition: 'lời giải thích hợp lý, đáng tin' },
+      { id: 'c1-6', term: 'pragmatic approach', definition: 'cách tiếp cận thực tế, thực dụng' },
+      { id: 'c1-7', term: 'rigorous methodology', definition: 'phương pháp luận khắt khe, chặt chẽ' },
+      { id: 'c1-8', term: 'volatile market', definition: 'thị trường nhiều biến động bất ổn' },
+      { id: 'c1-9', term: 'profound influence', definition: 'tác động hoặc ảnh hưởng sâu sắc' },
+      { id: 'c1-10', term: 'scrutinize evidence', definition: 'xem xét, kiểm tra chứng cứ kỹ lưỡng' },
+      { id: 'c1-11', term: 'ambiguous statement', definition: 'phát biểu mơ hồ, đa nghĩa' },
+      { id: 'c1-12', term: 'reconcile differences', definition: 'hòa giải những bất đồng' }
     ]
   }
 ];
@@ -298,6 +714,7 @@ export function importSharedSetFromUrl(sharedDataStr) {
       title: compact.t,
       subtitle: compact.s || `${compact.g} - ${compact.b}`,
       description: compact.d || `Bộ từ vựng gồm ${compact.items.length} thuật ngữ được chia sẻ.`,
+      category: 'custom',
       grade: compact.g || 'Lớp 10',
       book: compact.b || 'Chia sẻ',
       author: 'Được chia sẻ',
@@ -337,4 +754,3 @@ export function downloadSetAsBackupFile(vocabSet) {
     return false;
   }
 }
-
