@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { 
   CheckCircle2, 
   XCircle, 
   ArrowRight, 
   RotateCcw, 
-  Volume2, 
   Sparkles, 
   Award, 
   Check, 
@@ -12,13 +11,8 @@ import {
   BookOpen, 
   ChevronDown, 
   ChevronUp, 
-  HelpCircle, 
-  CheckSquare, 
-  Layers, 
-  GraduationCap,
   FileCheck2,
-  Stethoscope,
-  Flame
+  ClipboardCheck
 } from 'lucide-react';
 import { speakWord, playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
 import { getDiagnosticQuestionsForSet } from '../../data/diagnosticQuestions';
@@ -29,7 +23,15 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
     return getDiagnosticQuestionsForSet(vocabSet);
   }, [vocabSet]);
 
-  const [questions, setQuestions] = useState([]);
+  // Synchronously initialize questions with randomized options on mount
+  const [questions, setQuestions] = useState(() => {
+    const list = getDiagnosticQuestionsForSet(vocabSet);
+    return list.map(q => ({
+      ...q,
+      shuffledOptions: [...q.options].sort(() => 0.5 - Math.random())
+    }));
+  });
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [userAnswers, setUserAnswers] = useState({}); // { [qId]: { selected, isCorrect } }
@@ -38,8 +40,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
   const [showReviewList, setShowReviewList] = useState(false);
 
   // Initialize or restart test
-  const startTest = () => {
-    // Randomize options for each question
+  const startTest = useCallback(() => {
     const randomized = rawQuestions.map(q => ({
       ...q,
       shuffledOptions: [...q.options].sort(() => 0.5 - Math.random())
@@ -51,13 +52,19 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
     setIsAnswered(false);
     setIsCompleted(false);
     setShowReviewList(false);
-  };
-
-  useEffect(() => {
-    startTest();
   }, [rawQuestions]);
 
-  const currentQ = questions[currentIndex];
+  const lastSetIdRef = useRef(vocabSet?.id);
+
+  // If vocabSet changes, re-initialize
+  useEffect(() => {
+    if (lastSetIdRef.current !== vocabSet?.id) {
+      lastSetIdRef.current = vocabSet?.id;
+      startTest();
+    }
+  }, [vocabSet?.id, startTest]);
+
+  const currentQ = questions[currentIndex] || questions[0];
 
   // Parse type prefix: "[Receptive]" or "[Productive]"
   const questionTypeInfo = useMemo(() => {
@@ -76,7 +83,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
   }, [currentQ]);
 
   // Handle Option Click
-  const handleSelectOption = (option) => {
+  const handleSelectOption = useCallback((option) => {
     if (isAnswered || !currentQ) return;
     setSelectedOption(option);
     setIsAnswered(true);
@@ -102,22 +109,22 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
       playCorrectSound();
       if (currentQ.targetWord) speakWord(currentQ.targetWord);
       // Elevate mastery in parent
-      const termItem = terms.find(t => t.term.toLowerCase() === (currentQ.targetWord || '').toLowerCase());
+      const termItem = terms?.find(t => t.term.toLowerCase() === (currentQ.targetWord || '').toLowerCase());
       if (termItem && onUpdateMastery) {
         onUpdateMastery(termItem.id, 'mastered');
       }
     } else {
       playWrongSound();
       if (currentQ.targetWord) speakWord(currentQ.targetWord);
-      const termItem = terms.find(t => t.term.toLowerCase() === (currentQ.targetWord || '').toLowerCase());
+      const termItem = terms?.find(t => t.term.toLowerCase() === (currentQ.targetWord || '').toLowerCase());
       if (termItem && onUpdateMastery) {
         onUpdateMastery(termItem.id, 'learning');
       }
     }
-  };
+  }, [isAnswered, currentQ, questionTypeInfo, terms, onUpdateMastery]);
 
   // Move to next question or complete
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
       setSelectedOption(null);
@@ -125,12 +132,12 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
     } else {
       // Completed!
       setIsCompleted(true);
-      const totalCorrect = Object.values(userAnswers).filter(a => a.isCorrect).length + (selectedOption === currentQ.correctAnswer ? 1 : 0);
-      if (totalCorrect / questions.length >= 0.7) {
+      const totalCorrect = Object.values(userAnswers).filter(a => a.isCorrect).length;
+      if (totalCorrect / (questions.length || 1) >= 0.7) {
         triggerCelebration();
       }
     }
-  };
+  }, [currentIndex, questions.length, userAnswers]);
 
   // Keyboard shortcut listener (Enter for Next, 1-4 for options)
   useEffect(() => {
@@ -152,7 +159,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isAnswered, currentQ, handleNext]);
+  }, [isAnswered, currentQ, handleSelectOption, handleNext]);
 
   // Statistics calculation
   const totalQuestions = questions.length;
@@ -370,7 +377,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
   // ==========================================
   // ACTIVE QUESTION SCREEN
   // ==========================================
-  const progressPercent = Math.round(((currentIndex) / totalQuestions) * 100);
+  const progressPercent = Math.round(((currentIndex) / (totalQuestions || 1)) * 100);
 
   return (
     <div className="w-full max-w-3xl mx-auto text-left">
@@ -391,7 +398,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
                 </span>
               </div>
               <h3 className="text-base font-black text-gray-900 leading-tight">
-                {vocabSet.title}
+                {vocabSet?.title || 'Vocabulary Set'}
               </h3>
             </div>
           </div>
@@ -420,9 +427,9 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
 
       {/* Main Question Card */}
       <div className={`bg-white rounded-3xl border shadow-sm p-6 sm:p-8 transition-all ${
-        isAnswered && selectedOption === currentQ.correctAnswer
+        isAnswered && selectedOption === currentQ?.correctAnswer
           ? 'border-emerald-300 ring-2 ring-emerald-100'
-          : isAnswered && selectedOption !== currentQ.correctAnswer
+          : isAnswered && selectedOption !== currentQ?.correctAnswer
           ? 'border-rose-300 ring-2 ring-rose-100'
           : 'border-gray-200/90'
       }`}>
@@ -461,9 +468,9 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
           </p>
 
           <div className="grid grid-cols-1 gap-3">
-            {currentQ.shuffledOptions.map((option, idx) => {
+            {(currentQ?.shuffledOptions || currentQ?.options || []).map((option, idx) => {
               const isSelected = selectedOption === option;
-              const isTargetCorrect = option.trim().toLowerCase() === currentQ.correctAnswer.trim().toLowerCase();
+              const isTargetCorrect = option.trim().toLowerCase() === currentQ?.correctAnswer.trim().toLowerCase();
 
               let buttonStyle = 'bg-gray-50/80 hover:bg-white hover:border-primary/50 border-gray-200/90 text-gray-800';
 
@@ -513,7 +520,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
         {isAnswered && (
           <div className="mt-6 pt-5 border-t border-gray-100 animate-pop-in">
             <div className={`p-4 rounded-2xl border mb-5 ${
-              selectedOption === currentQ.correctAnswer
+              selectedOption === currentQ?.correctAnswer
                 ? 'bg-emerald-50/70 border-emerald-200'
                 : 'bg-blue-50/70 border-blue-200'
             }`}>
@@ -524,7 +531,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
                 </h4>
               </div>
               <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
-                {currentQ.rationale}
+                {currentQ?.rationale}
               </p>
             </div>
 
