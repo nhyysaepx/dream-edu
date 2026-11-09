@@ -138,12 +138,19 @@ const PassageRenderer = React.memo(function PassageRenderer({
   );
 });
 
-export default function ReadingHomeworkView({ homework }) {
+export default function ReadingHomeworkView({ 
+  homework,
+  mode = 'homework', // 'homework' | 'practice'
+  parentPath = mode === 'practice' ? '/practice' : '/homework',
+  parentLabel = mode === 'practice' ? 'Practice' : 'Homework',
+  storagePrefix = mode === 'practice' ? 'dream_practice_' : 'dream_hw_',
+  historyKey = mode === 'practice' ? 'dream_practice_history' : 'dream_homework_history'
+}) {
   const navigate = useNavigate();
   const homeworkId = homework.id;
 
   // Active Passage Tab (p1 or p2)
-  const [activePassageId, setActivePassageId] = useState('p1');
+  const [activePassageId, setActivePassageId] = useState(homework.passages?.[0]?.id || 'p1');
 
   // Dedicated Notes Column Visibility (User requested dedicated 3rd column on the right)
   const [isNotesColumnOpen, setIsNotesColumnOpen] = useState(true);
@@ -151,7 +158,7 @@ export default function ReadingHomeworkView({ homework }) {
   // Answers state: { [qId]: string }
   const [answers, setAnswers] = useState(() => {
     try {
-      const saved = localStorage.getItem(`dream_hw_${homeworkId}_draft`);
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_draft`);
       return saved ? JSON.parse(saved) : {};
     } catch {
       return {};
@@ -176,7 +183,7 @@ export default function ReadingHomeworkView({ homework }) {
   // Notes state: { [noteId]: { id, passageId, text, content, createdAt } }
   const [notes, setNotes] = useState(() => {
     try {
-      const saved = localStorage.getItem(`dream_hw_${homeworkId}_notes`);
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_notes`);
       return saved ? JSON.parse(saved) : {};
     } catch {
       return {};
@@ -191,8 +198,8 @@ export default function ReadingHomeworkView({ homework }) {
   // Stored HTML for each passage (including rendered highlights/notes)
   const [passageHtmls, setPassageHtmls] = useState(() => {
     const initial = {};
-    homework.passages.forEach(p => {
-      const saved = localStorage.getItem(`dream_hw_${homeworkId}_${p.id}_html`);
+    homework.passages?.forEach(p => {
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_${p.id}_html`);
       initial[p.id] = cleanPassageHtml(saved, p.content, p.title);
     });
     return initial;
@@ -200,8 +207,8 @@ export default function ReadingHomeworkView({ homework }) {
 
   // Auto-clean any corrupt/empty mark tags and repair damaged HTML from local storage on mount
   useEffect(() => {
-    homework.passages.forEach(p => {
-      const key = `dream_hw_${homeworkId}_${p.id}_html`;
+    homework.passages?.forEach(p => {
+      const key = `${storagePrefix}${homeworkId}_${p.id}_html`;
       try {
         const val = localStorage.getItem(key);
         if (val) {
@@ -215,12 +222,12 @@ export default function ReadingHomeworkView({ homework }) {
         console.error(e);
       }
     });
-  }, [homeworkId, homework.passages]);
+  }, [homeworkId, homework.passages, storagePrefix]);
 
   // Load past submission from history if exists
   useEffect(() => {
     try {
-      const history = localStorage.getItem('dream_homework_history');
+      const history = localStorage.getItem(historyKey);
       if (history) {
         const parsed = JSON.parse(history);
         if (parsed[homeworkId]) {
@@ -230,7 +237,7 @@ export default function ReadingHomeworkView({ homework }) {
     } catch (e) {
       console.error(e);
     }
-  }, [homeworkId]);
+  }, [homeworkId, historyKey]);
 
   // Synchronize draftNoteContent when activeNoteId changes
   useEffect(() => {
@@ -301,12 +308,12 @@ export default function ReadingHomeworkView({ homework }) {
         [activePassageId]: currentHtml
       }));
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_${activePassageId}_html`, currentHtml);
+        localStorage.setItem(`${storagePrefix}${homeworkId}_${activePassageId}_html`, currentHtml);
       } catch (e) {
         console.error(e);
       }
     }
-  }, [activePassageId, homeworkId]);
+  }, [activePassageId, homeworkId, storagePrefix]);
 
   // Text selection listener on the passage
   const handlePassageMouseUp = useCallback((e) => {
@@ -438,7 +445,7 @@ export default function ReadingHomeworkView({ homework }) {
         [activePassageId]: newHtml
       }));
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_${activePassageId}_html`, newHtml);
+        localStorage.setItem(`${storagePrefix}${homeworkId}_${activePassageId}_html`, newHtml);
       } catch (e) {
         console.error(e);
       }
@@ -511,7 +518,7 @@ export default function ReadingHomeworkView({ homework }) {
         [activePassageId]: newHtml
       }));
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_${activePassageId}_html`, newHtml);
+        localStorage.setItem(`${storagePrefix}${homeworkId}_${activePassageId}_html`, newHtml);
       } catch (e) {
         console.error(e);
       }
@@ -538,7 +545,7 @@ export default function ReadingHomeworkView({ homework }) {
     setNotes(prev => {
       const updated = { ...prev, [noteId]: newNote };
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+        localStorage.setItem(`${storagePrefix}${homeworkId}_notes`, JSON.stringify(updated));
       } catch (e) {
         console.error(e);
       }
@@ -606,7 +613,7 @@ export default function ReadingHomeworkView({ homework }) {
         }
       };
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+        localStorage.setItem(`${storagePrefix}${homeworkId}_notes`, JSON.stringify(updated));
       } catch (e) {
         console.error(e);
       }
@@ -633,7 +640,7 @@ export default function ReadingHomeworkView({ homework }) {
       const next = { ...prev };
       delete next[noteId];
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+        localStorage.setItem(`${storagePrefix}${homeworkId}_notes`, JSON.stringify(next));
       } catch (e) {
         console.error(e);
       }
@@ -661,7 +668,7 @@ export default function ReadingHomeworkView({ homework }) {
         if (next[k].passageId === activePassageId) delete next[k];
       });
       try {
-        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+        localStorage.setItem(`${storagePrefix}${homeworkId}_notes`, JSON.stringify(next));
       } catch (e) {
         console.error(e);
       }
@@ -688,7 +695,7 @@ export default function ReadingHomeworkView({ homework }) {
     const confirmClear = window.confirm('Bạn có chắc chắn muốn xóa toàn bộ các đoạn tô màu và ghi chú của bài đọc này?');
     if (!confirmClear) return;
 
-    const activePassage = homework.passages.find(p => p.id === activePassageId) || homework.passages[0];
+    const activePassage = homework.passages?.find(p => p.id === activePassageId) || homework.passages?.[0];
     const original = formatPassageToHtml(activePassage.content, activePassage.title);
 
     setPassageHtmls(prev => ({
@@ -697,13 +704,13 @@ export default function ReadingHomeworkView({ homework }) {
     }));
 
     try {
-      localStorage.removeItem(`dream_hw_${homeworkId}_${activePassageId}_html`);
+      localStorage.removeItem(`${storagePrefix}${homeworkId}_${activePassageId}_html`);
       setNotes(prev => {
         const next = { ...prev };
         Object.keys(next).forEach(k => {
           if (next[k].passageId === activePassageId) delete next[k];
         });
-        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+        localStorage.setItem(`${storagePrefix}${homeworkId}_notes`, JSON.stringify(next));
         return next;
       });
     } catch (e) {
@@ -716,7 +723,7 @@ export default function ReadingHomeworkView({ homework }) {
   // Save Draft
   const handleSaveDraft = () => {
     try {
-      localStorage.setItem(`dream_hw_${homeworkId}_draft`, JSON.stringify(answers));
+      localStorage.setItem(`${storagePrefix}${homeworkId}_draft`, JSON.stringify(answers));
       setSaveToast(true);
       setTimeout(() => setSaveToast(false), 2500);
     } catch (e) {
@@ -738,14 +745,14 @@ export default function ReadingHomeworkView({ homework }) {
     setIsSubmitted(true);
 
     try {
-      const currentHistory = JSON.parse(localStorage.getItem('dream_homework_history') || '{}');
+      const currentHistory = JSON.parse(localStorage.getItem(historyKey) || '{}');
       currentHistory[homeworkId] = {
         score: evaluationResults.correctCount,
         total: evaluationResults.totalCount,
         submittedAt: new Date().toISOString()
       };
-      localStorage.setItem('dream_homework_history', JSON.stringify(currentHistory));
-      localStorage.setItem(`dream_hw_${homeworkId}_draft`, JSON.stringify(answers));
+      localStorage.setItem(historyKey, JSON.stringify(currentHistory));
+      localStorage.setItem(`${storagePrefix}${homeworkId}_draft`, JSON.stringify(answers));
     } catch (e) {
       console.error(e);
     }
@@ -767,10 +774,10 @@ export default function ReadingHomeworkView({ homework }) {
     setIsSubmitted(false);
     setFilterMode('all');
     try {
-      localStorage.removeItem(`dream_hw_${homeworkId}_draft`);
-      const currentHistory = JSON.parse(localStorage.getItem('dream_homework_history') || '{}');
+      localStorage.removeItem(`${storagePrefix}${homeworkId}_draft`);
+      const currentHistory = JSON.parse(localStorage.getItem(historyKey) || '{}');
       delete currentHistory[homeworkId];
-      localStorage.setItem('dream_homework_history', JSON.stringify(currentHistory));
+      localStorage.setItem(historyKey, JSON.stringify(currentHistory));
     } catch (e) {
       console.error(e);
     }
@@ -809,27 +816,29 @@ export default function ReadingHomeworkView({ homework }) {
           <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
             <Link to="/" className="hover:text-primary transition-colors">Trang chủ</Link>
             <span>/</span>
-            <Link to="/homework" className="hover:text-primary transition-colors font-medium">Homework</Link>
+            <Link to={parentPath} className="hover:text-primary transition-colors font-medium">{parentLabel}</Link>
             <span>/</span>
             <span className="text-gray-900 font-bold truncate max-w-xs">{homework.title}</span>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
             <Link
-              to="/homework"
+              to={parentPath}
               className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-600 hover:text-primary transition-colors bg-white px-3 py-1.5 rounded-xl border border-gray-200 shadow-2xs"
             >
               <ArrowLeft size={14} />
-              <span>Tất cả bài tập</span>
+              <span>Tất cả bài {mode === 'practice' ? 'luyện tập' : 'tập'}</span>
             </Link>
 
-            <Link
-              to="/vocab/pre-ielts-reading-1"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl shadow-2xs transition-colors"
-            >
-              <BookOpen size={14} className="text-amber-600" />
-              <span>Học 30 từ vựng Reading 1</span>
-            </Link>
+            {(homework.vocabId || homework.id === 'pre-ielts-reading-1') && (
+              <Link
+                to={homework.vocabId ? `/vocab/${homework.vocabId}` : "/vocab/pre-ielts-reading-1"}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl shadow-2xs transition-colors"
+              >
+                <BookOpen size={14} className="text-amber-600" />
+                <span>Học từ vựng bài đọc</span>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -843,7 +852,7 @@ export default function ReadingHomeworkView({ homework }) {
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1">
                   <BookOpen size={13} />
-                  <span>IELTS Reading (Short-answer)</span>
+                  <span>{homework.skillBadge || 'IELTS Reading'}</span>
                 </span>
                 <span className="text-xs text-gray-500 font-medium">
                   {homework.session}
@@ -937,7 +946,7 @@ export default function ReadingHomeworkView({ homework }) {
                         : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                     }`}
                   >
-                    Tất cả (12)
+                    Tất cả ({allQuestions.length})
                   </button>
                   <button
                     onClick={() => setFilterMode('wrong_only')}
@@ -966,35 +975,46 @@ export default function ReadingHomeworkView({ homework }) {
             
             {/* Passage Selector Tabs, Annotation Tools & Font Controls */}
             <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
-              {/* Passage 1 / Passage 2 Buttons */}
-              <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-gray-200/80 shadow-2xs">
-                {homework.passages.map(p => {
-                  const isActive = activePassageId === p.id;
-                  return (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        setActivePassageId(p.id);
-                        setActiveNoteId(null);
-                        setSelectionPopup(null);
-                      }}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                        isActive
-                          ? 'bg-primary text-white shadow-xs'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                      }`}
-                    >
-                      <BookOpen size={13} />
-                      <span>Bài đọc {p.number}</span>
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                      }`}>
-                        {p.number === 1 ? 'Câu 1-6' : 'Câu 7-12'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Passage Tabs or Single Passage Badge */}
+              {homework.passages?.length > 1 ? (
+                <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-gray-200/80 shadow-2xs">
+                  {homework.passages.map(p => {
+                    const isActive = activePassageId === p.id;
+                    const minQ = p.questions?.[0]?.number || 1;
+                    const maxQ = p.questions?.[p.questions.length - 1]?.number || minQ;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setActivePassageId(p.id);
+                          setActiveNoteId(null);
+                          setSelectionPopup(null);
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                          isActive
+                            ? 'bg-primary text-white shadow-xs'
+                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                        }`}
+                      >
+                        <BookOpen size={13} />
+                        <span>Bài đọc {p.number}</span>
+                        <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+                          isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                        }`}>
+                          Câu {minQ}-{maxQ}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-2xl border border-gray-200/80 shadow-2xs">
+                  <BookOpen size={14} className="text-primary" />
+                  <span className="text-xs font-bold text-gray-800">
+                    {activePassage.shortTitle || activePassage.title || 'Bài đọc chính'}
+                  </span>
+                </div>
+              )}
 
               {/* Annotation Indicators & Font Controls */}
               <div className="flex items-center gap-2 flex-wrap">
@@ -1160,42 +1180,39 @@ export default function ReadingHomeworkView({ homework }) {
                 </div>
               </div>
 
-              {/* Jump to part tabs */}
-              <div className="flex items-center gap-1 text-xs">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFilterMode('p1');
-                    setActivePassageId('p1');
-                  }}
-                  className={`px-2.5 py-1 rounded-lg font-bold border transition-all cursor-pointer ${
-                    filterMode === 'p1' ? 'bg-primary text-white border-primary shadow-2xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                  }`}
-                >
-                  Phần 1 (1–6)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFilterMode('p2');
-                    setActivePassageId('p2');
-                  }}
-                  className={`px-2.5 py-1 rounded-lg font-bold border transition-all cursor-pointer ${
-                    filterMode === 'p2' ? 'bg-primary text-white border-primary shadow-2xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                  }`}
-                >
-                  Phần 2 (7–12)
-                </button>
-                {filterMode !== 'all' && (
-                  <button
-                    type="button"
-                    onClick={() => setFilterMode('all')}
-                    className="px-2 py-1 text-gray-400 hover:text-gray-700 text-xs font-semibold cursor-pointer"
-                  >
-                    Hiện tất cả
-                  </button>
-                )}
-              </div>
+              {/* Jump to part tabs (if multiple passages) */}
+              {homework.passages?.length > 1 && (
+                <div className="flex items-center gap-1 text-xs">
+                  {homework.passages.map(p => {
+                    const minQ = p.questions?.[0]?.number || 1;
+                    const maxQ = p.questions?.[p.questions.length - 1]?.number || minQ;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          setFilterMode(p.id);
+                          setActivePassageId(p.id);
+                        }}
+                        className={`px-2.5 py-1 rounded-lg font-bold border transition-all cursor-pointer ${
+                          filterMode === p.id ? 'bg-primary text-white border-primary shadow-2xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        Phần {p.number} ({minQ}–{maxQ})
+                      </button>
+                    );
+                  })}
+                  {filterMode !== 'all' && (
+                    <button
+                      type="button"
+                      onClick={() => setFilterMode('all')}
+                      className="px-2 py-1 text-gray-400 hover:text-gray-700 text-xs font-semibold cursor-pointer"
+                    >
+                      Hiện tất cả
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Questions Body (Independently scrollable) */}
@@ -1210,10 +1227,10 @@ export default function ReadingHomeworkView({ homework }) {
                       HƯỚNG DẪN LÀM BÀI (IELTS INSTRUCTION):
                     </h4>
                     <p className="font-semibold text-gray-800 leading-snug">
-                      Answer the questions below using <span className="underline font-black text-rose-700">NO MORE THAN THREE WORDS AND/OR A NUMBER</span> from the passage. Write your answers in boxes 1–12 on your answer sheet.
+                      {activePassage.instruction || `Answer the questions below using ${activePassage.wordLimit || 'NO MORE THAN THREE WORDS'} from the passage.`}
                     </p>
                     <p className="text-[11px] text-gray-500 mt-1">
-                      * Lưu ý: Không viết quá 3 từ. Lấy từ ngữ chính xác trực tiếp từ bài đọc.
+                      * Lưu ý: Quy tắc giới hạn từ: <span className="underline font-black text-rose-700">{activePassage.wordLimit || 'NO MORE THAN THREE WORDS'}</span>. Lấy từ ngữ chính xác trực tiếp từ bài đọc.
                     </p>
                   </div>
                 </div>
@@ -1224,7 +1241,8 @@ export default function ReadingHomeworkView({ homework }) {
                 {displayedQuestions.map((q) => {
                   const userVal = answers[q.id] || '';
                   const wordCount = countWords(userVal);
-                  const isWordOverLimit = wordCount > 3;
+                  const maxWords = activePassage.maxWords || 3;
+                  const isWordOverLimit = wordCount > maxWords;
                   const evalItem = evaluationResults.results[q.id];
 
                   let cardBorderClass = 'border-gray-200 hover:border-gray-300';
@@ -1252,7 +1270,7 @@ export default function ReadingHomeworkView({ homework }) {
                             {q.number}
                           </span>
                           <span className="text-[11px] font-bold text-gray-400">
-                            Bài đọc {q.passageNumber} • Box {q.number}
+                            {homework.passages?.length > 1 ? `Bài đọc ${q.passageNumber} • ` : ''}Box {q.number}
                           </span>
                         </div>
 
@@ -1344,9 +1362,9 @@ export default function ReadingHomeworkView({ homework }) {
                         {/* Word counter helper during input */}
                         {!isSubmitted && (
                           <div className="flex items-center justify-between text-[11px] px-1 text-gray-400 font-medium">
-                            <span>Tối đa: 3 từ và/hoặc 1 chữ số</span>
+                            <span>Tối đa: {maxWords} từ {activePassage.wordLimit?.includes('NUMBER') ? 'và/hoặc 1 chữ số' : ''}</span>
                             <span className={isWordOverLimit ? 'text-rose-600 font-bold' : ''}>
-                              {wordCount} / 3 từ {isWordOverLimit && '(Vượt quá giới hạn!)'}
+                              {wordCount} / {maxWords} từ {isWordOverLimit && '(Vượt quá giới hạn!)'}
                             </span>
                           </div>
                         )}

@@ -19,6 +19,8 @@ import TestDetail from './pages/TestDetail';
 import TestRoom from './pages/TestRoom';
 import Homework from './pages/Homework';
 import HomeworkDetail from './pages/HomeworkDetail';
+import Practice from './pages/Practice';
+import PracticeDetail from './pages/PracticeDetail';
 import VocabHub from './pages/VocabHub';
 import VocabStudySet from './pages/VocabStudySet';
 
@@ -59,6 +61,8 @@ function MainLayout() {
           <Route path="/tests/:id/exam" element={<TestRoom />} />
           <Route path="/homework" element={<Homework />} />
           <Route path="/homework/:id" element={<HomeworkDetail />} />
+          <Route path="/practice" element={<Practice />} />
+          <Route path="/practice/:id" element={<PracticeDetail />} />
           <Route path="/vocab" element={<VocabHub />} />
           <Route path="/vocab/:setId" element={<VocabStudySet />} />
         </Routes>
