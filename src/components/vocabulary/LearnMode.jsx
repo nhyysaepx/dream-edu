@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { 
   CheckCircle2, 
   XCircle, 
@@ -10,12 +10,10 @@ import {
   Award,
   Check,
   Brain,
-  HelpCircle,
   ThumbsUp,
   AlertCircle,
   RefreshCw,
-  Flame,
-  Zap
+  Flame
 } from 'lucide-react';
 import { speakWord, playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
 
@@ -136,22 +134,31 @@ export default function LearnMode({
     if (!currentTerm || !isMultipleChoice) return [];
 
     const correctAnswer = currentTerm.term;
-    const allDistractors = (activePoolRef.current || terms)
+    const pool = (activePool && activePool.length > 0 ? activePool : terms) || [];
+    const allDistractors = pool
       .filter(t => t.id !== currentTerm.id)
       .map(t => t.term);
 
-    // Shuffle and pick 3
-    const shuffledDistractors = [...allDistractors].sort(() => 0.5 - Math.random()).slice(0, 3);
+    // Deterministic pseudo-random generator seeded by currentTerm.id to ensure hook purity
+    let seed = 0;
+    const idStr = String(currentTerm.id || '');
+    for (let i = 0; i < idStr.length; i++) {
+      seed = (seed * 31 + idStr.charCodeAt(i)) % 1000003;
+    }
+    const pseudoRandom = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
 
-    // Shuffle correct answer with distractors
-    return [correctAnswer, ...shuffledDistractors].sort(() => 0.5 - Math.random());
-  }, [currentTerm?.id, isMultipleChoice, terms]);
+    const shuffledDistractors = [...allDistractors].sort(() => 0.5 - pseudoRandom()).slice(0, 3);
+    return [correctAnswer, ...shuffledDistractors].sort(() => 0.5 - pseudoRandom());
+  }, [currentTerm, isMultipleChoice, activePool, terms]);
 
   // Clean string helper for lenient checking
   const normalizeText = (str) => {
     return (str || '')
       .toLowerCase()
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
   };
@@ -336,12 +343,19 @@ export default function LearnMode({
   };
 
   // Keyboard shortcut listener (1-4 / A-D for options, Enter for next)
+  const handleSelectOptionRef = useRef(handleSelectOption);
+  const handleNextQuestionRef = useRef(handleNextQuestion);
+  useEffect(() => {
+    handleSelectOptionRef.current = handleSelectOption;
+    handleNextQuestionRef.current = handleNextQuestion;
+  });
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
         if (e.key === 'Enter' && (phase === 'batch_feedback' || phase === 'review_feedback')) {
           e.preventDefault();
-          handleNextQuestion();
+          handleNextQuestionRef.current();
         }
         return;
       }
@@ -350,28 +364,28 @@ export default function LearnMode({
         if (isMultipleChoice && options.length > 0) {
           if (['1', '2', '3', '4'].includes(e.key)) {
             const idx = parseInt(e.key, 10) - 1;
-            if (options[idx]) handleSelectOption(options[idx]);
+            if (options[idx]) handleSelectOptionRef.current(options[idx]);
           } else if (['a', 'A'].includes(e.key) && options[0]) {
-            handleSelectOption(options[0]);
+            handleSelectOptionRef.current(options[0]);
           } else if (['b', 'B'].includes(e.key) && options[1]) {
-            handleSelectOption(options[1]);
+            handleSelectOptionRef.current(options[1]);
           } else if (['c', 'C'].includes(e.key) && options[2]) {
-            handleSelectOption(options[2]);
+            handleSelectOptionRef.current(options[2]);
           } else if (['d', 'D'].includes(e.key) && options[3]) {
-            handleSelectOption(options[3]);
+            handleSelectOptionRef.current(options[3]);
           }
         }
       } else if (phase === 'batch_feedback' || phase === 'review_feedback') {
         if (e.key === 'Enter') {
           e.preventDefault();
-          handleNextQuestion();
+          handleNextQuestionRef.current();
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [phase, isMultipleChoice, options, handleSelectOption, handleNextQuestion]);
+  }, [phase, isMultipleChoice, options]);
 
   // Overall statistics
   const totalTerms = activePool.length;
@@ -684,7 +698,7 @@ export default function LearnMode({
                 if (isFeedback) {
                   if (isTargetCorrect) {
                     // Correct answer style: bright emerald glow + checkmark
-                    buttonClass = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold ring-4 ring-emerald-300 scale-[1.01] shadow-md animate-correct-glow';
+                    buttonClass = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold ring-4 ring-emerald-300 shadow-md animate-correct-glow';
                   } else if (isSelected && !isTargetCorrect) {
                     // Wrong selected answer style: shake animation + rose strike-through
                     buttonClass = 'bg-rose-50 border-rose-500 text-rose-800 ring-4 ring-rose-200 line-through animate-shake';
@@ -698,27 +712,30 @@ export default function LearnMode({
                     key={index}
                     disabled={isFeedback}
                     onClick={() => handleSelectOption(option)}
-                    className={`w-full p-4 rounded-2xl border text-left font-medium text-sm sm:text-base transition-all flex items-center justify-between group active:scale-[0.99] cursor-pointer ${buttonClass}`}
+                    className={`w-full p-3.5 sm:p-4 rounded-2xl border text-left font-medium text-sm sm:text-base transition-all flex items-start justify-between gap-3 group active:scale-[0.99] cursor-pointer ${buttonClass}`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className={`w-7 h-7 rounded-lg border text-xs font-black flex items-center justify-center transition-colors ${
+                    <div className="flex items-start gap-3 flex-1 min-w-0">
+                      <span className={`w-7 h-7 rounded-lg border text-xs font-black flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
                         isFeedback && isTargetCorrect
-                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
                           : isFeedback && isSelected && !isTargetCorrect
-                          ? 'bg-rose-500 text-white border-rose-500'
+                          ? 'bg-rose-500 text-white border-rose-500 shadow-2xs'
                           : 'bg-white border-gray-200 text-gray-600 group-hover:border-primary group-hover:text-primary'
                       }`}>
                         {String.fromCharCode(65 + index)}
                       </span>
-                      <span className="font-semibold">{option}</span>
+                      <span className="font-semibold leading-snug break-words flex-1 min-w-0 pt-0.5">{option}</span>
                     </div>
 
-                    {isFeedback && isTargetCorrect && (
-                      <CheckCircle2 size={22} className="text-emerald-600 flex-shrink-0 animate-pop-in" />
-                    )}
-                    {isFeedback && isSelected && !isTargetCorrect && (
-                      <XCircle size={22} className="text-rose-500 flex-shrink-0 animate-pop-in" />
-                    )}
+                    {/* Dedicated icon slot with fixed width to eliminate layout shift / text wrapping */}
+                    <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center mt-0.5">
+                      {isFeedback && isTargetCorrect && (
+                        <CheckCircle2 size={20} className="text-emerald-600 animate-pop-in" />
+                      )}
+                      {isFeedback && isSelected && !isTargetCorrect && (
+                        <XCircle size={20} className="text-rose-500 animate-pop-in" />
+                      )}
+                    </div>
                   </button>
                 );
               })}
@@ -787,37 +804,39 @@ export default function LearnMode({
 
         {/* FEEDBACK BANNER (When answered) */}
         {isFeedback && (
-          <div className="mt-4 pt-4 border-t border-gray-100 animate-pop-in">
+          <div className="mt-5 pt-5 border-t border-gray-100 animate-pop-in">
             {isCorrect ? (
-              <div className="p-4 bg-emerald-50 border border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-                <div className="flex items-center gap-3">
+              <div className="p-4 sm:p-5 bg-emerald-50 border border-emerald-300 rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 shadow-xs">
+                <div className="flex items-center gap-3.5 flex-1 min-w-0">
                   <span className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 animate-pop-in">
                     <Check size={22} />
                   </span>
-                  <div>
-                    <h4 className="text-sm font-extrabold text-emerald-950 flex items-center gap-2">
-                      <span>Chính xác! Rất tốt</span>
-                      <span className="text-xs font-semibold text-emerald-600 bg-emerald-100/60 px-2 py-0.5 rounded-full">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="text-sm font-extrabold text-emerald-950">
+                        Chính xác! Rất tốt
+                      </h4>
+                      <span className="text-xs font-semibold text-emerald-600 bg-emerald-100/60 px-2 py-0.5 rounded-full flex-shrink-0">
                         +1 điểm
                       </span>
-                    </h4>
-                    <p className="text-xs text-emerald-800 flex items-center gap-2 mt-0.5">
-                      <span className="font-bold text-sm">{currentTerm.term}</span>
+                    </div>
+                    <div className="text-xs text-emerald-800 flex items-center gap-2 mt-1 flex-wrap">
+                      <span className="font-black text-sm sm:text-base break-words text-emerald-950">{currentTerm.term}</span>
                       <button 
                         onClick={() => speakWord(currentTerm.term)}
-                        className="p-1 hover:bg-emerald-200/50 rounded-full text-emerald-800 transition-colors cursor-pointer"
+                        className="p-1 hover:bg-emerald-200/60 rounded-full text-emerald-800 transition-colors flex-shrink-0 cursor-pointer"
                         title="Nghe phát âm"
                       >
-                        <Volume2 size={15} />
+                        <Volume2 size={16} />
                       </button>
-                    </p>
+                    </div>
                   </div>
                 </div>
 
                 <button
                   autoFocus
                   onClick={handleNextQuestion}
-                  className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm flex-shrink-0 cursor-pointer active:scale-95"
                 >
                   <span>Tiếp tục (Enter)</span>
                   <ArrowRight size={16} />
@@ -825,26 +844,26 @@ export default function LearnMode({
               </div>
             ) : (
               <div className="p-5 bg-rose-50 border border-rose-300 rounded-2xl shadow-xs">
-                <div className="flex items-start gap-3 mb-3">
+                <div className="flex items-start gap-3.5 mb-3">
                   <span className="w-10 h-10 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <XCircle size={22} />
                   </span>
-                  <div className="flex-grow">
-                    <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
                       <h4 className="text-sm font-bold text-rose-900">Chưa chính xác!</h4>
-                      <span className="text-[11px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <span className="text-[11px] font-bold text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
                         <AlertCircle size={12} />
                         <span>Đã note lại để lặp lại sau 10 câu</span>
                       </span>
                     </div>
                     
-                    <div className="mt-3 bg-white p-3.5 rounded-xl border border-rose-200/80">
+                    <div className="mt-3 bg-white p-3.5 sm:p-4 rounded-xl border border-rose-200/80">
                       <p className="text-xs text-gray-500 font-medium">Đáp án chuẩn:</p>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-lg font-black text-primary">{currentTerm.term}</span>
+                      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 mt-1">
+                        <span className="text-base sm:text-lg font-black text-primary break-words flex-1 min-w-0">{currentTerm.term}</span>
                         <button
                           onClick={() => speakWord(currentTerm.term)}
-                          className="px-2.5 py-1 bg-blue-50 text-primary hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                          className="px-2.5 py-1 bg-blue-50 text-primary hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors flex-shrink-0 cursor-pointer"
                         >
                           <Volume2 size={14} />
                           <span>Nghe phát âm</span>
@@ -855,25 +874,25 @@ export default function LearnMode({
                 </div>
 
                 {/* Bottom actions */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
                   {!overrideCorrect ? (
                     <button
                       type="button"
                       onClick={handleOverrideCorrect}
-                      className="text-xs text-gray-500 hover:text-gray-800 font-medium flex items-center gap-1 cursor-pointer"
+                      className="text-xs text-gray-500 hover:text-gray-800 font-medium flex items-center gap-1 cursor-pointer self-start sm:self-auto"
                       title="Nếu bạn nhập đúng nhưng khác dấu hoặc viết tắt"
                     >
                       <ThumbsUp size={13} />
                       <span>Đáp án của tôi đúng (Bỏ qua lỗi gõ)</span>
                     </button>
                   ) : (
-                    <span className="text-xs text-emerald-700 font-bold">✓ Đã xác nhận là đúng</span>
+                    <span className="text-xs text-emerald-700 font-bold self-start sm:self-auto">✓ Đã xác nhận là đúng</span>
                   )}
 
                   <button
                     autoFocus
                     onClick={handleNextQuestion}
-                    className="w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-container text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ml-auto cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-container text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ml-auto cursor-pointer flex-shrink-0 active:scale-95"
                   >
                     <span>Đã ghi nhớ, câu tiếp theo (Enter)</span>
                     <ArrowRight size={16} />

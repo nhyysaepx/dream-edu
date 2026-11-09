@@ -476,7 +476,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
 
               if (isAnswered) {
                 if (isTargetCorrect) {
-                  buttonStyle = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold ring-4 ring-emerald-200 scale-[1.005] shadow-xs';
+                  buttonStyle = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold ring-4 ring-emerald-200 shadow-xs';
                 } else if (isSelected && !isTargetCorrect) {
                   buttonStyle = 'bg-rose-50 border-rose-500 text-rose-950 font-bold ring-4 ring-rose-200 line-through';
                 } else {
@@ -489,27 +489,32 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
                   key={idx}
                   disabled={isAnswered}
                   onClick={() => handleSelectOption(option)}
-                  className={`w-full p-4 rounded-2xl border text-left font-medium text-sm sm:text-base transition-all flex items-center justify-between group active:scale-[0.99] cursor-pointer ${buttonStyle}`}
+                  className={`w-full p-4 rounded-2xl border text-left font-medium text-sm sm:text-base transition-all flex items-start justify-between gap-3.5 group active:scale-[0.99] cursor-pointer ${buttonStyle}`}
                 >
-                  <div className="flex items-center gap-3.5">
-                    <span className={`w-8 h-8 rounded-xl border text-xs font-black flex items-center justify-center transition-colors flex-shrink-0 ${
+                  <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                    <span className={`w-8 h-8 rounded-xl border text-xs font-black flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
                       isAnswered && isTargetCorrect
-                        ? 'bg-emerald-600 text-white border-emerald-600'
+                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
                         : isAnswered && isSelected && !isTargetCorrect
-                        ? 'bg-rose-500 text-white border-rose-500'
+                        ? 'bg-rose-500 text-white border-rose-500 shadow-2xs'
                         : 'bg-white border-gray-200 text-gray-600 group-hover:border-primary group-hover:text-primary shadow-2xs'
                     }`}>
                       {String.fromCharCode(65 + idx)}
                     </span>
-                    <span className="font-semibold leading-relaxed">{option}</span>
+                    <span className="font-semibold leading-relaxed break-words flex-1 min-w-0 pt-0.5">
+                      {option}
+                    </span>
                   </div>
 
-                  {isAnswered && isTargetCorrect && (
-                    <CheckCircle2 size={22} className="text-emerald-600 flex-shrink-0 ml-2 animate-pop-in" />
-                  )}
-                  {isAnswered && isSelected && !isTargetCorrect && (
-                    <XCircle size={22} className="text-rose-500 flex-shrink-0 ml-2 animate-pop-in" />
-                  )}
+                  {/* Reserved fixed icon slot: 28px width ALWAYS preserved before & after clicking */}
+                  <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center mt-0.5">
+                    {isAnswered && isTargetCorrect && (
+                      <CheckCircle2 size={22} className="text-emerald-600 animate-pop-in" />
+                    )}
+                    {isAnswered && isSelected && !isTargetCorrect && (
+                      <XCircle size={22} className="text-rose-500 animate-pop-in" />
+                    )}
+                  </div>
                 </button>
               );
             })}
@@ -519,18 +524,42 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
         {/* Rationale / Explanation Box (Shows immediately when answered) */}
         {isAnswered && (
           <div className="mt-6 pt-5 border-t border-gray-100 animate-pop-in">
-            <div className={`p-4 rounded-2xl border mb-5 ${
+            <div className={`p-4 sm:p-5 rounded-2xl border mb-5 ${
               selectedOption === currentQ?.correctAnswer
                 ? 'bg-emerald-50/70 border-emerald-200'
-                : 'bg-blue-50/70 border-blue-200'
+                : 'bg-rose-50/60 border-rose-200'
             }`}>
+              {/* If wrong, show clear correct answer banner */}
+              {selectedOption !== currentQ?.correctAnswer && (
+                <div className="mb-3.5 pb-3 border-b border-rose-200/80">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-rose-800 uppercase tracking-wider mb-1.5">
+                    <XCircle size={15} className="text-rose-600 flex-shrink-0" />
+                    <span>Lựa chọn của bạn chưa chính xác</span>
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-800 bg-white p-3 rounded-xl border border-rose-200/70">
+                    <span className="text-gray-500 font-medium block text-xs mb-0.5">Đáp án chuẩn xác là:</span>
+                    <strong className="text-emerald-800 font-black text-sm sm:text-base leading-snug break-words block">
+                      {currentQ?.correctAnswer}
+                    </strong>
+                  </div>
+                </div>
+              )}
+
+              {/* If correct, show success callout */}
+              {selectedOption === currentQ?.correctAnswer && (
+                <div className="mb-3 pb-2.5 border-b border-emerald-200/60 flex items-center gap-1.5 text-xs font-bold text-emerald-800">
+                  <CheckCircle2 size={16} className="text-emerald-600 flex-shrink-0" />
+                  <span>Chính xác! Bạn đã chọn đáp án chuẩn xác.</span>
+                </div>
+              )}
+
               <div className="flex items-center gap-2 mb-1.5">
-                <Sparkles size={16} className="text-primary" />
+                <Sparkles size={16} className="text-primary flex-shrink-0" />
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-primary">
                   Giải thích chuyên sâu (Explanation & Rationale):
                 </h4>
               </div>
-              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed break-words">
                 {currentQ?.rationale}
               </p>
             </div>
@@ -540,7 +569,7 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
               <button
                 autoFocus
                 onClick={handleNext}
-                className="px-7 py-3 bg-primary hover:bg-primary-container text-white font-extrabold text-sm rounded-xl transition-all shadow-md flex items-center gap-2 active:scale-95 cursor-pointer"
+                className="w-full sm:w-auto px-7 py-3 bg-primary hover:bg-primary-container text-white font-extrabold text-sm rounded-xl transition-all shadow-md flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
               >
                 <span>{currentIndex < totalQuestions - 1 ? 'Câu tiếp theo (Enter)' : 'Xem kết quả bài Test'}</span>
                 <ArrowRight size={17} />
