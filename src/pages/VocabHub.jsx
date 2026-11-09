@@ -20,7 +20,11 @@ import {
   School, 
   Globe2, 
   FolderHeart,
-  HardDrive
+  HardDrive,
+  Headphones,
+  Compass,
+  Check,
+  ChevronRight
 } from 'lucide-react';
 import { 
   getAllVocabSets, 
@@ -36,10 +40,13 @@ export default function VocabHub() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sets, setSets] = useState([]);
 
-  // Active Category: 'school' | 'ielts' | 'cefr' | 'custom'
-  const [activeCategory, setActiveCategory] = useState('school');
-  // Sub-filter inside active category
-  const [subFilter, setSubFilter] = useState('all');
+  // Active Category: 'ielts' | 'school' | 'cefr' | 'custom'
+  // Default to 'ielts' with 'pre-ielts' so IELTS PRE - Reading 1 is immediately visible
+  const [activeCategory, setActiveCategory] = useState('ielts');
+  // Active Sub-Level (e.g. 'pre-ielts', 'grade-10', 'a2')
+  const [subFilter, setSubFilter] = useState('pre-ielts');
+  // Optional skill filter for IELTS: 'all' | 'reading' | 'listening' | 'writing'
+  const [skillFilter, setSkillFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreatorOpen, setIsCreatorOpen] = useState(false);
   const [importedNotice, setImportedNotice] = useState(null);
@@ -62,16 +69,26 @@ export default function VocabHub() {
         reloadSets();
         setImportedNotice(imported);
         setActiveCategory('custom');
+        setSubFilter('all');
         setSearchParams({}, { replace: true });
       }
     }
   }, [searchParams, setSearchParams]);
 
-  // Reset sub-filter when switching categories
+  // Switch Category and set sensible default sub-filter
   const handleCategoryChange = (cat) => {
     setActiveCategory(cat);
-    setSubFilter('all');
+    setSkillFilter('all');
     setSearchQuery('');
+    if (cat === 'ielts') {
+      setSubFilter('pre-ielts');
+    } else if (cat === 'school') {
+      setSubFilter('grade-10');
+    } else if (cat === 'cefr') {
+      setSubFilter('a2');
+    } else {
+      setSubFilter('all');
+    }
   };
 
   const handleDeleteSet = (e, id) => {
@@ -83,22 +100,27 @@ export default function VocabHub() {
     }
   };
 
-  // Filtered sets based on activeCategory, subFilter and search query
+  // Helper to count sets for each sub-level
+  const getLevelLessonCount = (catId, levelId) => {
+    return sets.filter(s => {
+      if (catId === 'ielts') return s.category === 'ielts' && s.ieltsLevel === levelId;
+      if (catId === 'school') return (s.category === 'school' || s.grade?.startsWith('Lớp')) && s.gradeLevel === levelId;
+      if (catId === 'cefr') return s.category === 'cefr' && s.cefrLevel === levelId;
+      return !s.isOfficial;
+    }).length;
+  };
+
+  // Filtered sets based on activeCategory, subFilter, skillFilter and search query
   const filteredSets = useMemo(() => {
     return sets.filter(s => {
       // 1. Category check
       if (activeCategory === 'school') {
         if (s.category !== 'school' && !s.grade?.startsWith('Lớp')) return false;
-        if (subFilter !== 'all') {
-          if (s.gradeLevel) {
-            if (s.gradeLevel !== subFilter) return false;
-          } else if (s.grade !== subFilter) {
-            return false;
-          }
-        }
+        if (subFilter !== 'all' && s.gradeLevel !== subFilter) return false;
       } else if (activeCategory === 'ielts') {
         if (s.category !== 'ielts') return false;
         if (subFilter !== 'all' && s.ieltsLevel !== subFilter) return false;
+        if (skillFilter !== 'all' && s.skill !== skillFilter) return false;
       } else if (activeCategory === 'cefr') {
         if (s.category !== 'cefr') return false;
         if (subFilter !== 'all' && s.cefrLevel !== subFilter) return false;
@@ -114,7 +136,7 @@ export default function VocabHub() {
       const matchTags = s.tags?.some(tag => tag.toLowerCase().includes(q));
       return matchTitle || matchDesc || matchTags;
     });
-  }, [sets, activeCategory, subFilter, searchQuery]);
+  }, [sets, activeCategory, subFilter, skillFilter, searchQuery]);
 
   // Counts for each category tab
   const counts = useMemo(() => {
@@ -128,36 +150,34 @@ export default function VocabHub() {
 
   const categoriesConfig = [
     {
-      id: 'school',
-      label: 'Tiếng Anh Phổ Thông (6 - 12)',
-      shortLabel: 'Tiếng Anh 6 - 12',
-      icon: School,
-      count: counts.school,
-      description: 'Trọn bộ từ vựng bám sát chương trình SGK Global Success từ Lớp 6 đến Lớp 12.',
-      subFilters: [
-        { id: 'all', label: 'Tất cả khối lớp' },
-        { id: 'grade-6', label: 'Lớp 6' },
-        { id: 'grade-7', label: 'Lớp 7' },
-        { id: 'grade-8', label: 'Lớp 8' },
-        { id: 'grade-9', label: 'Lớp 9' },
-        { id: 'grade-10', label: 'Lớp 10 (Trọng tâm)' },
-        { id: 'grade-11', label: 'Lớp 11' },
-        { id: 'grade-12', label: 'Lớp 12' }
-      ]
-    },
-    {
       id: 'ielts',
       label: 'Lộ trình IELTS - Dream Education',
       shortLabel: 'Lộ trình IELTS',
       icon: GraduationCap,
       count: counts.ielts,
       description: 'Lộ trình từ vựng chuẩn hóa của Dream Education từ IELTS Beginner (3.0) đến IELTS Advanced (6.5+).',
-      subFilters: [
-        { id: 'all', label: 'Tất cả các Level IELTS' },
-        { id: 'ielts-beginner', label: 'IELTS Beginner (3.0 - 4.0)' },
-        { id: 'pre-ielts', label: 'Pre-IELTS (4.0 - 5.0)' },
-        { id: 'ielts-foundation', label: 'IELTS Foundation (5.0 - 6.0)' },
-        { id: 'ielts-advanced', label: 'IELTS Advanced (6.5+)' }
+      levels: [
+        { id: 'ielts-beginner', name: 'IELTS Beginner', band: 'Band 3.0 - 4.0' },
+        { id: 'pre-ielts', name: 'Pre-IELTS', band: 'Band 4.0 - 5.0 (Trọng tâm)', isHot: true },
+        { id: 'ielts-foundation', name: 'IELTS Foundation', band: 'Band 5.0 - 6.0' },
+        { id: 'ielts-advanced', name: 'IELTS Advanced', band: 'Band 6.5+' }
+      ]
+    },
+    {
+      id: 'school',
+      label: 'Tiếng Anh Phổ Thông (6 - 12)',
+      shortLabel: 'Tiếng Anh 6 - 12',
+      icon: School,
+      count: counts.school,
+      description: 'Trọn bộ từ vựng bám sát chương trình SGK Global Success từ Lớp 6 đến Lớp 12.',
+      levels: [
+        { id: 'grade-6', name: 'Lớp 6', band: 'Global Success' },
+        { id: 'grade-7', name: 'Lớp 7', band: 'Global Success' },
+        { id: 'grade-8', name: 'Lớp 8', band: 'Global Success' },
+        { id: 'grade-9', name: 'Lớp 9', band: 'Global Success' },
+        { id: 'grade-10', name: 'Lớp 10', band: 'Unit 1 & Unit 2', isHot: true },
+        { id: 'grade-11', name: 'Lớp 11', band: 'Global Success' },
+        { id: 'grade-12', name: 'Lớp 12', band: 'Global Success' }
       ]
     },
     {
@@ -167,12 +187,11 @@ export default function VocabHub() {
       icon: Globe2,
       count: counts.cefr,
       description: 'Hệ thống từ vựng học thuật quốc tế phân chia theo chuẩn Khung tham chiếu Châu Âu từ A2 đến C1.',
-      subFilters: [
-        { id: 'all', label: 'Tất cả Level CEFR' },
-        { id: 'a2', label: 'Level A2 (Pre-Intermediate)' },
-        { id: 'b1', label: 'Level B1 (Intermediate)' },
-        { id: 'b2', label: 'Level B2 (Upper-Intermediate)' },
-        { id: 'c1', label: 'Level C1 (Advanced)' }
+      levels: [
+        { id: 'a2', name: 'Level A2', band: 'Pre-Intermediate' },
+        { id: 'b1', name: 'Level B1', band: 'Intermediate' },
+        { id: 'b2', name: 'Level B2', band: 'Upper-Intermediate' },
+        { id: 'c1', name: 'Level C1', band: 'Advanced' }
       ]
     },
     {
@@ -181,14 +200,27 @@ export default function VocabHub() {
       shortLabel: 'Bộ từ của bạn',
       icon: FolderHeart,
       count: counts.custom,
-      description: 'Các bộ từ vựng do chính bạn hoặc giáo viên tự tạo và lưu trữ trên trình duyệt này.',
-      subFilters: [
-        { id: 'all', label: 'Tất cả bộ từ tự tạo' }
+      description: 'Các bộ từ vựng do chính bạn hoặc giáo viên tự tạo và lưu trữ vĩnh viễn trên trình duyệt này.',
+      levels: [
+        { id: 'all', name: 'Tất cả bộ từ tự tạo', band: `${counts.custom} bộ từ` }
       ]
     }
   ];
 
   const currentCategoryConfig = categoriesConfig.find(c => c.id === activeCategory);
+  const currentSubLevel = currentCategoryConfig?.levels?.find(l => l.id === subFilter);
+
+  // Skill counts in current level for IELTS
+  const skillCounts = useMemo(() => {
+    if (activeCategory !== 'ielts') return {};
+    const levelSets = sets.filter(s => s.category === 'ielts' && s.ieltsLevel === subFilter);
+    return {
+      all: levelSets.length,
+      reading: levelSets.filter(s => s.skill === 'reading').length,
+      listening: levelSets.filter(s => s.skill === 'listening').length,
+      writing: levelSets.filter(s => s.skill === 'writing').length
+    };
+  }, [sets, activeCategory, subFilter]);
 
   return (
     <div className="pt-24 pb-20 bg-[#f8fafc] min-h-screen text-left">
@@ -258,7 +290,7 @@ export default function VocabHub() {
               Phòng Học Từ Vựng
             </h1>
             <p className="mt-1 text-sm sm:text-base text-gray-600 max-w-2xl">
-              Hệ thống thẻ ghi nhớ thông minh, chế độ học thích ứng 10 câu, kiểm tra và ghép từ theo chuẩn SGK, IELTS và khung CEFR.
+              Chọn từng Level để mở danh sách các bài học (Reading 1, Reading 2, Listening, Writing) và ôn luyện toàn diện.
             </p>
           </div>
 
@@ -273,7 +305,7 @@ export default function VocabHub() {
         </div>
 
         {/* ========================================================
-            CATEGORY SELECTION TABS (School 6-12 | IELTS | CEFR | Custom)
+            1. PRIMARY PROGRAM TABS (IELTS | School 6-12 | CEFR | Custom)
            ======================================================== */}
         <div className="bg-white rounded-3xl border border-gray-200/90 p-2 shadow-xs mb-6 overflow-x-auto no-scrollbar">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 min-w-[640px] md:min-w-0">
@@ -308,7 +340,7 @@ export default function VocabHub() {
                       </span>
                     </div>
                     <span className={`text-[11px] block truncate ${isActive ? 'text-blue-100' : 'text-gray-400'}`}>
-                      {cat.id === 'school' ? 'Lớp 6 đến Lớp 12' : cat.id === 'ielts' ? 'Band 3.0 - 7.5+' : cat.id === 'cefr' ? 'Chuẩn A2 - C1' : 'Tự tạo & Lưu trữ'}
+                      {cat.id === 'ielts' ? 'Beginner đến Advanced' : cat.id === 'school' ? 'Lớp 6 đến Lớp 12' : cat.id === 'cefr' ? 'Chuẩn A2 - C1' : 'Tự tạo & Lưu trữ'}
                     </span>
                   </div>
                 </button>
@@ -317,99 +349,228 @@ export default function VocabHub() {
           </div>
         </div>
 
-        {/* Category Description & Search / Sub-Filters Bar */}
+        {/* ========================================================
+            2. SUB-LEVEL SELECTOR TABS (Click a level to reveal its lessons)
+           ======================================================== */}
         <div className="bg-white rounded-3xl border border-gray-200/90 p-6 mb-8 shadow-xs">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-5 pb-5 border-b border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div>
-              <h2 className="text-xl font-extrabold text-gray-900 flex items-center gap-2">
-                <span>{currentCategoryConfig?.label}</span>
-                <span className="text-xs font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full">
-                  {filteredSets.length} bộ từ
-                </span>
-              </h2>
-              <p className="text-xs text-gray-500 mt-1 max-w-2xl">
-                {currentCategoryConfig?.description}
-              </p>
+              <span className="text-xs font-bold uppercase tracking-wider text-primary">
+                Chọn cấp độ / Khối lớp để xem bài học:
+              </span>
+              <h3 className="text-lg font-black text-gray-900 mt-0.5">
+                {activeCategory === 'ielts' && 'Các Level IELTS (Nhấn vào từng level để xem các bài Reading, Listening...):'}
+                {activeCategory === 'school' && 'Chọn Khối Lớp để xem danh sách bài Unit:'}
+                {activeCategory === 'cefr' && 'Chọn Cấp Độ CEFR Quốc Tế:'}
+                {activeCategory === 'custom' && 'Bộ từ vựng do bạn tự tạo hoặc chia sẻ:'}
+              </h3>
             </div>
 
-            {/* Search Bar */}
-            <div className="relative w-full lg:w-72">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            {/* Quick search input */}
+            <div className="relative w-full sm:w-64">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Tìm bộ từ theo tên, bài học..."
+                placeholder="Tìm bài học, chủ đề..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50/70 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full pl-8 pr-3 py-2 rounded-xl border border-gray-200 bg-gray-50 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
             </div>
           </div>
 
-          {/* Sub-Filters Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            {currentCategoryConfig?.subFilters.map((sub) => {
-              const isActive = subFilter === sub.id;
+          {/* Level Tabs Row */}
+          <div className="flex flex-wrap gap-2.5 mb-5">
+            {currentCategoryConfig?.levels?.map((lvl) => {
+              const isSelected = subFilter === lvl.id;
+              const lessonCount = getLevelLessonCount(activeCategory, lvl.id);
+
               return (
                 <button
-                  key={sub.id}
-                  onClick={() => setSubFilter(sub.id)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border whitespace-nowrap ${
-                    isActive
-                      ? 'bg-primary text-white border-primary shadow-xs'
-                      : 'bg-gray-50/80 text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-gray-900'
+                  key={lvl.id}
+                  onClick={() => {
+                    setSubFilter(lvl.id);
+                    setSkillFilter('all');
+                  }}
+                  className={`px-4 py-3 rounded-2xl border text-left transition-all relative flex items-center gap-3 cursor-pointer ${
+                    isSelected
+                      ? 'border-primary bg-primary text-white shadow-md ring-2 ring-primary/20 scale-[1.02]'
+                      : 'border-gray-200 bg-gray-50/70 hover:bg-white hover:border-primary/40 text-gray-800'
                   }`}
                 >
-                  {sub.label}
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`text-xs sm:text-sm font-black ${isSelected ? 'text-white' : 'text-gray-900'}`}>
+                        {lvl.name}
+                      </span>
+                      {lvl.isHot && (
+                        <span className={`px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider ${
+                          isSelected ? 'bg-amber-300 text-slate-900' : 'bg-amber-400 text-slate-900'
+                        }`}>
+                          Hot
+                        </span>
+                      )}
+                    </div>
+                    <span className={`text-[11px] font-medium ${isSelected ? 'text-blue-100' : 'text-gray-500'}`}>
+                      {lvl.band} • <strong className={isSelected ? 'text-white' : 'text-primary'}>{lessonCount} bài học</strong>
+                    </span>
+                  </div>
+
+                  {isSelected && (
+                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-white ml-1">
+                      <Check size={14} />
+                    </div>
+                  )}
                 </button>
               );
             })}
           </div>
+
+          {/* Optional Skill Filter (For IELTS: All | Reading | Listening | Writing) */}
+          {activeCategory === 'ielts' && (
+            <div className="pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold text-gray-500">Lọc kỹ năng trong level này:</span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setSkillFilter('all')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                      skillFilter === 'all'
+                        ? 'bg-primary text-white border-primary shadow-xs'
+                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    Tất cả bài ({skillCounts.all || 0})
+                  </button>
+                  <button
+                    onClick={() => setSkillFilter('reading')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5 cursor-pointer ${
+                      skillFilter === 'reading'
+                        ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    <BookOpen size={13} />
+                    <span>Reading ({skillCounts.reading || 0})</span>
+                  </button>
+                  <button
+                    onClick={() => setSkillFilter('listening')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5 cursor-pointer ${
+                      skillFilter === 'listening'
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Headphones size={13} />
+                    <span>Listening ({skillCounts.listening || 0})</span>
+                  </button>
+                  <button
+                    onClick={() => setSkillFilter('writing')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5 cursor-pointer ${
+                      skillFilter === 'writing'
+                        ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
+                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    <PenTool size={13} />
+                    <span>Writing ({skillCounts.writing || 0})</span>
+                  </button>
+                </div>
+              </div>
+
+              <span className="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                Đang hiển thị {filteredSets.length} bài học
+              </span>
+            </div>
+          )}
         </div>
 
         {/* ========================================================
-            VOCABULARY SETS GRID
+            3. LESSONS GRID (Pre-IELTS Reading 1, Reading 2, Listening 1...)
            ======================================================== */}
         <div className="mb-14">
+          <div className="flex items-center justify-between mb-5 px-1">
+            <div>
+              <span className="text-xs font-extrabold uppercase tracking-wider text-primary block">
+                Cấp độ đang chọn:
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black text-gray-900 flex items-center gap-2">
+                <span>{currentSubLevel?.name}</span>
+                <span className="text-sm font-semibold text-gray-500">({currentSubLevel?.band})</span>
+                <span className="text-xs bg-gray-100 text-gray-600 font-bold px-2.5 py-0.5 rounded-full">
+                  {filteredSets.length} bài học
+                </span>
+              </h3>
+            </div>
+
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="text-xs font-bold text-gray-500 hover:text-primary underline"
+              >
+                Xóa tìm kiếm
+              </button>
+            )}
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSets.map((set) => {
               const mastery = getMasteryData(set.id);
-              const starred = getStarredTerms(set.id);
               const masteredCount = set.terms.filter(t => mastery[t.id] === 'mastered').length;
               const percent = Math.round((masteredCount / set.terms.length) * 100);
 
-              // Category color badge
-              let badgeColor = 'bg-blue-50 text-blue-700 border-blue-200';
-              if (set.category === 'ielts') {
-                badgeColor = 'bg-amber-50 text-amber-800 border-amber-200';
-              } else if (set.category === 'cefr') {
-                badgeColor = 'bg-emerald-50 text-emerald-800 border-emerald-200';
-              } else if (!set.isOfficial) {
-                badgeColor = 'bg-purple-50 text-purple-800 border-purple-200';
+              // Skill Icon and Color theme
+              let SkillIcon = BookOpen;
+              let skillBadgeColor = 'bg-blue-50 text-blue-800 border-blue-200';
+              let skillAccentBg = 'bg-blue-500';
+
+              if (set.skill === 'reading') {
+                SkillIcon = BookOpen;
+                skillBadgeColor = 'bg-emerald-50 text-emerald-800 border-emerald-200';
+                skillAccentBg = 'bg-emerald-500';
+              } else if (set.skill === 'listening') {
+                SkillIcon = Headphones;
+                skillBadgeColor = 'bg-blue-50 text-blue-800 border-blue-200';
+                skillAccentBg = 'bg-blue-500';
+              } else if (set.skill === 'writing') {
+                SkillIcon = PenTool;
+                skillBadgeColor = 'bg-purple-50 text-purple-800 border-purple-200';
+                skillAccentBg = 'bg-purple-500';
+              } else {
+                SkillIcon = Sparkles;
+                skillBadgeColor = 'bg-amber-50 text-amber-800 border-amber-200';
+                skillAccentBg = 'bg-amber-500';
               }
 
               return (
                 <div
                   key={set.id}
                   onClick={() => navigate(`/vocab/${set.id}`)}
-                  className="bg-white rounded-3xl border border-gray-200/90 p-6 shadow-xs hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between group cursor-pointer"
+                  className="bg-white rounded-3xl border border-gray-200/90 p-6 shadow-xs hover:shadow-md hover:border-primary/50 transition-all flex flex-col justify-between group cursor-pointer relative"
                 >
                   <div>
-                    {/* Top Tag & Actions */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
+                    {/* Top Badges */}
+                    <div className="flex items-center justify-between gap-2 mb-3.5">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${badgeColor}`}>
-                          {set.subtitle || set.grade}
-                        </span>
-                        {set.lesson && (
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-primary text-white tracking-wider">
-                            {set.lesson}
+                        {set.lesson ? (
+                          <span className={`px-2.5 py-1 rounded-xl text-xs font-black border flex items-center gap-1 ${skillBadgeColor}`}>
+                            <SkillIcon size={13} />
+                            <span>{set.lesson}</span>
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 rounded-xl text-xs font-bold border bg-gray-50 text-gray-700 border-gray-200">
+                            {set.grade || 'Học phần'}
                           </span>
                         )}
+
+                        <span className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-gray-50 text-gray-600 border border-gray-100">
+                          {set.subtitle ? set.subtitle.split('•')[0].trim() : (set.grade || 'Dream')}
+                        </span>
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs text-gray-400 font-semibold">
-                          {set.terms.length} từ
+                        <span className="text-xs text-primary font-black bg-primary/10 px-2.5 py-1 rounded-xl">
+                          {set.terms.length} từ vựng
                         </span>
 
                         {!set.isOfficial && (
@@ -425,9 +586,9 @@ export default function VocabHub() {
                     </div>
 
                     {/* Set Title */}
-                    <h3 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-1 mb-1.5">
+                    <h4 className="text-lg font-black text-gray-900 group-hover:text-primary transition-colors line-clamp-1 mb-1.5">
                       {set.title}
-                    </h3>
+                    </h4>
                     <p className="text-xs text-gray-500 line-clamp-2 mb-5 leading-relaxed">
                       {set.description}
                     </p>
@@ -439,7 +600,7 @@ export default function VocabHub() {
                       <div className="flex items-center justify-between text-[11px] text-gray-500 font-bold mb-1.5">
                         <span className="flex items-center gap-1">
                           <CheckCircle2 size={12} className={percent > 0 ? 'text-emerald-500' : 'text-gray-400'} />
-                          <span>Đã thuộc: {masteredCount} / {set.terms.length}</span>
+                          <span>Đã thuộc: {masteredCount} / {set.terms.length} từ</span>
                         </span>
                         <span className={percent === 100 ? 'text-emerald-600 font-black' : 'text-primary'}>
                           {percent}%
@@ -455,39 +616,39 @@ export default function VocabHub() {
 
                     {/* Fast Mode Launchers */}
                     <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5 text-gray-400 group-hover:text-primary font-semibold transition-colors">
-                        <span className="text-[11px]">Bắt đầu học</span>
-                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      <div className="flex items-center gap-1.5 text-primary font-bold group-hover:translate-x-1 transition-transform">
+                        <span>Bắt đầu học</span>
+                        <ArrowRight size={14} />
                       </div>
 
                       <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                         <Link
                           to={`/vocab/${set.id}?mode=flashcards`}
                           className="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-blue-50 transition-colors"
-                          title="Thẻ ghi nhớ"
+                          title="Thẻ ghi nhớ Flashcard 3D"
                         >
-                          <Layers size={15} />
+                          <Layers size={16} />
                         </Link>
                         <Link
                           to={`/vocab/${set.id}?mode=learn`}
                           className="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-blue-50 transition-colors"
-                          title="Chế độ Học (Learn)"
+                          title="Chế độ Học thích ứng (10 câu lặp lại)"
                         >
-                          <Brain size={15} />
+                          <Brain size={16} />
                         </Link>
                         <Link
                           to={`/vocab/${set.id}?mode=test`}
                           className="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-blue-50 transition-colors"
-                          title="Kiểm tra"
+                          title="Kiểm tra trắc nghiệm / tự luận"
                         >
-                          <FileText size={15} />
+                          <FileText size={16} />
                         </Link>
                         <Link
                           to={`/vocab/${set.id}?mode=match`}
                           className="p-1.5 rounded-lg text-gray-500 hover:text-amber-600 hover:bg-amber-50 transition-colors"
-                          title="Ghép thẻ (Match)"
+                          title="Trò chơi Ghép thẻ (Match Game)"
                         >
-                          <Zap size={15} />
+                          <Zap size={16} />
                         </Link>
                       </div>
                     </div>
@@ -499,30 +660,21 @@ export default function VocabHub() {
 
           {/* Empty Search / Filter state */}
           {filteredSets.length === 0 && (
-            <div className="bg-white rounded-3xl border border-gray-200/90 p-12 text-center max-w-md mx-auto my-6">
+            <div className="bg-white rounded-3xl border border-gray-200/90 p-12 text-center max-w-md mx-auto my-6 shadow-xs">
               <Search size={36} className="text-gray-300 mx-auto mb-3" />
-              <h4 className="text-base font-bold text-gray-900 mb-1">Không tìm thấy bộ từ vựng nào</h4>
+              <h4 className="text-base font-bold text-gray-900 mb-1">Không tìm thấy bài học nào</h4>
               <p className="text-xs text-gray-500 mb-6">
-                Chưa có bộ từ phù hợp với bộ lọc hoặc từ khóa tìm kiếm "{searchQuery}".
+                Chưa có bài học phù hợp với cấp độ hoặc từ khóa tìm kiếm "{searchQuery}".
               </p>
-              {activeCategory === 'custom' ? (
-                <button
-                  onClick={() => setIsCreatorOpen(true)}
-                  className="px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-container transition-all"
-                >
-                  Tạo bộ từ đầu tiên của bạn
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setSubFilter('all');
-                    setSearchQuery('');
-                  }}
-                  className="px-5 py-2.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-200 transition-all"
-                >
-                  Xem tất cả bộ từ
-                </button>
-              )}
+              <button
+                onClick={() => {
+                  setSkillFilter('all');
+                  setSearchQuery('');
+                }}
+                className="px-5 py-2.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-200 transition-all cursor-pointer"
+              >
+                Xem tất cả bài học của cấp độ này
+              </button>
             </div>
           )}
         </div>
@@ -535,7 +687,7 @@ export default function VocabHub() {
               Đầy đủ tính năng học tập chuyên sâu - Hoàn toàn miễn phí
             </h3>
             <p className="text-sm text-gray-500 mt-1">
-              Không giới hạn số lượt học, không thu phí gói đăng ký, tối ưu cho học sinh trường phổ thông và luyện thi IELTS.
+              Tối ưu cho học sinh trường phổ thông và lộ trình luyện thi IELTS từ Beginner đến Advanced.
             </p>
           </div>
 
