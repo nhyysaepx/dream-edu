@@ -6,6 +6,7 @@ import {
   FileText, 
   Zap, 
   PenTool, 
+  ClipboardCheck,
   ArrowLeft, 
   Search, 
   Star, 
@@ -37,6 +38,7 @@ import LearnMode from '../components/vocabulary/LearnMode';
 import MatchGameMode from '../components/vocabulary/MatchGameMode';
 import TestMode from '../components/vocabulary/TestMode';
 import WriteSpellMode from '../components/vocabulary/WriteSpellMode';
+import DiagnosticTestMode from '../components/vocabulary/DiagnosticTestMode';
 import ExportModal from '../components/vocabulary/ExportModal';
 
 export default function VocabStudySet() {
@@ -117,7 +119,8 @@ export default function VocabStudySet() {
     { id: 'learn', label: 'Học (Learn)', icon: Brain, desc: 'Lộ trình ghi nhớ thích ứng thông minh' },
     { id: 'test', label: 'Kiểm tra (Test)', icon: FileText, desc: 'Trắc nghiệm, đúng/sai, tự luận' },
     { id: 'match', label: 'Ghép thẻ (Match)', icon: Zap, desc: 'Trò chơi đua tốc độ ghép từ' },
-    { id: 'write', label: 'Chính tả (Write)', icon: PenTool, desc: 'Nghe phát âm và luyện gõ từ' }
+    { id: 'write', label: 'Chính tả (Write)', icon: PenTool, desc: 'Nghe phát âm và luyện gõ từ' },
+    { id: 'diagnostic', label: 'Diagnostic Test', icon: ClipboardCheck, desc: 'Đánh giá chuẩn đoán từ vựng Receptive & Productive' }
   ];
 
   return (
@@ -292,6 +295,15 @@ export default function VocabStudySet() {
               terms={vocabSet.terms}
               starredIds={starredIds}
               onToggleStar={handleToggleStar}
+            />
+          )}
+
+          {activeMode === 'diagnostic' && (
+            <DiagnosticTestMode
+              vocabSet={vocabSet}
+              terms={vocabSet.terms}
+              onUpdateMastery={handleUpdateMastery}
+              onSwitchMode={(m) => setMode(m)}
             />
           )}
         </div>

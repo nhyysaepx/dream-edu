@@ -24,7 +24,8 @@ import {
   Headphones,
   Compass,
   Check,
-  ChevronRight
+  ChevronRight,
+  ClipboardCheck
 } from 'lucide-react';
 import { 
   getAllVocabSets, 
@@ -649,6 +650,13 @@ export default function VocabHub() {
                           title="Trò chơi Ghép thẻ (Match Game)"
                         >
                           <Zap size={16} />
+                        </Link>
+                        <Link
+                          to={`/vocab/${set.id}?mode=diagnostic`}
+                          className="p-1.5 rounded-lg text-gray-500 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
+                          title="Diagnostic Test (Chuẩn đoán Receptive & Productive)"
+                        >
+                          <ClipboardCheck size={16} />
                         </Link>
                       </div>
                     </div>
