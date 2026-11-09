@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -16,7 +16,12 @@ import {
   Filter, 
   Eye, 
   ChevronRight,
-  FileText
+  FileText,
+  Highlighter,
+  Edit3,
+  Trash2,
+  StickyNote,
+  X
 } from 'lucide-react';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
 
@@ -41,7 +46,6 @@ export function checkShortAnswer(userAnswer, acceptedList) {
   return acceptedList.some(accepted => {
     const acceptedClean = clean(accepted);
     if (userClean === acceptedClean) return true;
-    // Word connector equivalence (e.g., "12 and 15" vs "12 15" vs "12 to 15")
     const normalizeConnectors = (s) => s.replace(/\s+(and|to|or)\s+/g, ' ').replace(/\s+/g, ' ');
     if (normalizeConnectors(userClean) === normalizeConnectors(acceptedClean)) return true;
     return false;
@@ -54,11 +58,17 @@ function countWords(str) {
   return str.trim().split(/\s+/).length;
 }
 
+// Format raw text content into semantic HTML paragraphs
+function formatPassageToHtml(content, title) {
+  const paragraphs = content.split('\n\n').filter(p => p.trim() && p.trim() !== title.trim());
+  return paragraphs.map(p => `<p class="leading-relaxed mb-4">${p.trim()}</p>`).join('');
+}
+
 export default function ReadingHomeworkView({ homework }) {
   const navigate = useNavigate();
   const homeworkId = homework.id;
 
-  // Active Passage Tab (1 or 2)
+  // Active Passage Tab (p1 or p2)
   const [activePassageId, setActivePassageId] = useState('p1');
   
   // Answers state: { [qId]: string }
@@ -77,6 +87,41 @@ export default function ReadingHomeworkView({ homework }) {
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'wrong_only' | 'p1' | 'p2'
   const [fontSize, setFontSize] = useState('base'); // 'sm' | 'base' | 'lg'
 
+  // Ref to the passage container for text selection
+  const passageContainerRef = useRef(null);
+
+  // Text selection popup state: { text, range, x, y }
+  const [selectionPopup, setSelectionPopup] = useState(null);
+
+  // Notes state: { [noteId]: { id, passageId, text, content, createdAt } }
+  const [notes, setNotes] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`dream_hw_${homeworkId}_notes`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // Active note opened in the sidebar
+  const [activeNoteId, setActiveNoteId] = useState(null);
+  const [draftNoteContent, setDraftNoteContent] = useState('');
+  const [showNotesDrawer, setShowNotesDrawer] = useState(false);
+
+  // Stored HTML for each passage (including rendered highlights/notes)
+  const [passageHtmls, setPassageHtmls] = useState(() => {
+    const initial = {};
+    homework.passages.forEach(p => {
+      try {
+        const saved = localStorage.getItem(`dream_hw_${homeworkId}_${p.id}_html`);
+        initial[p.id] = saved || formatPassageToHtml(p.content, p.title);
+      } catch {
+        initial[p.id] = formatPassageToHtml(p.content, p.title);
+      }
+    });
+    return initial;
+  });
+
   // Load past submission from history if exists
   useEffect(() => {
     try {
@@ -92,6 +137,15 @@ export default function ReadingHomeworkView({ homework }) {
     }
   }, [homeworkId]);
 
+  // Synchronize draftNoteContent when activeNoteId changes
+  useEffect(() => {
+    if (activeNoteId && notes[activeNoteId]) {
+      setDraftNoteContent(notes[activeNoteId].content || '');
+    } else {
+      setDraftNoteContent('');
+    }
+  }, [activeNoteId, notes]);
+
   // Flatten all questions
   const allQuestions = useMemo(() => {
     return homework.passages.flatMap(p => p.questions.map(q => ({ ...q, passageId: p.id, passageNumber: p.number })));
@@ -101,6 +155,11 @@ export default function ReadingHomeworkView({ homework }) {
   const answeredCount = useMemo(() => {
     return allQuestions.filter(q => (answers[q.id] || '').trim().length > 0).length;
   }, [allQuestions, answers]);
+
+  // Count highlights and notes for current active passage
+  const currentPassageNotes = useMemo(() => {
+    return Object.values(notes).filter(n => n.passageId === activePassageId);
+  }, [notes, activePassageId]);
 
   // Evaluation results
   const evaluationResults = useMemo(() => {
@@ -129,13 +188,253 @@ export default function ReadingHomeworkView({ homework }) {
     };
   }, [allQuestions, answers]);
 
-  // Handle Input Change
+  // Handle Input Change for answers
   const handleInputChange = (qId, val) => {
     if (isSubmitted) return;
     setAnswers(prev => ({
       ...prev,
       [qId]: val
     }));
+  };
+
+  // Save current passage HTML to state and localStorage
+  const saveCurrentPassageHtml = useCallback(() => {
+    if (passageContainerRef.current) {
+      const currentHtml = passageContainerRef.current.innerHTML;
+      setPassageHtmls(prev => ({
+        ...prev,
+        [activePassageId]: currentHtml
+      }));
+      try {
+        localStorage.setItem(`dream_hw_${homeworkId}_${activePassageId}_html`, currentHtml);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [activePassageId, homeworkId]);
+
+  // Text selection listener on the passage
+  const handlePassageMouseUp = (e) => {
+    // If clicking popup or note sidebar or button, do nothing
+    if (
+      e.target.closest('#selection-popup') || 
+      e.target.closest('#note-sidebar') || 
+      e.target.closest('button') ||
+      e.target.closest('input') ||
+      e.target.closest('textarea')
+    ) {
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed || !selection.toString().trim()) {
+      setSelectionPopup(null);
+      return;
+    }
+
+    // Ensure selection is strictly inside passage container
+    if (passageContainerRef.current && passageContainerRef.current.contains(selection.anchorNode)) {
+      const text = selection.toString().trim();
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+
+      setSelectionPopup({
+        text,
+        range: range.cloneRange(),
+        x: rect.left + rect.width / 2,
+        y: rect.top - 8
+      });
+    } else {
+      setSelectionPopup(null);
+    }
+  };
+
+  // Close popup if clicking elsewhere
+  useEffect(() => {
+    const handleDocumentMouseDown = (e) => {
+      if (!e.target.closest('#selection-popup') && !e.target.closest('#passage-container')) {
+        setSelectionPopup(null);
+      }
+    };
+    document.addEventListener('mousedown', handleDocumentMouseDown);
+    return () => document.removeEventListener('mousedown', handleDocumentMouseDown);
+  }, []);
+
+  // 1. Apply Color Highlight
+  const applyHighlight = (color = 'yellow') => {
+    if (!selectionPopup || !selectionPopup.range) return;
+
+    try {
+      const range = selectionPopup.range;
+      const highlightId = `hl-${Date.now()}`;
+      
+      const mark = document.createElement('mark');
+      mark.id = highlightId;
+      mark.dataset.highlightId = highlightId;
+      mark.className = 'bg-yellow-200/90 text-gray-900 rounded px-1 py-0.5 cursor-pointer transition-colors shadow-2xs hover:bg-yellow-300 annotation-mark';
+      
+      const contents = range.extractContents();
+      mark.appendChild(contents);
+      range.insertNode(mark);
+
+      window.getSelection()?.removeAllRanges();
+      setSelectionPopup(null);
+      saveCurrentPassageHtml();
+    } catch (err) {
+      console.error('Highlight failed:', err);
+      setSelectionPopup(null);
+    }
+  };
+
+  // 2. Apply Note
+  const applyNote = () => {
+    if (!selectionPopup || !selectionPopup.range) return;
+
+    try {
+      const range = selectionPopup.range;
+      const noteId = `note-${Date.now()}`;
+      
+      const mark = document.createElement('mark');
+      mark.id = noteId;
+      mark.dataset.noteId = noteId;
+      mark.className = 'bg-amber-200 text-amber-950 border-b-2 border-amber-600 rounded px-1 py-0.5 cursor-pointer transition-colors font-semibold hover:bg-amber-300 annotation-note';
+      
+      const contents = range.extractContents();
+      mark.appendChild(contents);
+      range.insertNode(mark);
+
+      window.getSelection()?.removeAllRanges();
+      setSelectionPopup(null);
+
+      // Create note record
+      const newNote = {
+        id: noteId,
+        passageId: activePassageId,
+        text: selectionPopup.text,
+        content: '',
+        createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setNotes(prev => {
+        const updated = { ...prev, [noteId]: newNote };
+        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+        return updated;
+      });
+
+      setActiveNoteId(noteId);
+      setDraftNoteContent('');
+      setShowNotesDrawer(true);
+
+      saveCurrentPassageHtml();
+    } catch (err) {
+      console.error('Note creation failed:', err);
+      setSelectionPopup(null);
+    }
+  };
+
+  // Click on existing highlight or note inside the passage container
+  const handlePassageClick = (e) => {
+    const mark = e.target.closest('mark');
+    if (!mark) return;
+
+    const noteId = mark.dataset.noteId;
+    const highlightId = mark.dataset.highlightId;
+
+    if (noteId && notes[noteId]) {
+      e.stopPropagation();
+      setActiveNoteId(noteId);
+      setShowNotesDrawer(true);
+    } else if (highlightId) {
+      e.stopPropagation();
+      const confirmRemove = window.confirm('Bạn có muốn xóa đoạn tô màu này không?');
+      if (confirmRemove) {
+        const parent = mark.parentNode;
+        while (mark.firstChild) {
+          parent.insertBefore(mark.firstChild, mark);
+        }
+        parent.removeChild(mark);
+        saveCurrentPassageHtml();
+      }
+    }
+  };
+
+  // Save Note Content
+  const handleSaveNoteContent = () => {
+    if (!activeNoteId) return;
+
+    setNotes(prev => {
+      const updated = {
+        ...prev,
+        [activeNoteId]: {
+          ...prev[activeNoteId],
+          content: draftNoteContent
+        }
+      };
+      localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+      return updated;
+    });
+
+    setSaveToast(true);
+    setTimeout(() => setSaveToast(false), 2000);
+  };
+
+  // Delete Note and remove underline mark
+  const handleDeleteNote = (noteId) => {
+    const confirmDelete = window.confirm('Bạn có muốn xóa ghi chú này và hủy đánh dấu trong bài đọc?');
+    if (!confirmDelete) return;
+
+    // Un-wrap the mark in DOM if present
+    const mark = passageContainerRef.current?.querySelector(`mark[data-note-id="${noteId}"]`);
+    if (mark) {
+      const parent = mark.parentNode;
+      while (mark.firstChild) {
+        parent.insertBefore(mark.firstChild, mark);
+      }
+      parent.removeChild(mark);
+      saveCurrentPassageHtml();
+    }
+
+    setNotes(prev => {
+      const next = { ...prev };
+      delete next[noteId];
+      localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+      return next;
+    });
+
+    if (activeNoteId === noteId) {
+      setActiveNoteId(null);
+    }
+  };
+
+  // Reset / Clear all highlights & notes for active passage
+  const handleClearAllAnnotations = () => {
+    const confirmClear = window.confirm('Bạn có chắc chắn muốn xóa toàn bộ các đoạn tô màu và ghi chú của bài đọc này?');
+    if (!confirmClear) return;
+
+    const activePassage = homework.passages.find(p => p.id === activePassageId) || homework.passages[0];
+    const original = formatPassageToHtml(activePassage.content, activePassage.title);
+
+    setPassageHtmls(prev => ({
+      ...prev,
+      [activePassageId]: original
+    }));
+
+    try {
+      localStorage.removeItem(`dream_hw_${homeworkId}_${activePassageId}_html`);
+      setNotes(prev => {
+        const next = { ...prev };
+        Object.keys(next).forEach(k => {
+          if (next[k].passageId === activePassageId) delete next[k];
+        });
+        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(next));
+        return next;
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    setActiveNoteId(null);
+    setShowNotesDrawer(false);
   };
 
   // Save Draft
@@ -162,7 +461,6 @@ export default function ReadingHomeworkView({ homework }) {
 
     setIsSubmitted(true);
 
-    // Save to homework history
     try {
       const currentHistory = JSON.parse(localStorage.getItem('dream_homework_history') || '{}');
       currentHistory[homeworkId] = {
@@ -176,7 +474,6 @@ export default function ReadingHomeworkView({ homework }) {
       console.error(e);
     }
 
-    // Play celebration or sound
     if (evaluationResults.percentage >= 70) {
       playCorrectSound();
       triggerCelebration();
@@ -185,7 +482,7 @@ export default function ReadingHomeworkView({ homework }) {
     }
   };
 
-  // Reset / Retake
+  // Retake
   const handleRetake = () => {
     const confirmReset = window.confirm('Bạn có chắc chắn muốn làm lại bài tập này từ đầu không? Dữ liệu câu trả lời sẽ được làm mới.');
     if (!confirmReset) return;
@@ -221,7 +518,6 @@ export default function ReadingHomeworkView({ homework }) {
 
   const activePassage = homework.passages.find(p => p.id === activePassageId) || homework.passages[0];
 
-  // Font size classes for passage reading
   const passageFontClass = {
     sm: 'text-sm leading-relaxed',
     base: 'text-base leading-relaxed',
@@ -230,7 +526,7 @@ export default function ReadingHomeworkView({ homework }) {
 
   return (
     <div className="pt-20 pb-16 bg-[#f8fafc] min-h-screen text-left">
-      <div className="max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1540px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* TOP BAR / BREADCRUMB */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
@@ -288,12 +584,10 @@ export default function ReadingHomeworkView({ homework }) {
 
             {/* Quick Actions (Save, Progress, Submit) */}
             <div className="flex items-center gap-3 self-start lg:self-center flex-wrap">
-              {/* Progress pill */}
               <div className="px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-700">
                 Đã điền: <strong className="text-primary">{answeredCount}</strong> / {allQuestions.length} câu
               </div>
 
-              {/* Save Draft Button */}
               {!isSubmitted && (
                 <button
                   type="button"
@@ -305,7 +599,6 @@ export default function ReadingHomeworkView({ homework }) {
                 </button>
               )}
 
-              {/* Submit or Retake */}
               {!isSubmitted ? (
                 <button
                   type="button"
@@ -359,7 +652,6 @@ export default function ReadingHomeworkView({ homework }) {
                   </div>
                 </div>
 
-                {/* Filter buttons */}
                 <div className="flex items-center gap-2 self-stretch md:self-auto flex-wrap">
                   <button
                     onClick={() => setFilterMode('all')}
@@ -392,11 +684,11 @@ export default function ReadingHomeworkView({ homework }) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-auto lg:h-[calc(100vh-210px)] min-h-[650px]">
           
           {/* ============================================================== */}
-          {/* LEFT COLUMN: READING PASSAGE TEXT (50% on desktop)              */}
+          {/* LEFT COLUMN: READING PASSAGE TEXT WITH HIGHLIGHT & NOTE        */}
           {/* ============================================================== */}
-          <div className="lg:col-span-6 bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden">
+          <div className="lg:col-span-6 bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden relative">
             
-            {/* Passage Selector Tabs & Font Controls */}
+            {/* Passage Selector Tabs, Annotation Tools & Font Controls */}
             <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
               {/* Passage 1 / Passage 2 Buttons */}
               <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-gray-200/80 shadow-2xs">
@@ -405,8 +697,12 @@ export default function ReadingHomeworkView({ homework }) {
                   return (
                     <button
                       key={p.id}
-                      onClick={() => setActivePassageId(p.id)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      onClick={() => {
+                        setActivePassageId(p.id);
+                        setActiveNoteId(null);
+                        setSelectionPopup(null);
+                      }}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                         isActive
                           ? 'bg-primary text-white shadow-xs'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
@@ -424,45 +720,79 @@ export default function ReadingHomeworkView({ homework }) {
                 })}
               </div>
 
-              {/* Font Size Adjuster */}
-              <div className="flex items-center gap-1 text-xs text-gray-500 font-semibold">
-                <span>Cỡ chữ:</span>
+              {/* Annotation Indicators & Font Controls */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Notes Drawer Toggle */}
+                {currentPassageNotes.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowNotesDrawer(!showNotesDrawer)}
+                    className="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                    title="Mở danh sách ghi chú của bài đọc này"
+                  >
+                    <StickyNote size={13} className="text-amber-600" />
+                    <span>{currentPassageNotes.length} Ghi chú</span>
+                  </button>
+                )}
+
+                {/* Clear All Annotations for this passage */}
                 <button
                   type="button"
-                  onClick={() => setFontSize('sm')}
-                  className={`w-7 h-7 rounded-lg border flex items-center justify-center font-bold text-xs cursor-pointer ${
-                    fontSize === 'sm' ? 'bg-primary text-white border-primary' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-100'
-                  }`}
-                  title="Cỡ chữ nhỏ"
+                  onClick={handleClearAllAnnotations}
+                  className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                  title="Xóa tất cả tô màu và ghi chú của bài đọc này"
                 >
-                  A-
+                  <Trash2 size={14} />
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setFontSize('base')}
-                  className={`w-7 h-7 rounded-lg border flex items-center justify-center font-bold text-xs cursor-pointer ${
-                    fontSize === 'base' ? 'bg-primary text-white border-primary' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-100'
-                  }`}
-                  title="Cỡ chữ chuẩn"
-                >
-                  A
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFontSize('lg')}
-                  className={`w-7 h-7 rounded-lg border flex items-center justify-center font-bold text-xs cursor-pointer ${
-                    fontSize === 'lg' ? 'bg-primary text-white border-primary' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-100'
-                  }`}
-                  title="Cỡ chữ lớn"
-                >
-                  A+
-                </button>
+
+                {/* Font Size Adjuster */}
+                <div className="flex items-center gap-1 text-xs text-gray-500 font-semibold pl-1 border-l border-gray-200">
+                  <button
+                    type="button"
+                    onClick={() => setFontSize('sm')}
+                    className={`w-6 h-6 rounded-lg border flex items-center justify-center font-bold text-xs cursor-pointer ${
+                      fontSize === 'sm' ? 'bg-primary text-white border-primary' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
+                    title="Cỡ chữ nhỏ"
+                  >
+                    A-
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFontSize('base')}
+                    className={`w-6 h-6 rounded-lg border flex items-center justify-center font-bold text-xs cursor-pointer ${
+                      fontSize === 'base' ? 'bg-primary text-white border-primary' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
+                    title="Cỡ chữ chuẩn"
+                  >
+                    A
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFontSize('lg')}
+                    className={`w-6 h-6 rounded-lg border flex items-center justify-center font-bold text-xs cursor-pointer ${
+                      fontSize === 'lg' ? 'bg-primary text-white border-primary' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
+                    title="Cỡ chữ lớn"
+                  >
+                    A+
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Passage Body Text (Independently scrollable) */}
-            <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-4 text-justify select-text">
-              <div className="border-b border-gray-100 pb-3 mb-4">
+            {/* Passage Body Text with Live Mouse Selection */}
+            <div 
+              className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-4 text-justify select-text relative"
+              onMouseUp={handlePassageMouseUp}
+            >
+              {/* Highlight helper tip */}
+              <div className="flex items-center gap-1.5 text-[11px] text-gray-400 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 mb-2 select-none">
+                <Highlighter size={12} className="text-amber-500" />
+                <span>Mẹo: Bôi đen chữ bất kỳ trong bài đọc để <strong>Tô màu</strong> hoặc <strong>Ghi chú</strong></span>
+              </div>
+
+              <div className="border-b border-gray-100 pb-3 mb-4 select-none">
                 <span className="text-[11px] font-black uppercase tracking-wider text-primary">
                   IELTS Reading Passage {activePassage.number}
                 </span>
@@ -471,17 +801,161 @@ export default function ReadingHomeworkView({ homework }) {
                 </h2>
               </div>
 
-              <div className={`text-gray-800 ${passageFontClass} font-normal space-y-4`}>
-                {activePassage.content.split('\n\n').map((paragraph, pIdx) => {
-                  if (paragraph.trim() === activePassage.title.trim()) return null;
-                  return (
-                    <p key={pIdx} className="leading-relaxed text-gray-800">
-                      {paragraph}
-                    </p>
-                  );
-                })}
-              </div>
+              {/* Passage HTML Container (supports dynamic marks and notes) */}
+              <div 
+                id="passage-container"
+                ref={passageContainerRef}
+                onClick={handlePassageClick}
+                className={`text-gray-800 ${passageFontClass} font-normal space-y-4 leading-relaxed`}
+                dangerouslySetInnerHTML={{ __html: passageHtmls[activePassageId] || '' }}
+              />
             </div>
+
+            {/* ========================================================== */}
+            {/* FLOATING POPUP WHEN SELECTING TEXT (Like Test Platform)   */}
+            {/* ========================================================== */}
+            {selectionPopup && (
+              <div 
+                id="selection-popup"
+                className="fixed z-50 bg-white rounded-2xl shadow-2xl border border-gray-200/95 p-1 flex items-center gap-1 text-gray-800 animate-pop-in select-none"
+                style={{ 
+                  left: selectionPopup.x, 
+                  top: selectionPopup.y, 
+                  transform: 'translate(-50%, -120%)' 
+                }}
+              >
+                {/* 1. Highlight Button */}
+                <button 
+                  type="button"
+                  onClick={() => applyHighlight('yellow')} 
+                  className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-yellow-50 hover:text-amber-900 rounded-xl text-gray-700 text-xs font-bold transition-all cursor-pointer"
+                  title="Tô màu vàng (Highlight)"
+                >
+                  <span className="w-3 h-3 rounded-full bg-yellow-300 border border-yellow-400 inline-block shadow-2xs" />
+                  <Highlighter size={14} className="text-amber-600" />
+                  <span>Tô màu</span>
+                </button>
+
+                <div className="w-px h-4 bg-gray-200 my-auto" />
+
+                {/* 2. Note Button */}
+                <button 
+                  type="button"
+                  onClick={applyNote} 
+                  className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-blue-50 hover:text-blue-900 rounded-xl text-gray-700 text-xs font-bold transition-all cursor-pointer"
+                  title="Tạo ghi chú cho đoạn này"
+                >
+                  <Edit3 size={14} className="text-blue-600" />
+                  <span>Ghi chú</span>
+                </button>
+              </div>
+            )}
+
+            {/* ========================================================== */}
+            {/* NOTE SIDEBAR / DRAWER (Like Test Platform)                */}
+            {/* ========================================================== */}
+            {showNotesDrawer && (
+              <aside 
+                id="note-sidebar" 
+                className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-white border-l border-gray-200 shadow-2xl z-30 flex flex-col text-left animate-pop-in"
+              >
+                {/* Sidebar Header */}
+                <div className="p-3.5 bg-gradient-to-r from-primary to-[#18316c] text-white flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <StickyNote size={16} />
+                    <span className="font-extrabold text-xs sm:text-sm">Ghi chú bài đọc {activePassage.number}</span>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setShowNotesDrawer(false);
+                      setActiveNoteId(null);
+                    }} 
+                    className="p-1 hover:bg-white/20 rounded-lg text-white/80 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Sidebar Body */}
+                <div className="p-4 flex-1 flex flex-col overflow-y-auto space-y-4">
+                  {activeNoteId && notes[activeNoteId] ? (
+                    <div className="flex-1 flex flex-col space-y-3">
+                      <div>
+                        <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
+                          Đoạn trích dẫn:
+                        </span>
+                        <blockquote className="p-2.5 bg-amber-50 rounded-xl border border-amber-200/80 text-xs italic text-gray-800 leading-snug">
+                          "{notes[activeNoteId].text}"
+                        </blockquote>
+                      </div>
+
+                      <div className="flex-1 flex flex-col">
+                        <label className="text-[11px] font-bold text-gray-600 mb-1">
+                          Nội dung ghi chú của bạn:
+                        </label>
+                        <textarea
+                          autoFocus
+                          rows={4}
+                          value={draftNoteContent}
+                          onChange={(e) => setDraftNoteContent(e.target.value)}
+                          placeholder="Nhập ghi chú hoặc suy luận của bạn tại đây..."
+                          className="w-full flex-1 p-3 rounded-xl border border-gray-200 text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteNote(activeNoteId)}
+                          className="text-xs font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer"
+                        >
+                          <Trash2 size={13} />
+                          <span>Xóa</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleSaveNoteContent}
+                          className="px-4 py-2 bg-primary hover:bg-primary-container text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                        >
+                          <Save size={13} />
+                          <span>Lưu ghi chú</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-xs font-bold text-gray-700">
+                        Danh sách các ghi chú ({currentPassageNotes.length}):
+                      </p>
+                      {currentPassageNotes.length === 0 ? (
+                        <p className="text-xs text-gray-400 italic">Chưa có ghi chú nào cho bài đọc này. Bôi đen văn bản để thêm ghi chú.</p>
+                      ) : (
+                        currentPassageNotes.map(n => (
+                          <div 
+                            key={n.id}
+                            onClick={() => setActiveNoteId(n.id)}
+                            className="p-3 rounded-xl border border-amber-200 bg-amber-50/50 hover:bg-amber-50 transition-colors cursor-pointer space-y-1.5"
+                          >
+                            <p className="text-xs font-bold text-amber-950 truncate">
+                              "{n.text}"
+                            </p>
+                            <p className="text-xs text-gray-600 line-clamp-2">
+                              {n.content || '(Chưa có nội dung ghi chú - Bấm để thêm)'}
+                            </p>
+                            <div className="flex items-center justify-between text-[10px] text-gray-400 pt-1">
+                              <span>{n.createdAt || ''}</span>
+                              <span className="text-primary font-semibold">Chỉnh sửa →</span>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              </aside>
+            )}
           </div>
 
           {/* ============================================================== */}
