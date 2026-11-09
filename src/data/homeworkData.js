@@ -621,7 +621,7 @@ Receptionist: Mr Alaoui. I'll make sure he gets the message as soon as he arrive
 
 export const PRE_IELTS_READING_1_DETAIL = {
   id: 'pre-ielts-reading-1',
-  title: 'E - HOMEWORK - Reading 1 - Short-answer Questions',
+  title: 'HOMEWORK - Reading 1 - Short-answer Questions',
   level: 'Pre IELTS',
   session: 'Buổi 1 - Giáo trình Collins Get Ready for IELTS Reading (Unit 1: Friendship)',
   skill: 'Reading',
@@ -800,7 +800,7 @@ This dissatisfaction shows us how important friendships are for most of us. We s
 
 export const PRE_IELTS_READING_2_DETAIL = {
   id: 'pre-ielts-reading-2',
-  title: 'E - HOMEWORK - Reading 2 - The Body',
+  title: 'HOMEWORK - Reading 2 - The Body',
   level: 'Pre IELTS',
   session: 'Buổi 2 - Giáo trình Collins Get Ready for IELTS Reading (Unit 2: The Body)',
   skill: 'Reading',

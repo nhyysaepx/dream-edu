@@ -152,8 +152,26 @@ export default function ReadingHomeworkView({
   // Active Passage Tab (p1 or p2)
   const [activePassageId, setActivePassageId] = useState(homework.passages?.[0]?.id || 'p1');
 
-  // Dedicated Notes Column Visibility (User requested dedicated 3rd column on the right)
-  const [isNotesColumnOpen, setIsNotesColumnOpen] = useState(true);
+  // Dedicated Notes Column Visibility (default is closed, only opens when student has notes or creates one)
+  const [isNotesColumnOpen, setIsNotesColumnOpen] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_notes`);
+      if (!saved) return false;
+      const parsedNotes = JSON.parse(saved);
+      const initialPassageId = homework.passages?.[0]?.id || 'p1';
+      return Object.values(parsedNotes).some(n => n.passageId === initialPassageId);
+    } catch {
+      return false;
+    }
+  });
+
+  // If active passage changes and has no notes, default to closed
+  useEffect(() => {
+    const hasNotesForPassage = Object.values(notes).some(n => n.passageId === activePassageId);
+    if (!hasNotesForPassage) {
+      setIsNotesColumnOpen(false);
+    }
+  }, [activePassageId, notes]);
   
   // Answers state: { [qId]: string }
   const [answers, setAnswers] = useState(() => {
@@ -289,6 +307,153 @@ export default function ReadingHomeworkView({
       percentage: Math.round((correctCount / (allQuestions.length || 1)) * 100)
     };
   }, [allQuestions, answers]);
+
+  // Container ref for measuring widths when dragging
+  const splitContainerRef = useRef(null);
+
+  // Active drag divider: null | 'divider1' | 'divider2'
+  const [activeDragDivider, setActiveDragDivider] = useState(null);
+
+  // Responsive check for desktop split screen (>= 1024px)
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return window.innerWidth >= 1024;
+  });
+
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
+
+  // Split ratio for 2 columns (Passage vs Questions) - stores passage percentage (25 to 75)
+  const [splitRatio2Col, setSplitRatio2Col] = useState(() => {
+    try {
+      const saved = localStorage.getItem('dream_reading_split_2col');
+      if (saved) {
+        const val = Number(JSON.parse(saved));
+        if (val >= 25 && val <= 75) return val;
+      }
+    } catch (e) {}
+    return 50; // default 50/50
+  });
+
+  // Split ratio for 3 columns (Passage, Questions, Notes) - sum = 100
+  const [splitRatio3Col, setSplitRatio3Col] = useState(() => {
+    try {
+      const saved = localStorage.getItem('dream_reading_split_3col');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.passage && parsed.questions && parsed.notes) {
+          return parsed;
+        }
+      }
+    } catch (e) {}
+    return { passage: 44, questions: 34, notes: 22 };
+  });
+
+  // Current widths based on whether notes column is open
+  const currentPassageWidth = isNotesColumnOpen ? splitRatio3Col.passage : splitRatio2Col;
+  const currentQuestionsWidth = isNotesColumnOpen ? splitRatio3Col.questions : (100 - splitRatio2Col);
+  const currentNotesWidth = isNotesColumnOpen ? splitRatio3Col.notes : 0;
+
+  // Start dragging a divider
+  const startDragging = (dividerName, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveDragDivider(dividerName);
+  };
+
+  // Reset split ratios to default on double-click
+  const resetSplit = useCallback(() => {
+    setSplitRatio2Col(50);
+    setSplitRatio3Col({ passage: 44, questions: 34, notes: 22 });
+    try {
+      localStorage.removeItem('dream_reading_split_2col');
+      localStorage.removeItem('dream_reading_split_3col');
+    } catch (e) {}
+  }, []);
+
+  // Dragging mousemove handler
+  const handleMouseMove = useCallback((e) => {
+    if (!activeDragDivider || !splitContainerRef.current) return;
+    const rect = splitContainerRef.current.getBoundingClientRect();
+    if (!rect.width) return;
+
+    if (activeDragDivider === 'divider1') {
+      const mouseX = e.clientX - rect.left;
+      const pct = (mouseX / rect.width) * 100;
+
+      if (!isNotesColumnOpen) {
+        // 2 columns: clamp between 25% and 75%
+        const clamped = Math.min(75, Math.max(25, pct));
+        setSplitRatio2Col(Math.round(clamped * 10) / 10);
+      } else {
+        // 3 columns: clamp passage width
+        const notesPct = splitRatio3Col.notes;
+        const maxPassage = 100 - notesPct - 25; // keep at least 25% for questions
+        const clampedPassage = Math.min(maxPassage, Math.max(25, pct));
+        const newQuestions = 100 - notesPct - clampedPassage;
+        setSplitRatio3Col(prev => ({
+          ...prev,
+          passage: Math.round(clampedPassage * 10) / 10,
+          questions: Math.round(newQuestions * 10) / 10
+        }));
+      }
+    } else if (activeDragDivider === 'divider2' && isNotesColumnOpen) {
+      const mouseFromRight = rect.right - e.clientX;
+      const notesPct = (mouseFromRight / rect.width) * 100;
+      const clampedNotes = Math.min(35, Math.max(15, notesPct));
+
+      const remainingForPAndQ = 100 - clampedNotes;
+      let newPassage = splitRatio3Col.passage;
+      let newQuestions = remainingForPAndQ - newPassage;
+
+      if (newQuestions < 25) {
+        newQuestions = 25;
+        newPassage = remainingForPAndQ - 25;
+      } else if (newPassage < 25) {
+        newPassage = 25;
+        newQuestions = remainingForPAndQ - 25;
+      }
+
+      setSplitRatio3Col({
+        passage: Math.round(newPassage * 10) / 10,
+        questions: Math.round(newQuestions * 10) / 10,
+        notes: Math.round(clampedNotes * 10) / 10
+      });
+    }
+  }, [activeDragDivider, isNotesColumnOpen, splitRatio3Col]);
+
+  // Mouse up handler
+  const handleMouseUp = useCallback(() => {
+    if (activeDragDivider) {
+      setActiveDragDivider(null);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      try {
+        localStorage.setItem('dream_reading_split_2col', JSON.stringify(splitRatio2Col));
+        localStorage.setItem('dream_reading_split_3col', JSON.stringify(splitRatio3Col));
+      } catch (err) {}
+    }
+  }, [activeDragDivider, splitRatio2Col, splitRatio3Col]);
+
+  useEffect(() => {
+    if (activeDragDivider) {
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      };
+    }
+  }, [activeDragDivider, handleMouseMove, handleMouseUp]);
 
   // Handle Input Change for answers
   const handleInputChange = (qId, val) => {
@@ -644,6 +809,10 @@ export default function ReadingHomeworkView({
       } catch (e) {
         console.error(e);
       }
+      const remaining = Object.values(next).filter(n => n.passageId === activePassageId);
+      if (remaining.length === 0) {
+        setIsNotesColumnOpen(false);
+      }
       return next;
     });
 
@@ -676,6 +845,7 @@ export default function ReadingHomeworkView({
     });
 
     setActiveNoteId(null);
+    setIsNotesColumnOpen(false);
   };
 
   // Scroll to note mark in passage from Notes Column
@@ -718,6 +888,7 @@ export default function ReadingHomeworkView({
     }
 
     setActiveNoteId(null);
+    setIsNotesColumnOpen(false);
   };
 
   // Save Draft
@@ -810,6 +981,8 @@ export default function ReadingHomeworkView({
     lg: 'text-lg leading-loose'
   }[fontSize];
 
+  const cleanTitle = (homework?.title || '').replace(/^E\s*[-–—]\s*/i, '');
+
   return (
     <div className="pt-20 pb-16 bg-[#f8fafc] min-h-screen text-left">
       <div className="max-w-[1540px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -821,7 +994,7 @@ export default function ReadingHomeworkView({
             <span>/</span>
             <Link to={parentPath} className="hover:text-primary transition-colors font-medium">{parentLabel}</Link>
             <span>/</span>
-            <span className="text-gray-900 font-bold truncate max-w-xs">{homework.title}</span>
+            <span className="text-gray-900 font-bold truncate max-w-xs">{cleanTitle}</span>
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
@@ -863,7 +1036,7 @@ export default function ReadingHomeworkView({
               </div>
 
               <h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
-                {homework.title}
+                {cleanTitle}
               </h1>
               <p className="text-xs sm:text-sm text-gray-600 mt-1 max-w-3xl">
                 {homework.description}
@@ -968,13 +1141,24 @@ export default function ReadingHomeworkView({
           )}
         </div>
 
-        {/* MAIN IELTS 3-COLUMN SPLIT SCREEN (Passage | Questions | Dedicated Notes Column) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-auto lg:h-[calc(100vh-210px)] min-h-[650px]">
+        {/* MAIN IELTS 3-COLUMN SPLIT SCREEN (Passage | Questions | Dedicated Notes Column) WITH RESIZABLE DIVIDERS */}
+        <div 
+          ref={splitContainerRef}
+          className="flex flex-col lg:flex-row gap-4 lg:gap-0 h-auto lg:h-[calc(100vh-210px)] min-h-[650px] relative select-text"
+        >
           
           {/* ============================================================== */}
           {/* COLUMN 1: READING PASSAGE TEXT WITH LIVE HIGHLIGHT & NOTE       */}
           {/* ============================================================== */}
-          <div className={`${isNotesColumnOpen ? 'lg:col-span-5' : 'lg:col-span-6'} bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden relative transition-all duration-300`}>
+          <div 
+            style={{ 
+              width: isDesktop ? `calc(${currentPassageWidth}% - ${isNotesColumnOpen ? '8px' : '6px'})` : '100%',
+              minWidth: isDesktop ? '260px' : 'auto'
+            }}
+            className={`bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden relative flex-shrink-0 ${
+              activeDragDivider ? '' : 'transition-[width] duration-150'
+            }`}
+          >
             
             {/* Passage Selector Tabs, Annotation Tools & Font Controls */}
             <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
@@ -1165,10 +1349,40 @@ export default function ReadingHomeworkView({
             )}
           </div>
 
+          {/* DRAGGABLE RESIZER 1 (Between Passage & Questions) */}
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            title="Kéo sang trái/phải để chỉnh kích cỡ giữa Bài đọc và Bảng câu hỏi (Nhấp đúp để đặt lại mặc định)"
+            onMouseDown={(e) => startDragging('divider1', e)}
+            onDoubleClick={resetSplit}
+            className={`hidden lg:flex w-3 items-center justify-center cursor-col-resize select-none group z-10 flex-shrink-0 relative rounded-full transition-colors mx-0.5 ${
+              activeDragDivider === 'divider1' ? 'bg-primary/10' : 'hover:bg-primary/5'
+            }`}
+          >
+            <div className={`w-1 h-12 rounded-full transition-all flex flex-col items-center justify-center gap-1 ${
+              activeDragDivider === 'divider1'
+                ? 'bg-primary w-1.5 shadow-xs'
+                : 'bg-gray-300 group-hover:bg-primary/70 group-hover:w-1.5'
+            }`}>
+              <span className="w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+              <span className="w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+              <span className="w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+            </div>
+          </div>
+
           {/* ============================================================== */}
-          {/* COLUMN 2: SHORT-ANSWER QUESTIONS                              */}
+          {/* COLUMN 2: QUESTIONS                                            */}
           {/* ============================================================== */}
-          <div className={`${isNotesColumnOpen ? 'lg:col-span-4' : 'lg:col-span-6'} bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden transition-all duration-300`}>
+          <div 
+            style={{ 
+              width: isDesktop ? `calc(${currentQuestionsWidth}% - ${isNotesColumnOpen ? '8px' : '6px'})` : '100%',
+              minWidth: isDesktop ? '280px' : 'auto'
+            }}
+            className={`bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden flex-shrink-0 ${
+              activeDragDivider ? '' : 'transition-[width] duration-150'
+            }`}
+          >
             
             {/* Right Pane Navigation Header */}
             <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
@@ -1502,7 +1716,38 @@ export default function ReadingHomeworkView({
           {/* COLUMN 3: DEDICATED NOTES COLUMN ON THE FAR RIGHT OF WEBPAGE    */}
           {/* ============================================================== */}
           {isNotesColumnOpen && (
-            <div className="lg:col-span-3 bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden text-left transition-all duration-300">
+            <>
+              {/* DRAGGABLE RESIZER 2 (Between Questions & Notes) */}
+              <div
+                role="separator"
+                aria-orientation="vertical"
+                title="Kéo sang trái/phải để chỉnh kích cỡ giữa Bảng câu hỏi và Ghi chú (Nhấp đúp để đặt lại mặc định)"
+                onMouseDown={(e) => startDragging('divider2', e)}
+                onDoubleClick={resetSplit}
+                className={`hidden lg:flex w-3 items-center justify-center cursor-col-resize select-none group z-10 flex-shrink-0 relative rounded-full transition-colors mx-0.5 ${
+                  activeDragDivider === 'divider2' ? 'bg-primary/10' : 'hover:bg-primary/5'
+                }`}
+              >
+                <div className={`w-1 h-12 rounded-full transition-all flex flex-col items-center justify-center gap-1 ${
+                  activeDragDivider === 'divider2'
+                    ? 'bg-primary w-1.5 shadow-xs'
+                    : 'bg-gray-300 group-hover:bg-primary/70 group-hover:w-1.5'
+                }`}>
+                  <span className="w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+                  <span className="w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+                  <span className="w-0.5 h-0.5 rounded-full bg-white opacity-80" />
+                </div>
+              </div>
+
+              <div 
+                style={{ 
+                  width: isDesktop ? `calc(${currentNotesWidth}% - 8px)` : '100%',
+                  minWidth: isDesktop ? '220px' : 'auto'
+                }}
+                className={`bg-white rounded-3xl border border-gray-200/90 shadow-xs flex flex-col overflow-hidden text-left flex-shrink-0 ${
+                  activeDragDivider ? '' : 'transition-[width] duration-150'
+                }`}
+              >
               {/* Header */}
               <div className="p-3 sm:p-4 border-b border-gray-100 bg-amber-50/70 flex items-center justify-between gap-2 flex-shrink-0">
                 <div className="flex items-center gap-2">
@@ -1690,7 +1935,8 @@ export default function ReadingHomeworkView({
                 )}
               </div>
             </div>
-          )}
+          </>
+        )}
 
         </div>
 
