@@ -235,7 +235,17 @@ export default function Homework() {
                 </div>
 
                 {/* Card Action Footer */}
-                <div className="p-4 sm:p-5 pt-0">
+                <div className="p-4 sm:p-5 pt-0 space-y-2">
+                  {item.id === 'pre-ielts-reading-1' && (
+                    <Link
+                      to="/vocab/pre-ielts-reading-1"
+                      className="w-full py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                    >
+                      <BookOpen size={13} className="text-amber-600" />
+                      <span>Học 30 từ vựng Reading 1</span>
+                    </Link>
+                  )}
+
                   {isUpcoming ? (
                     <button 
                       disabled

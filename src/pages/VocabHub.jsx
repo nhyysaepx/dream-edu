@@ -396,9 +396,16 @@ export default function VocabHub() {
                   <div>
                     {/* Top Tag & Actions */}
                     <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${badgeColor}`}>
-                        {set.subtitle || set.grade}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${badgeColor}`}>
+                          {set.subtitle || set.grade}
+                        </span>
+                        {set.lesson && (
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-primary text-white tracking-wider">
+                            {set.lesson}
+                          </span>
+                        )}
+                      </div>
 
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs text-gray-400 font-semibold">
