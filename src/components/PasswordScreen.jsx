@@ -13,11 +13,9 @@ import {
   BookOpen, 
   GraduationCap, 
   FileText,
-  Home,
-  Sparkles
+  Home
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { ACCESS_PASSWORD } from '../constants/auth';
 import logo from '../assets/logo.png';
 import { PRACTICE_LIST, getPracticeDetailById } from '../data/practiceData';
 import { HOMEWORK_LIST, getHomeworkDetailById } from '../data/homeworkData';
@@ -149,12 +147,6 @@ export default function PasswordScreen({ currentPath = '' }) {
       setIsShaking(false);
       if (inputRef.current) inputRef.current.focus();
     }, 450);
-  };
-
-  const handleAutoFillDemo = () => {
-    setPassword(ACCESS_PASSWORD);
-    setError(null);
-    if (inputRef.current) inputRef.current.focus();
   };
 
   return (
@@ -304,43 +296,22 @@ export default function PasswordScreen({ currentPath = '' }) {
           </button>
         </form>
 
-        {/* Demo Helper & Links */}
-        <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col gap-3">
-          {/* Quick password filler for testing */}
-          <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-2.5 flex items-center justify-between gap-2 text-xs">
-            <div className="flex items-center gap-1.5 text-amber-900">
-              <Sparkles size={14} className="text-amber-600 shrink-0" />
-              <span className="font-semibold">Mật khẩu:</span>
-              <code className="bg-white/80 px-1.5 py-0.5 rounded border border-amber-200 text-amber-800 font-mono font-bold">
-                dreameducation
-              </code>
-            </div>
-            <button
-              type="button"
-              onClick={handleAutoFillDemo}
-              className="px-2.5 py-1 rounded-lg bg-white border border-amber-300 text-amber-900 font-bold text-[11px] hover:bg-amber-100 transition-colors cursor-pointer shrink-0"
-            >
-              Điền nhanh
-            </button>
-          </div>
-
-          {/* Return Home Link */}
-          <div className="flex items-center justify-center gap-4 text-xs font-semibold text-gray-500">
-            <Link 
-              to="/" 
-              className="flex items-center gap-1.5 hover:text-primary transition-colors py-1"
-            >
-              <Home size={14} />
-              <span>Quay lại Trang chủ</span>
-            </Link>
-            <span>•</span>
-            <Link 
-              to="/contact" 
-              className="hover:text-primary transition-colors py-1"
-            >
-              Liên hệ nhận mật khẩu
-            </Link>
-          </div>
+        {/* Return Home Link */}
+        <div className="mt-6 pt-5 border-t border-gray-100 flex items-center justify-center gap-4 text-xs font-semibold text-gray-500">
+          <Link 
+            to="/" 
+            className="flex items-center gap-1.5 hover:text-primary transition-colors py-1"
+          >
+            <Home size={14} />
+            <span>Quay lại Trang chủ</span>
+          </Link>
+          <span>•</span>
+          <Link 
+            to="/contact" 
+            className="hover:text-primary transition-colors py-1"
+          >
+            Liên hệ nhận mật khẩu
+          </Link>
         </div>
 
         {/* Bottom Security Assurance */}
