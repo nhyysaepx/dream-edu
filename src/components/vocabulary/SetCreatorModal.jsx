@@ -122,7 +122,7 @@ export default function SetCreatorModal({ isOpen, onClose, onCreated }) {
         <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
           <div>
             <h3 className="text-xl font-black text-gray-900">Tạo bộ học từ vựng mới</h3>
-            <p className="text-xs text-gray-500">Nhập danh sách từ vựng theo phong cách Quizlet hoàn toàn miễn phí</p>
+            <p className="text-xs text-gray-500">Nhập danh sách từ vựng thông minh hoàn toàn miễn phí</p>
           </div>
           <button 
             onClick={onClose}

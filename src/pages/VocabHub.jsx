@@ -91,7 +91,7 @@ export default function VocabHub() {
             <div className="flex items-center gap-2 mb-2">
               <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles size={14} />
-                <span>Quizlet Free Edition</span>
+                <span>Học từ vựng thông minh</span>
               </span>
               <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">
                 100% Miễn phí
@@ -334,7 +334,7 @@ export default function VocabHub() {
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-xs font-bold uppercase tracking-wider text-primary">Phương pháp học tập hiện đại</span>
             <h3 className="text-2xl font-black text-gray-900 mt-1">
-              Clone toàn bộ tính năng Quizlet Pro - Hoàn toàn miễn phí
+              Đầy đủ tính năng học tập chuyên sâu - Hoàn toàn miễn phí
             </h3>
             <p className="text-sm text-gray-500 mt-1">
               Không giới hạn số lượt học, không thu phí gói đăng ký, không có quảng cáo quấy rầy.

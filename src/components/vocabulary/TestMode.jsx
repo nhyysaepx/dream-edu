@@ -195,7 +195,7 @@ export default function TestMode({ terms, starredIds }) {
           </div>
           <div>
             <h2 className="text-2xl font-black text-gray-900">Thiết lập bài kiểm tra</h2>
-            <p className="text-xs text-gray-500">Tùy biến bài test theo phong cách Quizlet cho lớp học</p>
+            <p className="text-xs text-gray-500">Tùy biến bài test thông minh cho lớp học</p>
           </div>
         </div>
 

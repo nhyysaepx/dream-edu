@@ -234,10 +234,10 @@ export default function Home() {
                 <span>Phòng học • Học từ vựng thông minh</span>
               </div>
               <h2 className="text-3xl md:text-4xl font-black tracking-tight leading-tight">
-                Ôn luyện từ vựng miễn phí với công nghệ Flashcard & Quizlet Free
+                Ôn luyện từ vựng miễn phí với công nghệ Flashcard & Học Thích Ứng
               </h2>
               <p className="text-blue-100 text-sm md:text-base leading-relaxed">
-                Trọn bộ tính năng tương tự Quizlet: Thẻ ghi nhớ 3D, Chế độ học thích ứng (Learn), Trò chơi ghép từ kịch tính (Match) và Kiểm tra tự luận/trắc nghiệm (Test). Khám phá ngay bộ 74 từ vựng chuẩn Unit 1 SGK Tiếng Anh 10 Global Success!
+                Đầy đủ công cụ học tập thông minh: Thẻ ghi nhớ 3D, Chế độ học thích ứng (Learn), Trò chơi ghép từ kịch tính (Match) và Kiểm tra tự luận/trắc nghiệm (Test). Khám phá ngay bộ 74 từ vựng chuẩn Unit 1 SGK Tiếng Anh 10 Global Success!
               </p>
             </div>
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto">

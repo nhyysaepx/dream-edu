@@ -1,6 +1,63 @@
 // Audio Pronunciation & Visual Effects Utility
 
 /**
+ * Sound effects using Web Audio API (Zero external assets, instant response)
+ */
+export function playCorrectSound() {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    // Two upbeat notes: 587Hz -> 880Hz (D5 -> A5)
+    osc.frequency.setValueAtTime(587.33, now);
+    osc.frequency.setValueAtTime(880.00, now + 0.1);
+
+    gain.gain.setValueAtTime(0.22, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.38);
+  } catch (e) {}
+}
+
+export function playWrongSound() {
+  if (typeof window === 'undefined') return;
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'triangle';
+    // Gentle alert: 260Hz down to 180Hz
+    osc.frequency.setValueAtTime(260, now);
+    osc.frequency.exponentialRampToValueAtTime(180, now + 0.25);
+
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.28);
+  } catch (e) {}
+}
+
+/**
  * Text-to-speech helper using browser Web Speech API
  */
 export function speakWord(text, lang = 'en-US') {

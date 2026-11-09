@@ -97,7 +97,7 @@ export default function ExportModal({ isOpen, onClose, vocabSet }) {
                   exportFormat === 'tab' ? 'bg-primary text-white border-primary' : 'bg-gray-50 text-gray-700 border-gray-200'
                 }`}
               >
-                Tab (Quizlet/Anki)
+                Tab (Bảng tính / Anki)
               </button>
               <button
                 onClick={() => setExportFormat('numbered')}

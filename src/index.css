@@ -223,3 +223,13 @@
 .animate-pop-in {
   animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+@keyframes correctGlow {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+  70% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.animate-correct-glow {
+  animation: correctGlow 0.8s ease-out;
+}
