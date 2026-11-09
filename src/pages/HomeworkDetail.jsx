@@ -17,12 +17,18 @@ import {
   ChevronUp
 } from 'lucide-react';
 import AudioPlayer from '../components/AudioPlayer';
-import { PRE_IELTS_LISTENING_1_DETAIL } from '../data/homeworkData';
+import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
+import { PRE_IELTS_LISTENING_1_DETAIL, getHomeworkDetailById } from '../data/homeworkData';
 
 export default function HomeworkDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const homework = PRE_IELTS_LISTENING_1_DETAIL;
+  const homework = getHomeworkDetailById(id) || PRE_IELTS_LISTENING_1_DETAIL;
+
+  // If this is a Reading homework, render the specialized split-screen IELTS Reading component
+  if (homework?.skill === 'Reading') {
+    return <ReadingHomeworkView homework={homework} />;
+  }
 
   // Answers state
   const [answers, setAnswers] = useState(() => {
