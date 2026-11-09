@@ -67,6 +67,16 @@ function formatPassageToHtml(content, title) {
   return paragraphs.map(p => `<p class="leading-relaxed mb-4">${p.trim()}</p>`).join('');
 }
 
+// Safely unwrap a DOM element, preserving its text and child nodes
+function unwrapElement(el) {
+  if (!el || !el.parentNode) return;
+  const parent = el.parentNode;
+  while (el.firstChild) {
+    parent.insertBefore(el.firstChild, el);
+  }
+  parent.removeChild(el);
+}
+
 export default function ReadingHomeworkView({ homework }) {
   const navigate = useNavigate();
   const homeworkId = homework.id;
@@ -121,9 +131,20 @@ export default function ReadingHomeworkView({ homework }) {
     homework.passages.forEach(p => {
       try {
         const saved = localStorage.getItem(`dream_hw_${homeworkId}_${p.id}_html`);
-        // Clean out any corrupted empty marks from earlier tests
-        const cleaned = saved ? saved.replace(/<mark[^>]*>\s*<\/mark>/gi, '') : null;
-        initial[p.id] = cleaned || formatPassageToHtml(p.content, p.title);
+        if (saved) {
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = saved;
+          tempDiv.querySelectorAll('#active-selection-mark').forEach(unwrapElement);
+          tempDiv.querySelectorAll('mark').forEach(m => {
+            if (!m.textContent.trim()) unwrapElement(m);
+          });
+          Array.from(tempDiv.children).forEach(child => {
+            if (child.tagName === 'MARK') unwrapElement(child);
+          });
+          initial[p.id] = tempDiv.innerHTML || formatPassageToHtml(p.content, p.title);
+        } else {
+          initial[p.id] = formatPassageToHtml(p.content, p.title);
+        }
       } catch {
         initial[p.id] = formatPassageToHtml(p.content, p.title);
       }
@@ -139,27 +160,40 @@ export default function ReadingHomeworkView({ homework }) {
         const val = localStorage.getItem(key);
         if (val) {
           const cleanP = formatPassageToHtml(p.content, p.title);
-          // Check if marks are corrupted (e.g. mark directly preceding or outside <p>)
-          const isMarkAtRoot = /^\s*<mark/i.test(val) || />\s*<mark[^>]*>.*?<\/mark>\s*<p/is.test(val);
-          const hasEmptyMarks = /<mark[^>]*>\s*<\/mark>/gi.test(val);
-
-          // Check if text content lost words compared to original passage
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = val;
+
+          let hasChanges = false;
+          tempDiv.querySelectorAll('#active-selection-mark').forEach(m => {
+            hasChanges = true;
+            unwrapElement(m);
+          });
+          tempDiv.querySelectorAll('mark').forEach(m => {
+            if (!m.textContent.trim()) {
+              hasChanges = true;
+              unwrapElement(m);
+            }
+          });
+          Array.from(tempDiv.children).forEach(child => {
+            if (child.tagName === 'MARK') {
+              hasChanges = true;
+              unwrapElement(child);
+            }
+          });
+
+          // Check if text content lost words compared to original passage
           const origTextLen = p.content.replace(/\s+/g, ' ').trim().length;
           const savedTextLen = (tempDiv.textContent || '').replace(/\s+/g, ' ').trim().length;
           const isTextLost = Math.abs(origTextLen - savedTextLen) > 30;
 
-          if (isMarkAtRoot || isTextLost) {
+          if (isTextLost) {
             console.warn(`Restoring damaged passage HTML for ${p.id}`);
             localStorage.setItem(key, cleanP);
             setPassageHtmls(prev => ({ ...prev, [p.id]: cleanP }));
-          } else if (hasEmptyMarks) {
-            const cleaned = val.replace(/<mark[^>]*>\s*<\/mark>/gi, '');
-            if (cleaned !== val) {
-              localStorage.setItem(key, cleaned);
-              setPassageHtmls(prev => ({ ...prev, [p.id]: cleaned }));
-            }
+          } else if (hasChanges) {
+            const cleaned = tempDiv.innerHTML;
+            localStorage.setItem(key, cleaned);
+            setPassageHtmls(prev => ({ ...prev, [p.id]: cleaned }));
           }
         }
       } catch (e) {
@@ -243,10 +277,15 @@ export default function ReadingHomeworkView({ homework }) {
     }));
   };
 
-  // Save current passage HTML to state and localStorage
+  // Save current passage HTML to state and localStorage (safely excludes temporary active selection)
   const saveCurrentPassageHtml = useCallback(() => {
     if (passageContainerRef.current) {
-      const currentHtml = passageContainerRef.current.innerHTML;
+      const clone = passageContainerRef.current.cloneNode(true);
+      clone.querySelectorAll('#active-selection-mark').forEach(unwrapElement);
+      clone.querySelectorAll('mark').forEach(m => {
+        if (!m.textContent.trim()) unwrapElement(m);
+      });
+      const currentHtml = clone.innerHTML;
       setPassageHtmls(prev => ({
         ...prev,
         [activePassageId]: currentHtml
@@ -259,8 +298,11 @@ export default function ReadingHomeworkView({ homework }) {
     }
   }, [activePassageId, homeworkId]);
 
-  // Text selection listener on the passage
+  // Text selection listener on the passage: wraps in active selection mark to preserve visual highlight
   const handlePassageMouseUp = (e) => {
+    // Only proceed on primary mouse button
+    if (e.button !== undefined && e.button !== 0) return;
+
     // If clicking popup or note sidebar or button, do nothing
     if (
       e.target.closest('#selection-popup') || 
@@ -274,33 +316,92 @@ export default function ReadingHomeworkView({ homework }) {
 
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed || !selection.toString().trim()) {
+      // If user clicked without text selection, remove any existing active selection mark
+      const prevActive = passageContainerRef.current?.querySelector('#active-selection-mark');
+      if (prevActive) {
+        unwrapElement(prevActive);
+      }
       setSelectionPopup(null);
-      currentRangeRef.current = null;
       return;
     }
 
     // Ensure selection is strictly inside passage container
     if (passageContainerRef.current && passageContainerRef.current.contains(selection.anchorNode)) {
       const text = selection.toString().trim();
-      const range = selection.getRangeAt(0);
-      currentRangeRef.current = range.cloneRange();
-      const rect = range.getBoundingClientRect();
+      if (!text) {
+        setSelectionPopup(null);
+        return;
+      }
 
-      setSelectionPopup({
-        text,
-        x: rect.left + rect.width / 2,
-        y: rect.top - 8
-      });
+      // Remove any prior active selection mark first
+      const prevActive = passageContainerRef.current.querySelector('#active-selection-mark');
+      if (prevActive) {
+        unwrapElement(prevActive);
+      }
+
+      const range = selection.getRangeAt(0);
+
+      // Keep selection within a single paragraph to preserve document structure
+      const startP = (range.startContainer.nodeType === Node.TEXT_NODE 
+        ? range.startContainer.parentElement 
+        : range.startContainer)?.closest('p');
+      const endP = (range.endContainer.nodeType === Node.TEXT_NODE 
+        ? range.endContainer.parentElement 
+        : range.endContainer)?.closest('p');
+
+      if (startP && endP && startP !== endP) {
+        try {
+          range.setEnd(startP, startP.childNodes.length);
+        } catch (err) {
+          // ignore
+        }
+      }
+
+      const activeMark = document.createElement('mark');
+      activeMark.id = 'active-selection-mark';
+      activeMark.className = 'active-selection bg-sky-200/90 text-sky-950 border-b-2 border-sky-600 rounded px-0.5 font-medium inline transition-all';
+
+      let wrapped = false;
+      try {
+        range.surroundContents(activeMark);
+        wrapped = true;
+      } catch (wrapErr) {
+        try {
+          const fragment = range.extractContents();
+          activeMark.appendChild(fragment);
+          range.insertNode(activeMark);
+          wrapped = true;
+        } catch (err2) {
+          console.error('Wrap failed:', err2);
+        }
+      }
+
+      if (wrapped) {
+        // Clear native browser selection since our activeMark maintains visual highlight
+        selection.removeAllRanges();
+
+        const rect = activeMark.getBoundingClientRect();
+        setSelectionPopup({
+          text: activeMark.textContent.trim(),
+          x: rect.left + rect.width / 2,
+          y: rect.top - 8
+        });
+      } else {
+        setSelectionPopup(null);
+      }
     } else {
       setSelectionPopup(null);
-      currentRangeRef.current = null;
     }
   };
 
-  // Close popup if clicking elsewhere
+  // Close popup if clicking elsewhere & unwrap any pending active selection mark
   useEffect(() => {
     const handleDocumentMouseDown = (e) => {
       if (!e.target.closest('#selection-popup') && !e.target.closest('#passage-container')) {
+        const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
+        if (activeMark) {
+          unwrapElement(activeMark);
+        }
         setSelectionPopup(null);
       }
     };
@@ -312,9 +413,10 @@ export default function ReadingHomeworkView({ homework }) {
   useEffect(() => {
     const handleKeyDown = async (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c') {
+        const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
         const selection = window.getSelection();
-        if (selection && !selection.isCollapsed && selection.toString().trim()) {
-          const text = selection.toString().trim();
+        const text = activeMark?.textContent?.trim() || (!selection?.isCollapsed ? selection?.toString().trim() : '');
+        if (text) {
           try {
             await navigator.clipboard.writeText(text);
             setCopyToast(true);
@@ -329,146 +431,85 @@ export default function ReadingHomeworkView({ homework }) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // 1. Apply Color Highlight
+  // 1. Apply Color Highlight (converts the active selection mark directly to yellow highlight)
   const applyHighlight = (color = 'yellow') => {
-    let range = null;
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-      range = selection.getRangeAt(0);
-    } else if (currentRangeRef.current) {
-      range = currentRangeRef.current;
-    }
-
-    if (!range) {
+    const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
+    if (!activeMark) {
       setSelectionPopup(null);
       return;
     }
 
-    try {
-      if (passageContainerRef.current && !passageContainerRef.current.contains(range.commonAncestorContainer)) {
-        if (!passageContainerRef.current.contains(range.startContainer)) {
-          setSelectionPopup(null);
-          return;
-        }
-      }
+    const highlightId = `hl-${Date.now()}`;
+    activeMark.id = highlightId;
+    activeMark.dataset.highlightId = highlightId;
+    activeMark.dataset.annotationType = 'highlight';
+    activeMark.className = 'annotation-mark bg-yellow-200 text-gray-900 rounded px-1 py-0.5 cursor-pointer font-medium hover:bg-yellow-300 transition-colors shadow-2xs inline';
+    activeMark.title = 'Bấm để xóa tô màu';
 
-      const highlightId = `hl-${Date.now()}`;
-      const mark = document.createElement('mark');
-      mark.id = highlightId;
-      mark.dataset.highlightId = highlightId;
-      mark.dataset.annotationType = 'highlight';
-      mark.className = 'annotation-mark bg-yellow-200 text-gray-900 rounded px-1 py-0.5 cursor-pointer font-medium hover:bg-yellow-300 transition-colors shadow-2xs inline';
-      mark.title = 'Bấm để xóa tô màu';
-
-      try {
-        range.surroundContents(mark);
-      } catch (wrapErr) {
-        const fragment = range.cloneContents();
-        mark.appendChild(fragment);
-        range.deleteContents();
-        range.insertNode(mark);
-      }
-
-      window.getSelection()?.removeAllRanges();
-      currentRangeRef.current = null;
-      setSelectionPopup(null);
-      saveCurrentPassageHtml();
-    } catch (err) {
-      console.error('Highlight failed:', err);
-      setSelectionPopup(null);
-    }
+    setSelectionPopup(null);
+    saveCurrentPassageHtml();
   };
 
-  // 2. Apply Note
+  // 2. Apply Note (converts the active selection mark directly to amber note)
   const applyNote = () => {
-    let range = null;
-    const selection = window.getSelection();
-    if (selection && selection.rangeCount > 0 && !selection.isCollapsed) {
-      range = selection.getRangeAt(0);
-    } else if (currentRangeRef.current) {
-      range = currentRangeRef.current;
-    }
-
-    if (!range) {
+    const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
+    if (!activeMark) {
       setSelectionPopup(null);
       return;
     }
 
-    const selectedText = selectionPopup?.text || range.toString().trim();
-    if (!selectedText) {
-      setSelectionPopup(null);
-      return;
-    }
+    const noteId = `note-${Date.now()}`;
+    const selectedText = activeMark.textContent.trim();
 
-    try {
-      if (passageContainerRef.current && !passageContainerRef.current.contains(range.commonAncestorContainer)) {
-        if (!passageContainerRef.current.contains(range.startContainer)) {
-          setSelectionPopup(null);
-          return;
-        }
-      }
+    activeMark.id = noteId;
+    activeMark.dataset.noteId = noteId;
+    activeMark.dataset.annotationId = noteId;
+    activeMark.dataset.annotationType = 'note';
+    activeMark.className = 'annotation-note bg-amber-200 text-amber-950 border-b-2 border-amber-600 rounded px-1 py-0.5 cursor-pointer font-semibold hover:bg-amber-300 transition-colors inline';
+    activeMark.title = 'Bấm để xem/sửa ghi chú';
 
-      const noteId = `note-${Date.now()}`;
-      const mark = document.createElement('mark');
-      mark.id = noteId;
-      mark.dataset.noteId = noteId;
-      mark.dataset.annotationId = noteId;
-      mark.dataset.annotationType = 'note';
-      mark.className = 'annotation-note bg-amber-200 text-amber-950 border-b-2 border-amber-600 rounded px-1 py-0.5 cursor-pointer font-semibold hover:bg-amber-300 transition-colors inline';
-      mark.title = 'Bấm để xem/sửa ghi chú';
+    setSelectionPopup(null);
 
-      try {
-        range.surroundContents(mark);
-      } catch (wrapErr) {
-        const fragment = range.cloneContents();
-        mark.appendChild(fragment);
-        range.deleteContents();
-        range.insertNode(mark);
-      }
+    // Create note record
+    const newNote = {
+      id: noteId,
+      passageId: activePassageId,
+      text: selectedText,
+      content: '',
+      createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+    };
 
-      window.getSelection()?.removeAllRanges();
-      currentRangeRef.current = null;
-      setSelectionPopup(null);
+    setNotes(prev => {
+      const updated = { ...prev, [noteId]: newNote };
+      localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
+      return updated;
+    });
 
-      // Create note record
-      const newNote = {
-        id: noteId,
-        passageId: activePassageId,
-        text: selectedText,
-        content: '',
-        createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-      };
+    setActiveNoteId(noteId);
+    setDraftNoteContent('');
+    setShowNotesDrawer(true);
 
-      setNotes(prev => {
-        const updated = { ...prev, [noteId]: newNote };
-        localStorage.setItem(`dream_hw_${homeworkId}_notes`, JSON.stringify(updated));
-        return updated;
-      });
-
-      setActiveNoteId(noteId);
-      setDraftNoteContent('');
-      setShowNotesDrawer(true);
-
-      saveCurrentPassageHtml();
-    } catch (err) {
-      console.error('Note creation failed:', err);
-      setSelectionPopup(null);
-    }
+    saveCurrentPassageHtml();
   };
 
   // 3. Copy selected text to clipboard
   const handleCopySelectedText = async () => {
-    const textToCopy = selectionPopup?.text || window.getSelection()?.toString().trim();
+    const activeMark = passageContainerRef.current?.querySelector('#active-selection-mark');
+    const textToCopy = activeMark?.textContent?.trim() || selectionPopup?.text;
     if (!textToCopy) return;
 
     try {
       await navigator.clipboard.writeText(textToCopy);
       setCopyToast(true);
       setTimeout(() => setCopyToast(false), 2000);
-      setSelectionPopup(null);
     } catch (err) {
       console.error('Copy failed:', err);
     }
+
+    if (activeMark) {
+      unwrapElement(activeMark);
+    }
+    setSelectionPopup(null);
   };
 
   // Click on existing highlight or note inside the passage container
@@ -844,6 +885,8 @@ export default function ReadingHomeworkView({ homework }) {
                     <button
                       key={p.id}
                       onClick={() => {
+                        const existing = passageContainerRef.current?.querySelector('#active-selection-mark');
+                        if (existing) unwrapElement(existing);
                         setActivePassageId(p.id);
                         setActiveNoteId(null);
                         setSelectionPopup(null);
