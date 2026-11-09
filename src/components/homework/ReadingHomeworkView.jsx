@@ -152,27 +152,6 @@ export default function ReadingHomeworkView({
   // Active Passage Tab (p1 or p2)
   const [activePassageId, setActivePassageId] = useState(homework.passages?.[0]?.id || 'p1');
 
-  // Dedicated Notes Column Visibility (default is closed, only opens when student has notes or creates one)
-  const [isNotesColumnOpen, setIsNotesColumnOpen] = useState(() => {
-    try {
-      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_notes`);
-      if (!saved) return false;
-      const parsedNotes = JSON.parse(saved);
-      const initialPassageId = homework.passages?.[0]?.id || 'p1';
-      return Object.values(parsedNotes).some(n => n.passageId === initialPassageId);
-    } catch {
-      return false;
-    }
-  });
-
-  // If active passage changes and has no notes, default to closed
-  useEffect(() => {
-    const hasNotesForPassage = Object.values(notes).some(n => n.passageId === activePassageId);
-    if (!hasNotesForPassage) {
-      setIsNotesColumnOpen(false);
-    }
-  }, [activePassageId, notes]);
-  
   // Answers state: { [qId]: string }
   const [answers, setAnswers] = useState(() => {
     try {
@@ -207,6 +186,27 @@ export default function ReadingHomeworkView({
       return {};
     }
   });
+
+  // Dedicated Notes Column Visibility (default is closed, only opens when student has notes or creates one)
+  const [isNotesColumnOpen, setIsNotesColumnOpen] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_notes`);
+      if (!saved) return false;
+      const parsedNotes = JSON.parse(saved);
+      const initialPassageId = homework.passages?.[0]?.id || 'p1';
+      return Object.values(parsedNotes).some(n => n.passageId === initialPassageId);
+    } catch {
+      return false;
+    }
+  });
+
+  // If active passage changes and has no notes, default to closed
+  useEffect(() => {
+    const hasNotesForPassage = Object.values(notes).some(n => n.passageId === activePassageId);
+    if (!hasNotesForPassage) {
+      setIsNotesColumnOpen(false);
+    }
+  }, [activePassageId, notes]);
 
   // Active note opened in the right-hand Notes column
   const [activeNoteId, setActiveNoteId] = useState(null);
