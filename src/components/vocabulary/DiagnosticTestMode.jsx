@@ -381,43 +381,43 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
 
   return (
     <div className="w-full max-w-3xl mx-auto text-left">
-      {/* Top Progress Bar */}
-      <div className="bg-white rounded-3xl border border-gray-200/90 shadow-xs p-5 sm:p-6 mb-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-10 h-10 rounded-2xl bg-primary text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-              <ClipboardCheck size={20} />
+      {/* Top Progress Bar - Compact */}
+      <div className="bg-white rounded-2xl border border-gray-200/90 shadow-2xs p-3.5 sm:p-4 mb-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 mb-2.5">
+          <div className="flex items-center gap-2">
+            <span className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <ClipboardCheck size={18} />
             </span>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-wider text-primary">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[11px] font-black uppercase tracking-wider text-primary">
                   Diagnostic Test
                 </span>
-                <span className="px-2 py-0.2 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[10px] font-bold">
-                  Pre-IELTS Standard
+                <span className="px-1.5 py-0.2 bg-blue-50 text-blue-700 border border-blue-200 rounded text-[9px] font-bold">
+                  Pre-IELTS
                 </span>
               </div>
-              <h3 className="text-base font-black text-gray-900 leading-tight">
+              <h3 className="text-sm sm:text-base font-extrabold text-gray-900 leading-tight">
                 {vocabSet?.title || 'Vocabulary Set'}
               </h3>
             </div>
           </div>
 
           {/* Counters */}
-          <div className="flex items-center gap-2">
-            <div className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 rounded-xl text-xs font-bold">
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            <div className="px-2.5 py-1 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg text-xs font-bold">
               Câu: <strong className="text-gray-900">{currentIndex + 1}</strong> / {totalQuestions}
             </div>
 
-            <div className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-xs font-bold flex items-center gap-1">
-              <Check size={14} className="text-emerald-600 stroke-[2.5]" />
+            <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs font-bold flex items-center gap-1">
+              <Check size={13} className="text-emerald-600 stroke-[2.5]" />
               <span>Đúng: <strong>{score}</strong></span>
             </div>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="w-full bg-gray-100 h-2.5 rounded-full overflow-hidden">
+        <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
           <div 
             className="bg-primary h-full rounded-full transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -425,8 +425,8 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
         </div>
       </div>
 
-      {/* Main Question Card */}
-      <div className={`bg-white rounded-3xl border shadow-sm p-6 sm:p-8 transition-all ${
+      {/* Main Question Card - Compact & Steady */}
+      <div className={`bg-white rounded-2xl sm:rounded-3xl border shadow-sm p-4 sm:p-5 transition-all ${
         isAnswered && selectedOption === currentQ?.correctAnswer
           ? 'border-emerald-300 ring-2 ring-emerald-100'
           : isAnswered && selectedOption !== currentQ?.correctAnswer
@@ -434,40 +434,40 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
           : 'border-gray-200/90'
       }`}>
         {/* Meta Bar */}
-        <div className="flex items-center justify-between border-b border-gray-100 pb-3.5 mb-6">
-          <div className="flex items-center gap-2">
-            <span className={`px-2.5 py-1 rounded-xl text-xs font-black tracking-wide border uppercase flex items-center gap-1.5 ${
+        <div className="flex items-center justify-between border-b border-gray-100 pb-2.5 mb-3">
+          <div className="flex items-center gap-1.5">
+            <span className={`px-2 py-0.5 rounded-lg text-[11px] font-black tracking-wide border uppercase flex items-center gap-1 ${
               questionTypeInfo.type === 'Receptive'
                 ? 'bg-blue-50 text-blue-800 border-blue-200'
                 : 'bg-purple-50 text-purple-800 border-purple-200'
             }`}>
-              <BookOpen size={13} />
+              <BookOpen size={12} />
               <span>[{questionTypeInfo.type}]</span>
-              <span className="hidden sm:inline font-semibold normal-case text-[11px] text-gray-500">
+              <span className="hidden sm:inline font-medium normal-case text-[10px] text-gray-500">
                 {questionTypeInfo.type === 'Receptive' ? '• Nhận biết ngữ nghĩa' : '• Vận dụng ngữ cảnh'}
               </span>
             </span>
           </div>
 
-          <span className="text-xs font-bold text-gray-400">
-            Câu {currentIndex + 1} trên {totalQuestions}
+          <span className="text-[11px] font-bold text-gray-400">
+            Câu {currentIndex + 1} / {totalQuestions}
           </span>
         </div>
 
         {/* Question Text */}
-        <div className="mb-6">
-          <h2 className="text-xl sm:text-2xl font-black text-gray-900 leading-snug">
+        <div className="mb-3">
+          <h2 className="text-base sm:text-lg md:text-xl font-extrabold text-gray-900 leading-snug">
             {questionTypeInfo.cleanText}
           </h2>
         </div>
 
-        {/* Options Grid */}
-        <div className="space-y-3 mb-6">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+        {/* Options Grid: 2-Column Responsive Compact Grid */}
+        <div className="space-y-2 mb-3">
+          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
             Chọn 1 trong các đáp án sau (hoặc phím 1-4):
           </p>
 
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {(currentQ?.shuffledOptions || currentQ?.options || []).map((option, idx) => {
               const isSelected = selectedOption === option;
               const isTargetCorrect = option.trim().toLowerCase() === currentQ?.correctAnswer.trim().toLowerCase();
@@ -476,9 +476,9 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
 
               if (isAnswered) {
                 if (isTargetCorrect) {
-                  buttonStyle = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold ring-4 ring-emerald-200 shadow-xs';
+                  buttonStyle = 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold ring-2 ring-emerald-300 shadow-2xs';
                 } else if (isSelected && !isTargetCorrect) {
-                  buttonStyle = 'bg-rose-50 border-rose-500 text-rose-950 font-bold ring-4 ring-rose-200 line-through';
+                  buttonStyle = 'bg-rose-50 border-rose-500 text-rose-950 font-bold ring-2 ring-rose-200 line-through';
                 } else {
                   buttonStyle = 'bg-gray-50/40 border-gray-100 text-gray-400 opacity-60';
                 }
@@ -489,10 +489,10 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
                   key={idx}
                   disabled={isAnswered}
                   onClick={() => handleSelectOption(option)}
-                  className={`w-full p-4 rounded-2xl border text-left font-medium text-sm sm:text-base transition-all flex items-start justify-between gap-3.5 group active:scale-[0.99] cursor-pointer ${buttonStyle}`}
+                  className={`w-full min-h-[50px] sm:min-h-[54px] p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border text-left font-medium text-xs sm:text-sm transition-all flex items-start justify-between gap-2.5 group active:scale-[0.99] cursor-pointer ${buttonStyle}`}
                 >
-                  <div className="flex items-start gap-3.5 flex-1 min-w-0">
-                    <span className={`w-8 h-8 rounded-xl border text-xs font-black flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
+                  <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                    <span className={`w-7 h-7 rounded-lg border text-xs font-black flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 ${
                       isAnswered && isTargetCorrect
                         ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
                         : isAnswered && isSelected && !isTargetCorrect
@@ -501,18 +501,18 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
                     }`}>
                       {String.fromCharCode(65 + idx)}
                     </span>
-                    <span className="font-semibold leading-relaxed break-words flex-1 min-w-0 pt-0.5">
+                    <span className="font-semibold leading-snug break-words flex-1 min-w-0 pt-0.5">
                       {option}
                     </span>
                   </div>
 
-                  {/* Reserved fixed icon slot: 28px width ALWAYS preserved before & after clicking */}
-                  <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center mt-0.5">
+                  {/* Reserved fixed icon slot: 24px width ALWAYS preserved before & after clicking */}
+                  <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center mt-0.5">
                     {isAnswered && isTargetCorrect && (
-                      <CheckCircle2 size={22} className="text-emerald-600 animate-pop-in" />
+                      <CheckCircle2 size={19} className="text-emerald-600 animate-pop-in" />
                     )}
                     {isAnswered && isSelected && !isTargetCorrect && (
-                      <XCircle size={22} className="text-rose-500 animate-pop-in" />
+                      <XCircle size={19} className="text-rose-500 animate-pop-in" />
                     )}
                   </div>
                 </button>
@@ -521,62 +521,83 @@ export default function DiagnosticTestMode({ vocabSet, terms, onUpdateMastery, o
           </div>
         </div>
 
-        {/* Rationale / Explanation Box (Shows immediately when answered) */}
-        {isAnswered && (
-          <div className="mt-6 pt-5 border-t border-gray-100 animate-pop-in">
-            <div className={`p-4 sm:p-5 rounded-2xl border mb-5 ${
-              selectedOption === currentQ?.correctAnswer
-                ? 'bg-emerald-50/70 border-emerald-200'
-                : 'bg-rose-50/60 border-rose-200'
-            }`}>
-              {/* If wrong, show clear correct answer banner */}
-              {selectedOption !== currentQ?.correctAnswer && (
-                <div className="mb-3.5 pb-3 border-b border-rose-200/80">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-rose-800 uppercase tracking-wider mb-1.5">
-                    <XCircle size={15} className="text-rose-600 flex-shrink-0" />
-                    <span>Lựa chọn của bạn chưa chính xác</span>
-                  </div>
-                  <div className="text-xs sm:text-sm text-gray-800 bg-white p-3 rounded-xl border border-rose-200/70">
-                    <span className="text-gray-500 font-medium block text-xs mb-0.5">Đáp án chuẩn xác là:</span>
-                    <strong className="text-emerald-800 font-black text-sm sm:text-base leading-snug break-words block">
-                      {currentQ?.correctAnswer}
-                    </strong>
-                  </div>
-                </div>
-              )}
-
-              {/* If correct, show success callout */}
-              {selectedOption === currentQ?.correctAnswer && (
-                <div className="mb-3 pb-2.5 border-b border-emerald-200/60 flex items-center gap-1.5 text-xs font-bold text-emerald-800">
-                  <CheckCircle2 size={16} className="text-emerald-600 flex-shrink-0" />
-                  <span>Chính xác! Bạn đã chọn đáp án chuẩn xác.</span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-2 mb-1.5">
-                <Sparkles size={16} className="text-primary flex-shrink-0" />
-                <h4 className="text-xs font-extrabold uppercase tracking-wider text-primary">
-                  Giải thích chuyên sâu (Explanation & Rationale):
-                </h4>
+        {/* Permanent Bottom Action Slot: Zero Height Jump */}
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          {!isAnswered ? (
+            <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-gray-100 bg-gray-50/70 flex items-center justify-between gap-3 text-xs text-gray-500">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-white border border-gray-200 text-gray-700 flex items-center justify-center text-xs flex-shrink-0 font-bold shadow-2xs">
+                  ⌨️
+                </span>
+                <span className="font-medium text-gray-600">
+                  Bấm phím <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded text-[11px] font-bold text-gray-700">1</kbd> - <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded text-[11px] font-bold text-gray-700">4</kbd> hoặc click chọn đáp án
+                </span>
               </div>
-              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed break-words">
-                {currentQ?.rationale}
-              </p>
+              <span className="text-[11px] text-gray-400 hidden sm:inline font-medium">
+                Đang chờ chọn...
+              </span>
             </div>
+          ) : (
+            <div className={`p-3 sm:p-3.5 rounded-xl sm:rounded-2xl border shadow-xs transition-all animate-pop-in ${
+              selectedOption === currentQ?.correctAnswer
+                ? 'bg-emerald-50/90 border-emerald-300'
+                : 'bg-rose-50/90 border-rose-300'
+            }`}>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                {/* Left: Feedback content */}
+                <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    selectedOption === currentQ?.correctAnswer
+                      ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-rose-100 text-rose-700'
+                  }`}>
+                    {selectedOption === currentQ?.correctAnswer ? (
+                      <Check size={16} className="stroke-[2.5]" />
+                    ) : (
+                      <XCircle size={16} />
+                    )}
+                  </span>
 
-            {/* Next Question Action Button */}
-            <div className="flex items-center justify-end">
-              <button
-                autoFocus
-                onClick={handleNext}
-                className="w-full sm:w-auto px-7 py-3 bg-primary hover:bg-primary-container text-white font-extrabold text-sm rounded-xl transition-all shadow-md flex items-center justify-center gap-2 active:scale-95 cursor-pointer"
-              >
-                <span>{currentIndex < totalQuestions - 1 ? 'Câu tiếp theo (Enter)' : 'Xem kết quả bài Test'}</span>
-                <ArrowRight size={17} />
-              </button>
+                  <div className="flex-1 min-w-0 text-xs">
+                    {selectedOption === currentQ?.correctAnswer ? (
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-extrabold text-sm text-emerald-950">Chính xác!</span>
+                        <span className="px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded font-bold text-[10px]">
+                          +1 điểm
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-rose-950 flex flex-wrap items-center gap-1.5 mb-0.5">
+                        <span className="font-bold text-rose-900">Chưa chính xác.</span>
+                        <span className="text-gray-600 font-medium">Đáp án chuẩn:</span>
+                        <strong className="text-emerald-900 font-black bg-white px-2 py-0.5 rounded border border-rose-200/80 shadow-2xs">
+                          {currentQ?.correctAnswer}
+                        </strong>
+                      </div>
+                    )}
+
+                    {currentQ?.rationale && (
+                      <p className="mt-1 text-xs text-gray-700 leading-relaxed break-words">
+                        <strong className="text-gray-900 font-semibold">Giải thích: </strong>
+                        {currentQ.rationale}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right / Inline Action Button (NO autoFocus!) */}
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="w-full md:w-auto px-5 py-2.5 bg-primary hover:bg-primary-container text-white font-extrabold text-xs sm:text-sm rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 flex-shrink-0 active:scale-95 cursor-pointer self-stretch md:self-center"
+                >
+                  <span>{currentIndex < totalQuestions - 1 ? 'Câu tiếp theo (Enter)' : 'Xem kết quả bài Test'}</span>
+                  <ArrowRight size={15} />
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

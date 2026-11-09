@@ -834,7 +834,7 @@ export default function LearnMode({
                 </div>
 
                 <button
-                  autoFocus
+                  type="button"
                   onClick={handleNextQuestion}
                   className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm flex-shrink-0 cursor-pointer active:scale-95"
                 >
@@ -890,7 +890,7 @@ export default function LearnMode({
                   )}
 
                   <button
-                    autoFocus
+                    type="button"
                     onClick={handleNextQuestion}
                     className="w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-container text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm ml-auto cursor-pointer flex-shrink-0 active:scale-95"
                   >
