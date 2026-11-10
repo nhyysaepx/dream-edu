@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   Search, 
   Clock, 
@@ -15,7 +15,17 @@ import {
 import { HOMEWORK_LEVELS, HOMEWORK_LIST } from '../data/homeworkData';
 
 export default function Homework() {
-  const [activeLevel, setActiveLevel] = useState('pre-ielts');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeLevel, setActiveLevel] = useState(() => {
+    const requested = searchParams.get('level');
+    if (requested === 'intermediate' || requested === 'ielts-intermediate' || requested === 'ielts-foundation') {
+      return 'ielts-foundation';
+    }
+    if (requested && HOMEWORK_LEVELS.some(l => l.id === requested)) {
+      return requested;
+    }
+    return 'ielts-foundation'; // Default to IELTS Intermediate / Foundation so new exercises are immediately visible
+  });
   const [activeSkill, setActiveSkill] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [submissionHistory, setSubmissionHistory] = useState({});

@@ -63,8 +63,14 @@ function countWords(str) {
 
 // Format raw text content into semantic HTML paragraphs
 function formatPassageToHtml(content, title) {
-  const paragraphs = content.split('\n\n').filter(p => p.trim() && p.trim() !== title.trim());
-  return paragraphs.map(p => `<p class="leading-relaxed mb-4">${p.trim()}</p>`).join('');
+  const paragraphs = content.split('\n\n').filter(p => p.trim() && p.trim() !== (title || '').trim());
+  return paragraphs.map(p => {
+    const trimmed = p.trim();
+    if (trimmed.length < 80 && !trimmed.endsWith('.') && (trimmed.startsWith('Passage ') || trimmed.startsWith('New value') || trimmed.startsWith('Young people are') || trimmed.startsWith('Why youth travel') || trimmed.startsWith('Summary '))) {
+      return `<h3 class="font-bold text-gray-900 text-base sm:text-lg mt-5 mb-2 pb-1 border-b border-gray-100">${trimmed}</h3>`;
+    }
+    return `<p class="leading-relaxed mb-4">${trimmed.replace(/\n/g, '<br/>')}</p>`;
+  }).join('');
 }
 
 // Safely unwrap a DOM element, preserving its text and child nodes
@@ -1500,21 +1506,45 @@ export default function ReadingHomeworkView({
                   return (
                     <React.Fragment key={q.id}>
                       {/* Section Header Divider if question starts a new section */}
-                      {q.isSectionStart && filterMode === 'all' && q.number > 1 && (
+                      {q.isSectionStart && filterMode === 'all' && (q.number > 1 || q.sectionTitle || q.sectionWordBank) && (
                         <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200 text-xs sm:text-sm text-amber-950 mt-6 mb-2">
                           <div className="flex items-start gap-2.5">
                             <Info size={18} className="text-amber-700 flex-shrink-0 mt-0.5" />
-                            <div>
+                            <div className="w-full">
                               <h4 className="font-extrabold text-amber-900 mb-1">
                                 {q.sectionTitle || 'PHẦN TIẾP THEO:'}
                               </h4>
-                              <p className="font-semibold text-gray-800 leading-snug">
-                                {q.sectionInstruction}
-                              </p>
+                              {q.sectionInstruction && (
+                                <p className="font-semibold text-gray-800 leading-snug">
+                                  {q.sectionInstruction}
+                                </p>
+                              )}
                               {q.wordLimit && (
                                 <p className="text-[11px] text-gray-600 mt-1">
                                   * Quy tắc giới hạn từ: <span className="underline font-black text-rose-700">{q.wordLimit}</span>. Lấy từ ngữ chính xác trực tiếp từ bài đọc.
                                 </p>
+                              )}
+
+                              {/* Word Bank if provided for this section */}
+                              {q.sectionWordBank && q.sectionWordBank.length > 0 && (
+                                <div className="mt-3 p-3 bg-white rounded-xl border border-amber-200 text-xs">
+                                  <p className="font-black text-amber-900 mb-2 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                                    <Sparkles size={13} className="text-amber-600" />
+                                    <span>Khung từ vựng lựa chọn (Word Box):</span>
+                                  </p>
+                                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                                    {q.sectionWordBank.map((wb) => (
+                                      <div key={wb.letter} className="flex items-center gap-1.5 p-1.5 bg-gray-50 rounded-lg border border-gray-200">
+                                        <span className="w-5 h-5 rounded-md bg-blue-100 text-primary font-black flex items-center justify-center text-[11px] flex-shrink-0">
+                                          {wb.letter}
+                                        </span>
+                                        <span className="font-medium text-gray-800 truncate" title={wb.word}>
+                                          {wb.word}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -1563,6 +1593,49 @@ export default function ReadingHomeworkView({
                         <p className="font-bold text-gray-900 text-sm sm:text-base leading-snug mb-3">
                           {q.question}
                         </p>
+
+                        {/* Multiple Choice / Pick from List Options if provided */}
+                        {q.options && q.options.length > 0 && (
+                          <div className="grid grid-cols-1 gap-2 my-3">
+                            {q.options.map((opt) => {
+                              const optLetter = opt.letter || opt.key || (typeof opt === 'string' ? opt.charAt(0) : '');
+                              const optText = opt.text || (typeof opt === 'string' ? opt : '');
+                              const cleanUser = (userVal || '').trim().toUpperCase();
+                              const isSelected = cleanUser === optLetter.toUpperCase() || cleanUser === optText.toUpperCase();
+                              
+                              let optStyle = 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700';
+                              if (isSelected && !isSubmitted) {
+                                optStyle = 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary/30';
+                              } else if (isSubmitted) {
+                                const isThisOptCorrect = (q.acceptedAnswers || []).some(a => 
+                                  a.toUpperCase() === optLetter.toUpperCase() || a.toLowerCase() === optText.toLowerCase()
+                                );
+                                if (isThisOptCorrect) {
+                                  optStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold';
+                                } else if (isSelected && !evalItem?.isCorrect) {
+                                  optStyle = 'border-rose-400 bg-rose-50 text-rose-950 line-through';
+                                }
+                              }
+
+                              return (
+                                <button
+                                  key={optLetter}
+                                  type="button"
+                                  disabled={isSubmitted}
+                                  onClick={() => handleInputChange(q.id, optLetter)}
+                                  className={`text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition-all flex items-start gap-2.5 cursor-pointer ${optStyle}`}
+                                >
+                                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0 ${
+                                    isSelected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'
+                                  }`}>
+                                    {optLetter}
+                                  </span>
+                                  <span className="flex-1 leading-snug">{optText}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
 
                         {/* Answer Input Box (Box format like IELTS) */}
                         <div className="space-y-1.5">
