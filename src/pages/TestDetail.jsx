@@ -3,10 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   Clock, 
-  Users, 
   MessageSquare, 
   Sparkles, 
-  Info, 
   FileText,
   Volume2,
   Headphones,
@@ -61,37 +59,6 @@ export default function TestDetail() {
     const allIds = exam.parts ? exam.parts.map(p => p.id) : [1, 2, 3, 4];
     setSelectedParts(allIds);
     setTimeLimit(exam.skill === 'Reading' ? '60' : '40');
-  };
-
-  // Draft state (synced with localStorage)
-  const draftStorageKey = `ielts_draft_${exam.id}`;
-  const [draft, setDraft] = useState(() => {
-    const saved = localStorage.getItem(draftStorageKey);
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) {}
-    }
-    // Default initial mock draft for vol1-lis-1 (as seen in screenshots)
-    if (exam.id === 'vol1-lis-1') {
-      return {
-        exists: true,
-        title: exam.title,
-        timestamp: '16/09/2026 09:07:22',
-        answeredCount: 0,
-        timeSpent: '0:01:45',
-        version: 'IELTS Test v1',
-        mode: 'Full test'
-      };
-    }
-    return { exists: false };
-  });
-
-  const handleClearDraft = () => {
-    localStorage.removeItem(draftStorageKey);
-    setDraft({ exists: false });
-  };
-
-  const handleResumeDraft = () => {
-    navigate(`/tests/${exam.id}/exam?resume=true`);
   };
 
   const handleStartPractice = () => {
@@ -174,79 +141,12 @@ export default function TestDetail() {
                   Thời gian làm bài: <strong>{exam.duration} phút</strong> | {exam.partsCount} phần thi | {exam.questionsCount} câu hỏi | {exam.commentsCount || 150} bình luận
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Users size={16} className="text-gray-400" />
-                <span>
-                  <strong>{(exam.participants || 250000).toLocaleString()}</strong> người đã luyện tập đề thi này
-                </span>
-              </div>
             </div>
 
             {/* Red Note */}
             <p className="text-sm italic text-red-600 font-medium">
               Chú ý: để được quy đổi sang scaled score (ví dụ trên thang điểm 990 cho TOEIC hoặc 9.0 cho IELTS), vui lòng chọn chế độ làm FULL TEST.
             </p>
-
-            {/* Amber / Yellow Banner: Bạn có bài làm chưa nộp dưới đây */}
-            {draft?.exists && (
-              <div className="bg-[#fff9eb] border border-[#f5dfa8] rounded-xl p-5 text-gray-900 shadow-xs">
-                <div className="flex items-center gap-2 font-medium text-amber-900 mb-3 text-sm">
-                  <Info size={18} className="text-amber-600 shrink-0" />
-                  <span>Bạn có bài làm chưa nộp dưới đây</span>
-                </div>
-
-                <div className="overflow-x-auto bg-white rounded-lg border border-[#f5dfa8]/70">
-                  <table className="w-full text-left text-xs md:text-sm">
-                    <thead className="bg-[#fffdf8] border-b border-gray-200 text-gray-600 font-semibold">
-                      <tr>
-                        <th className="py-2.5 px-4">Lưu lần cuối</th>
-                        <th className="py-2.5 px-4">Số câu đã trả lời</th>
-                        <th className="py-2.5 px-4">Thời gian đã làm</th>
-                        <th className="py-2.5 px-4 text-right">Thao tác</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      <tr>
-                        <td className="py-3 px-4">
-                          <div className="font-semibold text-gray-900">{draft.title || exam.title}</div>
-                          <div className="text-xs text-gray-500 mt-0.5">{draft.timestamp}</div>
-                          <div className="flex gap-1.5 mt-1">
-                            <span className="bg-gray-100 text-gray-600 text-[10px] px-1.5 py-0.5 rounded font-medium">
-                              {draft.version || 'IELTS Test v1'}
-                            </span>
-                            <span className="bg-green-100 text-green-700 text-[10px] px-1.5 py-0.5 rounded font-medium">
-                              {draft.mode || 'Full test'}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="py-3 px-4 font-medium text-gray-700">
-                          {draft.answeredCount || 0}/40
-                        </td>
-                        <td className="py-3 px-4 text-gray-700">
-                          {draft.timeSpent || '0:01:45'}
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={handleResumeDraft}
-                              className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-1.5 rounded text-xs font-semibold transition-all shadow-xs active:scale-95 cursor-pointer"
-                            >
-                              Tiếp tục
-                            </button>
-                            <button
-                              onClick={handleClearDraft}
-                              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded text-xs font-medium transition-all cursor-pointer"
-                            >
-                              Xóa
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
 
             {/* Mode Tabs: Luyện tập | Làm full test | Thảo luận */}
             <div className="border-b border-gray-200 flex gap-8">
