@@ -34,6 +34,144 @@ export const VOL1_LIS_1 = {
       maxWords: 1,
       audioUrl: '/audio/vol1_test1_part1.mp3',
       context: 'Customer inquiries about activities, times, and rules for the Beechen Festival.',
+      transcript: "**Speaker 1** \\[00:00:01\\] Listen carefully and answer questions. 1 to 6. Beach and festival offers.\n\n**Speaker 2** \\[00:02:40\\] Oh, hello. I want to check some details about the festival. I know tickets are running out fast and I haven't got access to the Internet at present. My computer's down.\n\n**Speaker 1** \\[00:02:50\\] Okay, well, the first activity is on June the 19th at 7 p.m., and it's a concert with local musicians performing.\n\n**Speaker 2** \\[00:02:59\\] Hmm. Lovely. Is it in the theater, like, last year?\n\n**Speaker 1** \\[00:03:03\\] Yes, that's right. And for the next activity on the 20th, the times changed.\n\n**Speaker 2** \\[00:03:09\\] Is that the tour?\n\n**Speaker 1** \\[00:03:10\\] Yes. Now, it does say on the tickets that it's a 340 start, but that's an error. There wasn't time to update them, unfortunately. So it should say 430 instead. The correct time is on the website, though.\n\n**Speaker 2** \\[00:03:25\\] Oh, right. Because one of my friends wants to go on there to see Beach with an expert and find out about the town and its history. Does she need to get a ticket in advance?\n\n**Speaker 1** \\[00:03:35\\] No. Just turn up at the station where the guide will be waiting. They'll start from there. And I think the plan is to stop for a break in the park. And there's no charge for the tour. And the tour will finish with a visit to the 16th century mill where they used to make flour. It's recently been restored.\n\n**Speaker 2** \\[00:03:53\\] Fine.\n\n**Speaker 1** \\[00:03:54\\] And then on the 21st, there's an all day event for children.\n\n**Speaker 2** \\[00:03:57\\] Oh, that could be good for my visitors. They're bringing theirs, you see.\n\n**Speaker 1** \\[00:04:02\\] Right. Well, the plan was to have a painting competition for the kids, but it's now going to be cooking instead. And there'll be prizes for all the different age groups.\n\n**Speaker 2** \\[00:04:12\\] Oh, great.\n\n**Speaker 1** \\[00:04:13\\] And it's in beach and community center.\n\n**Speaker 2** \\[00:04:15\\] Oh, yes, I know where that is.\n\n**Speaker 1** \\[00:04:17\\] They don't need to bring any ingredients, but they'll need to have a plate to put whatever they've made on so they can display it and then take it home.\n\n**Speaker 2** \\[00:04:25\\] Sounds good. And are they going ahead with the fireworks in the evening? Or is that canceled? There was an article in the paper after last year's display which suggested it might not be happening again.\n\n**Speaker 1** \\[00:04:37\\] That's right. No, that's still on. It's getting more popular each year and having it in the town square was starting to be a bit difficult because of the numbers, which is why it's next to the river this time. It'll be easy for large numbers of people to get to.\n\n**Speaker 2** \\[00:04:53\\] Yes, of course. I'm sure there's lots to look forward to.\n\n**Speaker 1** \\[00:05:01\\] Before you hear the rest of the conversation, you have some time to look at questions 7 to 10 on page two. Now listen and answer a question. 7 to 10.\n\n**Speaker 2** \\[00:05:35\\] Okay. Now, I just want to check how it's going to impact on me as a local resident. I mean, some people last year thought it was too noisy at night.\n\n**Speaker 1** \\[00:05:45\\] Yes, I know. And that's why this year, evening events won't go on beyond 1115. Now, I know previously some activities lasted until 1145. And the new time applies now to all the events every evening.\n\n**Speaker 2** \\[00:06:00\\] Okay.\n\n**Speaker 1** \\[00:06:01\\] And another change perhaps you know about this already is that because of high visitor numbers, parking in the town center isn't going to be allowed. It'll be outside town.\n\n**Speaker 2** \\[00:06:12\\] Oh, yes. To keep the streets clear, I suppose, for all the visitors. I did know, actually. And it's not really going to be a problem for me, right? I mean, I could just walk into town from my home.\n\n**Speaker 1** \\[00:06:24\\] Okay. Well, anyway, if you want to check any more details about the festival, once you're back online, you can look at w w w dot events dot com, and you'll be able to comment on what activities you enjoyed and what would really help the organizers would be if people could use the Web site to give feedback about what they enjoyed and that kind of thing. This will help them plan for next year.\n\n**Speaker 2** \\[00:06:51\\] That's probably a good idea. And with pricing, I know local residents.",
+      layout: [
+        {
+                "type": "table",
+                "title": "Beechen Festival",
+                "instruction": "Questions 1\u20136: Complete the table below. Write ONE WORD AND/OR A NUMBER for each answer.",
+                "wordLimit": "ONE WORD AND/OR A NUMBER",
+                "headers": [
+                        "Date",
+                        "Time",
+                        "Activity",
+                        "Place",
+                        "Comments"
+                ],
+                "rows": [
+                        {
+                                "id": "row-1",
+                                "cells": [
+                                        {
+                                                "text": "June 19th"
+                                        },
+                                        {
+                                                "text": "7 p.m."
+                                        },
+                                        {
+                                                "text": "Example: Concert"
+                                        },
+                                        {
+                                                "prefix": "the",
+                                                "questionId": 1,
+                                                "suffix": ""
+                                        },
+                                        {
+                                                "text": ""
+                                        }
+                                ]
+                        },
+                        {
+                                "id": "row-2",
+                                "cells": [
+                                        {
+                                                "text": "June 20th"
+                                        },
+                                        {
+                                                "prefix": "",
+                                                "questionId": 2,
+                                                "suffix": "p.m."
+                                        },
+                                        {
+                                                "text": "tour"
+                                        },
+                                        {
+                                                "prefix": "meet at the",
+                                                "questionId": 3,
+                                                "suffix": ""
+                                        },
+                                        {
+                                                "text": "includes a visit to an old flour mill"
+                                        }
+                                ]
+                        },
+                        {
+                                "id": "row-3",
+                                "cells": [
+                                        {
+                                                "text": "June 21st"
+                                        },
+                                        {
+                                                "text": "all day"
+                                        },
+                                        {
+                                                "prefix": "children's",
+                                                "questionId": 4,
+                                                "suffix": "competition"
+                                        },
+                                        {
+                                                "text": "Beechen Community Centre"
+                                        },
+                                        {
+                                                "prefix": "bring a",
+                                                "questionId": 5,
+                                                "suffix": ""
+                                        }
+                                ]
+                        },
+                        {
+                                "id": "row-4",
+                                "cells": [
+                                        {
+                                                "text": "June 21st"
+                                        },
+                                        {
+                                                "text": "evening"
+                                        },
+                                        {
+                                                "text": "fireworks"
+                                        },
+                                        {
+                                                "prefix": "by the",
+                                                "questionId": 6,
+                                                "suffix": ""
+                                        },
+                                        {
+                                                "text": ""
+                                        }
+                                ]
+                        }
+                ]
+        },
+        {
+                "type": "notes",
+                "title": "Festival Notes",
+                "instruction": "Questions 7\u201310: Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.",
+                "wordLimit": "ONE WORD AND/OR A NUMBER",
+                "items": [
+                        {
+                                "prefix": "This year, activities end by",
+                                "questionId": 7,
+                                "suffix": "p.m."
+                        },
+                        {
+                                "prefix": "There won\u2019t be any",
+                                "questionId": 8,
+                                "suffix": "in the town centre this year."
+                        },
+                        {
+                                "prefix": "The festival\u2019s web address is www.",
+                                "questionId": 9,
+                                "suffix": ".com."
+                        },
+                        {
+                                "prefix": "Festival organisers would like to receive",
+                                "questionId": 10,
+                                "suffix": "online."
+                        }
+                ]
+        }
+],
       questions: [
         { 
           id: 1, 
@@ -191,6 +329,60 @@ export const VOL1_LIS_1 = {
       maxWords: 3,
       audioUrl: '/audio/vol1_test1_part2.mp3',
       context: 'Gary Payne introduces walking tour itinerary and equipment.',
+      transcript: "**Speaker 1** \\[00:06:59\\] That is the end of Section one. You now have half a minute to check your answers. Now turn to section two on page three. Section two, you'll hear a tour guide talking to some tourists who are going on a walking holiday in Spain. First you have some time to look at questions 11 to 14 on page three. Now listen carefully and answer questions. 11 to 14.\n\n**Speaker 3** \\[00:08:31\\] Well, good evening, everyone. My name's Gary Payne, and I'll be the leader for your walking holiday in Spain. And the purpose of this evening's meeting is for us all to get to know each other in advance and for you to ask any questions you may have about the holiday. So I'll begin by telling you a little bit about what to expect now. The ferry crossing from England to Santander in Spain takes about 24 hours. We'll be sailing on the Prince Regent, which was first launched in the 1980s, as well as the crew of 160. It can accommodate about 2000 people and 600 cars and its sales at an average speed of 37 kilometers an hour. There'll be an on board map on one of the decks which charts the ship's progress during the voyage. Although our mini bus will be on one of the vehicle decks in the boat, access to these decks is prohibited during the crossing. So when you leave our bus, you'll have to take everything that you're likely to need with you, like toiletries or books and magazines. In fact, it's probably a good idea to put these things in a separate bag beforehand. You shouldn't need snacks on board as meals are provided, and they're quite substantial. And if you don't feel well or get a headache, you can get tablets from me. I always carry an adequate supply. Now, once we're in Spain, we'll be based at a hostel in a small village called La Vega de la Barna, about 120 kilometers from Santander. It's a very picturesque area that's retained a lot of its traditional industry and culture. The hostel accommodations fairly simple. There are bunk beds and each room holds 4 to 8 people. But the bathrooms and showers are of a high standard. The hostel residents have the use of tennis courts nearby. If you feel like a game, we'll be given breakfast and an evening meal at the hostel. In general, the hostel is relaxed, but there are a few rules which the owners enforce strictly. Smoking is not allowed anywhere inside the building and food and drink is banned in the dormitories. Any chairs or tables which you take outside into the gardens must be returned every evening to their original place. And finally, the doors are locked after midnight, out of consideration for other guests who are trying to sleep.\n\n**Speaker 1** \\[00:10:52\\] Before you hear the rest of the talk, you have some time to look at questions 15 to 20 on page four. Now listen and answer questions. 15 to 20.\n\n**Speaker 3** \\[00:11:32\\] Now that's enough about travel and accommodation. But before I move on, I should say something briefly about equipment. There's a list in the guide book you've been sent, but I'll just elaborate on one or two items. First boots. Make sure that the ones you bring have thick soles. That's the most important thing. Don't bring trainers for walking in. Apart from anything else, they're dangerous because they slip. It's important to bring spare socks then about waterproofs. I'd strongly advise you not to come with anything heavy, you know, with a thick lining. The ideal things are those lightweight ones because they fold up small, and although they do keep the wind out, they don't make you too hot. Right next sun cream. This is absolutely essential. And regarding the strength. Make sure you get what's known as Total BLOCK. Even factor 25 isn't good enough for those latitudes in July. Then let's see. Bring a folder to keep your map and other papers in. You know, one of those plastic ones. It's not very likely to rain, but if it does, you'll find it soaks everything. So that's the practicalities over. Now, let me tell you a little bit about the area in Spain where we'll be walking the Picos de Europa. It's a very popular area for tourists because of its spectacular peaks, although they're only 25 kilometers from the sea. The highest peaks are more than 2600 meters high and have year round snow caps on the highest peaks. You've got alpine plants that are only free of their snow cover for a few months a year. Then you've got Meadows that are full of wildflowers at certain times of the year. Then the northern slopes are covered by woodlands, giving homes to rare species such as wolves and bears. And because of the variety of plant life which survives in that part of Europe due to the traditional way of life. There you.",
+      layout: [
+        {
+                "type": "questions",
+                "title": "Walking Holiday",
+                "instruction": "Questions 11\u201314: Choose the correct letter, A, B or C.",
+                "questionIds": [
+                        11,
+                        12,
+                        13,
+                        14
+                ]
+        },
+        {
+                "type": "notes",
+                "title": "Clothes and equipment",
+                "instruction": "Questions 15\u201317: Complete the notes below. Write NO MORE THAN THREE WORDS for each answer.",
+                "wordLimit": "NO MORE THAN THREE WORDS",
+                "subheading": "Bring:",
+                "items": [
+                        {
+                                "text": "boots with thick soles"
+                        },
+                        {
+                                "prefix": "spare",
+                                "questionId": 15,
+                                "suffix": ""
+                        },
+                        {
+                                "text": "light waterproofs"
+                        },
+                        {
+                                "prefix": "suncream: strength",
+                                "questionId": 16,
+                                "suffix": ""
+                        },
+                        {
+                                "prefix": "a",
+                                "questionId": 17,
+                                "suffix": "folder for map, etc."
+                        }
+                ]
+        },
+        {
+                "type": "questions",
+                "title": "Features of Spain Area",
+                "instruction": "Questions 18\u201320: Choose THREE letters, A\u2013G. Which THREE of the following features of the area in Spain does the speaker talk about?",
+                "questionIds": [
+                        18,
+                        19,
+                        20
+                ]
+        }
+],
       questions: [
         { 
           id: 11, 
@@ -343,6 +535,65 @@ export const VOL1_LIS_1 = {
       instruction: 'Questions 21–24: Choose the correct letter, A, B or C. Questions 25–30: How did the categories of student markers compare with the rest of the group? Choose A, B, or C.',
       audioUrl: '/audio/vol1_test1_part3.mp3',
       context: 'Steve and Sally discuss university research on student peer assessment.',
+      transcript: "**Speaker 1** \\[00:13:35\\] That is the end of section two. You now have half a minute to check your answers. Now turn to section three on page five. Section three. You will hear two students called Sally and Steve discussing Sally's project on peer assessment, a system where students mark each other's work. First you have some time to look at questions 21 to 24 on page five. Now listen carefully and answer questions. 21 to 24.\n\n**Speaker 1** I can't believe you're still in the library, Sally. You've been here all day. Are you still working on your peer assessment project?\n\n**Speaker 4** \\[00:15:25\\] Hi, Steve. Yes, I'm still here, and I'm nowhere near finished. I'm still processing the reading I've done on peer assessment. I'm interested to see if students mocking each other's work is beneficial. I know a lot of the other students are pretty skeptical about its value as a way of assessing their performance. They think the tutors are in favor of it because they don't have to spend so long marking beside disagree. I think we can learn a great deal from it. Yes, I can see one advantage being that it saves time spent going over things in class.\n\n**Speaker 4** \\[00:16:00\\] Well, initially it doesn't seem to work that way, and it can be quite a time consuming business because sometimes things have to be marked again if the teacher thinks the student's assessments aren't reliable. The real game is the fact that the students learn to stand back and assess their own assignments objectively because they're much more familiar with the marking system.\n\n**Speaker 1** \\[00:16:22\\] Yes, I can see that. It gives them an opportunity to reflect on their own performance.\n\n**Speaker 1** \\[00:16:28\\] And how do they feel about having another student mark their work?\n\n**Speaker 1** \\[00:16:32\\] Is that good for rapport?\n\n**Speaker 4** \\[00:16:34\\] In some cases, yes. In some cases, no. I think more research is needed to answer that question.\n\n**Speaker 1** \\[00:16:41\\] What happens if a tutor notices that the marks for a particular assignment seem wrong?\n\n**Speaker 1** \\[00:16:47\\] Should the students mark them again?\n\n**Speaker 4** \\[00:16:49\\] That might not make any difference. So in that case, the tutor would have to remark all those assignments and then go through the marking criteria really carefully with the students on the next assignment with some sample answers. Right. I've been reading about a research project on peer assessment. The researchers invited a group of students from two different universities to attend a one day conference. They also invited some university lecturers to attend. Each student gave a short presentation on a project of their choice. Each of these presentations was assessed individually by all the participants, both students and lecturers, to support their marking. They used a set of assessment guidelines that had been prepared the day before by a random selection of students.\n\n**Speaker 1** \\[00:17:42\\] Before you hear the rest of the discussion, you have some time to look at questions 25 to 30 on page six. Now listen and answer our questions. 25 to 30. So were the student markers reliable?\n\n**Speaker 4** \\[00:18:30\\] Well, comparisons were made between certain categories of student markers and the group as a whole, including the lecturers. The findings showed that there were some variations in the way different groups marked gender did come into play. For example.\n\n**Speaker 1** \\[00:18:46\\] I expect the male students were more generous when marking female presenters. Were they?\n\n**Speaker 4** \\[00:18:51\\] Quite the reverse, actually. They were harder on the female presenters than on the males, which wasn't what I'd expected either.\n\n**Speaker 1** \\[00:18:59\\] Did female students show any bias towards male presenters?\n\n**Speaker 4** \\[00:19:03\\] Interestingly, not.\n\n**Speaker 1** \\[00:19:05\\] So. Does that suggest women are fairer and more reliable markers than men?\n\n**Speaker 4** \\[00:19:09\\] Well, I wouldn't go that far. It's only a small sample. But significantly, the results showed that when women marked other women, this didn't affect the grades they gave. Mm.\n\n**Speaker 1** \\[00:19:22\\] What about age? Were you able to come to any conclusions about that?\n\n**Speaker 4** \\[00:19:26\\] Yes, because we had some mature students presenting and we found the marks awarded to them by their younger peers. Well, rather more generous.\n\n**Speaker 1** \\[00:19:34\\] Oh, well, I wonder why that is. Now, you said there were groups of students from two universities. Did they tend to favor students making presentations from their own universities?\n\n**Speaker 4** \\[00:19:46\\] It didn't seem to influence marking one way or the other, which is quite encouraging. We've been interested to see if students personal relationships affected their objectivity. One striking variation, though, was in the students who'd been asked to help devise the criteria for the marking scheme. They were actually the toughest markers of all, marking consistently below the tutors.\n\n**Speaker 1** \\[00:20:09\\] Really? Well, it sounds as if it's generated lots of useful data. I expect you. We have a debt.",
+      layout: [
+        {
+                "type": "questions",
+                "title": "Peer Assessment",
+                "instruction": "Questions 21\u201324: Choose the correct letter, A, B or C.",
+                "questionIds": [
+                        21,
+                        22,
+                        23,
+                        24
+                ]
+        },
+        {
+                "type": "matching",
+                "title": "Categories of student markers",
+                "instruction": "Questions 25\u201330: How did the following categories of student markers compare with the rest of the group when marking student presentations? Choose the correct letter, A, B or C.",
+                "legend": [
+                        {
+                                "letter": "A",
+                                "text": "They gave higher marks."
+                        },
+                        {
+                                "letter": "B",
+                                "text": "They gave lower marks."
+                        },
+                        {
+                                "letter": "C",
+                                "text": "Their marks were not significantly different."
+                        }
+                ],
+                "items": [
+                        {
+                                "questionId": 25,
+                                "label": "male students marking female presenters"
+                        },
+                        {
+                                "questionId": 26,
+                                "label": "female students marking male presenters"
+                        },
+                        {
+                                "questionId": 27,
+                                "label": "female students marking female presenters"
+                        },
+                        {
+                                "questionId": 28,
+                                "label": "younger students marking older presenters"
+                        },
+                        {
+                                "questionId": 29,
+                                "label": "students marking presenters from a different university"
+                        },
+                        {
+                                "questionId": 30,
+                                "label": "students who had helped set criteria"
+                        }
+                ]
+        }
+],
       questions: [
         { 
           id: 21, 
@@ -536,6 +787,126 @@ export const VOL1_LIS_1 = {
       maxWords: 1,
       audioUrl: '/audio/vol1_test1_part4.mp3',
       context: 'Linguistics lecture on Bislama, the pidgin language of Vanuatu.',
+      transcript: "**Speaker 3** \\[00:22:18\\] Good morning and welcome back to the series of linguistics lectures. Today I will be talking about the language Bish Llama, which is a form of pidgin English. Linguists use the term pidgin to describe new languages that are created by combining two or more existing languages, often in a simplified form. The study of pidgin languages is important because it provides us with information about language change and modification. The Pidgin English known as Bish Llama, is used in the South Pacific nation of Vanuatu, a group of islands where 81/1 languages are still regularly used by the local people. There are a further 17 local languages that are in danger of dying out and eight that have been identified as extinct. This gives a total of 106/1 languages in all, a very high number for a small country with a population of just 200,000 people. Then thinking about foreign languages. English is the most important and has official status, largely because it is the medium for all education purposes. However, it has been lamented as the most widely spoken language in the country, used regularly by more than 90% of the population. We should note here that in earlier times some people had negative feelings towards the language. In fact, for many years it was commonly referred to as a broken language, and its use was discouraged. But attitudes have changed dramatically. And today the people of Vanuatu are very proud of this unique language. It is only when we understand the historical context that we can comprehend just why Bishop Palmer developed in Vanuatu. The first form of pidgin English in this region can be traced to around 1800 when foreign traders arrived and local people were recruited to work as sailors. On board multilingual ships, there was an obvious need for a common tongue and pidgin English was born this early former bush llama continued to spread as trade in the Pacific developed in sandalwood and other local commodities. Then from about 1860, a lot of people from Vanuatu traveled to Australia to work on the new plantations as laborers again because of the multilingual nature of these workplaces. It was very important to have a common language. Finally, in modern times, there have been other pressures that have maintained the need for a common language like many other parts of the world from about the 1950s. Vanuatu experienced a significant migration of its people from small villages into the city. And it has been here that Bulama has really established itself as the country's first language. So then how can we describe the language itself? In general terms, pidgin languages can be defined as extremely simple versions of the original language. However, this is not a satisfactory definition in this case, and linguists prefer to describe Bulama as a developed pidgin because it has more rules and ideas than most simple pidgin languages found in other parts of the world. Let's think first about the vocabulary, because Britain was the colonial power. The majority of Bellamy's vocabulary is derived from English. However, some care needs to be taken here. For example, the word from in Belgium can also mean because of. So we need to be aware that words can have a wider range of meanings. Ambitious drama. Indeed, there are numerous other potentially misleading terms. And English is not the only contributor to the vocabulary. Again because of the region's history. There are some words around 5 to 10% that are derived from French. Then a relatively small number of words have been taken from local Pacific languages. Usually this is the case where there is no English equivalent for naturally occurring phenomena or to describe some aspect of the culture that is unique to the country. Finally, a word about grammar. Although the vocabulary is based largely on English, it's important to note that the grammatical structure of llama is derived from patterns common in the local languages of Vanuatu. So for example, there are two distinct pronouns meaning we. One means I and you. And another means I. And some others. But not you. Sounds confusing in English, but in the local languages. Such distinctions are common. A different example concerns the word long. It is almost the only preposition and best lama and may be used in place of a whole range of English words such as at two with on, in and so on. Well, that is the end of the formal part of the lecture. If you have any questions now, I'll be most happy to.",
+      layout: [
+        {
+                "type": "notes",
+                "title": "Bislama \u2013 The Pidgin English Language of Vanuatu",
+                "instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+                "wordLimit": "ONE WORD ONLY",
+                "sections": [
+                        {
+                                "heading": "Languages in Vanuatu",
+                                "subheading": "Local languages:",
+                                "items": [
+                                        {
+                                                "text": "Actively spoken languages: 81"
+                                        },
+                                        {
+                                                "text": "Declining languages: 17"
+                                        },
+                                        {
+                                                "prefix": "",
+                                                "questionId": 31,
+                                                "suffix": "languages: 8"
+                                        },
+                                        {
+                                                "text": "Total: 106"
+                                        }
+                                ],
+                                "afterItems": [
+                                        {
+                                                "prefix": "Foreign languages: English is used in the",
+                                                "questionId": 32,
+                                                "suffix": "system"
+                                        }
+                                ]
+                        },
+                        {
+                                "heading": "Bislama",
+                                "items": [
+                                        {
+                                                "text": "It is spoken by 90% of the population today."
+                                        },
+                                        {
+                                                "prefix": "In the past this language was described as",
+                                                "questionId": 33,
+                                                "suffix": ""
+                                        }
+                                ]
+                        },
+                        {
+                                "heading": "History of Bislama",
+                                "items": [
+                                        {
+                                                "text": "Around 1800 it was used as a common language on many ships."
+                                        },
+                                        {
+                                                "prefix": "After 1860 Vanuatu people worked in Australian",
+                                                "questionId": 34,
+                                                "suffix": ""
+                                        },
+                                        {
+                                                "prefix": "After 1950 people moved to the",
+                                                "questionId": 35,
+                                                "suffix": ""
+                                        }
+                                ]
+                        },
+                        {
+                                "heading": "Description of Bislama",
+                                "subsections": [
+                                        {
+                                                "subheading": "General",
+                                                "items": [
+                                                        {
+                                                                "prefix": "Bislama should be called a",
+                                                                "questionId": 36,
+                                                                "suffix": "pidgin."
+                                                        }
+                                                ]
+                                        },
+                                        {
+                                                "subheading": "Vocabulary",
+                                                "items": [
+                                                        {
+                                                                "text": "Most words come from English."
+                                                        },
+                                                        {
+                                                                "prefix": "Words such as \u201cfrom\u201d may have more",
+                                                                "questionId": 37,
+                                                                "suffix": "in Bislama."
+                                                        },
+                                                        {
+                                                                "prefix": "Less than 10% of words are of",
+                                                                "questionId": 38,
+                                                                "suffix": "origin."
+                                                        },
+                                                        {
+                                                                "prefix": "Pacific words describe the natural world and also local",
+                                                                "questionId": 39,
+                                                                "suffix": ""
+                                                        }
+                                                ]
+                                        },
+                                        {
+                                                "subheading": "Grammar",
+                                                "items": [
+                                                        {
+                                                                "text": "It is based on Vanuatu languages."
+                                                        },
+                                                        {
+                                                                "prefix": "The word \u201clong\u201d acts as an important",
+                                                                "questionId": 40,
+                                                                "suffix": "in Bislama."
+                                                        }
+                                                ]
+                                        }
+                                ]
+                        }
+                ]
+        }
+],
       questions: [
         { 
           id: 31, 
@@ -681,23 +1052,5 @@ export const VOL1_LIS_1 = {
       ]
     }
   ],
-  transcript: `Audio Test 1 - Full Transcript
-Speaker 1 [00:00:01] IELTS Listening Version 16208. You will hear a number of different recordings and you will have to answer questions on what you hear. There will be time for you to read the instructions and questions and you will have a chance to check your work.
-
-Part 1: Beechen Festival Offers
-Speaker 2 [00:01:49] Oh, hello. I want to check some details about the festival. Tickets are running out fast and my computer's down.
-Speaker 1 [00:02:00] First activity is on June 19th at 7pm, a concert in the theater with local musicians.
-Speaker 2 [00:02:09] Lovely. And for the next activity on the 20th?
-Speaker 1 [00:03:03] The guided tour starts at 4:30 (ticket error said 3:40). Meet the guide at the station; it includes an old flour mill.
-Speaker 1 [00:03:54] June 21st: children's cooking competition at Beechen Community Centre. Bring a plate for the dishes. Evening fireworks by the river.
-Speaker 1 [00:05:45] Noise rules: events end by 11:15 pm. Parking in town centre is restricted this year. Web: www.events.com. Feedback welcomed online.
-
-Part 2: Walking Holiday in Spain
-Speaker 3 [00:08:31] Good evening everyone. Gary Payne here for your walking holiday in Spain. The ferry crossing takes about 24 hours and holds 2000 passengers. Pack reading material in a separate bag so you have immediate access. The hostel in La Vega de Liébana has good washing facilities, curfew at 11pm. Bring boots with thick soles, spare socks, total block suncream, and a plastic folder for maps. High altitude brings diverse vegetation and wonderful mountain wildlife...
-
-Part 3: Peer Assessment Research Discussion
-Speaker 4 [00:15:25] Steve, students see peer assessment as a way for tutors to save time, but research shows it raises self-awareness. Disputed marks are reviewed by the tutor. Presentations were marked by both lecturers and students across the board. Male markers gave lower marks to women; women showed no significant bias. Younger students gave higher marks to older presenters; participants who helped set criteria were stricter and gave lower marks...
-
-Part 4: Bislama – The Pidgin English Language of Vanuatu
-Speaker 3 [00:22:18] Vanuatu has 81 active languages, 17 declining, and 8 extinct languages. English serves in the education system. Bislama was once dismissed as 'broken English'. After 1860, Vanuatu laborers worked in Australian plantations where the pidgin flourished. After 1950, large numbers moved to the towns. Today Bislama is a developed pidgin. Words like 'from' have multiple meanings; less than 10% are of French origin; Pacific words capture local culture; and 'long' functions as an all-purpose preposition.`
+  transcript: "**AUDIO TEST 1**\n\n**A \u2013 PART 1**\n\n**Speaker 1** \\[00:00:01\\] Listen carefully and answer questions. 1 to 6. Beach and festival offers.\n\n**Speaker 2** \\[00:02:40\\] Oh, hello. I want to check some details about the festival. I know tickets are running out fast and I haven't got access to the Internet at present. My computer's down.\n\n**Speaker 1** \\[00:02:50\\] Okay, well, the first activity is on June the 19th at 7 p.m., and it's a concert with local musicians performing.\n\n**Speaker 2** \\[00:02:59\\] Hmm. Lovely. Is it in the theater, like, last year?\n\n**Speaker 1** \\[00:03:03\\] Yes, that's right. And for the next activity on the 20th, the times changed.\n\n**Speaker 2** \\[00:03:09\\] Is that the tour?\n\n**Speaker 1** \\[00:03:10\\] Yes. Now, it does say on the tickets that it's a 340 start, but that's an error. There wasn't time to update them, unfortunately. So it should say 430 instead. The correct time is on the website, though.\n\n**Speaker 2** \\[00:03:25\\] Oh, right. Because one of my friends wants to go on there to see Beach with an expert and find out about the town and its history. Does she need to get a ticket in advance?\n\n**Speaker 1** \\[00:03:35\\] No. Just turn up at the station where the guide will be waiting. They'll start from there. And I think the plan is to stop for a break in the park. And there's no charge for the tour. And the tour will finish with a visit to the 16th century mill where they used to make flour. It's recently been restored.\n\n**Speaker 2** \\[00:03:53\\] Fine.\n\n**Speaker 1** \\[00:03:54\\] And then on the 21st, there's an all day event for children.\n\n**Speaker 2** \\[00:03:57\\] Oh, that could be good for my visitors. They're bringing theirs, you see.\n\n**Speaker 1** \\[00:04:02\\] Right. Well, the plan was to have a painting competition for the kids, but it's now going to be cooking instead. And there'll be prizes for all the different age groups.\n\n**Speaker 2** \\[00:04:12\\] Oh, great.\n\n**Speaker 1** \\[00:04:13\\] And it's in beach and community center.\n\n**Speaker 2** \\[00:04:15\\] Oh, yes, I know where that is.\n\n**Speaker 1** \\[00:04:17\\] They don't need to bring any ingredients, but they'll need to have a plate to put whatever they've made on so they can display it and then take it home.\n\n**Speaker 2** \\[00:04:25\\] Sounds good. And are they going ahead with the fireworks in the evening? Or is that canceled? There was an article in the paper after last year's display which suggested it might not be happening again.\n\n**Speaker 1** \\[00:04:37\\] That's right. No, that's still on. It's getting more popular each year and having it in the town square was starting to be a bit difficult because of the numbers, which is why it's next to the river this time. It'll be easy for large numbers of people to get to.\n\n**Speaker 2** \\[00:04:53\\] Yes, of course. I'm sure there's lots to look forward to.\n\n**Speaker 1** \\[00:05:01\\] Before you hear the rest of the conversation, you have some time to look at questions 7 to 10 on page two. Now listen and answer a question. 7 to 10.\n\n**Speaker 2** \\[00:05:35\\] Okay. Now, I just want to check how it's going to impact on me as a local resident. I mean, some people last year thought it was too noisy at night.\n\n**Speaker 1** \\[00:05:45\\] Yes, I know. And that's why this year, evening events won't go on beyond 1115. Now, I know previously some activities lasted until 1145. And the new time applies now to all the events every evening.\n\n**Speaker 2** \\[00:06:00\\] Okay.\n\n**Speaker 1** \\[00:06:01\\] And another change perhaps you know about this already is that because of high visitor numbers, parking in the town center isn't going to be allowed. It'll be outside town.\n\n**Speaker 2** \\[00:06:12\\] Oh, yes. To keep the streets clear, I suppose, for all the visitors. I did know, actually. And it's not really going to be a problem for me, right? I mean, I could just walk into town from my home.\n\n**Speaker 1** \\[00:06:24\\] Okay. Well, anyway, if you want to check any more details about the festival, once you're back online, you can look at w w w dot events dot com, and you'll be able to comment on what activities you enjoyed and what would really help the organizers would be if people could use the Web site to give feedback about what they enjoyed and that kind of thing. This will help them plan for next year.\n\n**Speaker 2** \\[00:06:51\\] That's probably a good idea. And with pricing, I know local residents.\n\n**B \u2013 PART 2**\n\n**Speaker 1** \\[00:06:59\\] That is the end of Section one. You now have half a minute to check your answers. Now turn to section two on page three. Section two, you'll hear a tour guide talking to some tourists who are going on a walking holiday in Spain. First you have some time to look at questions 11 to 14 on page three. Now listen carefully and answer questions. 11 to 14.\n\n**Speaker 3** \\[00:08:31\\] Well, good evening, everyone. My name's Gary Payne, and I'll be the leader for your walking holiday in Spain. And the purpose of this evening's meeting is for us all to get to know each other in advance and for you to ask any questions you may have about the holiday. So I'll begin by telling you a little bit about what to expect now. The ferry crossing from England to Santander in Spain takes about 24 hours. We'll be sailing on the Prince Regent, which was first launched in the 1980s, as well as the crew of 160. It can accommodate about 2000 people and 600 cars and its sales at an average speed of 37 kilometers an hour. There'll be an on board map on one of the decks which charts the ship's progress during the voyage. Although our mini bus will be on one of the vehicle decks in the boat, access to these decks is prohibited during the crossing. So when you leave our bus, you'll have to take everything that you're likely to need with you, like toiletries or books and magazines. In fact, it's probably a good idea to put these things in a separate bag beforehand. You shouldn't need snacks on board as meals are provided, and they're quite substantial. And if you don't feel well or get a headache, you can get tablets from me. I always carry an adequate supply. Now, once we're in Spain, we'll be based at a hostel in a small village called La Vega de la Barna, about 120 kilometers from Santander. It's a very picturesque area that's retained a lot of its traditional industry and culture. The hostel accommodations fairly simple. There are bunk beds and each room holds 4 to 8 people. But the bathrooms and showers are of a high standard. The hostel residents have the use of tennis courts nearby. If you feel like a game, we'll be given breakfast and an evening meal at the hostel. In general, the hostel is relaxed, but there are a few rules which the owners enforce strictly. Smoking is not allowed anywhere inside the building and food and drink is banned in the dormitories. Any chairs or tables which you take outside into the gardens must be returned every evening to their original place. And finally, the doors are locked after midnight, out of consideration for other guests who are trying to sleep.\n\n**Speaker 1** \\[00:10:52\\] Before you hear the rest of the talk, you have some time to look at questions 15 to 20 on page four. Now listen and answer questions. 15 to 20.\n\n**Speaker 3** \\[00:11:32\\] Now that's enough about travel and accommodation. But before I move on, I should say something briefly about equipment. There's a list in the guide book you've been sent, but I'll just elaborate on one or two items. First boots. Make sure that the ones you bring have thick soles. That's the most important thing. Don't bring trainers for walking in. Apart from anything else, they're dangerous because they slip. It's important to bring spare socks then about waterproofs. I'd strongly advise you not to come with anything heavy, you know, with a thick lining. The ideal things are those lightweight ones because they fold up small, and although they do keep the wind out, they don't make you too hot. Right next sun cream. This is absolutely essential. And regarding the strength. Make sure you get what's known as Total BLOCK. Even factor 25 isn't good enough for those latitudes in July. Then let's see. Bring a folder to keep your map and other papers in. You know, one of those plastic ones. It's not very likely to rain, but if it does, you'll find it soaks everything. So that's the practicalities over. Now, let me tell you a little bit about the area in Spain where we'll be walking the Picos de Europa. It's a very popular area for tourists because of its spectacular peaks, although they're only 25 kilometers from the sea. The highest peaks are more than 2600 meters high and have year round snow caps on the highest peaks. You've got alpine plants that are only free of their snow cover for a few months a year. Then you've got Meadows that are full of wildflowers at certain times of the year. Then the northern slopes are covered by woodlands, giving homes to rare species such as wolves and bears. And because of the variety of plant life which survives in that part of Europe due to the traditional way of life. There you.\n\n**C \u2013 PART 3**\n\n**Speaker 1** \\[00:13:35\\] That is the end of section two. You now have half a minute to check your answers. Now turn to section three on page five. Section three. You will hear two students called Sally and Steve discussing Sally's project on peer assessment, a system where students mark each other's work. First you have some time to look at questions 21 to 24 on page five. Now listen carefully and answer questions. 21 to 24.\n\n**Speaker 1** I can't believe you're still in the library, Sally. You've been here all day. Are you still working on your peer assessment project?\n\n**Speaker 4** \\[00:15:25\\] Hi, Steve. Yes, I'm still here, and I'm nowhere near finished. I'm still processing the reading I've done on peer assessment. I'm interested to see if students mocking each other's work is beneficial. I know a lot of the other students are pretty skeptical about its value as a way of assessing their performance. They think the tutors are in favor of it because they don't have to spend so long marking beside disagree. I think we can learn a great deal from it. Yes, I can see one advantage being that it saves time spent going over things in class.\n\n**Speaker 4** \\[00:16:00\\] Well, initially it doesn't seem to work that way, and it can be quite a time consuming business because sometimes things have to be marked again if the teacher thinks the student's assessments aren't reliable. The real game is the fact that the students learn to stand back and assess their own assignments objectively because they're much more familiar with the marking system.\n\n**Speaker 1** \\[00:16:22\\] Yes, I can see that. It gives them an opportunity to reflect on their own performance.\n\n**Speaker 1** \\[00:16:28\\] And how do they feel about having another student mark their work?\n\n**Speaker 1** \\[00:16:32\\] Is that good for rapport?\n\n**Speaker 4** \\[00:16:34\\] In some cases, yes. In some cases, no. I think more research is needed to answer that question.\n\n**Speaker 1** \\[00:16:41\\] What happens if a tutor notices that the marks for a particular assignment seem wrong?\n\n**Speaker 1** \\[00:16:47\\] Should the students mark them again?\n\n**Speaker 4** \\[00:16:49\\] That might not make any difference. So in that case, the tutor would have to remark all those assignments and then go through the marking criteria really carefully with the students on the next assignment with some sample answers. Right. I've been reading about a research project on peer assessment. The researchers invited a group of students from two different universities to attend a one day conference. They also invited some university lecturers to attend. Each student gave a short presentation on a project of their choice. Each of these presentations was assessed individually by all the participants, both students and lecturers, to support their marking. They used a set of assessment guidelines that had been prepared the day before by a random selection of students.\n\n**Speaker 1** \\[00:17:42\\] Before you hear the rest of the discussion, you have some time to look at questions 25 to 30 on page six. Now listen and answer our questions. 25 to 30. So were the student markers reliable?\n\n**Speaker 4** \\[00:18:30\\] Well, comparisons were made between certain categories of student markers and the group as a whole, including the lecturers. The findings showed that there were some variations in the way different groups marked gender did come into play. For example.\n\n**Speaker 1** \\[00:18:46\\] I expect the male students were more generous when marking female presenters. Were they?\n\n**Speaker 4** \\[00:18:51\\] Quite the reverse, actually. They were harder on the female presenters than on the males, which wasn't what I'd expected either.\n\n**Speaker 1** \\[00:18:59\\] Did female students show any bias towards male presenters?\n\n**Speaker 4** \\[00:19:03\\] Interestingly, not.\n\n**Speaker 1** \\[00:19:05\\] So. Does that suggest women are fairer and more reliable markers than men?\n\n**Speaker 4** \\[00:19:09\\] Well, I wouldn't go that far. It's only a small sample. But significantly, the results showed that when women marked other women, this didn't affect the grades they gave. Mm.\n\n**Speaker 1** \\[00:19:22\\] What about age? Were you able to come to any conclusions about that?\n\n**Speaker 4** \\[00:19:26\\] Yes, because we had some mature students presenting and we found the marks awarded to them by their younger peers. Well, rather more generous.\n\n**Speaker 1** \\[00:19:34\\] Oh, well, I wonder why that is. Now, you said there were groups of students from two universities. Did they tend to favor students making presentations from their own universities?\n\n**Speaker 4** \\[00:19:46\\] It didn't seem to influence marking one way or the other, which is quite encouraging. We've been interested to see if students personal relationships affected their objectivity. One striking variation, though, was in the students who'd been asked to help devise the criteria for the marking scheme. They were actually the toughest markers of all, marking consistently below the tutors.\n\n**Speaker 1** \\[00:20:09\\] Really? Well, it sounds as if it's generated lots of useful data. I expect you. We have a debt.\n\n**D \u2013 PART 4**\n\n**Speaker 3** \\[00:22:18\\] Good morning and welcome back to the series of linguistics lectures. Today I will be talking about the language Bish Llama, which is a form of pidgin English. Linguists use the term pidgin to describe new languages that are created by combining two or more existing languages, often in a simplified form. The study of pidgin languages is important because it provides us with information about language change and modification. The Pidgin English known as Bish Llama, is used in the South Pacific nation of Vanuatu, a group of islands where 81/1 languages are still regularly used by the local people. There are a further 17 local languages that are in danger of dying out and eight that have been identified as extinct. This gives a total of 106/1 languages in all, a very high number for a small country with a population of just 200,000 people. Then thinking about foreign languages. English is the most important and has official status, largely because it is the medium for all education purposes. However, it has been lamented as the most widely spoken language in the country, used regularly by more than 90% of the population. We should note here that in earlier times some people had negative feelings towards the language. In fact, for many years it was commonly referred to as a broken language, and its use was discouraged. But attitudes have changed dramatically. And today the people of Vanuatu are very proud of this unique language. It is only when we understand the historical context that we can comprehend just why Bishop Palmer developed in Vanuatu. The first form of pidgin English in this region can be traced to around 1800 when foreign traders arrived and local people were recruited to work as sailors. On board multilingual ships, there was an obvious need for a common tongue and pidgin English was born this early former bush llama continued to spread as trade in the Pacific developed in sandalwood and other local commodities. Then from about 1860, a lot of people from Vanuatu traveled to Australia to work on the new plantations as laborers again because of the multilingual nature of these workplaces. It was very important to have a common language. Finally, in modern times, there have been other pressures that have maintained the need for a common language like many other parts of the world from about the 1950s. Vanuatu experienced a significant migration of its people from small villages into the city. And it has been here that Bulama has really established itself as the country's first language. So then how can we describe the language itself? In general terms, pidgin languages can be defined as extremely simple versions of the original language. However, this is not a satisfactory definition in this case, and linguists prefer to describe Bulama as a developed pidgin because it has more rules and ideas than most simple pidgin languages found in other parts of the world. Let's think first about the vocabulary, because Britain was the colonial power. The majority of Bellamy's vocabulary is derived from English. However, some care needs to be taken here. For example, the word from in Belgium can also mean because of. So we need to be aware that words can have a wider range of meanings. Ambitious drama. Indeed, there are numerous other potentially misleading terms. And English is not the only contributor to the vocabulary. Again because of the region's history. There are some words around 5 to 10% that are derived from French. Then a relatively small number of words have been taken from local Pacific languages. Usually this is the case where there is no English equivalent for naturally occurring phenomena or to describe some aspect of the culture that is unique to the country. Finally, a word about grammar. Although the vocabulary is based largely on English, it's important to note that the grammatical structure of llama is derived from patterns common in the local languages of Vanuatu. So for example, there are two distinct pronouns meaning we. One means I and you. And another means I. And some others. But not you. Sounds confusing in English, but in the local languages. Such distinctions are common. A different example concerns the word long. It is almost the only preposition and best lama and may be used in place of a whole range of English words such as at two with on, in and so on. Well, that is the end of the formal part of the lecture. If you have any questions now, I'll be most happy to."
 };

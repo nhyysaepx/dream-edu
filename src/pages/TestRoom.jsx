@@ -404,6 +404,7 @@ export default function TestRoom() {
 
   // Transcripts toggles for Listening parts
   const [expandedTranscripts, setExpandedTranscripts] = useState({});
+  const [transcriptViewMode, setTranscriptViewMode] = useState({}); // { [partId]: 'part' | 'full' }
 
   // Reading Passage Display & Annotation State
   const [selectionPopup, setSelectionPopup] = useState(null);
@@ -1236,162 +1237,900 @@ export default function TestRoom() {
               </div>
             </div>
 
-            {/* Questions List for Listening */}
-            <div className="space-y-4">
-              {displayedQuestions.map((q) => {
-                const evalResult = evaluation.results[q.id];
-                const isActive = activeQuestionId === q.id;
+            {/* Questions View: Custom Structured Layout (Tables, Notes, Matching) OR Fallback Card List */}
+            {currentPart?.layout ? (
+              <div className="space-y-6">
+                {currentPart.layout.map((sec, secIdx) => {
+                  // =========================================================
+                  // 1. TABLE COMPLETION SECTION
+                  // =========================================================
+                  if (sec.type === 'table') {
+                    return (
+                      <div key={secIdx} className={`rounded-3xl border overflow-hidden transition-colors ${currentTheme.card}`}>
+                        <div className={`p-4 sm:p-5 border-b ${currentTheme.cardHeader} flex items-center justify-between gap-3 flex-wrap`}>
+                          <div>
+                            <h3 className={`font-bold text-base sm:text-lg ${currentTheme.title}`}>
+                              {sec.title}
+                            </h3>
+                            {sec.instruction && (
+                              <p className={`text-xs mt-1 ${currentTheme.subText}`}>
+                                {sec.instruction}
+                              </p>
+                            )}
+                          </div>
+                          {sec.wordLimit && (
+                            <span className={`text-[10px] sm:text-xs font-extrabold uppercase px-3 py-1 rounded-full ${currentTheme.badge}`}>
+                              {sec.wordLimit}
+                            </span>
+                          )}
+                        </div>
 
-                return (
-                  <div
-                    key={q.id}
-                    id={`q-${q.id}`}
-                    className={`rounded-2xl border p-5 transition-all ${currentTheme.card} ${
-                      isSubmitted
-                        ? evalResult?.isCorrect
-                          ? 'ring-2 ring-emerald-500/50'
-                          : 'ring-2 ring-rose-500/50'
-                        : isActive
-                          ? 'ring-2 ring-blue-500 shadow-md'
-                          : ''
-                    }`}
-                    onClick={() => setActiveQuestionId(q.id)}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className={`font-extrabold text-xs px-2.5 py-0.5 rounded-md ${currentTheme.cardSubtle}`}>
-                        Câu {q.id}
-                      </span>
-                      {q.wordLimit && q.type !== 'choice' && (
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${currentTheme.badge}`}>
-                          {q.wordLimit}
-                        </span>
-                      )}
-                    </div>
+                        <div className="p-3 sm:p-5 overflow-x-auto">
+                          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                              <tr className={`border-b ${currentTheme.divider} ${currentTheme.cardSubtle}`}>
+                                {sec.headers?.map((h, hIdx) => (
+                                  <th key={hIdx} className="p-3 font-bold text-gray-800 dark:text-gray-200 text-xs sm:text-sm">
+                                    {h}
+                                  </th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody className={`divide-y ${currentTheme.divider}`}>
+                              {sec.rows?.map((row, rIdx) => (
+                                <tr key={row.id || rIdx} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                  {row.cells?.map((cell, cIdx) => (
+                                    <td key={cIdx} className="p-3 align-middle text-gray-700 dark:text-gray-300">
+                                      {cell.questionId ? (
+                                        (() => {
+                                          const q = currentPart.questions?.find(item => item.id === cell.questionId);
+                                          if (!q) return null;
+                                          const evalResult = evaluation.results[q.id];
+                                          const isActive = activeQuestionId === q.id;
 
-                    {/* CHOICE OR FILL */}
-                    {q.type === 'choice' ? (
-                      <div className="space-y-3">
-                        <p className={`${currentFont.question} leading-snug`}>
-                          {q.question}
-                        </p>
-                        <div className="space-y-2">
-                          {q.options?.map((opt, oIdx) => {
-                            const isChecked = userAnswers[q.id] === opt || userAnswers[q.id] === opt.charAt(0);
+                                          return (
+                                            <div
+                                              id={`q-${q.id}`}
+                                              onClick={() => setActiveQuestionId(q.id)}
+                                              className={`flex flex-wrap items-center gap-1.5 p-1 rounded-xl transition-all cursor-pointer ${
+                                                isActive ? 'bg-blue-50/80 dark:bg-blue-950/40 ring-2 ring-blue-500' : ''
+                                              }`}
+                                            >
+                                              {cell.prefix && <span className="font-medium">{cell.prefix}</span>}
+                                              <span className={`inline-flex items-center justify-center font-extrabold text-[11px] px-1.5 py-0.5 rounded-md min-w-[24px] transition-colors ${
+                                                isActive
+                                                  ? 'bg-blue-600 text-white'
+                                                  : isSubmitted
+                                                    ? evalResult?.isCorrect
+                                                      ? 'bg-emerald-600 text-white'
+                                                      : 'bg-rose-600 text-white'
+                                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                                              }`}>
+                                                {q.id}
+                                              </span>
+                                              <input
+                                                type="text"
+                                                value={userAnswers[q.id] || ''}
+                                                disabled={isTimeUp || isSubmitted}
+                                                placeholder={q.placeholder || 'Điền câu trả lời...'}
+                                                onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                                                className={`w-28 sm:w-36 px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border transition-all ${
+                                                  isSubmitted
+                                                    ? evalResult?.isCorrect
+                                                      ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold dark:bg-emerald-950/40 dark:text-emerald-200'
+                                                      : 'bg-rose-50 border-rose-500 text-rose-950 font-bold dark:bg-rose-950/40 dark:text-rose-200'
+                                                    : isActive
+                                                      ? 'border-blue-500 ring-2 ring-blue-500/30 bg-white dark:bg-gray-800'
+                                                      : `${currentTheme.input}`
+                                                }`}
+                                              />
+                                              {cell.suffix && <span className="font-medium">{cell.suffix}</span>}
+                                              {isSubmitted && evalResult && (
+                                                <span className="text-xs ml-1">
+                                                  {evalResult.isCorrect ? (
+                                                    <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                                                      <CheckCircle2 size={13} />
+                                                    </span>
+                                                  ) : (
+                                                    <span className="text-rose-600 dark:text-rose-400 font-bold block text-[11px] bg-rose-50 dark:bg-rose-950/60 px-1.5 py-0.5 rounded border border-rose-200 dark:border-rose-900">
+                                                      ✓ {evalResult.correctAnswer}
+                                                    </span>
+                                                  )}
+                                                </span>
+                                              )}
+                                            </div>
+                                          );
+                                        })()
+                                      ) : (
+                                        <span className="font-medium">{cell.text}</span>
+                                      )}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // =========================================================
+                  // 2. NOTE COMPLETION SECTION (BULLETS OR HIERARCHY)
+                  // =========================================================
+                  if (sec.type === 'notes') {
+                    return (
+                      <div key={secIdx} className={`rounded-3xl border p-5 sm:p-7 space-y-4 transition-colors ${currentTheme.card}`}>
+                        <div className={`flex items-center justify-between gap-3 flex-wrap border-b pb-3.5 ${currentTheme.divider}`}>
+                          <div>
+                            <h3 className={`font-bold text-base sm:text-lg flex items-center gap-2 ${currentTheme.title}`}>
+                              <FileText size={18} className="text-blue-600 dark:text-blue-400" />
+                              <span>{sec.title}</span>
+                            </h3>
+                            {sec.instruction && (
+                              <p className={`text-xs mt-1 ${currentTheme.subText}`}>
+                                {sec.instruction}
+                              </p>
+                            )}
+                          </div>
+                          {sec.wordLimit && (
+                            <span className={`text-[10px] sm:text-xs font-extrabold uppercase px-3 py-1 rounded-full ${currentTheme.badge}`}>
+                              {sec.wordLimit}
+                            </span>
+                          )}
+                        </div>
+
+                        {sec.subheading && (
+                          <h4 className="font-bold text-sm text-gray-900 dark:text-gray-100">
+                            {sec.subheading}
+                          </h4>
+                        )}
+
+                        {/* Flat items list */}
+                        {sec.items && (
+                          <ul className="space-y-3">
+                            {sec.items.map((item, iIdx) => {
+                              if (item.questionId) {
+                                const q = currentPart.questions?.find(it => it.id === item.questionId);
+                                if (!q) return null;
+                                const evalResult = evaluation.results[q.id];
+                                const isActive = activeQuestionId === q.id;
+
+                                return (
+                                  <li
+                                    key={iIdx}
+                                    id={`q-${q.id}`}
+                                    onClick={() => setActiveQuestionId(q.id)}
+                                    className={`flex flex-wrap items-center gap-1.5 p-1.5 rounded-xl transition-all cursor-pointer ${
+                                      isActive ? 'bg-blue-50/80 dark:bg-blue-950/40 ring-2 ring-blue-500' : ''
+                                    }`}
+                                  >
+                                    <span className="text-blue-500 font-bold">•</span>
+                                    {item.prefix && <span className="font-medium text-xs sm:text-sm">{item.prefix}</span>}
+                                    <span className={`inline-flex items-center justify-center font-extrabold text-[11px] px-1.5 py-0.5 rounded-md min-w-[24px] ${
+                                      isActive
+                                        ? 'bg-blue-600 text-white'
+                                        : isSubmitted
+                                          ? evalResult?.isCorrect
+                                            ? 'bg-emerald-600 text-white'
+                                            : 'bg-rose-600 text-white'
+                                          : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                                    }`}>
+                                      {q.id}
+                                    </span>
+                                    <input
+                                      type="text"
+                                      value={userAnswers[q.id] || ''}
+                                      disabled={isTimeUp || isSubmitted}
+                                      placeholder={q.placeholder || 'Điền câu trả lời...'}
+                                      onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                                      className={`w-36 sm:w-48 px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border transition-all ${
+                                        isSubmitted
+                                          ? evalResult?.isCorrect
+                                            ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold dark:bg-emerald-950/40 dark:text-emerald-200'
+                                            : 'bg-rose-50 border-rose-500 text-rose-950 font-bold dark:bg-rose-950/40 dark:text-rose-200'
+                                          : isActive
+                                            ? 'border-blue-500 ring-2 ring-blue-500/30 bg-white dark:bg-gray-800'
+                                            : `${currentTheme.input}`
+                                      }`}
+                                    />
+                                    {item.suffix && <span className="font-medium text-xs sm:text-sm">{item.suffix}</span>}
+                                    {isSubmitted && evalResult && (
+                                      <span className="inline-flex items-center gap-1 ml-1 text-xs">
+                                        {evalResult.isCorrect ? (
+                                          <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                                            <CheckCircle2 size={14} /> Đúng
+                                          </span>
+                                        ) : (
+                                          <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200 dark:border-rose-900">
+                                            <XCircle size={14} /> Đáp án: <strong>{evalResult.correctAnswer}</strong>
+                                          </span>
+                                        )}
+                                      </span>
+                                    )}
+                                  </li>
+                                );
+                              }
+                              return (
+                                <li key={iIdx} className="flex items-center gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                                  <span className="text-gray-400">•</span>
+                                  <span className="font-medium">{item.text}</span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        )}
+
+                        {/* Hierarchical sections (like Part 4) */}
+                        {sec.sections && (
+                          <div className="space-y-6 pt-1">
+                            {sec.sections.map((subSec, sIdx) => (
+                              <div key={sIdx} className={`p-4 sm:p-5 rounded-2xl border ${currentTheme.cardSubtle} space-y-3`}>
+                                <h4 className="font-extrabold text-sm sm:text-base text-gray-900 dark:text-white border-b pb-2 border-gray-200 dark:border-gray-700 flex items-center gap-2">
+                                  <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+                                  <span>{subSec.heading}</span>
+                                </h4>
+
+                                {subSec.subheading && (
+                                  <h5 className="font-bold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300 pt-1">
+                                    {subSec.subheading}
+                                  </h5>
+                                )}
+
+                                {subSec.items && (
+                                  <ul className="space-y-2.5 pl-2">
+                                    {subSec.items.map((item, iIdx) => {
+                                      if (item.questionId) {
+                                        const q = currentPart.questions?.find(it => it.id === item.questionId);
+                                        if (!q) return null;
+                                        const evalResult = evaluation.results[q.id];
+                                        const isActive = activeQuestionId === q.id;
+
+                                        return (
+                                          <li
+                                            key={iIdx}
+                                            id={`q-${q.id}`}
+                                            onClick={() => setActiveQuestionId(q.id)}
+                                            className={`flex flex-wrap items-center gap-1.5 p-1 rounded-xl transition-all cursor-pointer ${
+                                              isActive ? 'bg-blue-50/80 dark:bg-blue-950/40 ring-2 ring-blue-500' : ''
+                                            }`}
+                                          >
+                                            <span className="text-gray-400">•</span>
+                                            {item.prefix && <span className="font-medium text-xs sm:text-sm">{item.prefix}</span>}
+                                            <span className={`inline-flex items-center justify-center font-extrabold text-[11px] px-1.5 py-0.5 rounded-md min-w-[24px] ${
+                                              isActive
+                                                ? 'bg-blue-600 text-white'
+                                                : isSubmitted
+                                                  ? evalResult?.isCorrect
+                                                    ? 'bg-emerald-600 text-white'
+                                                    : 'bg-rose-600 text-white'
+                                                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                                            }`}>
+                                              {q.id}
+                                            </span>
+                                            <input
+                                              type="text"
+                                              value={userAnswers[q.id] || ''}
+                                              disabled={isTimeUp || isSubmitted}
+                                              placeholder={q.placeholder || 'Điền câu trả lời...'}
+                                              onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                                              className={`w-36 sm:w-48 px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border transition-all ${
+                                                isSubmitted
+                                                  ? evalResult?.isCorrect
+                                                    ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold dark:bg-emerald-950/40 dark:text-emerald-200'
+                                                    : 'bg-rose-50 border-rose-500 text-rose-950 font-bold dark:bg-rose-950/40 dark:text-rose-200'
+                                                  : isActive
+                                                    ? 'border-blue-500 ring-2 ring-blue-500/30 bg-white dark:bg-gray-800'
+                                                    : `${currentTheme.input}`
+                                              }`}
+                                            />
+                                            {item.suffix && <span className="font-medium text-xs sm:text-sm">{item.suffix}</span>}
+                                            {isSubmitted && evalResult && (
+                                              <span className="inline-flex items-center gap-1 ml-1 text-xs">
+                                                {evalResult.isCorrect ? (
+                                                  <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                                                    <CheckCircle2 size={14} /> Đúng
+                                                  </span>
+                                                ) : (
+                                                  <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200 dark:border-rose-900">
+                                                    <XCircle size={14} /> Đáp án: <strong>{evalResult.correctAnswer}</strong>
+                                                  </span>
+                                                )}
+                                              </span>
+                                            )}
+                                          </li>
+                                        );
+                                      }
+                                      return (
+                                        <li key={iIdx} className="flex items-center gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                                          <span className="text-gray-400">•</span>
+                                          <span className="font-medium">{item.text}</span>
+                                        </li>
+                                      );
+                                    })}
+                                  </ul>
+                                )}
+
+                                {subSec.afterItems && (
+                                  <div className="pt-2 pl-2 space-y-2 border-t border-gray-200/60 dark:border-gray-700/60">
+                                    {subSec.afterItems.map((item, aIdx) => {
+                                      const q = currentPart.questions?.find(it => it.id === item.questionId);
+                                      if (!q) return null;
+                                      const evalResult = evaluation.results[q.id];
+                                      const isActive = activeQuestionId === q.id;
+
+                                      return (
+                                        <div
+                                          key={aIdx}
+                                          id={`q-${q.id}`}
+                                          onClick={() => setActiveQuestionId(q.id)}
+                                          className={`flex flex-wrap items-center gap-1.5 p-1 rounded-xl transition-all cursor-pointer ${
+                                            isActive ? 'bg-blue-50/80 dark:bg-blue-950/40 ring-2 ring-blue-500' : ''
+                                          }`}
+                                        >
+                                          {item.prefix && <span className="font-medium text-xs sm:text-sm">{item.prefix}</span>}
+                                          <span className={`inline-flex items-center justify-center font-extrabold text-[11px] px-1.5 py-0.5 rounded-md min-w-[24px] ${
+                                            isActive
+                                              ? 'bg-blue-600 text-white'
+                                              : isSubmitted
+                                                ? evalResult?.isCorrect
+                                                  ? 'bg-emerald-600 text-white'
+                                                  : 'bg-rose-600 text-white'
+                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                                          }`}>
+                                            {q.id}
+                                          </span>
+                                          <input
+                                            type="text"
+                                            value={userAnswers[q.id] || ''}
+                                            disabled={isTimeUp || isSubmitted}
+                                            placeholder={q.placeholder || 'Điền câu trả lời...'}
+                                            onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                                            className={`w-36 sm:w-48 px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border transition-all ${
+                                              isSubmitted
+                                                ? evalResult?.isCorrect
+                                                  ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold dark:bg-emerald-950/40 dark:text-emerald-200'
+                                                  : 'bg-rose-50 border-rose-500 text-rose-950 font-bold dark:bg-rose-950/40 dark:text-rose-200'
+                                                : isActive
+                                                  ? 'border-blue-500 ring-2 ring-blue-500/30 bg-white dark:bg-gray-800'
+                                                  : `${currentTheme.input}`
+                                            }`}
+                                          />
+                                          {item.suffix && <span className="font-medium text-xs sm:text-sm">{item.suffix}</span>}
+                                          {isSubmitted && evalResult && (
+                                            <span className="inline-flex items-center gap-1 ml-1 text-xs">
+                                              {evalResult.isCorrect ? (
+                                                <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                                                  <CheckCircle2 size={14} /> Đúng
+                                                </span>
+                                              ) : (
+                                                <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200 dark:border-rose-900">
+                                                  <XCircle size={14} /> Đáp án: <strong>{evalResult.correctAnswer}</strong>
+                                                </span>
+                                              )}
+                                            </span>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+
+                                {subSec.subsections && (
+                                  <div className="space-y-4 pt-2">
+                                    {subSec.subsections.map((sub, subIdx) => (
+                                      <div key={subIdx} className="pl-3 border-l-2 border-blue-500/40 space-y-2">
+                                        <h6 className="font-bold text-xs text-blue-700 dark:text-blue-300">
+                                          {sub.subheading}
+                                        </h6>
+                                        <ul className="space-y-2">
+                                          {sub.items.map((item, iIdx) => {
+                                            if (item.questionId) {
+                                              const q = currentPart.questions?.find(it => it.id === item.questionId);
+                                              if (!q) return null;
+                                              const evalResult = evaluation.results[q.id];
+                                              const isActive = activeQuestionId === q.id;
+
+                                              return (
+                                                <li
+                                                  key={iIdx}
+                                                  id={`q-${q.id}`}
+                                                  onClick={() => setActiveQuestionId(q.id)}
+                                                  className={`flex flex-wrap items-center gap-1.5 p-1 rounded-xl transition-all cursor-pointer ${
+                                                    isActive ? 'bg-blue-50/80 dark:bg-blue-950/40 ring-2 ring-blue-500' : ''
+                                                  }`}
+                                                >
+                                                  <span className="text-gray-400">•</span>
+                                                  {item.prefix && <span className="font-medium text-xs sm:text-sm">{item.prefix}</span>}
+                                                  <span className={`inline-flex items-center justify-center font-extrabold text-[11px] px-1.5 py-0.5 rounded-md min-w-[24px] ${
+                                                    isActive
+                                                      ? 'bg-blue-600 text-white'
+                                                      : isSubmitted
+                                                        ? evalResult?.isCorrect
+                                                          ? 'bg-emerald-600 text-white'
+                                                          : 'bg-rose-600 text-white'
+                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                                                  }`}>
+                                                    {q.id}
+                                                  </span>
+                                                  <input
+                                                    type="text"
+                                                    value={userAnswers[q.id] || ''}
+                                                    disabled={isTimeUp || isSubmitted}
+                                                    placeholder={q.placeholder || 'Điền câu trả lời...'}
+                                                    onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                                                    className={`w-36 sm:w-48 px-2.5 py-1 text-xs sm:text-sm font-semibold rounded-lg border transition-all ${
+                                                      isSubmitted
+                                                        ? evalResult?.isCorrect
+                                                          ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold dark:bg-emerald-950/40 dark:text-emerald-200'
+                                                          : 'bg-rose-50 border-rose-500 text-rose-950 font-bold dark:bg-rose-950/40 dark:text-rose-200'
+                                                        : isActive
+                                                          ? 'border-blue-500 ring-2 ring-blue-500/30 bg-white dark:bg-gray-800'
+                                                          : `${currentTheme.input}`
+                                                    }`}
+                                                  />
+                                                  {item.suffix && <span className="font-medium text-xs sm:text-sm">{item.suffix}</span>}
+                                                  {isSubmitted && evalResult && (
+                                                    <span className="inline-flex items-center gap-1 ml-1 text-xs">
+                                                      {evalResult.isCorrect ? (
+                                                        <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                                                          <CheckCircle2 size={14} /> Đúng
+                                                        </span>
+                                                      ) : (
+                                                        <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 bg-rose-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-md border border-rose-200 dark:border-rose-900">
+                                                          <XCircle size={14} /> Đáp án: <strong>{evalResult.correctAnswer}</strong>
+                                                        </span>
+                                                      )}
+                                                    </span>
+                                                  )}
+                                                </li>
+                                              );
+                                            }
+                                            return (
+                                              <li key={iIdx} className="flex items-center gap-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
+                                                <span className="text-gray-400">•</span>
+                                                <span className="font-medium">{item.text}</span>
+                                              </li>
+                                            );
+                                          })}
+                                        </ul>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                      </div>
+                    );
+                  }
+
+                  // =========================================================
+                  // 3. MATCHING SECTION
+                  // =========================================================
+                  if (sec.type === 'matching') {
+                    return (
+                      <div key={secIdx} className={`rounded-3xl border p-5 sm:p-7 space-y-5 transition-colors ${currentTheme.card}`}>
+                        <div className={`border-b pb-3.5 ${currentTheme.divider}`}>
+                          <h3 className={`font-bold text-base sm:text-lg ${currentTheme.title}`}>
+                            {sec.title}
+                          </h3>
+                          {sec.instruction && (
+                            <p className={`text-xs mt-1 ${currentTheme.subText}`}>
+                              {sec.instruction}
+                            </p>
+                          )}
+                        </div>
+
+                        {sec.legend && (
+                          <div className={`p-4 rounded-2xl border ${currentTheme.banner} space-y-2 text-xs sm:text-sm`}>
+                            <div className="font-bold text-xs uppercase tracking-wider mb-1 text-gray-600 dark:text-gray-300">
+                              Các lựa chọn (Choose A, B, or C):
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                              {sec.legend.map((leg) => (
+                                <div key={leg.letter} className="flex items-center gap-2 p-2 rounded-xl bg-white/70 dark:bg-gray-800/70 border border-gray-200/70 dark:border-gray-700/70">
+                                  <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-extrabold flex items-center justify-center text-xs shrink-0">
+                                    {leg.letter}
+                                  </span>
+                                  <span className="font-medium text-xs text-gray-800 dark:text-gray-200">{leg.text}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="space-y-3">
+                          {sec.items?.map((item) => {
+                            const q = currentPart.questions?.find(it => it.id === item.questionId);
+                            if (!q) return null;
+                            const evalResult = evaluation.results[q.id];
+                            const isActive = activeQuestionId === q.id;
+
                             return (
-                              <label
-                                key={oIdx}
-                                className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${currentFont.body} ${
-                                  isTimeUp || isSubmitted 
-                                    ? 'cursor-not-allowed opacity-80' 
-                                    : 'cursor-pointer'
-                                } ${
-                                  isChecked
-                                    ? currentTheme.radioChecked
-                                    : currentTheme.radioUnchecked
+                              <div
+                                key={q.id}
+                                id={`q-${q.id}`}
+                                onClick={() => setActiveQuestionId(q.id)}
+                                className={`p-3.5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all cursor-pointer ${
+                                  isSubmitted
+                                    ? evalResult?.isCorrect
+                                      ? 'ring-2 ring-emerald-500/50 bg-emerald-50/20'
+                                      : 'ring-2 ring-rose-500/50 bg-rose-50/20'
+                                    : isActive
+                                      ? 'ring-2 ring-blue-500 shadow-md bg-blue-50/30'
+                                      : currentTheme.cardSubtle
                                 }`}
                               >
-                                <input
-                                  type="radio"
-                                  name={`q-${q.id}`}
-                                  value={opt}
-                                  checked={isChecked}
-                                  disabled={isTimeUp || isSubmitted}
-                                  onChange={() => handleAnswerChange(q.id, opt.charAt(0))}
-                                  className="w-4 h-4 disabled:opacity-50"
-                                />
-                                <span>{opt}</span>
-                              </label>
+                                <div className="flex items-center gap-3">
+                                  <span className={`w-7 h-7 rounded-xl font-extrabold text-xs flex items-center justify-center shrink-0 ${
+                                    isActive ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+                                  }`}>
+                                    {q.id}
+                                  </span>
+                                  <span className="font-medium text-xs sm:text-sm text-gray-800 dark:text-gray-200">
+                                    {item.label}
+                                  </span>
+                                </div>
+
+                                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                                  {['A', 'B', 'C'].map((optLetter) => {
+                                    const isSelected = userAnswers[q.id] === optLetter;
+                                    const isCorrectChoice = isSubmitted && (q.answer === optLetter || q.primaryAnswer === optLetter);
+                                    const isWrongSelected = isSubmitted && isSelected && !evalResult?.isCorrect;
+
+                                    return (
+                                      <button
+                                        key={optLetter}
+                                        type="button"
+                                        disabled={isTimeUp || isSubmitted}
+                                        onClick={() => handleAnswerChange(q.id, optLetter)}
+                                        className={`w-9 h-9 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center justify-center border ${
+                                          isSubmitted
+                                            ? isCorrectChoice
+                                              ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                                              : isWrongSelected
+                                                ? 'bg-rose-600 text-white border-rose-600'
+                                                : 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700 opacity-60'
+                                            : isSelected
+                                              ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-blue-400'
+                                        }`}
+                                      >
+                                        {optLetter}
+                                      </button>
+                                    );
+                                  })}
+
+                                  {isSubmitted && evalResult && (
+                                    <span className="ml-2 text-xs font-bold">
+                                      {evalResult.isCorrect ? (
+                                        <span className="text-emerald-600 flex items-center gap-0.5"><CheckCircle2 size={15} /> Đúng</span>
+                                      ) : (
+                                        <span className="text-rose-600 flex items-center gap-0.5"><XCircle size={15} /> Đáp án: {evalResult.correctAnswer}</span>
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
                             );
                           })}
                         </div>
                       </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <div className={`${currentFont.body} font-medium leading-relaxed flex flex-wrap items-center gap-2`}>
-                          {q.label && <span>{q.label}</span>}
-                          <input
-                            type="text"
-                            value={userAnswers[q.id] || ''}
-                            disabled={isTimeUp || isSubmitted}
-                            placeholder={q.placeholder || `[Điền câu ${q.id}]`}
-                            onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                            className={`rounded-lg border font-bold transition-all ${currentFont.input} ${
-                              isTimeUp || isSubmitted
-                                ? `${currentTheme.inputDisabled} cursor-not-allowed`
-                                : currentTheme.input
-                            }`}
-                          />
-                          {q.suffix && <span>{q.suffix}</span>}
-                        </div>
-                      </div>
-                    )}
+                    );
+                  }
 
-                    {/* POST SUBMIT REVIEW DETAILS */}
-                    {isSubmitted && evalResult && (
-                      <div className={`mt-3.5 pt-3 border-t ${currentTheme.divider} space-y-2 text-xs`}>
-                        {evalResult.isCorrect ? (
-                          <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
-                            <CheckCircle2 size={16} />
-                            <span>Chính xác! Đáp án: {evalResult.correctAnswer}</span>
+                  // =========================================================
+                  // 4. QUESTIONS SECTION (MULTIPLE CHOICE)
+                  // =========================================================
+                  if (sec.type === 'questions') {
+                    return (
+                      <div key={secIdx} className="space-y-4">
+                        {sec.title && (
+                          <div className={`p-4 rounded-2xl border ${currentTheme.card} ${currentTheme.divider}`}>
+                            <h3 className={`font-bold text-base sm:text-lg ${currentTheme.title}`}>
+                              {sec.title}
+                            </h3>
+                            {sec.instruction && (
+                              <p className={`text-xs mt-1 ${currentTheme.subText}`}>
+                                {sec.instruction}
+                              </p>
+                            )}
                           </div>
-                        ) : (
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-1.5 text-rose-500 font-bold">
-                              <XCircle size={16} />
-                              <span>Chưa chính xác!</span>
-                            </div>
-                            <div className={`border rounded-lg p-2 ${currentTheme.cardSubtle}`}>
-                              <span>Đáp án đúng: </span>
-                              <strong className="font-bold underline">{evalResult.correctAnswer}</strong>
-                              {evalResult.userAnswer && (
-                                <span className="opacity-70 ml-2">(Bạn đã điền: {evalResult.userAnswer})</span>
+                        )}
+
+                        {sec.questionIds?.map((qid) => {
+                          const q = currentPart.questions?.find(item => item.id === qid);
+                          if (!q) return null;
+                          const evalResult = evaluation.results[q.id];
+                          const isActive = activeQuestionId === q.id;
+
+                          return (
+                            <div
+                              key={q.id}
+                              id={`q-${q.id}`}
+                              className={`rounded-2xl border p-5 transition-all ${currentTheme.card} ${
+                                isSubmitted
+                                  ? evalResult?.isCorrect
+                                    ? 'ring-2 ring-emerald-500/50'
+                                    : 'ring-2 ring-rose-500/50'
+                                  : isActive
+                                    ? 'ring-2 ring-blue-500 shadow-md'
+                                    : ''
+                              }`}
+                              onClick={() => setActiveQuestionId(q.id)}
+                            >
+                              <div className="flex items-center justify-between gap-2 mb-2">
+                                <span className={`font-extrabold text-xs px-2.5 py-0.5 rounded-md ${currentTheme.cardSubtle}`}>
+                                  Câu {q.id}
+                                </span>
+                              </div>
+
+                              <p className={`${currentFont.question} leading-snug mb-3`}>
+                                {q.question}
+                              </p>
+
+                              <div className="space-y-2">
+                                {q.options?.map((opt, oIdx) => {
+                                  const optLetter = opt.trim().charAt(0);
+                                  const isChecked = userAnswers[q.id] === opt || userAnswers[q.id] === optLetter;
+                                  return (
+                                    <label
+                                      key={oIdx}
+                                      className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${currentFont.body} ${
+                                        isTimeUp || isSubmitted ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'
+                                      } ${
+                                        isChecked ? currentTheme.radioChecked : currentTheme.radioUnchecked
+                                      }`}
+                                    >
+                                      <input
+                                        type="radio"
+                                        name={`q-${q.id}`}
+                                        value={opt}
+                                        checked={isChecked}
+                                        disabled={isTimeUp || isSubmitted}
+                                        onChange={() => handleAnswerChange(q.id, optLetter)}
+                                        className="w-4 h-4"
+                                      />
+                                      <span>{opt}</span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+
+                              {isSubmitted && evalResult && (
+                                <div className={`mt-3.5 pt-3 border-t ${currentTheme.divider} space-y-2 text-xs`}>
+                                  {evalResult.isCorrect ? (
+                                    <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
+                                      <CheckCircle2 size={16} />
+                                      <span>Chính xác! Đáp án: {evalResult.correctAnswer}</span>
+                                    </div>
+                                  ) : (
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-1.5 text-rose-500 font-bold">
+                                        <XCircle size={16} />
+                                        <span>Chưa chính xác!</span>
+                                      </div>
+                                      <div className={`border rounded-lg p-2 ${currentTheme.cardSubtle}`}>
+                                        <span>Đáp án đúng: </span>
+                                        <strong className="font-bold underline">{evalResult.correctAnswer}</strong>
+                                        {evalResult.userAnswer && (
+                                          <span className="opacity-70 ml-2">(Bạn đã chọn: {evalResult.userAnswer})</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+                                  {evalResult.explanation && (
+                                    <div className={`border rounded-lg p-2.5 leading-relaxed ${currentTheme.cardSubtle}`}>
+                                      <p>{evalResult.explanation}</p>
+                                    </div>
+                                  )}
+                                </div>
                               )}
                             </div>
-                          </div>
-                        )}
+                          );
+                        })}
+                      </div>
+                    );
+                  }
 
-                        {evalResult.explanation && (
-                          <div className={`border rounded-lg p-2.5 leading-relaxed ${currentTheme.cardSubtle}`}>
-                            <div className="font-bold flex items-center gap-1 mb-1 text-current">
-                              <Sparkles size={12} />
-                              <span>Giải thích chi tiết:</span>
-                            </div>
-                            <p>{evalResult.explanation}</p>
-                          </div>
-                        )}
+                  return null;
+                })}
+              </div>
+            ) : (
+              /* Fallback to Standard Questions List */
+              <div className="space-y-4">
+                {displayedQuestions.map((q) => {
+                  const evalResult = evaluation.results[q.id];
+                  const isActive = activeQuestionId === q.id;
 
-                        {evalResult.evidence && (
-                          <div className={`border-l-2 border-current p-2 italic ${currentTheme.cardSubtle}`}>
-                            <span className="font-semibold not-italic block text-[10px] opacity-70">Trích đoạn băng nghe:</span>
-                            &ldquo;{evalResult.evidence}&rdquo;
-                          </div>
+                  return (
+                    <div
+                      key={q.id}
+                      id={`q-${q.id}`}
+                      className={`rounded-2xl border p-5 transition-all ${currentTheme.card} ${
+                        isSubmitted
+                          ? evalResult?.isCorrect
+                            ? 'ring-2 ring-emerald-500/50'
+                            : 'ring-2 ring-rose-500/50'
+                          : isActive
+                            ? 'ring-2 ring-blue-500 shadow-md'
+                            : ''
+                      }`}
+                      onClick={() => setActiveQuestionId(q.id)}
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className={`font-extrabold text-xs px-2.5 py-0.5 rounded-md ${currentTheme.cardSubtle}`}>
+                          Câu {q.id}
+                        </span>
+                        {q.wordLimit && q.type !== 'choice' && (
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${currentTheme.badge}`}>
+                            {q.wordLimit}
+                          </span>
                         )}
                       </div>
-                    )}
 
-                  </div>
-                );
-              })}
-            </div>
+                      {/* CHOICE OR FILL */}
+                      {q.type === 'choice' ? (
+                        <div className="space-y-3">
+                          <p className={`${currentFont.question} leading-snug`}>
+                            {q.question}
+                          </p>
+                          <div className="space-y-2">
+                            {q.options?.map((opt, oIdx) => {
+                              const isChecked = userAnswers[q.id] === opt || userAnswers[q.id] === opt.charAt(0);
+                              return (
+                                <label
+                                  key={oIdx}
+                                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${currentFont.body} ${
+                                    isTimeUp || isSubmitted 
+                                      ? 'cursor-not-allowed opacity-80' 
+                                      : 'cursor-pointer'
+                                  } ${
+                                    isChecked
+                                      ? currentTheme.radioChecked
+                                      : currentTheme.radioUnchecked
+                                  }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`q-${q.id}`}
+                                    value={opt}
+                                    checked={isChecked}
+                                    disabled={isTimeUp || isSubmitted}
+                                    onChange={() => handleAnswerChange(q.id, opt.charAt(0))}
+                                    className="w-4 h-4 disabled:opacity-50"
+                                  />
+                                  <span>{opt}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <div className={`${currentFont.body} font-medium leading-relaxed flex flex-wrap items-center gap-2`}>
+                            {q.label && <span>{q.label}</span>}
+                            <input
+                              type="text"
+                              value={userAnswers[q.id] || ''}
+                              disabled={isTimeUp || isSubmitted}
+                              placeholder={q.placeholder || `[Điền câu ${q.id}]`}
+                              onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                              className={`rounded-lg border font-bold transition-all ${currentFont.input} ${
+                                isTimeUp || isSubmitted
+                                  ? `${currentTheme.inputDisabled} cursor-not-allowed`
+                                  : currentTheme.input
+                              }`}
+                            />
+                            {q.suffix && <span>{q.suffix}</span>}
+                          </div>
+                        </div>
+                      )}
 
-            {/* Expandable Full Transcript Accordion */}
-            {exam.transcript && (
+                      {/* POST SUBMIT REVIEW DETAILS */}
+                      {isSubmitted && evalResult && (
+                        <div className={`mt-3.5 pt-3 border-t ${currentTheme.divider} space-y-2 text-xs`}>
+                          {evalResult.isCorrect ? (
+                            <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
+                              <CheckCircle2 size={16} />
+                              <span>Chính xác! Đáp án: {evalResult.correctAnswer}</span>
+                            </div>
+                          ) : (
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1.5 text-rose-500 font-bold">
+                                <XCircle size={16} />
+                                <span>Chưa chính xác!</span>
+                              </div>
+                              <div className={`border rounded-lg p-2 ${currentTheme.cardSubtle}`}>
+                                <span>Đáp án đúng: </span>
+                                <strong className="font-bold underline">{evalResult.correctAnswer}</strong>
+                                {evalResult.userAnswer && (
+                                  <span className="opacity-70 ml-2">(Bạn đã điền: {evalResult.userAnswer})</span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {evalResult.explanation && (
+                            <div className={`border rounded-lg p-2.5 leading-relaxed ${currentTheme.cardSubtle}`}>
+                              <div className="font-bold flex items-center gap-1 mb-1 text-current">
+                                <Sparkles size={12} />
+                                <span>Giải thích chi tiết:</span>
+                              </div>
+                              <p>{evalResult.explanation}</p>
+                            </div>
+                          )}
+
+                          {evalResult.evidence && (
+                            <div className={`border-l-2 border-current p-2 italic ${currentTheme.cardSubtle}`}>
+                              <span className="font-semibold not-italic block text-[10px] opacity-70">Trích đoạn băng nghe:</span>
+                              &ldquo;{evalResult.evidence}&rdquo;
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Expandable Audio Transcript Accordion */}
+            {(exam.transcript || currentPart?.transcript) && (
               <div className={`rounded-2xl border shadow-xs overflow-hidden transition-colors ${currentTheme.card}`}>
-                <button
-                  type="button"
-                  onClick={() => setExpandedTranscripts(prev => ({ ...prev, [currentPart.id]: !prev[currentPart.id] }))}
+                <div
                   className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-sm transition cursor-pointer hover:opacity-90"
+                  onClick={() => setExpandedTranscripts(prev => ({ ...prev, [currentPart.id]: !prev[currentPart.id] }))}
                 >
                   <div className="flex items-center gap-2">
                     <FileText size={16} className="text-current" />
-                    <span>Lời thoại bài nghe đầy đủ (Audio Transcript)</span>
+                    <span>Lời thoại bài nghe (Audio Transcript)</span>
                   </div>
-                  {expandedTranscripts[currentPart.id] ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                </button>
+
+                  <div className="flex items-center gap-3">
+                    {currentPart?.transcript && exam.transcript && (
+                      <div
+                        className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 text-xs font-semibold"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setTranscriptViewMode(prev => ({ ...prev, [currentPart.id]: 'part' }))}
+                          className={`px-2.5 py-1 rounded-md transition cursor-pointer ${
+                            transcriptViewMode[currentPart.id] !== 'full'
+                              ? 'bg-white dark:bg-gray-700 shadow-xs text-blue-600 dark:text-blue-400 font-bold'
+                              : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                          }`}
+                        >
+                          Phần {currentPart.id}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setTranscriptViewMode(prev => ({ ...prev, [currentPart.id]: 'full' }))}
+                          className={`px-2.5 py-1 rounded-md transition cursor-pointer ${
+                            transcriptViewMode[currentPart.id] === 'full'
+                              ? 'bg-white dark:bg-gray-700 shadow-xs text-blue-600 dark:text-blue-400 font-bold'
+                              : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                          }`}
+                        >
+                          Toàn bộ bài nghe
+                        </button>
+                      </div>
+                    )}
+                    {expandedTranscripts[currentPart.id] ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  </div>
+                </div>
 
                 {expandedTranscripts[currentPart.id] && (
                   <div className={`p-5 border-t font-mono text-xs sm:text-sm leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto ${currentTheme.cardSubtle}`}>
-                    {exam.transcript}
+                    {transcriptViewMode[currentPart.id] === 'full' 
+                      ? exam.transcript 
+                      : (currentPart?.transcript || exam.transcript)}
                   </div>
                 )}
               </div>
