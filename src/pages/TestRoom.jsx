@@ -1,752 +1,970 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { 
-  Volume2, 
-  Menu, 
-  Edit3, 
-  ChevronDown, 
-  Send, 
-  Type, 
-  LogOut, 
   ArrowLeft, 
-  ArrowRight,
-  Check,
-  Moon,
-  Highlighter,
-  Clock,
-  Play,
-  Pause,
-  RotateCcw,
-  CheckCircle2,
-  XCircle,
-  FileText,
-  Headphones,
-  BookOpen
+  Clock, 
+  CheckCircle2, 
+  XCircle, 
+  AlertTriangle, 
+  RotateCcw, 
+  Save, 
+  Send, 
+  BookOpen, 
+  Headphones, 
+  Sparkles, 
+  Edit3, 
+  Trash2, 
+  X, 
+  Volume2, 
+  ChevronDown, 
+  ChevronUp, 
+  FileText, 
+  Trophy, 
+  Menu
 } from 'lucide-react';
+import AudioPlayer from '../components/AudioPlayer';
 import { EXAM_COLLECTIONS } from '../data/examData';
+import { playCorrectSound, triggerCelebration } from '../utils/speechUtils';
+
+// =============================================================================
+// ACCESSIBILITY: THEMES & CONTRAST SCHEMES (CBT STANDARD)
+// =============================================================================
+const THEMES = {
+  standard: {
+    id: 'standard',
+    name: 'Tiêu chuẩn',
+    root: 'bg-[#f8fafc] text-gray-900',
+    header: 'bg-white border-gray-200 text-gray-900',
+    headerSub: 'text-gray-500',
+    card: 'bg-white border-gray-200/90 text-gray-900 shadow-xs',
+    cardHeader: 'bg-slate-50 border-gray-200 text-gray-900',
+    cardSubtle: 'bg-gray-50 border-gray-200 text-gray-700',
+    banner: 'bg-blue-50/80 border-blue-200/80 text-[#185bc3]',
+    passageText: 'text-gray-800 font-serif',
+    input: 'bg-white border-gray-300 text-gray-900 focus:border-[#2c4482] placeholder:text-gray-400',
+    inputDisabled: 'bg-gray-100 border-gray-300 text-gray-600',
+    radioChecked: 'bg-blue-50/80 border-[#2c4482] text-[#2c4482] font-bold shadow-2xs',
+    radioUnchecked: 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50',
+    partTabActive: 'bg-[#2c4482] text-white shadow-xs',
+    partTabInactive: 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200/80',
+    qPillActive: 'bg-[#185bc3] text-white font-bold shadow-xs',
+    qPillInactive: 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+    badge: 'bg-[#e8f1ff] text-[#185bc3]',
+    btnPrimary: 'bg-[#2c4482] hover:bg-[#20325c] text-white shadow-sm',
+    btnSecondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200',
+    menuPopup: 'bg-white border-gray-200 text-gray-800 shadow-xl',
+    divider: 'border-gray-200',
+    subText: 'text-gray-500'
+  },
+  'white-black': {
+    id: 'white-black',
+    name: 'Nền đen',
+    root: 'bg-[#121212] text-gray-100',
+    header: 'bg-[#1a1a1a] border-gray-800 text-white',
+    headerSub: 'text-gray-400',
+    card: 'bg-[#1e1e1e] border-gray-800 text-gray-100 shadow-md',
+    cardHeader: 'bg-[#262626] border-gray-800 text-gray-100',
+    cardSubtle: 'bg-[#252525] border-gray-700 text-gray-300',
+    banner: 'bg-[#1e293b] border-blue-900 text-blue-300',
+    passageText: 'text-gray-200 font-serif',
+    input: 'bg-[#2a2a2a] border-gray-700 text-white focus:border-blue-500 placeholder:text-gray-500',
+    inputDisabled: 'bg-[#181818] border-gray-800 text-gray-500',
+    radioChecked: 'bg-[#1e3a5f] border-blue-500 text-blue-200 font-bold shadow-2xs',
+    radioUnchecked: 'bg-[#252525] border-gray-700 text-gray-200 hover:bg-[#2e2e2e]',
+    partTabActive: 'bg-blue-600 text-white shadow-xs',
+    partTabInactive: 'bg-[#252525] text-gray-300 hover:bg-[#2e2e2e] border border-gray-700',
+    qPillActive: 'bg-blue-500 text-white font-bold shadow-xs',
+    qPillInactive: 'bg-[#2a2a2a] text-gray-300 hover:bg-[#333333]',
+    badge: 'bg-blue-950 text-blue-300 border border-blue-800',
+    btnPrimary: 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm',
+    btnSecondary: 'bg-[#2a2a2a] hover:bg-[#333333] text-gray-200 border border-gray-700',
+    menuPopup: 'bg-[#1e1e1e] border-gray-700 text-gray-100 shadow-2xl',
+    divider: 'border-gray-800',
+    subText: 'text-gray-400'
+  },
+  'yellow-black': {
+    id: 'yellow-black',
+    name: 'Vàng/Đen',
+    root: 'bg-[#000000] text-[#ffe600]',
+    header: 'bg-[#0a0a0a] border-[#ffe600]/40 text-[#ffe600]',
+    headerSub: 'text-[#ffe600]/70',
+    card: 'bg-[#0d0d0d] border-[#ffe600]/50 text-[#ffe600] shadow-md',
+    cardHeader: 'bg-[#161616] border-[#ffe600]/40 text-[#ffe600]',
+    cardSubtle: 'bg-[#141414] border-[#ffe600]/40 text-[#ffe600]',
+    banner: 'bg-[#1a1800] border-[#ffe600] text-[#ffe600]',
+    passageText: 'text-[#ffe600] font-serif',
+    input: 'bg-[#141414] border-[#ffe600] text-[#ffe600] focus:border-[#fff066] focus:ring-1 focus:ring-[#ffe600] placeholder:text-[#ffe600]/40',
+    inputDisabled: 'bg-[#080808] border-[#ffe600]/30 text-[#ffe600]/50',
+    radioChecked: 'bg-[#ffe600] border-[#ffe600] text-black font-extrabold shadow-2xs',
+    radioUnchecked: 'bg-[#0d0d0d] border-[#ffe600]/60 text-[#ffe600] hover:bg-[#1a1a00]',
+    partTabActive: 'bg-[#ffe600] text-black font-extrabold shadow-xs',
+    partTabInactive: 'bg-[#141414] text-[#ffe600] hover:bg-[#202000] border border-[#ffe600]/40',
+    qPillActive: 'bg-[#ffe600] text-black font-extrabold shadow-xs',
+    qPillInactive: 'bg-[#141414] text-[#ffe600] hover:bg-[#202000] border border-[#ffe600]/40',
+    badge: 'bg-[#ffe600]/20 text-[#ffe600] border border-[#ffe600]/40',
+    btnPrimary: 'bg-[#ffe600] hover:bg-[#fff066] text-black font-extrabold shadow-sm',
+    btnSecondary: 'bg-[#161616] hover:bg-[#222200] text-[#ffe600] border border-[#ffe600]/50',
+    menuPopup: 'bg-[#0d0d0d] border-[#ffe600] text-[#ffe600] shadow-2xl',
+    divider: 'border-[#ffe600]/30',
+    subText: 'text-[#ffe600]/70'
+  },
+  'black-white': {
+    id: 'black-white',
+    name: 'Đen/Trắng',
+    root: 'bg-white text-black',
+    header: 'bg-white border-2 border-black text-black',
+    headerSub: 'text-black',
+    card: 'bg-white border-2 border-black text-black shadow-none',
+    cardHeader: 'bg-gray-100 border-b-2 border-black text-black',
+    cardSubtle: 'bg-gray-100 border-2 border-black text-black',
+    banner: 'bg-gray-100 border-2 border-black text-black font-bold',
+    passageText: 'text-black font-serif',
+    input: 'bg-white border-2 border-black text-black focus:ring-2 focus:ring-black placeholder:text-gray-500',
+    inputDisabled: 'bg-gray-100 border-2 border-black text-gray-600',
+    radioChecked: 'bg-black border-2 border-black text-white font-bold',
+    radioUnchecked: 'bg-white border-2 border-black text-black hover:bg-gray-100',
+    partTabActive: 'bg-black text-white font-bold border-2 border-black',
+    partTabInactive: 'bg-white text-black border-2 border-black hover:bg-gray-100',
+    qPillActive: 'bg-black text-white font-bold border-2 border-black',
+    qPillInactive: 'bg-white text-black border-2 border-black hover:bg-gray-100',
+    badge: 'bg-black text-white border border-black',
+    btnPrimary: 'bg-black hover:bg-gray-900 text-white font-extrabold border-2 border-black',
+    btnSecondary: 'bg-white hover:bg-gray-100 text-black border-2 border-black',
+    menuPopup: 'bg-white border-2 border-black text-black shadow-2xl',
+    divider: 'border-2 border-black',
+    subText: 'text-black'
+  }
+};
+
+// =============================================================================
+// TEXT SIZES CONFIGURATION
+// =============================================================================
+const FONT_CLASSES = {
+  standard: {
+    container: 'text-sm sm:text-base',
+    passage: 'text-sm sm:text-base leading-relaxed',
+    title: 'text-xl sm:text-2xl font-black',
+    question: 'text-sm font-bold',
+    body: 'text-xs sm:text-sm',
+    badge: 'text-xs',
+    input: 'text-xs sm:text-sm py-1.5 px-3'
+  },
+  large: {
+    container: 'text-base sm:text-lg',
+    passage: 'text-base sm:text-lg leading-loose',
+    title: 'text-2xl sm:text-3xl font-black',
+    question: 'text-base font-bold',
+    body: 'text-sm sm:text-base',
+    badge: 'text-sm',
+    input: 'text-sm sm:text-base py-2 px-4'
+  },
+  'extra-large': {
+    container: 'text-lg sm:text-xl',
+    passage: 'text-lg sm:text-xl leading-loose',
+    title: 'text-3xl sm:text-4xl font-black',
+    question: 'text-lg font-black',
+    body: 'text-base sm:text-lg',
+    badge: 'text-base',
+    input: 'text-base sm:text-lg py-2.5 px-4'
+  }
+};
+
+// Clean and normalize text for IELTS answer comparison
+function normalizeAnswer(text) {
+  if (!text) return '';
+  return text
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/[‘'’"`]/g, '')
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
+    .replace(/\b(a|an|the)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Check short answer accuracy
+function checkAccuracy(userAnswer, primaryAnswer, acceptableList = []) {
+  const userClean = normalizeAnswer(userAnswer);
+  if (!userClean) return false;
+
+  const targetList = [primaryAnswer, ...acceptableList].filter(Boolean);
+  return targetList.some(target => {
+    const targetClean = normalizeAnswer(target);
+    if (userClean === targetClean) return true;
+    const norm = (s) => s.replace(/\s+(and|to|or)\s+/g, ' ').replace(/\s+/g, ' ');
+    return norm(userClean) === norm(targetClean);
+  });
+}
+
+// Word counter
+function countWords(str) {
+  if (!str || !str.trim()) return 0;
+  return str.trim().split(/\s+/).length;
+}
 
 export default function TestRoom() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const exam = EXAM_COLLECTIONS.find(e => e.id === id) || EXAM_COLLECTIONS[0];
+  // Load exam
+  const exam = useMemo(() => {
+    return EXAM_COLLECTIONS.find(e => e.id === id) || EXAM_COLLECTIONS[0];
+  }, [id]);
+
   const isListening = exam.skill === 'Listening';
   const isReading = exam.skill === 'Reading';
 
-  // Mode and params
+  // URL Params: mode, parts, time
   const mode = searchParams.get('mode') || 'practice';
-  const resumeParam = searchParams.get('resume') === 'true';
   const partsParam = searchParams.get('parts');
-  const allowedPartIds = partsParam 
-    ? partsParam.split(',').map(Number) 
-    : (exam.parts ? exam.parts.map(p => p.id) : [1, 2, 3, 4]);
-  const customTime = searchParams.get('time');
+  const customTimeParam = searchParams.get('time');
 
-  // Active section & question
-  const [activePartIndex, setActivePartIndex] = useState(0);
-  const [activeQuestion, setActiveQuestion] = useState(1);
-  const [userAnswers, setUserAnswers] = useState({});
+  // Accessibility State: Contrast & Text Size (persisted in localStorage)
+  const [contrast, setContrast] = useState(() => {
+    return localStorage.getItem('ielts_test_contrast') || 'standard';
+  });
+  const [textSize, setTextSize] = useState(() => {
+    return localStorage.getItem('ielts_test_textsize') || 'standard';
+  });
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
 
-  // Timer state
-  const initialDuration = customTime 
-    ? parseInt(customTime, 10) * 60 
-    : exam.duration * 60;
+  // Active theme & font size styles
+  const currentTheme = THEMES[contrast] || THEMES.standard;
+  const currentFont = FONT_CLASSES[textSize] || FONT_CLASSES.standard;
+
+  const handleContrastChange = (cId) => {
+    setContrast(cId);
+    try { localStorage.setItem('ielts_test_contrast', cId); } catch (e) {}
+  };
+
+  const handleTextSizeChange = (sId) => {
+    setTextSize(sId);
+    try { localStorage.setItem('ielts_test_textsize', sId); } catch (e) {}
+  };
+
+  // Filter allowed parts
+  const selectedPartIds = useMemo(() => {
+    if (partsParam) {
+      return partsParam.split(',').map(Number).filter(n => !isNaN(n));
+    }
+    return exam.parts ? exam.parts.map(p => p.id) : [1];
+  }, [partsParam, exam.parts]);
+
+  const activeParts = useMemo(() => {
+    if (!exam.parts || exam.parts.length === 0) return [];
+    const filtered = exam.parts.filter(p => selectedPartIds.includes(p.id));
+    return filtered.length > 0 ? filtered : exam.parts;
+  }, [exam.parts, selectedPartIds]);
+
+  // Active Part Index (0-based inside activeParts)
+  const [activePartIdx, setActivePartIdx] = useState(0);
+  const currentPart = activeParts[activePartIdx] || activeParts[0];
+
+  // Active question ID for scrolling
+  const [activeQuestionId, setActiveQuestionId] = useState(null);
+
+  // All questions flattened from active parts
+  const allQuestions = useMemo(() => {
+    return activeParts.flatMap(p => (p.questions || []).map(q => ({
+      ...q,
+      partId: p.id,
+      partTitle: p.title,
+      partName: p.name,
+      instruction: q.instruction || p.instruction,
+      wordLimit: q.wordLimit || p.wordLimit || 'ONE WORD ONLY',
+      maxWords: q.maxWords || p.maxWords || 1
+    })));
+  }, [activeParts]);
+
+  const totalQuestions = allQuestions.length;
+
+  // Answers State: { [qId]: string }
+  const draftStorageKey = `dream_test_${exam.id}_${selectedPartIds.join('-')}_draft`;
+  const [userAnswers, setUserAnswers] = useState(() => {
+    try {
+      const saved = localStorage.getItem(draftStorageKey);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // Time & Timer state
+  const hasTimeLimit = Boolean(customTimeParam && !isNaN(parseInt(customTimeParam, 10)) && parseInt(customTimeParam, 10) > 0);
+  const initialDuration = hasTimeLimit ? parseInt(customTimeParam, 10) * 60 : null;
   const [timeLeft, setTimeLeft] = useState(initialDuration);
   const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const [isTimeUp, setIsTimeUp] = useState(false);
 
-  // Modals
+  // Submission & Results
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
-  const [showQuitModal, setShowQuitModal] = useState(false);
-  const [isTestSubmitted, setIsTestSubmitted] = useState(false);
-  const [testScore, setTestScore] = useState(null);
+  const [showResultsModal, setShowResultsModal] = useState(false);
+  const [saveToast, setSaveToast] = useState(false);
+  const [filterMode, setFilterMode] = useState('all'); // 'all' | 'wrong_only'
 
-  // Accessibility
-  const [contrast, setContrast] = useState('standard');
-  const [textSize, setTextSize] = useState('standard');
-  const [showSettings, setShowSettings] = useState(false);
+  // Transcripts toggles for Listening parts
+  const [expandedTranscripts, setExpandedTranscripts] = useState({});
 
-  // Audio Player for Listening
-  const audioRef = useRef(null);
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(0);
-  const [audioDuration, setAudioDuration] = useState(0);
-  const [audioVolume, setAudioVolume] = useState(0.85);
-
-  // Annotations & Notes
+  // Reading Passage Display & Annotation State
   const [selectionPopup, setSelectionPopup] = useState(null);
-  const [notes, setNotes] = useState({});
-  const [activeNoteId, setActiveNoteId] = useState(null);
+  const [notes, setNotes] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`dream_test_${exam.id}_notes`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [showNotesDrawer, setShowNotesDrawer] = useState(false);
   const [draftNoteContent, setDraftNoteContent] = useState('');
+  const [activeNoteTarget, setActiveNoteTarget] = useState(null);
 
-  const draftStorageKey = `ielts_draft_${exam.id}`;
+  const passageContainerRef = useRef(null);
 
-  // Load saved draft if resume mode
+  // Close settings popup when clicking outside
+  const settingsRef = useRef(null);
   useEffect(() => {
-    if (resumeParam) {
-      const saved = localStorage.getItem(draftStorageKey);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.userAnswers) setUserAnswers(parsed.userAnswers);
-          if (parsed.timeLeft) setTimeLeft(parsed.timeLeft);
-        } catch (e) {}
+    function handleClickOutside(event) {
+      if (settingsRef.current && !settingsRef.current.contains(event.target)) {
+        setShowSettingsMenu(false);
       }
     }
-  }, [resumeParam, draftStorageKey]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  // Auto-save draft to localStorage whenever answers change
-  useEffect(() => {
-    if (Object.keys(userAnswers).length > 0 && !isTestSubmitted) {
-      const draftObj = {
-        exists: true,
-        title: exam.title,
-        timestamp: new Date().toLocaleString('vi-VN'),
-        answeredCount: Object.keys(userAnswers).length,
-        timeSpent: formatTime(initialDuration - timeLeft),
-        version: 'IELTS Test v1',
-        mode: mode === 'fulltest' ? 'Full test' : 'Luyện tập',
-        timeLeft,
-        userAnswers
-      };
-      localStorage.setItem(draftStorageKey, JSON.stringify(draftObj));
+  // Answer change handler - STRICTLY LOCKED IF TIME UP OR SUBMITTED
+  const handleAnswerChange = (qId, val) => {
+    if (isTimeUp || isSubmitted) return;
+    setUserAnswers(prev => ({
+      ...prev,
+      [qId]: val
+    }));
+  };
+
+  // Save draft
+  const handleSaveDraft = () => {
+    try {
+      localStorage.setItem(draftStorageKey, JSON.stringify(userAnswers));
+      setSaveToast(true);
+      setTimeout(() => setSaveToast(false), 2500);
+    } catch (e) {
+      console.error(e);
     }
-  }, [userAnswers, timeLeft, isTestSubmitted, exam.title, initialDuration, mode, draftStorageKey]);
+  };
 
-  // Timer countdown
+  // Evaluation results calculation
+  const evaluation = useMemo(() => {
+    let correctCount = 0;
+    const results = {};
+
+    allQuestions.forEach(q => {
+      const userVal = userAnswers[q.id] || '';
+      let isCorrect = false;
+
+      if (q.type === 'choice') {
+        const cleanUser = (userVal || '').trim().toUpperCase();
+        const cleanAnswer = (q.answer || q.primaryAnswer || '').trim().toUpperCase();
+        isCorrect = cleanUser === cleanAnswer || cleanUser.startsWith(cleanAnswer);
+      } else {
+        isCorrect = checkAccuracy(userVal, q.answer || q.primaryAnswer, q.acceptable || []);
+      }
+
+      if (isCorrect) correctCount++;
+      results[q.id] = {
+        isCorrect,
+        userAnswer: userVal,
+        correctAnswer: q.primaryAnswer || q.answer,
+        explanation: q.explanation || '',
+        evidence: q.evidence || ''
+      };
+    });
+
+    // Scaled IELTS Band Score Calculation
+    let band = '4.0';
+    const ratio = totalQuestions > 0 ? (correctCount / totalQuestions) : 0;
+    if (ratio >= 0.95) band = '9.0';
+    else if (ratio >= 0.90) band = '8.5';
+    else if (ratio >= 0.82) band = '8.0';
+    else if (ratio >= 0.75) band = '7.5';
+    else if (ratio >= 0.68) band = '7.0';
+    else if (ratio >= 0.60) band = '6.5';
+    else if (ratio >= 0.52) band = '6.0';
+    else if (ratio >= 0.42) band = '5.5';
+    else if (ratio >= 0.35) band = '5.0';
+    else if (ratio >= 0.28) band = '4.5';
+
+    return {
+      correctCount,
+      total: totalQuestions,
+      percentage: totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0,
+      band,
+      results
+    };
+  }, [allQuestions, userAnswers, totalQuestions]);
+
+  // Handle final submit
+  const handleSubmitTest = useCallback((isAutoTimeout = false) => {
+    setIsTimerRunning(false);
+    setIsSubmitted(true);
+    setShowSubmitModal(false);
+    setShowResultsModal(true);
+
+    if (isAutoTimeout) {
+      setIsTimeUp(true);
+    }
+
+    try {
+      if (evaluation.percentage >= 60) {
+        playCorrectSound();
+        triggerCelebration();
+      }
+    } catch (e) {}
+
+    // Save to test history
+    try {
+      const history = JSON.parse(localStorage.getItem('dream_exam_history') || '{}');
+      history[`${exam.id}_${Date.now()}`] = {
+        examId: exam.id,
+        examTitle: exam.title,
+        parts: selectedPartIds,
+        score: evaluation.correctCount,
+        total: totalQuestions,
+        band: evaluation.band,
+        completedAt: new Date().toISOString(),
+        timedOut: isAutoTimeout
+      };
+      localStorage.setItem('dream_exam_history', JSON.stringify(history));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [exam.id, exam.title, selectedPartIds, evaluation, totalQuestions]);
+
+  // Timer countdown hook
   useEffect(() => {
-    if (!isTimerRunning || timeLeft <= 0 || isTestSubmitted) return;
+    if (!hasTimeLimit || !isTimerRunning || isSubmitted || isTimeUp) return;
+
+    if (timeLeft <= 0) {
+      setIsTimeUp(true);
+      handleSubmitTest(true);
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(interval);
-          handleSubmitTest();
+          setIsTimeUp(true);
+          handleSubmitTest(true);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [isTimerRunning, timeLeft, isTestSubmitted]);
+  }, [hasTimeLimit, isTimerRunning, isSubmitted, isTimeUp, timeLeft, handleSubmitTest]);
 
-  // Audio track switching when part changes (for Listening)
-  const currentPart = exam.parts?.[activePartIndex] || exam.parts?.[0];
-  const currentAudioUrl = exam.audioTracks?.[currentPart?.id] || currentPart?.audioUrl;
-
-  useEffect(() => {
-    if (!isListening) return;
-    setIsPlayingAudio(false);
-    setAudioProgress(0);
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, [activePartIndex, isListening]);
-
-  // Audio event listeners
-  const onAudioTimeUpdate = () => {
-    if (audioRef.current) {
-      setAudioProgress(audioRef.current.currentTime);
-      setAudioDuration(audioRef.current.duration || 0);
-    }
+  // Format time MM:SS
+  const formatTime = (seconds) => {
+    if (seconds === null || seconds === undefined || isNaN(seconds)) return '00:00';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  const togglePlayAudio = () => {
-    if (!audioRef.current) return;
-    if (isPlayingAudio) {
-      audioRef.current.pause();
-      setIsPlayingAudio(false);
-    } else {
-      audioRef.current.play().catch(e => console.log('Audio autoplay blocked:', e));
-      setIsPlayingAudio(true);
+  // Retake test
+  const handleRetake = () => {
+    setIsSubmitted(false);
+    setIsTimeUp(false);
+    setShowResultsModal(false);
+    setUserAnswers({});
+    if (hasTimeLimit) {
+      setTimeLeft(initialDuration);
+      setIsTimerRunning(true);
     }
+    try {
+      localStorage.removeItem(draftStorageKey);
+    } catch (e) {}
   };
 
-  // Text selection handler for Notes / Highlights
-  const handleMouseUp = (e) => {
-    if (e.target.closest('#selection-popup') || e.target.closest('#note-sidebar') || e.target.closest('input')) {
+  // Answered count
+  const answeredCount = Object.keys(userAnswers).filter(k => (userAnswers[k] || '').toString().trim() !== '').length;
+
+  // Text Selection for Reading Highlighter & Notes
+  const handlePassageMouseUp = () => {
+    if (!isReading) return;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+      setSelectionPopup(null);
       return;
     }
-    const selection = window.getSelection();
-    if (selection && !selection.isCollapsed && selection.toString().trim() !== '') {
-      const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      setSelectionPopup({
-        text: selection.toString(),
-        x: rect.left + (rect.width / 2),
-        y: rect.top - 10
-      });
-    } else {
+
+    const range = sel.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    setSelectionPopup({
+      text: sel.toString().trim(),
+      x: rect.left + rect.width / 2,
+      y: rect.top - 8,
+      range: range.cloneRange()
+    });
+  };
+
+  const applyHighlight = (colorClass) => {
+    if (!selectionPopup || !selectionPopup.range) return;
+    try {
+      const span = document.createElement('mark');
+      span.className = `${colorClass} px-0.5 rounded transition-colors cursor-pointer select-none`;
+      span.textContent = selectionPopup.text;
+      selectionPopup.range.deleteContents();
+      selectionPopup.range.insertNode(span);
+      window.getSelection()?.removeAllRanges();
       setSelectionPopup(null);
+    } catch (e) {
+      console.error('Highlight failed:', e);
     }
   };
 
-  const applyAnnotation = (type) => {
+  const openNoteForSelection = () => {
     if (!selectionPopup) return;
-    if (type === 'note') {
-      const noteId = `note-${Date.now()}`;
-      setNotes(prev => ({
-        ...prev,
-        [noteId]: { text: selectionPopup.text, content: '' }
-      }));
-      setActiveNoteId(noteId);
-      setDraftNoteContent('');
-    }
+    setActiveNoteTarget({
+      id: `note-${Date.now()}`,
+      passageId: currentPart.id,
+      text: selectionPopup.text
+    });
+    setDraftNoteContent('');
+    setShowNotesDrawer(true);
     setSelectionPopup(null);
   };
 
-  const handleAnswerChange = (qId, val) => {
-    setUserAnswers(prev => ({ ...prev, [qId]: val }));
+  const saveCurrentNote = () => {
+    if (!activeNoteTarget || !draftNoteContent.trim()) return;
+    const noteId = activeNoteTarget.id;
+    const newNotes = {
+      ...notes,
+      [noteId]: {
+        id: noteId,
+        passageId: activeNoteTarget.passageId,
+        text: activeNoteTarget.text,
+        content: draftNoteContent.trim(),
+        createdAt: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+      }
+    };
+    setNotes(newNotes);
+    try {
+      localStorage.setItem(`dream_test_${exam.id}_notes`, JSON.stringify(newNotes));
+    } catch (e) {}
+    setActiveNoteTarget(null);
+    setDraftNoteContent('');
   };
 
-  const handleQuit = (saveDraft = true) => {
-    setIsTimerRunning(false);
-    if (!saveDraft) {
-      localStorage.removeItem(draftStorageKey);
+  const deleteNote = (noteId) => {
+    const next = { ...notes };
+    delete next[noteId];
+    setNotes(next);
+    try {
+      localStorage.setItem(`dream_test_${exam.id}_notes`, JSON.stringify(next));
+    } catch (e) {}
+  };
+
+  // Displayed questions filter
+  const displayedQuestions = useMemo(() => {
+    const currentPartQuestions = currentPart?.questions || [];
+    if (filterMode === 'wrong_only' && isSubmitted) {
+      return currentPartQuestions.filter(q => !evaluation.results[q.id]?.isCorrect);
     }
-    navigate(`/tests/${exam.id}`);
-  };
-
-  const handleSubmitTest = () => {
-    setIsTimerRunning(false);
-    let correctCount = 0;
-    
-    // Check all parts
-    exam.parts?.forEach(part => {
-      part.questions?.forEach(q => {
-        const userVal = (userAnswers[q.id] || '').trim().toLowerCase();
-        if (q.type === 'choice') {
-          if (userVal === (q.answer || '').trim().toLowerCase()) {
-            correctCount++;
-          }
-        } else {
-          const matchAcceptable = q.acceptable && q.acceptable.some(a => a.toLowerCase() === userVal);
-          const matchAnswer = q.answer && q.answer.toLowerCase() === userVal;
-          if (matchAcceptable || matchAnswer) {
-            correctCount++;
-          }
-        }
-      });
-    });
-
-    // IELTS band calculation
-    let band = '4.0';
-    if (correctCount >= 39) band = '9.0';
-    else if (correctCount >= 37) band = '8.5';
-    else if (correctCount >= 35) band = '8.0';
-    else if (correctCount >= 32) band = '7.5';
-    else if (correctCount >= 30) band = '7.0';
-    else if (correctCount >= 26) band = '6.5';
-    else if (correctCount >= 23) band = '6.0';
-    else if (correctCount >= 18) band = '5.5';
-    else if (correctCount >= 16) band = '5.0';
-    else if (correctCount >= 13) band = '4.5';
-
-    setTestScore({ correctCount, total: 40, band });
-    setIsTestSubmitted(true);
-    setShowSubmitModal(true);
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
-
-  const contrastClasses = {
-    standard: 'bg-[#f4f6fa] text-gray-900',
-    'black-white': 'bg-white text-black',
-    'white-black': 'bg-[#121212] text-white',
-    'yellow-black': 'bg-[#000000] text-[#ffe600]'
-  };
-
-  const textSizeClasses = {
-    standard: 'text-base',
-    large: 'text-lg',
-    'extra-large': 'text-xl'
-  };
+    return currentPartQuestions;
+  }, [currentPart, filterMode, isSubmitted, evaluation.results]);
 
   return (
-    <div 
-      className={`min-h-screen flex flex-col font-sans transition-colors select-text ${contrastClasses[contrast]} ${textSizeClasses[textSize]}`}
-      onMouseUp={handleMouseUp}
-    >
-      {/* Hidden audio element for listening track */}
-      {isListening && currentAudioUrl && (
-        <audio 
-          ref={audioRef} 
-          src={currentAudioUrl}
-          onTimeUpdate={onAudioTimeUpdate}
-          onEnded={() => setIsPlayingAudio(false)} 
-        />
-      )}
+    <div className={`min-h-screen pt-16 pb-20 select-text font-sans transition-colors ${currentTheme.root} ${currentFont.container}`}>
+      
+      {/* ========================================================================= */}
+      {/* 1. TOP STICKY HEADER BAR (WITH ACCESSIBILITY MENU) */}
+      {/* ========================================================================= */}
+      <header className={`border-b sticky top-0 z-40 transition-colors shadow-xs ${currentTheme.header}`}>
+        <div className="max-w-[1540px] mx-auto px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+          
+          {/* Left: Back & Test Identity */}
+          <div className="flex items-center gap-3">
+            <Link
+              to={`/tests/${exam.id}`}
+              className={`p-2 rounded-xl border transition-colors ${currentTheme.btnSecondary}`}
+              title="Quay lại thông tin đề thi"
+            >
+              <ArrowLeft size={16} />
+            </Link>
 
-      {/* TOP CBT HEADER */}
-      <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-4 select-none z-30 shadow-xs">
-        {/* Left: Test Title & Audio */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="bg-[#2c4482] text-white text-xs px-2.5 py-1 rounded font-bold uppercase tracking-wider">
-              {isListening ? 'IELTS LISTENING' : 'IELTS READING'}
-            </span>
-            <span className="font-bold text-sm text-gray-800 hidden md:inline">
-              {exam.title}
-            </span>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 ${currentTheme.badge}`}>
+                  {isListening ? <Headphones size={11} /> : <BookOpen size={11} />}
+                  <span>{isListening ? 'IELTS Listening' : 'IELTS Reading'}</span>
+                </span>
+                <span className={`text-xs font-semibold hidden sm:inline ${currentTheme.headerSub}`}>
+                  {selectedPartIds.length === (exam.parts?.length || 4) 
+                    ? 'Full Test' 
+                    : `${selectedPartIds.length} phần đã chọn`}
+                </span>
+              </div>
+              <h1 className={`text-sm sm:text-base font-bold truncate max-w-xs sm:max-w-md lg:max-w-lg`}>
+                {exam.title}
+              </h1>
+            </div>
           </div>
 
-          {/* Audio Controls for Listening */}
-          {isListening && currentAudioUrl && (
-            <div className="flex items-center gap-2.5 bg-gray-100 rounded-full px-3 py-1.5 border border-gray-200">
-              <button
-                onClick={togglePlayAudio}
-                className="text-[#2c4482] hover:scale-110 transition-transform cursor-pointer"
-                title={isPlayingAudio ? 'Tạm dừng audio' : 'Phát audio'}
-              >
-                {isPlayingAudio ? <Pause size={16} /> : <Play size={16} />}
-              </button>
-              <span className="text-[11px] font-semibold text-gray-700">
-                Track {activePartIndex + 1}
-              </span>
-              <Volume2 size={15} className="text-gray-500" />
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.05"
-                value={audioVolume}
-                onChange={(e) => {
-                  const val = parseFloat(e.target.value);
-                  setAudioVolume(val);
-                  if (audioRef.current) audioRef.current.volume = val;
-                }}
-                className="w-16 h-1 bg-gray-300 rounded-lg cursor-pointer accent-[#2c4482]"
-              />
-              <span className="text-[11px] text-gray-600 font-mono">
-                {formatTime(audioProgress)} / {formatTime(audioDuration || 600)}
-              </span>
+          {/* Center: Countdown Timer Display & Answered Counter */}
+          <div className="flex items-center gap-3">
+            <div className={`px-3.5 py-1.5 rounded-xl border flex items-center gap-2 transition-all ${
+              isTimeUp 
+                ? 'bg-rose-50 border-rose-300 text-rose-700 animate-pulse'
+                : hasTimeLimit && timeLeft < 300 
+                  ? 'bg-amber-50 border-amber-300 text-amber-700 font-bold'
+                  : currentTheme.cardSubtle
+            }`}>
+              <Clock size={16} className={hasTimeLimit && timeLeft < 300 ? 'text-amber-600 animate-pulse' : 'opacity-70'} />
+              <div className="text-xs sm:text-sm font-mono font-bold">
+                {hasTimeLimit ? (
+                  isTimeUp ? 'HẾT GIỜ (00:00)' : formatTime(timeLeft)
+                ) : (
+                  'Tự do'
+                )}
+              </div>
+              {hasTimeLimit && !isTimeUp && (
+                <span className="text-[10px] opacity-60 font-sans hidden sm:inline">còn lại</span>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Center: Countdown Timer */}
-        <div className="flex items-center gap-2">
-          <Clock size={18} className={timeLeft < 300 ? 'text-red-500 animate-pulse' : 'text-[#2c4482]'} />
-          <span className={`font-mono font-bold text-base md:text-lg ${timeLeft < 300 ? 'text-red-600' : 'text-gray-800'}`}>
-            {formatTime(timeLeft)}
-          </span>
-          <span className="text-xs text-gray-400 hidden sm:inline">còn lại</span>
-        </div>
+            {/* Answered Progress Counter */}
+            <div className={`hidden md:flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border ${currentTheme.cardSubtle}`}>
+              <span>Đã làm:</span>
+              <strong className="font-bold">{answeredCount}</strong> / {totalQuestions} câu
+            </div>
+          </div>
 
-        {/* Right: Settings, Submit, Quit */}
-        <div className="flex items-center gap-3">
-          
-          {/* Settings Menu */}
-          <div className="relative">
-            <button
-              onClick={() => setShowSettings(!showSettings)}
-              className="p-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors flex items-center gap-1 cursor-pointer"
-              title="Cài đặt hiển thị"
-            >
-              <Menu size={18} />
-              <ChevronDown size={14} />
-            </button>
+          {/* Right: Accessibility Menu, Save Draft, Submit, Retake */}
+          <div className="flex items-center gap-2">
+            
+            {/* ACCESSIBILITY SETTINGS DROPDOWN BUTTON (☰ ⌄) */}
+            <div className="relative" ref={settingsRef}>
+              <button
+                type="button"
+                onClick={() => setShowSettingsMenu(!showSettingsMenu)}
+                className={`p-2 border rounded-xl flex items-center gap-1 transition-colors cursor-pointer ${currentTheme.btnSecondary}`}
+                title="Cài đặt tương phản & Cỡ chữ (Accessibility)"
+              >
+                <Menu size={16} />
+                <ChevronDown size={13} />
+              </button>
 
-            {showSettings && (
-              <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-3 z-50 text-xs text-gray-800 space-y-3">
-                <div>
-                  <div className="font-bold text-gray-700 mb-1.5">Tương phản (Contrast):</div>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    <button 
-                      onClick={() => setContrast('standard')}
-                      className={`p-1.5 rounded border text-center ${contrast === 'standard' ? 'border-[#2c4482] bg-blue-50 font-bold' : 'border-gray-200'}`}
-                    >
-                      Tiêu chuẩn
-                    </button>
-                    <button 
-                      onClick={() => setContrast('white-black')}
-                      className={`p-1.5 rounded border text-center bg-black text-white ${contrast === 'white-black' ? 'ring-2 ring-blue-500' : ''}`}
-                    >
-                      Nền đen
-                    </button>
-                    <button 
-                      onClick={() => setContrast('yellow-black')}
-                      className={`p-1.5 rounded border text-center bg-black text-yellow-300 ${contrast === 'yellow-black' ? 'ring-2 ring-blue-500' : ''}`}
-                    >
-                      Vàng/Đen
-                    </button>
-                    <button 
-                      onClick={() => setContrast('black-white')}
-                      className={`p-1.5 rounded border text-center bg-white text-black ${contrast === 'black-white' ? 'ring-2 ring-blue-500' : ''}`}
-                    >
-                      Đen/Trắng
-                    </button>
+              {/* POPUP: CONTRAST & TEXT SIZE */}
+              {showSettingsMenu && (
+                <div className={`absolute right-0 mt-2 w-64 rounded-2xl border p-4 z-50 text-xs space-y-3.5 text-left animate-in fade-in zoom-in-95 ${currentTheme.menuPopup}`}>
+                  {/* Contrast options */}
+                  <div>
+                    <div className="font-bold mb-2 opacity-90">Tương phản (Contrast):</div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <button 
+                        type="button"
+                        onClick={() => handleContrastChange('standard')}
+                        className={`p-2 rounded-lg border text-center font-bold text-xs transition-all cursor-pointer ${
+                          contrast === 'standard' 
+                            ? 'bg-[#2c4482] text-white ring-2 ring-blue-300' 
+                            : 'bg-white text-gray-800 border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        Tiêu chuẩn
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => handleContrastChange('white-black')}
+                        className={`p-2 rounded-lg border text-center font-bold text-xs transition-all cursor-pointer ${
+                          contrast === 'white-black' 
+                            ? 'bg-black text-white ring-2 ring-blue-500 border-blue-400' 
+                            : 'bg-[#181818] text-white border-gray-700 hover:bg-[#252525]'
+                        }`}
+                      >
+                        Nền đen
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => handleContrastChange('yellow-black')}
+                        className={`p-2 rounded-lg border text-center font-bold text-xs transition-all cursor-pointer ${
+                          contrast === 'yellow-black' 
+                            ? 'bg-black text-[#ffe600] ring-2 ring-[#ffe600] border-[#ffe600]' 
+                            : 'bg-black text-[#ffe600] border-[#ffe600]/60 hover:bg-[#1a1a00]'
+                        }`}
+                      >
+                        Vàng/Đen
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => handleContrastChange('black-white')}
+                        className={`p-2 rounded-lg border-2 text-center font-bold text-xs transition-all cursor-pointer ${
+                          contrast === 'black-white' 
+                            ? 'bg-white text-black ring-2 ring-black border-black' 
+                            : 'bg-white text-black border-black hover:bg-gray-100'
+                        }`}
+                      >
+                        Đen/Trắng
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Text Size options */}
+                  <div className={`pt-3 border-t ${currentTheme.divider}`}>
+                    <div className="font-bold mb-2 opacity-90">Cỡ chữ (Text size):</div>
+                    <div className="flex gap-1.5">
+                      {[
+                        { id: 'standard', label: 'Vừa' },
+                        { id: 'large', label: 'Lớn' },
+                        { id: 'extra-large', label: 'Rất lớn' }
+                      ].map(s => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => handleTextSizeChange(s.id)}
+                          className={`flex-1 py-1.5 rounded-lg border text-center font-bold text-xs transition-all cursor-pointer ${
+                            textSize === s.id
+                              ? contrast === 'yellow-black' 
+                                ? 'bg-[#ffe600] text-black font-extrabold border-[#ffe600]' 
+                                : contrast === 'white-black' 
+                                  ? 'bg-blue-600 text-white border-blue-500' 
+                                  : 'bg-[#2c4482] text-white border-[#2c4482]'
+                              : `${currentTheme.btnSecondary}`
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
+              )}
+            </div>
 
-                <div className="border-t border-gray-100 pt-2">
-                  <div className="font-bold text-gray-700 mb-1.5">Cỡ chữ (Text size):</div>
-                  <div className="flex gap-1.5">
-                    <button 
-                      onClick={() => setTextSize('standard')}
-                      className={`flex-1 py-1 rounded border text-center ${textSize === 'standard' ? 'bg-blue-50 border-[#2c4482] font-bold' : 'border-gray-200'}`}
-                    >
-                      Vừa
-                    </button>
-                    <button 
-                      onClick={() => setTextSize('large')}
-                      className={`flex-1 py-1 rounded border text-center ${textSize === 'large' ? 'bg-blue-50 border-[#2c4482] font-bold' : 'border-gray-200'}`}
-                    >
-                      Lớn
-                    </button>
-                    <button 
-                      onClick={() => setTextSize('extra-large')}
-                      className={`flex-1 py-1 rounded border text-center ${textSize === 'extra-large' ? 'bg-blue-50 border-[#2c4482] font-bold' : 'border-gray-200'}`}
-                    >
-                      Rất lớn
-                    </button>
-                  </div>
-                </div>
+            {!isSubmitted ? (
+              <>
+                <button
+                  type="button"
+                  onClick={handleSaveDraft}
+                  disabled={isTimeUp}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${currentTheme.btnSecondary}`}
+                >
+                  <Save size={14} />
+                  <span className="hidden sm:inline">Lưu nháp</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowSubmitModal(true)}
+                  disabled={isTimeUp}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${currentTheme.btnPrimary}`}
+                >
+                  <Send size={14} />
+                  <span>Nộp bài</span>
+                </button>
+              </>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowResultsModal(true)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${currentTheme.btnPrimary}`}
+                >
+                  <Trophy size={14} />
+                  <span>Xem điểm</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRetake}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${currentTheme.btnSecondary}`}
+                >
+                  <RotateCcw size={14} />
+                  <span>Làm lại</span>
+                </button>
               </div>
             )}
           </div>
-
-          {/* Submit Test Button */}
-          <button
-            onClick={() => setShowSubmitModal(true)}
-            className="bg-[#2c4482] hover:bg-[#20325c] text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
-          >
-            <Send size={15} />
-            <span>Nộp bài</span>
-          </button>
-
-          {/* Quit Button */}
-          <button
-            onClick={() => setShowQuitModal(true)}
-            className="border border-red-200 text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors cursor-pointer"
-            title="Thoát phòng thi"
-          >
-            <LogOut size={16} />
-          </button>
         </div>
       </header>
 
-      {/* MAIN TEST AREA */}
-      <div className="flex-1 flex overflow-hidden relative">
+      {/* Save Draft Toast */}
+      {saveToast && (
+        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 text-xs font-bold animate-in fade-in slide-in-from-top-3">
+          <CheckCircle2 size={16} />
+          <span>Đã lưu bài làm nháp thành công!</span>
+        </div>
+      )}
 
-        {/* ======================================================== */}
-        {/* CASE 1: LISTENING MODE (4 PARTS WITH DEDICATED AUDIO) */}
-        {/* ======================================================== */}
-        {isListening && (
-          <main className="flex-1 overflow-y-auto p-4 md:p-8 max-w-4xl mx-auto w-full text-left">
-            <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 shadow-xs mb-8">
-              
-              {/* Part Header */}
-              <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
-                <div>
-                  <span className="text-xs font-bold text-[#2c4482] uppercase tracking-wider">
-                    PART {activePartIndex + 1}
+      {/* ========================================================================= */}
+      {/* 2. TIME-UP LOCKOUT BANNER (STRICT DISABILITY WHEN EXPIRED) */}
+      {/* ========================================================================= */}
+      {isTimeUp && (
+        <div className="bg-rose-600 text-white px-4 py-3 text-center text-xs sm:text-sm font-bold shadow-md flex items-center justify-center gap-2">
+          <AlertTriangle size={18} className="shrink-0 animate-bounce" />
+          <span>⏰ ĐÃ HẾT THỜI GIAN LÀM BÀI! Toàn bộ câu trả lời đã được khóa. Hệ thống đã tự động chấm điểm và nộp bài.</span>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 3. PART SWITCHER TABS (FOR SELECTED PARTS / PASSAGES) */}
+      {/* ========================================================================= */}
+      <div className="max-w-[1540px] mx-auto px-4 sm:px-6 pt-4 pb-2">
+        <div className={`rounded-2xl border p-2 flex items-center justify-between gap-2 flex-wrap transition-colors ${currentTheme.card}`}>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className={`text-xs font-bold uppercase px-2 ${currentTheme.headerSub}`}>
+              {isReading ? 'Bài đọc:' : 'Phần thi:'}
+            </span>
+            {activeParts.map((part, pIdx) => {
+              const isActive = activePartIdx === pIdx;
+              const partQuestions = part.questions || [];
+              const answeredInPart = partQuestions.filter(q => !!userAnswers[q.id]).length;
+
+              return (
+                <button
+                  key={part.id}
+                  type="button"
+                  onClick={() => {
+                    setActivePartIdx(pIdx);
+                    if (partQuestions.length > 0) setActiveQuestionId(partQuestions[0].id);
+                  }}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+                    isActive 
+                      ? currentTheme.partTabActive 
+                      : currentTheme.partTabInactive
+                  }`}
+                >
+                  <span>{part.title}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    isActive ? 'bg-black/20 text-current' : 'bg-current/10 text-current'
+                  }`}>
+                    {answeredInPart}/{partQuestions.length}
                   </span>
-                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mt-1">
-                    {currentPart?.name || `Part ${activePartIndex + 1}`}
-                  </h2>
-                </div>
-                <span className="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  Questions {currentPart?.questionRange || '1–10'}
-                </span>
-              </div>
+                </button>
+              );
+            })}
+          </div>
 
-              {/* Instruction */}
-              <div className="bg-blue-50/70 border border-blue-100 rounded-lg p-4 text-sm text-[#185bc3] font-medium mb-6">
-                {currentPart?.instruction || 'Answer the questions below.'}
-              </div>
+          {/* Quick Stats Pill */}
+          <div className={`text-xs font-medium px-2 ${currentTheme.subText}`}>
+            Đang mở: <strong className="font-bold">{currentPart?.name || currentPart?.title}</strong>
+          </div>
+        </div>
+      </div>
 
-              {/* Questions List */}
-              <div className="space-y-6">
-                {currentPart?.questions?.map((q) => {
-                  const isAnswered = !!userAnswers[q.id];
-                  const isActive = activeQuestion === q.id;
-
-                  return (
-                    <div 
-                      key={q.id}
-                      id={`q-${q.id}`}
-                      className={`p-4 rounded-lg transition-colors ${
-                        isActive ? 'bg-blue-50/50 ring-1 ring-blue-300' : 'hover:bg-gray-50'
-                      }`}
-                      onClick={() => setActiveQuestion(q.id)}
-                    >
-                      {/* Multiple Choice question */}
-                      {q.type === 'choice' ? (
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-3 text-sm">
-                            <span className="w-6 h-6 rounded-full bg-gray-200 text-gray-700 inline-flex items-center justify-center font-bold text-xs mr-2">
-                              {q.id}
-                            </span>
-                            {q.question}
-                          </p>
-                          <div className="space-y-2 pl-6">
-                            {q.options?.map((opt, oIdx) => {
-                              const letter = opt.charAt(0);
-                              return (
-                                <label key={oIdx} className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer">
-                                  <input
-                                    type="radio"
-                                    name={`q-${q.id}`}
-                                    checked={userAnswers[q.id] === letter}
-                                    onChange={() => handleAnswerChange(q.id, letter)}
-                                    className="text-[#2c4482] focus:ring-[#2c4482]"
-                                  />
-                                  <span>{opt}</span>
-                                </label>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ) : (
-                        /* Fill in the blanks question */
-                        <div className="flex flex-wrap items-center gap-2 text-sm">
-                          <span className="w-7 h-7 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-xs shrink-0">
-                            {q.id}
-                          </span>
-                          <span className="text-gray-800">{q.label}</span>
-                          <input
-                            type="text"
-                            value={userAnswers[q.id] || ''}
-                            onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                            placeholder={`[${q.id}]`}
-                            className="w-44 bg-white border border-gray-300 rounded px-3 py-1.5 text-sm font-medium text-[#2c4482] focus:outline-none focus:border-[#2c4482] focus:ring-1 focus:ring-[#2c4482] shadow-2xs"
-                          />
-                          {q.suffix && <span className="text-gray-800">{q.suffix}</span>}
-                          {isAnswered && (
-                            <CheckCircle2 size={16} className="text-green-500 shrink-0 ml-1" />
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-            </div>
-          </main>
-        )}
-
-        {/* ======================================================== */}
-        {/* CASE 2: READING MODE (3 PASSAGES WITH 2-COLUMN SPLIT) */}
-        {/* ======================================================== */}
+      {/* ========================================================================= */}
+      {/* 4. MAIN TEST BODY: READING (SPLIT-VIEW) VS LISTENING (AUDIO & CARDS) */}
+      {/* ========================================================================= */}
+      <div className="max-w-[1540px] mx-auto px-4 sm:px-6 pt-3">
+        
+        {/* ======================================================================= */}
+        {/* CASE A: READING LAYOUT (2-COLUMN SPLIT WITH HIGHLIGHTER & NOTES) */}
+        {/* ======================================================================= */}
         {isReading && (
-          <div className="flex-1 flex overflow-hidden text-left">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             
-            {/* Left Column: Reading Passage Text */}
-            <div className="w-1/2 border-r border-gray-200 bg-white overflow-y-auto p-6 md:p-8">
-              <div className="max-w-2xl mx-auto space-y-4">
-                <div className="border-b pb-3 mb-4">
-                  <span className="text-xs font-bold text-[#2c4482] uppercase tracking-wider">
+            {/* LEFT COLUMN: READING PASSAGE TEXT (7 COLS) */}
+            <div className={`lg:col-span-7 rounded-3xl border overflow-hidden flex flex-col transition-colors ${currentTheme.card}`}>
+              
+              {/* Passage Toolbar */}
+              <div className={`px-5 py-3 border-b flex items-center justify-between gap-3 flex-wrap transition-colors ${currentTheme.cardHeader}`}>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-md ${currentTheme.badge}`}>
                     {currentPart?.title}
                   </span>
-                  <h2 className="text-2xl font-bold text-gray-900 mt-1">
+                  <span className={`text-xs font-medium ${currentTheme.subText}`}>
+                    Câu {currentPart?.questionRange}
+                  </span>
+                </div>
+
+                {/* Notes Drawer Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowNotesDrawer(!showNotesDrawer)}
+                  className={`flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg border font-semibold cursor-pointer transition-colors ${currentTheme.btnSecondary}`}
+                >
+                  <Edit3 size={13} className="text-current" />
+                  <span>Ghi chú ({Object.keys(notes).length})</span>
+                </button>
+              </div>
+
+              {/* Passage Content Container */}
+              <div 
+                ref={passageContainerRef}
+                onMouseUp={handlePassageMouseUp}
+                className="p-6 sm:p-8 max-h-[calc(100vh-220px)] overflow-y-auto leading-relaxed relative"
+              >
+                <div className={`border-b pb-4 mb-5 ${currentTheme.divider}`}>
+                  <h2 className={`${currentFont.title} mb-1`}>
                     {currentPart?.name}
                   </h2>
+                  <p className={`text-xs ${currentTheme.subText}`}>
+                    Bôi đen văn bản để tô màu (Highlight) hoặc thêm ghi chú giải thích.
+                  </p>
                 </div>
-                <div className="prose prose-sm text-gray-800 leading-relaxed font-serif whitespace-pre-line text-justify">
+
+                <div className={`whitespace-pre-line text-justify ${currentTheme.passageText} ${currentFont.passage}`}>
                   {currentPart?.readingText}
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Questions */}
-            <div className="w-1/2 bg-[#fafbfc] overflow-y-auto p-6 md:p-8">
-              <div className="max-w-xl mx-auto space-y-6">
-                
-                {/* Instruction */}
-                <div className="bg-blue-50/70 border border-blue-100 rounded-lg p-4 text-xs md:text-sm text-[#185bc3] font-medium">
-                  {currentPart?.instruction || 'Answer the questions based on the reading passage.'}
-                </div>
-
-                {/* Questions */}
-                <div className="space-y-4">
-                  {currentPart?.questions?.map((q) => {
-                    const isAnswered = !!userAnswers[q.id];
-                    const isActive = activeQuestion === q.id;
-
-                    return (
-                      <div 
-                        key={q.id}
-                        id={`q-${q.id}`}
-                        className={`p-4 rounded-xl border bg-white transition-all ${
-                          isActive ? 'border-[#2c4482] ring-1 ring-[#2c4482] shadow-xs' : 'border-gray-200 hover:border-gray-300'
-                        }`}
-                        onClick={() => setActiveQuestion(q.id)}
+            {/* RIGHT COLUMN: QUESTIONS & INSTANT/POST SUBMIT FEEDBACK (5 COLS) */}
+            <div className="lg:col-span-5 space-y-4">
+              
+              {/* Question Navigation Pills Bar */}
+              <div className={`rounded-2xl border p-4 shadow-xs transition-colors ${currentTheme.card}`}>
+                <div className="flex items-center justify-between gap-2 mb-2.5">
+                  <span className="text-xs font-bold uppercase">Danh sách câu hỏi:</span>
+                  {isSubmitted && (
+                    <div className="flex items-center gap-1.5 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setFilterMode('all')}
+                        className={`px-2 py-0.5 rounded-md font-bold ${filterMode === 'all' ? currentTheme.btnPrimary : currentTheme.btnSecondary}`}
                       >
-                        {q.type === 'choice' ? (
-                          <div>
-                            <p className="font-semibold text-gray-900 text-sm mb-3">
-                              <span className="font-bold text-[#2c4482] mr-2">Câu {q.id}:</span>
-                              {q.question}
-                            </p>
-                            <div className="space-y-2">
-                              {q.options?.map((opt, oIdx) => (
-                                <label key={oIdx} className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer">
-                                  <input
-                                    type="radio"
-                                    name={`q-${q.id}`}
-                                    checked={userAnswers[q.id] === opt}
-                                    onChange={() => handleAnswerChange(q.id, opt)}
-                                    className="text-[#2c4482] focus:ring-[#2c4482]"
-                                  />
-                                  <span>{opt}</span>
-                                </label>
-                              ))}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <span className="w-6 h-6 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center font-bold text-xs">
-                                {q.id}
-                              </span>
-                              <span className="text-sm text-gray-800">{q.label}</span>
-                            </div>
-                            <div className="flex items-center gap-2 pl-8">
-                              <input
-                                type="text"
-                                value={userAnswers[q.id] || ''}
-                                onChange={(e) => handleAnswerChange(q.id, e.target.value)}
-                                placeholder="Nhập câu trả lời..."
-                                className="w-full max-w-sm bg-white border border-gray-300 rounded px-3 py-1.5 text-sm font-medium text-[#2c4482] focus:outline-none focus:border-[#2c4482]"
-                              />
-                              {q.suffix && <span className="text-sm text-gray-800">{q.suffix}</span>}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        Tất cả
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFilterMode('wrong_only')}
+                        className={`px-2 py-0.5 rounded-md font-bold ${filterMode === 'wrong_only' ? 'bg-rose-600 text-white' : currentTheme.btnSecondary}`}
+                      >
+                        Chỉ câu sai
+                      </button>
+                    </div>
+                  )}
                 </div>
 
-              </div>
-            </div>
+                {/* Pills Grid */}
+                <div className="flex flex-wrap gap-1.5">
+                  {(currentPart?.questions || []).map((q) => {
+                    const isAns = !!userAnswers[q.id];
+                    const evalResult = evaluation.results[q.id];
+                    const isCorrect = isSubmitted && evalResult?.isCorrect;
 
-          </div>
-        )}
+                    let bgClass = currentTheme.qPillInactive;
+                    if (isSubmitted) {
+                      bgClass = isCorrect ? 'bg-emerald-500 text-white font-bold' : 'bg-rose-500 text-white font-bold';
+                    } else if (isAns) {
+                      bgClass = currentTheme.qPillActive;
+                    }
 
-        {/* ANNOTATION FLOATING POPUP */}
-        {selectionPopup && (
-          <div 
-            id="selection-popup"
-            className="fixed z-50 bg-white rounded-md shadow-xl border border-gray-200 flex p-1"
-            style={{ 
-              left: selectionPopup.x, 
-              top: selectionPopup.y, 
-              transform: 'translate(-50%, -120%)' 
-            }}
-          >
-            <button 
-              onClick={() => applyAnnotation('note')} 
-              className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800 w-16 transition-colors cursor-pointer"
-            >
-              <Edit3 size={16} className="mb-1" />
-              <span className="text-xs font-medium">Ghi chú</span>
-            </button>
-            <button 
-              onClick={() => applyAnnotation('highlight')} 
-              className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800 w-16 transition-colors cursor-pointer"
-            >
-              <Highlighter size={16} className="mb-1" />
-              <span className="text-xs font-medium">Tô màu</span>
-            </button>
-          </div>
-        )}
-
-        {/* NOTES SIDEBAR */}
-        {activeNoteId && notes[activeNoteId] && (
-          <aside id="note-sidebar" className="w-72 bg-gray-50 border-l border-gray-300 flex flex-col shadow-xl z-40 shrink-0 text-left">
-            <div className="bg-[#2c4482] text-white p-3 flex justify-between items-center">
-              <span className="font-bold text-sm">Ghi chú</span>
-              <button onClick={() => setActiveNoteId(null)} className="text-white/80 hover:text-white">
-                <XCircle size={16} />
-              </button>
-            </div>
-            <div className="p-3 text-xs italic text-gray-600 bg-gray-100 border-b">
-              &quot;{notes[activeNoteId].text}&quot;
-            </div>
-            <div className="p-3 flex-1 flex flex-col gap-2">
-              <textarea
-                value={draftNoteContent}
-                onChange={(e) => setDraftNoteContent(e.target.value)}
-                placeholder="Nhập ghi chú của bạn tại đây..."
-                className="w-full flex-1 border border-gray-300 rounded p-2 text-xs focus:outline-none focus:border-[#2c4482] resize-none"
-              ></textarea>
-              <div className="flex justify-between items-center pt-2">
-                <button 
-                  onClick={() => {
-                    const next = { ...notes };
-                    delete next[activeNoteId];
-                    setNotes(next);
-                    setActiveNoteId(null);
-                  }} 
-                  className="text-xs text-red-600 hover:underline"
-                >
-                  Xóa ghi chú
-                </button>
-                <button 
-                  onClick={() => {
-                    setNotes(prev => ({
-                      ...prev,
-                      [activeNoteId]: { ...prev[activeNoteId], content: draftNoteContent }
-                    }));
-                  }} 
-                  className="bg-[#2c4482] text-white px-3 py-1 rounded text-xs font-semibold"
-                >
-                  Lưu
-                </button>
-              </div>
-            </div>
-          </aside>
-        )}
-      </div>
-
-      {/* FOOTER PALETTE & NAVIGATION */}
-      <footer className="h-16 border-t border-gray-200 bg-white flex items-center px-4 select-none z-30 justify-between">
-        <div className="flex items-center gap-6 overflow-x-auto py-2">
-          {exam.parts?.map((part, pIdx) => {
-            const isCurrentPart = activePartIndex === pIdx;
-            const partQuestions = part.questions || [];
-
-            return (
-              <div 
-                key={part.id}
-                onClick={() => {
-                  setActivePartIndex(pIdx);
-                  if (partQuestions.length > 0) setActiveQuestion(partQuestions[0].id);
-                }}
-                className={`flex items-center gap-3 h-full px-3 py-1 rounded cursor-pointer border-b-2 transition-all ${
-                  isCurrentPart ? 'border-[#2c4482] bg-blue-50/50' : 'border-transparent text-gray-500 hover:text-gray-900'
-                }`}
-              >
-                <span className="font-bold text-xs uppercase tracking-wider text-gray-800">
-                  {isListening ? `PART ${pIdx + 1}` : `PASSAGE ${pIdx + 1}`}
-                </span>
-
-                {/* Question badges */}
-                <div className="hidden sm:flex gap-1">
-                  {partQuestions.map((q) => {
-                    const isAnswered = !!userAnswers[q.id];
-                    const isActive = activeQuestion === q.id;
                     return (
                       <button
                         key={q.id}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActivePartIndex(pIdx);
-                          setActiveQuestion(q.id);
+                        type="button"
+                        onClick={() => {
+                          setActiveQuestionId(q.id);
+                          const el = document.getElementById(`q-${q.id}`);
+                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }}
-                        className={`w-5 h-5 flex items-center justify-center text-[10px] font-bold rounded transition-colors ${
-                          isActive 
-                            ? 'ring-2 ring-[#2c4482] bg-[#2c4482] text-white' 
-                            : isAnswered 
-                              ? 'bg-blue-100 text-[#2c4482]' 
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        className={`w-7 h-7 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${bgClass} ${
+                          activeQuestionId === q.id ? 'ring-2 ring-current ring-offset-1' : ''
                         }`}
                       >
                         {q.id}
@@ -755,135 +973,594 @@ export default function TestRoom() {
                   })}
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* Prev / Next navigation */}
-        <div className="flex items-center gap-2">
+              {/* Questions List */}
+              <div className="space-y-4 max-h-[calc(100vh-280px)] overflow-y-auto pr-1">
+                {displayedQuestions.map((q) => {
+                  const evalResult = evaluation.results[q.id];
+                  const wordCount = countWords(userAnswers[q.id] || '');
+                  const isOverLimit = q.maxWords && wordCount > q.maxWords;
+
+                  return (
+                    <div
+                      key={q.id}
+                      id={`q-${q.id}`}
+                      className={`rounded-2xl border p-5 transition-all ${currentTheme.card} ${
+                        isSubmitted
+                          ? evalResult?.isCorrect
+                            ? 'ring-2 ring-emerald-500/50'
+                            : 'ring-2 ring-rose-500/50'
+                          : activeQuestionId === q.id
+                            ? 'ring-2 ring-current shadow-md'
+                            : ''
+                      }`}
+                    >
+                      {/* Section Title or Instruction */}
+                      {q.sectionTitle && (
+                        <div className={`text-[11px] font-extrabold uppercase tracking-wider mb-1 ${currentTheme.headerSub}`}>
+                          {q.sectionTitle}
+                        </div>
+                      )}
+
+                      {/* Header badge & word limit */}
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <span className={`font-extrabold text-xs px-2.5 py-0.5 rounded-md ${currentTheme.cardSubtle}`}>
+                          Câu {q.id}
+                        </span>
+                        {q.wordLimit && q.type !== 'choice' && (
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            isOverLimit ? 'bg-rose-100 text-rose-700' : currentTheme.badge
+                          }`}>
+                            {q.wordLimit} ({wordCount}/{q.maxWords || 1} từ)
+                          </span>
+                        )}
+                      </div>
+
+                      {/* QUESTION TYPE: MULTIPLE CHOICE OR TRUE/FALSE */}
+                      {q.type === 'choice' ? (
+                        <div className="space-y-3">
+                          <p className={`${currentFont.question} leading-snug`}>
+                            {q.question}
+                          </p>
+                          <div className="space-y-1.5">
+                            {q.options?.map((opt, oIdx) => {
+                              const isChecked = userAnswers[q.id] === opt;
+                              return (
+                                <label
+                                  key={oIdx}
+                                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${currentFont.body} ${
+                                    isTimeUp || isSubmitted 
+                                      ? 'cursor-not-allowed opacity-80' 
+                                      : 'cursor-pointer'
+                                  } ${
+                                    isChecked
+                                      ? currentTheme.radioChecked
+                                      : currentTheme.radioUnchecked
+                                  }`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name={`q-${q.id}`}
+                                    value={opt}
+                                    checked={isChecked}
+                                    disabled={isTimeUp || isSubmitted}
+                                    onChange={() => handleAnswerChange(q.id, opt)}
+                                    className="w-4 h-4 disabled:opacity-50"
+                                  />
+                                  <span>{opt}</span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        /* QUESTION TYPE: FILL IN THE BLANKS / NOTES COMPLETION */
+                        <div className="space-y-2">
+                          <div className={`${currentFont.body} font-medium leading-relaxed`}>
+                            {q.label && <span>{q.label} </span>}
+                            <input
+                              type="text"
+                              value={userAnswers[q.id] || ''}
+                              disabled={isTimeUp || isSubmitted}
+                              placeholder={q.placeholder || `[Điền câu ${q.id}]`}
+                              onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                              className={`inline-block rounded-lg border font-bold transition-all ${currentFont.input} ${
+                                isTimeUp || isSubmitted
+                                  ? `${currentTheme.inputDisabled} cursor-not-allowed`
+                                  : currentTheme.input
+                              } ${isOverLimit ? 'border-rose-400 bg-rose-50/50' : ''}`}
+                            />
+                            {q.suffix && <span> {q.suffix}</span>}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* POST SUBMIT REVIEW: GREEN / RED + EXPLANATION + EVIDENCE */}
+                      {isSubmitted && evalResult && (
+                        <div className={`mt-3.5 pt-3 border-t ${currentTheme.divider} space-y-2 text-xs`}>
+                          {evalResult.isCorrect ? (
+                            <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
+                              <CheckCircle2 size={16} />
+                              <span>Chính xác! Đáp án: {evalResult.correctAnswer}</span>
+                            </div>
+                          ) : (
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-1.5 text-rose-500 font-bold">
+                                <XCircle size={16} />
+                                <span>Chưa chính xác!</span>
+                              </div>
+                              <div className={`border rounded-lg p-2 ${currentTheme.cardSubtle}`}>
+                                <span>Đáp án đúng: </span>
+                                <strong className="font-bold underline">{evalResult.correctAnswer}</strong>
+                                {evalResult.userAnswer && (
+                                  <span className="opacity-70 ml-2">(Bạn đã điền: {evalResult.userAnswer})</span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Vietnamese Explanation */}
+                          {evalResult.explanation && (
+                            <div className={`border rounded-lg p-2.5 leading-relaxed ${currentTheme.cardSubtle}`}>
+                              <div className="font-bold flex items-center gap-1 mb-1 text-current">
+                                <Sparkles size={12} />
+                                <span>Giải thích chi tiết:</span>
+                              </div>
+                              <p>{evalResult.explanation}</p>
+                            </div>
+                          )}
+
+                          {/* Quoted Evidence */}
+                          {evalResult.evidence && (
+                            <div className={`border-l-2 border-current p-2 italic ${currentTheme.cardSubtle}`}>
+                              <span className="font-semibold not-italic block text-[10px] opacity-70">Trích dẫn bằng chứng từ bài đọc:</span>
+                              &ldquo;{evalResult.evidence}&rdquo;
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                    </div>
+                  );
+                })}
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        {/* ======================================================================= */}
+        {/* CASE B: LISTENING LAYOUT (MATCHES HOMEWORKDETAIL WITH AUDIOPLAYER) */}
+        {/* ======================================================================= */}
+        {isListening && (
+          <div className="space-y-6 max-w-4xl mx-auto">
+            
+            {/* Listening Part Banner & Dedicated Audio Player */}
+            <div className={`rounded-3xl border p-6 space-y-5 transition-colors ${currentTheme.card}`}>
+              <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 ${currentTheme.divider}`}>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-xs font-extrabold uppercase px-2.5 py-0.5 rounded-md ${currentTheme.badge}`}>
+                      {currentPart?.title}
+                    </span>
+                    <span className={`text-xs font-medium ${currentTheme.subText}`}>
+                      Câu {currentPart?.questionRange} ({currentPart?.questions?.length || 10} câu hỏi)
+                    </span>
+                  </div>
+                  <h2 className={`${currentFont.title}`}>
+                    {currentPart?.name}
+                  </h2>
+                  {currentPart?.context && (
+                    <p className={`text-xs mt-1 ${currentTheme.subText}`}>
+                      {currentPart.context}
+                    </p>
+                  )}
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className={`text-xs font-bold block ${currentTheme.subText}`}>Định dạng</span>
+                  <span className="text-xs font-bold">Audio chuẩn IELTS 128kbps</span>
+                </div>
+              </div>
+
+              {/* Native AudioPlayer with playback speed & scrub bar */}
+              <div>
+                <AudioPlayer
+                  src={exam.audioTracks?.[currentPart?.id] || currentPart?.audioUrl}
+                  title={`${currentPart?.title}: ${currentPart?.name}`}
+                />
+              </div>
+
+              {/* Instruction banner */}
+              <div className={`p-3.5 border rounded-xl leading-relaxed ${currentFont.instruction} ${currentTheme.banner}`}>
+                <strong>Hướng dẫn: </strong>
+                {currentPart?.instruction || 'Nghe đoạn ghi âm và trả lời các câu hỏi bên dưới.'}
+              </div>
+            </div>
+
+            {/* Questions List for Listening */}
+            <div className="space-y-4">
+              {displayedQuestions.map((q) => {
+                const evalResult = evaluation.results[q.id];
+
+                return (
+                  <div
+                    key={q.id}
+                    id={`q-${q.id}`}
+                    className={`rounded-2xl border p-5 transition-all ${currentTheme.card} ${
+                      isSubmitted
+                        ? evalResult?.isCorrect
+                          ? 'ring-2 ring-emerald-500/50'
+                          : 'ring-2 ring-rose-500/50'
+                        : ''
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className={`font-extrabold text-xs px-2.5 py-0.5 rounded-md ${currentTheme.cardSubtle}`}>
+                        Câu {q.id}
+                      </span>
+                      {q.wordLimit && q.type !== 'choice' && (
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${currentTheme.badge}`}>
+                          {q.wordLimit}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* CHOICE OR FILL */}
+                    {q.type === 'choice' ? (
+                      <div className="space-y-3">
+                        <p className={`${currentFont.question} leading-snug`}>
+                          {q.question}
+                        </p>
+                        <div className="space-y-2">
+                          {q.options?.map((opt, oIdx) => {
+                            const isChecked = userAnswers[q.id] === opt || userAnswers[q.id] === opt.charAt(0);
+                            return (
+                              <label
+                                key={oIdx}
+                                className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${currentFont.body} ${
+                                  isTimeUp || isSubmitted 
+                                    ? 'cursor-not-allowed opacity-80' 
+                                    : 'cursor-pointer'
+                                } ${
+                                  isChecked
+                                    ? currentTheme.radioChecked
+                                    : currentTheme.radioUnchecked
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name={`q-${q.id}`}
+                                  value={opt}
+                                  checked={isChecked}
+                                  disabled={isTimeUp || isSubmitted}
+                                  onChange={() => handleAnswerChange(q.id, opt.charAt(0))}
+                                  className="w-4 h-4 disabled:opacity-50"
+                                />
+                                <span>{opt}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <div className={`${currentFont.body} font-medium leading-relaxed flex flex-wrap items-center gap-2`}>
+                          {q.label && <span>{q.label}</span>}
+                          <input
+                            type="text"
+                            value={userAnswers[q.id] || ''}
+                            disabled={isTimeUp || isSubmitted}
+                            placeholder={q.placeholder || `[Điền câu ${q.id}]`}
+                            onChange={(e) => handleAnswerChange(q.id, e.target.value)}
+                            className={`rounded-lg border font-bold transition-all ${currentFont.input} ${
+                              isTimeUp || isSubmitted
+                                ? `${currentTheme.inputDisabled} cursor-not-allowed`
+                                : currentTheme.input
+                            }`}
+                          />
+                          {q.suffix && <span>{q.suffix}</span>}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* POST SUBMIT REVIEW DETAILS */}
+                    {isSubmitted && evalResult && (
+                      <div className={`mt-3.5 pt-3 border-t ${currentTheme.divider} space-y-2 text-xs`}>
+                        {evalResult.isCorrect ? (
+                          <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
+                            <CheckCircle2 size={16} />
+                            <span>Chính xác! Đáp án: {evalResult.correctAnswer}</span>
+                          </div>
+                        ) : (
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5 text-rose-500 font-bold">
+                              <XCircle size={16} />
+                              <span>Chưa chính xác!</span>
+                            </div>
+                            <div className={`border rounded-lg p-2 ${currentTheme.cardSubtle}`}>
+                              <span>Đáp án đúng: </span>
+                              <strong className="font-bold underline">{evalResult.correctAnswer}</strong>
+                              {evalResult.userAnswer && (
+                                <span className="opacity-70 ml-2">(Bạn đã điền: {evalResult.userAnswer})</span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {evalResult.explanation && (
+                          <div className={`border rounded-lg p-2.5 leading-relaxed ${currentTheme.cardSubtle}`}>
+                            <div className="font-bold flex items-center gap-1 mb-1 text-current">
+                              <Sparkles size={12} />
+                              <span>Giải thích chi tiết:</span>
+                            </div>
+                            <p>{evalResult.explanation}</p>
+                          </div>
+                        )}
+
+                        {evalResult.evidence && (
+                          <div className={`border-l-2 border-current p-2 italic ${currentTheme.cardSubtle}`}>
+                            <span className="font-semibold not-italic block text-[10px] opacity-70">Trích đoạn băng nghe:</span>
+                            &ldquo;{evalResult.evidence}&rdquo;
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Expandable Full Transcript Accordion */}
+            {exam.transcript && (
+              <div className={`rounded-2xl border shadow-xs overflow-hidden transition-colors ${currentTheme.card}`}>
+                <button
+                  type="button"
+                  onClick={() => setExpandedTranscripts(prev => ({ ...prev, [currentPart.id]: !prev[currentPart.id] }))}
+                  className={`w-full px-5 py-4 flex items-center justify-between text-left font-bold text-sm transition cursor-pointer hover:opacity-90`}
+                >
+                  <div className="flex items-center gap-2">
+                    <FileText size={16} className="text-current" />
+                    <span>Lời thoại bài nghe đầy đủ (Audio Transcript)</span>
+                  </div>
+                  {expandedTranscripts[currentPart.id] ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                </button>
+
+                {expandedTranscripts[currentPart.id] && (
+                  <div className={`p-5 border-t font-mono text-xs sm:text-sm leading-relaxed whitespace-pre-wrap max-h-96 overflow-y-auto ${currentTheme.cardSubtle}`}>
+                    {exam.transcript}
+                  </div>
+                )}
+              </div>
+            )}
+
+          </div>
+        )}
+
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 5. FLOATING SELECTION POPUP FOR HIGHLIGHTING & NOTES */}
+      {/* ========================================================================= */}
+      {selectionPopup && (
+        <div
+          className="fixed z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-1 flex items-center gap-1 animate-in fade-in"
+          style={{
+            left: selectionPopup.x,
+            top: selectionPopup.y,
+            transform: 'translate(-50%, -100%)'
+          }}
+        >
           <button
-            onClick={() => {
-              if (activePartIndex > 0) {
-                setActivePartIndex(activePartIndex - 1);
-              }
-            }}
-            disabled={activePartIndex === 0}
-            className="w-9 h-9 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-100 disabled:opacity-30 cursor-pointer"
-          >
-            <ArrowLeft size={16} />
-          </button>
+            type="button"
+            onClick={() => applyHighlight('bg-yellow-200 text-black')}
+            className="w-6 h-6 rounded-md bg-yellow-200 hover:scale-110 transition-transform shadow-2xs"
+            title="Tô vàng"
+          />
           <button
-            onClick={() => {
-              if (activePartIndex < (exam.parts?.length || 4) - 1) {
-                setActivePartIndex(activePartIndex + 1);
-              }
-            }}
-            disabled={activePartIndex >= (exam.parts?.length || 4) - 1}
-            className="w-9 h-9 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-100 disabled:opacity-30 cursor-pointer"
+            type="button"
+            onClick={() => applyHighlight('bg-emerald-200 text-black')}
+            className="w-6 h-6 rounded-md bg-emerald-200 hover:scale-110 transition-transform shadow-2xs"
+            title="Tô xanh lá"
+          />
+          <button
+            type="button"
+            onClick={() => applyHighlight('bg-pink-200 text-black')}
+            className="w-6 h-6 rounded-md bg-pink-200 hover:scale-110 transition-transform shadow-2xs"
+            title="Tô hồng"
+          />
+          <div className="w-[1px] h-4 bg-gray-200 mx-1" />
+          <button
+            type="button"
+            onClick={openNoteForSelection}
+            className="px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-1 cursor-pointer"
           >
-            <ArrowRight size={16} />
+            <Edit3 size={12} className="text-[#185bc3]" />
+            <span>Ghi chú</span>
           </button>
         </div>
-      </footer>
+      )}
 
-      {/* QUIT MODAL */}
-      {showQuitModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 text-left shadow-2xl space-y-4">
-            <h3 className="font-bold text-lg text-gray-900">Rời khỏi phòng thi?</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Bạn có muốn lưu lại tiến trình làm bài hiện tại để có thể tiếp tục sau này không?
+      {/* ========================================================================= */}
+      {/* 6. NOTES DRAWER SIDEBAR */}
+      {/* ========================================================================= */}
+      {showNotesDrawer && (
+        <div className={`fixed inset-y-0 right-0 w-80 shadow-2xl border-l z-50 flex flex-col animate-in slide-in-from-right text-left ${currentTheme.card}`}>
+          <div className={`p-4 flex items-center justify-between border-b ${currentTheme.cardHeader}`}>
+            <div className="flex items-center gap-2 font-bold text-sm">
+              <Edit3 size={16} />
+              <span>Ghi chú bài đọc</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowNotesDrawer(false)}
+              className="opacity-70 hover:opacity-100"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* New note creator */}
+          {activeNoteTarget && (
+            <div className={`p-4 border-b space-y-2 ${currentTheme.cardSubtle}`}>
+              <div className="text-xs font-semibold italic opacity-80">
+                &ldquo;{activeNoteTarget.text}&rdquo;
+              </div>
+              <textarea
+                rows={3}
+                value={draftNoteContent}
+                onChange={(e) => setDraftNoteContent(e.target.value)}
+                placeholder="Viết ghi chú của bạn vào đây..."
+                className={`w-full text-xs p-2.5 rounded-lg border focus:outline-none ${currentTheme.input}`}
+              />
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveNoteTarget(null)}
+                  className={`px-2.5 py-1 text-xs rounded ${currentTheme.btnSecondary}`}
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  onClick={saveCurrentNote}
+                  className={`px-3 py-1 text-xs font-bold rounded shadow-xs ${currentTheme.btnPrimary}`}
+                >
+                  Lưu ghi chú
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Existing notes list */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {Object.keys(notes).length === 0 ? (
+              <div className="text-center py-12 opacity-50 text-xs">
+                Chưa có ghi chú nào. Hãy bôi đen một đoạn văn bản và chọn &ldquo;Ghi chú&rdquo;.
+              </div>
+            ) : (
+              Object.values(notes).map((note) => (
+                <div key={note.id} className={`p-3 border rounded-xl space-y-1.5 text-xs ${currentTheme.cardSubtle}`}>
+                  <div className="italic opacity-80 line-clamp-2">
+                    &ldquo;{note.text}&rdquo;
+                  </div>
+                  <div className="font-semibold whitespace-pre-wrap">
+                    {note.content}
+                  </div>
+                  <div className={`flex items-center justify-between text-[10px] opacity-60 pt-1 border-t ${currentTheme.divider}`}>
+                    <span>{note.createdAt}</span>
+                    <button
+                      type="button"
+                      onClick={() => deleteNote(note.id)}
+                      className="text-rose-500 hover:underline flex items-center gap-0.5"
+                    >
+                      <Trash2 size={11} /> Xóa
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 7. SUBMIT CONFIRMATION MODAL */}
+      {/* ========================================================================= */}
+      {showSubmitModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className={`rounded-3xl max-w-md w-full p-6 text-left shadow-2xl border animate-in zoom-in-95 ${currentTheme.card}`}>
+            <h3 className="text-lg font-black mb-2">
+              Xác nhận nộp bài thi?
+            </h3>
+            <p className={`text-xs sm:text-sm mb-4 leading-relaxed ${currentTheme.subText}`}>
+              Bạn đã hoàn thành <strong>{answeredCount}</strong> / <strong>{totalQuestions}</strong> câu hỏi. Sau khi nộp, hệ thống sẽ tự động chấm điểm và hiển thị đáp án cùng giải thích chi tiết.
             </p>
-            <div className="flex justify-end gap-3 pt-2">
+
+            <div className="flex items-center justify-end gap-3">
               <button
-                onClick={() => setShowQuitModal(false)}
-                className="px-4 py-2 border border-gray-200 text-gray-700 rounded-lg text-xs font-semibold hover:bg-gray-50 cursor-pointer"
+                type="button"
+                onClick={() => setShowSubmitModal(false)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold cursor-pointer ${currentTheme.btnSecondary}`}
               >
-                Hủy
+                Tiếp tục làm bài
               </button>
               <button
-                onClick={() => handleQuit(false)}
-                className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg text-xs font-semibold cursor-pointer"
+                type="button"
+                onClick={() => handleSubmitTest(false)}
+                className={`px-5 py-2 rounded-xl text-xs font-bold cursor-pointer ${currentTheme.btnPrimary}`}
               >
-                Thoát không lưu
-              </button>
-              <button
-                onClick={() => handleQuit(true)}
-                className="px-4 py-2 bg-[#2c4482] text-white rounded-lg text-xs font-semibold hover:bg-[#20325c] cursor-pointer"
-              >
-                Lưu nháp & Thoát
+                Đồng ý nộp bài
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* SUBMIT CONFIRMATION & RESULT MODAL */}
-      {showSubmitModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 text-left shadow-2xl space-y-5">
-            {!isTestSubmitted ? (
-              <>
-                <h3 className="font-bold text-lg text-gray-900">Xác nhận nộp bài</h3>
-                <p className="text-sm text-gray-600">
-                  Bạn đã trả lời <strong>{Object.keys(userAnswers).length}/40</strong> câu hỏi. Bạn có chắc chắn muốn kết thúc bài thi và xem kết quả?
-                </p>
-                <div className="flex justify-end gap-3 pt-3">
-                  <button
-                    onClick={() => setShowSubmitModal(false)}
-                    className="px-4 py-2 border border-gray-200 text-gray-700 rounded-lg text-xs font-semibold hover:bg-gray-50 cursor-pointer"
-                  >
-                    Tiếp tục làm bài
-                  </button>
-                  <button
-                    onClick={handleSubmitTest}
-                    className="px-5 py-2 bg-[#2c4482] text-white rounded-lg text-xs font-semibold hover:bg-[#20325c] cursor-pointer"
-                  >
-                    Nộp bài ngay
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="text-center py-2">
-                  <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle2 size={36} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-1">Kết quả bài thi</h3>
-                  <p className="text-xs text-gray-500">{exam.title}</p>
-                </div>
+      {/* ========================================================================= */}
+      {/* 8. RESULTS SUMMARY MODAL (BAND SCORE & FULL EVALUATION) */}
+      {/* ========================================================================= */}
+      {showResultsModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className={`rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center shadow-2xl border animate-in zoom-in-95 ${currentTheme.card}`}>
+            
+            {/* Header Icon */}
+            <div className={`w-16 h-16 rounded-3xl mx-auto flex items-center justify-center mb-4 ${
+              isTimeUp ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-[#2c4482]'
+            }`}>
+              {isTimeUp ? <Clock size={32} /> : <Trophy size={32} />}
+            </div>
 
-                <div className="bg-gray-50 rounded-xl p-4 grid grid-cols-2 gap-4 text-center border border-gray-200">
-                  <div>
-                    <span className="text-xs text-gray-500 font-medium">Số câu đúng</span>
-                    <div className="text-2xl font-bold text-[#2c4482] mt-1">
-                      {testScore?.correctCount || 0} / 40
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-xs text-gray-500 font-medium">IELTS Band quy đổi</span>
-                    <div className="text-2xl font-bold text-green-600 mt-1">
-                      Band {testScore?.band || '5.0'}
-                    </div>
-                  </div>
-                </div>
+            <h3 className="text-xl sm:text-2xl font-black mb-1">
+              {isTimeUp ? 'Hết giờ làm bài!' : 'Chúc mừng bạn đã hoàn thành bài thi!'}
+            </h3>
+            <p className={`text-xs sm:text-sm mb-6 ${currentTheme.subText}`}>
+              {isTimeUp 
+                ? 'Hệ thống đã tự động khóa và chấm điểm bài làm của bạn.' 
+                : 'Kết quả chấm điểm tự động dựa trên thang điểm IELTS chuẩn quốc tế.'}
+            </p>
 
-                <div className="flex justify-between gap-3 pt-2">
-                  <button
-                    onClick={() => navigate(`/tests/${exam.id}`)}
-                    className="flex-1 py-2.5 border border-[#2c4482] text-[#2c4482] hover:bg-blue-50 rounded-lg text-xs font-semibold transition-colors text-center cursor-pointer"
-                  >
-                    Xem chi tiết đề thi
-                  </button>
-                  <button
-                    onClick={() => navigate('/test-platform')}
-                    className="flex-1 py-2.5 bg-[#2c4482] text-white hover:bg-[#20325c] rounded-lg text-xs font-semibold transition-colors text-center cursor-pointer"
-                  >
-                    Về Thư viện đề thi
-                  </button>
-                </div>
-              </>
-            )}
+            {/* Score Grid */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className={`border rounded-2xl p-3.5 ${currentTheme.cardSubtle}`}>
+                <span className="text-[10px] font-bold uppercase block mb-1 opacity-70">Điểm số</span>
+                <span className="text-xl sm:text-2xl font-black">
+                  {evaluation.correctCount}/{totalQuestions}
+                </span>
+              </div>
+              <div className={`border rounded-2xl p-3.5 ${currentTheme.cardSubtle}`}>
+                <span className="text-[10px] font-bold uppercase block mb-1 opacity-70">Tỷ lệ đúng</span>
+                <span className="text-xl sm:text-2xl font-black text-emerald-500">
+                  {evaluation.percentage}%
+                </span>
+              </div>
+              <div className={`border rounded-2xl p-3.5 ${currentTheme.cardSubtle}`}>
+                <span className="text-[10px] font-bold uppercase block mb-1 opacity-70">IELTS Band</span>
+                <span className="text-xl sm:text-2xl font-black text-purple-500">
+                  {evaluation.band}
+                </span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowResultsModal(false)}
+                className={`w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-bold cursor-pointer ${currentTheme.btnPrimary}`}
+              >
+                <span>Xem lại bài làm & giải thích</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleRetake}
+                className={`w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold cursor-pointer ${currentTheme.btnSecondary}`}
+              >
+                Làm lại bài thi
+              </button>
+            </div>
           </div>
         </div>
       )}

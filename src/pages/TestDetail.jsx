@@ -32,7 +32,36 @@ export default function TestDetail() {
   const [selectedParts, setSelectedParts] = useState(
     exam.parts ? exam.parts.map(p => p.id) : [1, 2, 3, 4]
   );
-  const [timeLimit, setTimeLimit] = useState('');
+  
+  // Time limits array: from 5 -> 100 minutes, step 5 minutes
+  const TIME_OPTIONS = Array.from({ length: 20 }, (_, i) => (i + 1) * 5); // [5, 10, 15, ..., 100]
+  const [timeLimit, setTimeLimit] = useState(() => {
+    // Default smart suggestion
+    return exam.skill === 'Reading' ? '60' : '40';
+  });
+
+  // Calculate selected questions count
+  const selectedQuestionsCount = exam.parts
+    ? exam.parts
+        .filter(p => selectedParts.includes(p.id))
+        .reduce((sum, p) => sum + (p.questionCount || p.questions?.length || 0), 0)
+    : 0;
+
+  // Auto-adjust default recommended time based on selected parts
+  const handleSelectSinglePart = (partId) => {
+    setSelectedParts([partId]);
+    if (exam.skill === 'Reading') {
+      setTimeLimit('20'); // 20 mins for 1 passage
+    } else {
+      setTimeLimit('10'); // 10 mins for 1 listening part
+    }
+  };
+
+  const handleSelectAllParts = () => {
+    const allIds = exam.parts ? exam.parts.map(p => p.id) : [1, 2, 3, 4];
+    setSelectedParts(allIds);
+    setTimeLimit(exam.skill === 'Reading' ? '60' : '40');
+  };
 
   // Draft state (synced with localStorage)
   const draftStorageKey = `ielts_draft_${exam.id}`;
@@ -72,7 +101,8 @@ export default function TestDetail() {
   };
 
   const handleStartFullTest = () => {
-    navigate(`/tests/${exam.id}/exam?mode=fulltest`);
+    const allParts = exam.parts ? exam.parts.map(p => p.id).join(',') : '1,2,3,4';
+    navigate(`/tests/${exam.id}/exam?mode=fulltest&parts=${allParts}&time=${exam.duration}`);
   };
 
   return (
@@ -266,15 +296,57 @@ export default function TestDetail() {
 
                 {/* Chọn phần thi bạn muốn làm */}
                 <div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-3">Chọn phần thi bạn muốn làm</h3>
-                  <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                    <h3 className="font-bold text-gray-900 text-sm flex items-center gap-2">
+                      <span>Chọn phần thi bạn muốn làm:</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-100 text-[#185bc3]">
+                        {selectedParts.length} / {exam.parts?.length || 0} phần ({selectedQuestionsCount} câu hỏi)
+                      </span>
+                    </h3>
+
+                    {/* Quick Select Buttons */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={handleSelectAllParts}
+                        className={`text-xs px-2.5 py-1 rounded-md font-semibold transition-colors cursor-pointer ${
+                          selectedParts.length === (exam.parts?.length || 0)
+                            ? 'bg-[#2c4482] text-white shadow-xs'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {exam.skill === 'Reading' ? 'Tất cả 3 bài đọc' : 'Tất cả 4 phần'}
+                      </button>
+                      {exam.parts?.map((part) => {
+                        const isSolo = selectedParts.length === 1 && selectedParts[0] === part.id;
+                        return (
+                          <button
+                            key={part.id}
+                            type="button"
+                            onClick={() => handleSelectSinglePart(part.id)}
+                            className={`text-xs px-2.5 py-1 rounded-md font-semibold transition-colors cursor-pointer ${
+                              isSolo
+                                ? 'bg-[#185bc3] text-white shadow-xs ring-2 ring-blue-300'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }`}
+                          >
+                            {exam.skill === 'Reading' ? `Passage ${part.id} riêng` : `Part ${part.id} riêng`}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
                     {exam.parts?.map((part) => {
                       const isChecked = selectedParts.includes(part.id);
                       return (
                         <label 
                           key={part.id}
-                          className={`flex items-start gap-3 p-3.5 rounded-lg border transition-all cursor-pointer ${
-                            isChecked ? 'bg-white border-[#2c4482]/40 shadow-xs' : 'bg-gray-50/50 border-gray-200'
+                          className={`flex items-start gap-3 p-3.5 rounded-xl border transition-all cursor-pointer ${
+                            isChecked 
+                              ? 'bg-blue-50/40 border-[#2c4482]/40 shadow-xs ring-1 ring-[#2c4482]/20' 
+                              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50/50'
                           }`}
                         >
                           <input
@@ -290,8 +362,13 @@ export default function TestDetail() {
                             className="mt-1 w-4 h-4 text-[#2c4482] rounded border-gray-300 focus:ring-[#2c4482] cursor-pointer"
                           />
                           <div className="flex-1">
-                            <div className="font-medium text-gray-900 text-sm">
-                              {part.title}: {part.name} ({part.questionCount} câu hỏi)
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <span className="font-bold text-gray-900 text-sm">
+                                {part.title}: {part.name}
+                              </span>
+                              <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md">
+                                {part.questionCount || part.questions?.length || 10} câu ({part.questionRange || ''})
+                              </span>
                             </div>
                             <div className="flex flex-wrap gap-1.5 mt-1.5">
                               {part.tags?.map((tag, tIdx) => (
@@ -310,31 +387,89 @@ export default function TestDetail() {
                   </div>
                 </div>
 
-                {/* Giới hạn thời gian */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Giới hạn thời gian (Để trống để làm bài không giới hạn)
-                  </label>
-                  <div className="flex items-center gap-2 max-w-xs">
-                    <input
-                      type="number"
-                      placeholder={`Ví dụ: ${exam.duration}`}
-                      value={timeLimit}
-                      onChange={(e) => setTimeLimit(e.target.value)}
-                      className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#2c4482] focus:ring-1 focus:ring-[#2c4482]"
-                    />
-                    <span className="text-sm text-gray-500">phút</span>
+                {/* Giới hạn thời gian (từ 5 -> 100 phút, cách mỗi 5 phút) */}
+                <div className="bg-white border border-gray-200/90 rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-2xs">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-900 mb-0.5">
+                        Giới hạn thời gian làm bài:
+                      </label>
+                      <p className="text-xs text-gray-500">
+                        Chọn từ 5 đến 100 phút (cách mỗi 5 phút). Khi hết giờ, hệ thống sẽ tự động khóa bài thi.
+                      </p>
+                    </div>
+
+                    {/* Current chosen display */}
+                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                      {timeLimit ? `⏱ ${timeLimit} phút` : '⏱ Không giới hạn'}
+                    </span>
+                  </div>
+
+                  {/* Dropdown Select with 5 to 100 min, step 5 min */}
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <div className="relative flex-1 max-w-sm">
+                      <select
+                        value={timeLimit}
+                        onChange={(e) => setTimeLimit(e.target.value)}
+                        className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-medium text-gray-900 focus:outline-none focus:border-[#2c4482] focus:ring-2 focus:ring-[#2c4482]/20 shadow-xs cursor-pointer"
+                      >
+                        <option value="">Không giới hạn thời gian (Luyện tập tự do)</option>
+                        {TIME_OPTIONS.map((m) => (
+                          <option key={m} value={m.toString()}>
+                            {m} phút {m === (exam.skill === 'Reading' ? 60 : 40) ? '(Chuẩn IELTS Full)' : ''} {m === 20 ? '(Chuẩn 1 Passage)' : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Quick Preset Chips */}
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs text-gray-400 font-medium mr-1">Gợi ý nhanh:</span>
+                      {[
+                        { val: '10', label: '10p' },
+                        { val: '15', label: '15p' },
+                        { val: '20', label: '20p' },
+                        { val: '30', label: '30p' },
+                        { val: '40', label: '40p' },
+                        { val: '60', label: '60p' },
+                        { val: '', label: 'Tự do' },
+                      ].map((chip) => (
+                        <button
+                          key={chip.label}
+                          type="button"
+                          onClick={() => setTimeLimit(chip.val)}
+                          className={`text-xs px-2.5 py-1.5 rounded-lg font-semibold transition-all cursor-pointer ${
+                            timeLimit === chip.val
+                              ? 'bg-[#2c4482] text-white shadow-xs'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {chip.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Red/Orange Notice for Auto-lock on Expiration */}
+                  <div className="p-3 bg-rose-50/70 border border-rose-200/80 rounded-xl flex items-start gap-2.5 text-xs text-rose-800">
+                    <span className="font-bold text-sm">⚠️</span>
+                    <p className="leading-relaxed">
+                      <strong>Lưu ý quan trọng:</strong> Khi thời gian đếm ngược kết thúc (00:00), <strong>toàn bộ bài thi sẽ tự động khóa và nộp điểm</strong>. Học sinh sẽ không thể tiếp tục điền hoặc thay đổi đáp án.
+                    </p>
                   </div>
                 </div>
 
                 {/* Button Bắt đầu làm bài -> navigates to /tests/:id/exam */}
-                <div className="pt-2">
+                <div className="pt-2 flex items-center gap-4">
                   <button
                     onClick={handleStartPractice}
                     disabled={selectedParts.length === 0}
-                    className="bg-[#2c4482] hover:bg-[#20325c] text-white px-8 py-3.5 rounded-lg font-semibold text-base transition-all shadow-md active:scale-95 disabled:opacity-50 cursor-pointer"
+                    className="bg-[#2c4482] hover:bg-[#20325c] text-white px-8 py-3.5 rounded-xl font-bold text-base transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2"
                   >
-                    Bắt đầu làm bài
+                    <span>Bắt đầu làm bài</span>
+                    <span className="text-xs bg-white/20 px-2 py-0.5 rounded-md font-medium">
+                      {selectedParts.length} phần • {timeLimit ? `${timeLimit} phút` : 'Tự do'}
+                    </span>
                   </button>
                 </div>
               </div>
