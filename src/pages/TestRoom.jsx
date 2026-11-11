@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
+  ArrowRight,
   Clock, 
   CheckCircle2, 
   XCircle, 
@@ -15,12 +16,12 @@ import {
   Edit3, 
   Trash2, 
   X, 
-  Volume2, 
   ChevronDown, 
   ChevronUp, 
   FileText, 
   Trophy, 
-  Menu
+  Menu,
+  Check
 } from 'lucide-react';
 import AudioPlayer from '../components/AudioPlayer';
 import { EXAM_COLLECTIONS } from '../data/examData';
@@ -54,7 +55,16 @@ const THEMES = {
     btnSecondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200',
     menuPopup: 'bg-white border-gray-200 text-gray-800 shadow-xl',
     divider: 'border-gray-200',
-    subText: 'text-gray-500'
+    subText: 'text-gray-500',
+    footer: 'bg-white border-gray-200 text-gray-900 shadow-2xl',
+    footerLine: 'bg-slate-300',
+    footerActiveBox: 'border-2 border-[#2c4482] text-[#2c4482] bg-blue-50/40',
+    footerInactiveText: 'text-slate-700 hover:text-[#2c4482]',
+    footerSubText: 'text-slate-500',
+    footerDashAns: 'bg-[#2c4482]',
+    footerDashUnans: 'bg-slate-300',
+    footerNavBtn: 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300',
+    footerSubmitBtn: 'bg-[#2c4482] hover:bg-[#20325c] text-white'
   },
   'white-black': {
     id: 'white-black',
@@ -80,7 +90,16 @@ const THEMES = {
     btnSecondary: 'bg-[#2a2a2a] hover:bg-[#333333] text-gray-200 border border-gray-700',
     menuPopup: 'bg-[#1e1e1e] border-gray-700 text-gray-100 shadow-2xl',
     divider: 'border-gray-800',
-    subText: 'text-gray-400'
+    subText: 'text-gray-400',
+    footer: 'bg-[#1a1a1a] border-gray-800 text-white shadow-2xl',
+    footerLine: 'bg-gray-700',
+    footerActiveBox: 'border-2 border-blue-400 text-blue-400 bg-blue-950/40',
+    footerInactiveText: 'text-gray-300 hover:text-white',
+    footerSubText: 'text-gray-400',
+    footerDashAns: 'bg-blue-400',
+    footerDashUnans: 'bg-gray-700',
+    footerNavBtn: 'bg-[#2a2a2a] hover:bg-[#333333] text-gray-200 border-gray-700',
+    footerSubmitBtn: 'bg-blue-600 hover:bg-blue-700 text-white'
   },
   'yellow-black': {
     id: 'yellow-black',
@@ -106,7 +125,16 @@ const THEMES = {
     btnSecondary: 'bg-[#161616] hover:bg-[#222200] text-[#ffe600] border border-[#ffe600]/50',
     menuPopup: 'bg-[#0d0d0d] border-[#ffe600] text-[#ffe600] shadow-2xl',
     divider: 'border-[#ffe600]/30',
-    subText: 'text-[#ffe600]/70'
+    subText: 'text-[#ffe600]/70',
+    footer: 'bg-[#0a0a0a] border-[#ffe600]/40 text-[#ffe600] shadow-2xl',
+    footerLine: 'bg-[#ffe600]/40',
+    footerActiveBox: 'border-2 border-[#ffe600] text-[#ffe600] bg-[#1a1800]',
+    footerInactiveText: 'text-[#ffe600]/70 hover:text-[#ffe600]',
+    footerSubText: 'text-[#ffe600]/60',
+    footerDashAns: 'bg-[#ffe600]',
+    footerDashUnans: 'bg-[#ffe600]/30',
+    footerNavBtn: 'bg-[#161616] hover:bg-[#222200] text-[#ffe600] border-[#ffe600]/50',
+    footerSubmitBtn: 'bg-[#ffe600] hover:bg-[#fff066] text-black font-extrabold'
   },
   'black-white': {
     id: 'black-white',
@@ -132,7 +160,16 @@ const THEMES = {
     btnSecondary: 'bg-white hover:bg-gray-100 text-black border-2 border-black',
     menuPopup: 'bg-white border-2 border-black text-black shadow-2xl',
     divider: 'border-2 border-black',
-    subText: 'text-black'
+    subText: 'text-black',
+    footer: 'bg-white border-t-2 border-black text-black shadow-2xl',
+    footerLine: 'bg-black',
+    footerActiveBox: 'border-2 border-black text-black bg-gray-100 font-extrabold',
+    footerInactiveText: 'text-black hover:underline',
+    footerSubText: 'text-black',
+    footerDashAns: 'bg-black',
+    footerDashUnans: 'bg-gray-300',
+    footerNavBtn: 'bg-white hover:bg-gray-100 text-black border-2 border-black',
+    footerSubmitBtn: 'bg-black hover:bg-gray-900 text-white border-2 border-black font-bold'
   }
 };
 
@@ -147,6 +184,7 @@ const FONT_CLASSES = {
     question: 'text-sm font-bold',
     body: 'text-xs sm:text-sm',
     badge: 'text-xs',
+    instruction: 'text-xs sm:text-sm',
     input: 'text-xs sm:text-sm py-1.5 px-3'
   },
   large: {
@@ -156,6 +194,7 @@ const FONT_CLASSES = {
     question: 'text-base font-bold',
     body: 'text-sm sm:text-base',
     badge: 'text-sm',
+    instruction: 'text-sm sm:text-base',
     input: 'text-sm sm:text-base py-2 px-4'
   },
   'extra-large': {
@@ -165,9 +204,60 @@ const FONT_CLASSES = {
     question: 'text-lg font-black',
     body: 'text-base sm:text-lg',
     badge: 'text-base',
+    instruction: 'text-base sm:text-lg',
     input: 'text-base sm:text-lg py-2.5 px-4'
   }
 };
+
+// =============================================================================
+// OFFICIAL IELTS BAND SCORE CONVERTER (ACCURATE MAPPING)
+// =============================================================================
+export function calculateIELTSBand(correctCount, totalQuestions, skill = 'Listening') {
+  if (!totalQuestions || totalQuestions <= 0 || !correctCount || correctCount <= 0) {
+    return '0.0';
+  }
+
+  // Scale proportionally to standard 40 questions when student practices a subset of parts
+  const scaledScore = totalQuestions === 40 
+    ? correctCount 
+    : Math.round((correctCount / totalQuestions) * 40);
+
+  if (scaledScore <= 0) return '0.0';
+  if (scaledScore === 1) return '1.0';
+  if (scaledScore <= 3) return '2.0';
+  if (scaledScore <= 5) return '2.5';
+  if (scaledScore <= 7) return '3.0';
+  if (scaledScore <= 9) return '3.5';
+
+  if (skill === 'Reading') {
+    if (scaledScore >= 39) return '9.0';
+    if (scaledScore >= 37) return '8.5';
+    if (scaledScore >= 35) return '8.0';
+    if (scaledScore >= 33) return '7.5';
+    if (scaledScore >= 30) return '7.0';
+    if (scaledScore >= 27) return '6.5';
+    if (scaledScore >= 23) return '6.0';
+    if (scaledScore >= 19) return '5.5';
+    if (scaledScore >= 15) return '5.0';
+    if (scaledScore >= 13) return '4.5';
+    if (scaledScore >= 10) return '4.0';
+    return '3.5';
+  } else {
+    // Listening
+    if (scaledScore >= 39) return '9.0';
+    if (scaledScore >= 37) return '8.5';
+    if (scaledScore >= 35) return '8.0';
+    if (scaledScore >= 32) return '7.5';
+    if (scaledScore >= 30) return '7.0';
+    if (scaledScore >= 26) return '6.5';
+    if (scaledScore >= 23) return '6.0';
+    if (scaledScore >= 18) return '5.5';
+    if (scaledScore >= 16) return '5.0';
+    if (scaledScore >= 13) return '4.5';
+    if (scaledScore >= 10) return '4.0';
+    return '3.5';
+  }
+}
 
 // Clean and normalize text for IELTS answer comparison
 function normalizeAnswer(text) {
@@ -262,8 +352,8 @@ export default function TestRoom() {
   const [activePartIdx, setActivePartIdx] = useState(0);
   const currentPart = activeParts[activePartIdx] || activeParts[0];
 
-  // Active question ID for scrolling
-  const [activeQuestionId, setActiveQuestionId] = useState(null);
+  // Active question ID
+  const [activeQuestionId, setActiveQuestionId] = useState(1);
 
   // All questions flattened from active parts
   const allQuestions = useMemo(() => {
@@ -279,6 +369,13 @@ export default function TestRoom() {
   }, [activeParts]);
 
   const totalQuestions = allQuestions.length;
+
+  // Set initial active question
+  useEffect(() => {
+    if (allQuestions.length > 0 && !activeQuestionId) {
+      setActiveQuestionId(allQuestions[0].id);
+    }
+  }, [allQuestions, activeQuestionId]);
 
   // Answers State: { [qId]: string }
   const draftStorageKey = `dream_test_${exam.id}_${selectedPartIds.join('-')}_draft`;
@@ -356,7 +453,7 @@ export default function TestRoom() {
     }
   };
 
-  // Evaluation results calculation
+  // Evaluation results calculation with ACCURATE IELTS BAND SCORE
   const evaluation = useMemo(() => {
     let correctCount = 0;
     const results = {};
@@ -383,28 +480,17 @@ export default function TestRoom() {
       };
     });
 
-    // Scaled IELTS Band Score Calculation
-    let band = '4.0';
-    const ratio = totalQuestions > 0 ? (correctCount / totalQuestions) : 0;
-    if (ratio >= 0.95) band = '9.0';
-    else if (ratio >= 0.90) band = '8.5';
-    else if (ratio >= 0.82) band = '8.0';
-    else if (ratio >= 0.75) band = '7.5';
-    else if (ratio >= 0.68) band = '7.0';
-    else if (ratio >= 0.60) band = '6.5';
-    else if (ratio >= 0.52) band = '6.0';
-    else if (ratio >= 0.42) band = '5.5';
-    else if (ratio >= 0.35) band = '5.0';
-    else if (ratio >= 0.28) band = '4.5';
+    const percentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+    const band = calculateIELTSBand(correctCount, totalQuestions, exam.skill);
 
     return {
       correctCount,
       total: totalQuestions,
-      percentage: totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0,
+      percentage,
       band,
       results
     };
-  }, [allQuestions, userAnswers, totalQuestions]);
+  }, [allQuestions, userAnswers, totalQuestions, exam.skill]);
 
   // Handle final submit
   const handleSubmitTest = useCallback((isAutoTimeout = false) => {
@@ -494,6 +580,56 @@ export default function TestRoom() {
   // Answered count
   const answeredCount = Object.keys(userAnswers).filter(k => (userAnswers[k] || '').toString().trim() !== '').length;
 
+  // Scroll to a specific question (switches part if in another part)
+  const scrollToQuestion = (qId) => {
+    setActiveQuestionId(qId);
+    
+    // Check if target question belongs to another part
+    const targetPartIdx = activeParts.findIndex(p => 
+      (p.questions || []).some(q => q.id === qId)
+    );
+    const needSwitch = targetPartIdx !== -1 && targetPartIdx !== activePartIdx;
+    if (needSwitch) {
+      setActivePartIdx(targetPartIdx);
+    }
+
+    // Smooth scroll to question card
+    setTimeout(() => {
+      const el = document.getElementById(`q-${qId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Pulse ring highlight effect
+        el.classList.add('ring-4', 'ring-blue-400');
+        setTimeout(() => el.classList.remove('ring-4', 'ring-blue-400'), 1200);
+        
+        // Focus input if available
+        const input = el.querySelector('input:not([type="radio"])') || el.querySelector('input');
+        if (input && !input.disabled) {
+          input.focus();
+        }
+      }
+    }, needSwitch ? 120 : 50);
+  };
+
+  // Question navigation previous / next
+  const currentQuestionIndex = allQuestions.findIndex(q => q.id === (activeQuestionId || allQuestions[0]?.id));
+  const isFirstQuestion = currentQuestionIndex <= 0;
+  const isLastQuestion = currentQuestionIndex >= allQuestions.length - 1;
+
+  const handlePrevQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      const prevQ = allQuestions[currentQuestionIndex - 1];
+      scrollToQuestion(prevQ.id);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < allQuestions.length - 1) {
+      const nextQ = allQuestions[currentQuestionIndex + 1];
+      scrollToQuestion(nextQ.id);
+    }
+  };
+
   // Text Selection for Reading Highlighter & Notes
   const handlePassageMouseUp = () => {
     if (!isReading) return;
@@ -580,7 +716,7 @@ export default function TestRoom() {
   }, [currentPart, filterMode, isSubmitted, evaluation.results]);
 
   return (
-    <div className={`min-h-screen pt-16 pb-20 select-text font-sans transition-colors ${currentTheme.root} ${currentFont.container}`}>
+    <div className={`min-h-screen pb-28 select-text font-sans transition-colors ${currentTheme.root} ${currentFont.container}`}>
       
       {/* ========================================================================= */}
       {/* 1. TOP STICKY HEADER BAR (WITH ACCESSIBILITY MENU) */}
@@ -610,7 +746,7 @@ export default function TestRoom() {
                     : `${selectedPartIds.length} phần đã chọn`}
                 </span>
               </div>
-              <h1 className={`text-sm sm:text-base font-bold truncate max-w-xs sm:max-w-md lg:max-w-lg`}>
+              <h1 className="text-sm sm:text-base font-bold truncate max-w-xs sm:max-w-md lg:max-w-lg">
                 {exam.title}
               </h1>
             </div>
@@ -811,55 +947,9 @@ export default function TestRoom() {
       )}
 
       {/* ========================================================================= */}
-      {/* 3. PART SWITCHER TABS (FOR SELECTED PARTS / PASSAGES) */}
+      {/* 3. MAIN TEST BODY: READING (SPLIT-VIEW) VS LISTENING (AUDIO & CARDS) */}
       {/* ========================================================================= */}
-      <div className="max-w-[1540px] mx-auto px-4 sm:px-6 pt-4 pb-2">
-        <div className={`rounded-2xl border p-2 flex items-center justify-between gap-2 flex-wrap transition-colors ${currentTheme.card}`}>
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className={`text-xs font-bold uppercase px-2 ${currentTheme.headerSub}`}>
-              {isReading ? 'Bài đọc:' : 'Phần thi:'}
-            </span>
-            {activeParts.map((part, pIdx) => {
-              const isActive = activePartIdx === pIdx;
-              const partQuestions = part.questions || [];
-              const answeredInPart = partQuestions.filter(q => !!userAnswers[q.id]).length;
-
-              return (
-                <button
-                  key={part.id}
-                  type="button"
-                  onClick={() => {
-                    setActivePartIdx(pIdx);
-                    if (partQuestions.length > 0) setActiveQuestionId(partQuestions[0].id);
-                  }}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
-                    isActive 
-                      ? currentTheme.partTabActive 
-                      : currentTheme.partTabInactive
-                  }`}
-                >
-                  <span>{part.title}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                    isActive ? 'bg-black/20 text-current' : 'bg-current/10 text-current'
-                  }`}>
-                    {answeredInPart}/{partQuestions.length}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Quick Stats Pill */}
-          <div className={`text-xs font-medium px-2 ${currentTheme.subText}`}>
-            Đang mở: <strong className="font-bold">{currentPart?.name || currentPart?.title}</strong>
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 4. MAIN TEST BODY: READING (SPLIT-VIEW) VS LISTENING (AUDIO & CARDS) */}
-      {/* ========================================================================= */}
-      <div className="max-w-[1540px] mx-auto px-4 sm:px-6 pt-3">
+      <div className="max-w-[1540px] mx-auto px-4 sm:px-6 pt-5">
         
         {/* ======================================================================= */}
         {/* CASE A: READING LAYOUT (2-COLUMN SPLIT WITH HIGHLIGHTER & NOTES) */}
@@ -896,7 +986,7 @@ export default function TestRoom() {
               <div 
                 ref={passageContainerRef}
                 onMouseUp={handlePassageMouseUp}
-                className="p-6 sm:p-8 max-h-[calc(100vh-220px)] overflow-y-auto leading-relaxed relative"
+                className="p-6 sm:p-8 max-h-[calc(100vh-230px)] overflow-y-auto leading-relaxed relative"
               >
                 <div className={`border-b pb-4 mb-5 ${currentTheme.divider}`}>
                   <h2 className={`${currentFont.title} mb-1`}>
@@ -916,70 +1006,36 @@ export default function TestRoom() {
             {/* RIGHT COLUMN: QUESTIONS & INSTANT/POST SUBMIT FEEDBACK (5 COLS) */}
             <div className="lg:col-span-5 space-y-4">
               
-              {/* Question Navigation Pills Bar */}
-              <div className={`rounded-2xl border p-4 shadow-xs transition-colors ${currentTheme.card}`}>
-                <div className="flex items-center justify-between gap-2 mb-2.5">
-                  <span className="text-xs font-bold uppercase">Danh sách câu hỏi:</span>
-                  {isSubmitted && (
-                    <div className="flex items-center gap-1.5 text-xs">
-                      <button
-                        type="button"
-                        onClick={() => setFilterMode('all')}
-                        className={`px-2 py-0.5 rounded-md font-bold ${filterMode === 'all' ? currentTheme.btnPrimary : currentTheme.btnSecondary}`}
-                      >
-                        Tất cả
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setFilterMode('wrong_only')}
-                        className={`px-2 py-0.5 rounded-md font-bold ${filterMode === 'wrong_only' ? 'bg-rose-600 text-white' : currentTheme.btnSecondary}`}
-                      >
-                        Chỉ câu sai
-                      </button>
-                    </div>
-                  )}
+              {/* Filter mode header if submitted */}
+              {isSubmitted && (
+                <div className={`rounded-2xl border p-3 flex items-center justify-between gap-2 text-xs font-bold ${currentTheme.card}`}>
+                  <span>Bộ lọc câu hỏi:</span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setFilterMode('all')}
+                      className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${filterMode === 'all' ? currentTheme.btnPrimary : currentTheme.btnSecondary}`}
+                    >
+                      Tất cả ({currentPart?.questions?.length || 0})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFilterMode('wrong_only')}
+                      className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${filterMode === 'wrong_only' ? 'bg-rose-600 text-white' : currentTheme.btnSecondary}`}
+                    >
+                      Chỉ câu sai
+                    </button>
+                  </div>
                 </div>
-
-                {/* Pills Grid */}
-                <div className="flex flex-wrap gap-1.5">
-                  {(currentPart?.questions || []).map((q) => {
-                    const isAns = !!userAnswers[q.id];
-                    const evalResult = evaluation.results[q.id];
-                    const isCorrect = isSubmitted && evalResult?.isCorrect;
-
-                    let bgClass = currentTheme.qPillInactive;
-                    if (isSubmitted) {
-                      bgClass = isCorrect ? 'bg-emerald-500 text-white font-bold' : 'bg-rose-500 text-white font-bold';
-                    } else if (isAns) {
-                      bgClass = currentTheme.qPillActive;
-                    }
-
-                    return (
-                      <button
-                        key={q.id}
-                        type="button"
-                        onClick={() => {
-                          setActiveQuestionId(q.id);
-                          const el = document.getElementById(`q-${q.id}`);
-                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }}
-                        className={`w-7 h-7 rounded-lg text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${bgClass} ${
-                          activeQuestionId === q.id ? 'ring-2 ring-current ring-offset-1' : ''
-                        }`}
-                      >
-                        {q.id}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              )}
 
               {/* Questions List */}
-              <div className="space-y-4 max-h-[calc(100vh-280px)] overflow-y-auto pr-1">
+              <div className="space-y-4 max-h-[calc(100vh-230px)] overflow-y-auto pr-1">
                 {displayedQuestions.map((q) => {
                   const evalResult = evaluation.results[q.id];
                   const wordCount = countWords(userAnswers[q.id] || '');
                   const isOverLimit = q.maxWords && wordCount > q.maxWords;
+                  const isActive = activeQuestionId === q.id;
 
                   return (
                     <div
@@ -990,10 +1046,11 @@ export default function TestRoom() {
                           ? evalResult?.isCorrect
                             ? 'ring-2 ring-emerald-500/50'
                             : 'ring-2 ring-rose-500/50'
-                          : activeQuestionId === q.id
-                            ? 'ring-2 ring-current shadow-md'
+                          : isActive
+                            ? 'ring-2 ring-blue-500 shadow-md'
                             : ''
                       }`}
+                      onClick={() => setActiveQuestionId(q.id)}
                     >
                       {/* Section Title or Instruction */}
                       {q.sectionTitle && (
@@ -1183,6 +1240,7 @@ export default function TestRoom() {
             <div className="space-y-4">
               {displayedQuestions.map((q) => {
                 const evalResult = evaluation.results[q.id];
+                const isActive = activeQuestionId === q.id;
 
                 return (
                   <div
@@ -1193,8 +1251,11 @@ export default function TestRoom() {
                         ? evalResult?.isCorrect
                           ? 'ring-2 ring-emerald-500/50'
                           : 'ring-2 ring-rose-500/50'
-                        : ''
+                        : isActive
+                          ? 'ring-2 ring-blue-500 shadow-md'
+                          : ''
                     }`}
+                    onClick={() => setActiveQuestionId(q.id)}
                   >
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <span className={`font-extrabold text-xs px-2.5 py-0.5 rounded-md ${currentTheme.cardSubtle}`}>
@@ -1319,7 +1380,7 @@ export default function TestRoom() {
                 <button
                   type="button"
                   onClick={() => setExpandedTranscripts(prev => ({ ...prev, [currentPart.id]: !prev[currentPart.id] }))}
-                  className={`w-full px-5 py-4 flex items-center justify-between text-left font-bold text-sm transition cursor-pointer hover:opacity-90`}
+                  className="w-full px-5 py-4 flex items-center justify-between text-left font-bold text-sm transition cursor-pointer hover:opacity-90"
                 >
                   <div className="flex items-center gap-2">
                     <FileText size={16} className="text-current" />
@@ -1339,6 +1400,151 @@ export default function TestRoom() {
           </div>
         )}
 
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 4. PERSISTENT CBT BOTTOM QUESTION PALETTE BAR (LUÔN HIỆN KHI LÀM BÀI) */}
+      {/* ========================================================================= */}
+      <div className={`fixed bottom-0 left-0 right-0 z-40 border-t transition-colors shadow-2xl select-none ${currentTheme.footer}`}>
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-4">
+          
+          {/* Left: Scrollable Questions Palette by Part */}
+          <div className="flex-1 overflow-x-auto flex items-center gap-5 sm:gap-7 py-1 no-scrollbar">
+            {activeParts.map((part, pIdx) => {
+              const isCurrent = activePartIdx === pIdx;
+              const partQuestions = part.questions || [];
+              const answeredInPart = partQuestions.filter(q => !!userAnswers[q.id]).length;
+              const partLabel = isReading ? `PASSAGE ${part.id}` : `PART ${part.id}`;
+
+              return (
+                <div key={part.id} className="flex items-center gap-2 shrink-0">
+                  {/* Current Active Part: Part Header + Question Numbers with Top Dashes */}
+                  {isCurrent ? (
+                    <div className="flex items-center gap-3">
+                      {/* Part Label with top segment line */}
+                      <div className="flex flex-col items-center">
+                        <div className={`w-full h-[2.5px] rounded-full mb-1 ${currentTheme.footerLine}`} />
+                        <span className="text-xs font-black tracking-wide uppercase px-1">
+                          {partLabel}
+                        </span>
+                      </div>
+
+                      {/* Question numbers horizontally with individual dash above each */}
+                      <div className="flex items-center gap-1 sm:gap-1.5 ml-1">
+                        {partQuestions.map((q) => {
+                          const isAns = !!userAnswers[q.id];
+                          const isActive = activeQuestionId === q.id;
+                          const evalResult = evaluation.results[q.id];
+                          const isCorrect = isSubmitted && evalResult?.isCorrect;
+
+                          return (
+                            <button
+                              key={q.id}
+                              type="button"
+                              onClick={() => scrollToQuestion(q.id)}
+                              className="group flex flex-col items-center cursor-pointer p-0.5 focus:outline-none transition-all"
+                              title={`Câu ${q.id}${isAns ? ' (Đã trả lời)' : ' (Chưa làm)'}`}
+                            >
+                              {/* Top dash indicator */}
+                              <span
+                                className={`w-3.5 h-[2px] rounded-full mb-1 transition-all ${
+                                  isSubmitted
+                                    ? isCorrect ? 'bg-emerald-500' : 'bg-rose-500'
+                                    : isAns
+                                      ? currentTheme.footerDashAns
+                                      : `${currentTheme.footerDashUnans} group-hover:opacity-100`
+                                }`}
+                              />
+
+                              {/* Question number pill / outline */}
+                              <div
+                                className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold transition-all ${
+                                  isSubmitted
+                                    ? isCorrect
+                                      ? 'bg-emerald-500 text-white font-black shadow-xs'
+                                      : 'bg-rose-500 text-white font-black shadow-xs'
+                                    : isActive
+                                      ? `${currentTheme.footerActiveBox} font-black scale-105 shadow-2xs`
+                                      : `${currentTheme.footerInactiveText}`
+                                }`}
+                              >
+                                {q.id}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    /* Inactive Part Button (e.g. PART 2   0 of 10) with full-width top line */
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActivePartIdx(pIdx);
+                        if (partQuestions.length > 0) {
+                          scrollToQuestion(partQuestions[0].id);
+                        }
+                      }}
+                      className="group flex flex-col items-start cursor-pointer transition-all hover:opacity-100 opacity-80"
+                      title={`Chuyển sang ${partLabel}`}
+                    >
+                      {/* Top horizontal line spanning the part */}
+                      <div className={`w-full h-[2.5px] rounded-full mb-1 transition-opacity ${currentTheme.footerLine} group-hover:opacity-100`} />
+                      
+                      <div className="flex items-center gap-1.5 py-0.5 px-1">
+                        <span className="text-xs font-black uppercase tracking-wide">
+                          {partLabel}
+                        </span>
+                        <span className={`text-xs font-medium ${currentTheme.footerSubText}`}>
+                          {answeredInPart} of {partQuestions.length}
+                        </span>
+                      </div>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right Navigation Controls: Arrows & Checkmark */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Arrow Left (Previous question) */}
+            <button
+              type="button"
+              onClick={handlePrevQuestion}
+              disabled={isFirstQuestion}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl border flex items-center justify-center transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${currentTheme.footerNavBtn}`}
+              title="Câu trước đó"
+            >
+              <ArrowLeft size={16} />
+            </button>
+
+            {/* Arrow Right (Next question) */}
+            <button
+              type="button"
+              onClick={handleNextQuestion}
+              disabled={isLastQuestion}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl border flex items-center justify-center transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${currentTheme.footerNavBtn}`}
+              title="Câu tiếp theo"
+            >
+              <ArrowRight size={16} />
+            </button>
+
+            {/* Checkmark Button (Review / Submit) */}
+            {!isSubmitted && (
+              <button
+                type="button"
+                onClick={() => setShowSubmitModal(true)}
+                disabled={isTimeUp}
+                className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-all shadow-sm active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer ${currentTheme.footerSubmitBtn}`}
+                title="Kiểm tra & Nộp bài thi"
+              >
+                <Check size={18} strokeWidth={2.8} />
+              </button>
+            )}
+          </div>
+
+        </div>
       </div>
 
       {/* ========================================================================= */}
@@ -1508,13 +1714,21 @@ export default function TestRoom() {
             
             {/* Header Icon */}
             <div className={`w-16 h-16 rounded-3xl mx-auto flex items-center justify-center mb-4 ${
-              isTimeUp ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-[#2c4482]'
+              isTimeUp 
+                ? 'bg-amber-100 text-amber-700' 
+                : evaluation.correctCount > 0 
+                  ? 'bg-blue-50 text-[#2c4482]' 
+                  : 'bg-gray-100 text-gray-500'
             }`}>
               {isTimeUp ? <Clock size={32} /> : <Trophy size={32} />}
             </div>
 
             <h3 className="text-xl sm:text-2xl font-black mb-1">
-              {isTimeUp ? 'Hết giờ làm bài!' : 'Chúc mừng bạn đã hoàn thành bài thi!'}
+              {isTimeUp 
+                ? 'Hết giờ làm bài!' 
+                : evaluation.percentage >= 50 
+                  ? 'Chúc mừng bạn đã hoàn thành bài thi!' 
+                  : 'Kết quả bài làm của bạn'}
             </h3>
             <p className={`text-xs sm:text-sm mb-6 ${currentTheme.subText}`}>
               {isTimeUp 
@@ -1532,13 +1746,17 @@ export default function TestRoom() {
               </div>
               <div className={`border rounded-2xl p-3.5 ${currentTheme.cardSubtle}`}>
                 <span className="text-[10px] font-bold uppercase block mb-1 opacity-70">Tỷ lệ đúng</span>
-                <span className="text-xl sm:text-2xl font-black text-emerald-500">
+                <span className={`text-xl sm:text-2xl font-black ${
+                  evaluation.percentage >= 50 ? 'text-emerald-500' : 'text-gray-700'
+                }`}>
                   {evaluation.percentage}%
                 </span>
               </div>
               <div className={`border rounded-2xl p-3.5 ${currentTheme.cardSubtle}`}>
                 <span className="text-[10px] font-bold uppercase block mb-1 opacity-70">IELTS Band</span>
-                <span className="text-xl sm:text-2xl font-black text-purple-500">
+                <span className={`text-xl sm:text-2xl font-black ${
+                  evaluation.correctCount > 0 ? 'text-purple-500' : 'text-gray-600'
+                }`}>
                   {evaluation.band}
                 </span>
               </div>
