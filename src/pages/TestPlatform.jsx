@@ -19,7 +19,15 @@ export default function TestPlatform() {
 
   // Filter exams for library
   const filteredExams = EXAM_COLLECTIONS.filter(exam => {
-    const matchesCategory = activeCategory === 'Tất cả' || exam.category === activeCategory || exam.tags?.includes(activeCategory);
+    const matchesCategory = activeCategory === 'Tất cả' || 
+      exam.category === activeCategory || 
+      exam.tags?.includes(activeCategory) ||
+      exam.tags?.includes(`#${activeCategory}`) ||
+      (activeCategory === 'Tiếng Anh A2 -> C1' && (
+        exam.category === 'Tiếng Anh A2 - C1' ||
+        exam.category === 'Tiếng Anh A2 -> C1' ||
+        exam.tags?.some(t => t.includes('A2') || t.includes('B1') || t.includes('B2') || t.includes('C1') || t.includes('CEFR'))
+      ));
     const matchesSearch = !searchQuery.trim() || 
       exam.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       exam.skill.toLowerCase().includes(searchQuery.toLowerCase());

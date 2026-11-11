@@ -1030,6 +1030,14 @@ export default function TestRoom() {
                 </div>
               )}
 
+              {/* Instruction banner for Reading */}
+              {currentPart?.instruction && (
+                <div className={`p-3.5 border rounded-2xl leading-relaxed text-xs ${currentFont.instruction} ${currentTheme.banner}`}>
+                  <strong>Hướng dẫn: </strong>
+                  {currentPart.instruction}
+                </div>
+              )}
+
               {/* Questions List */}
               <div className="space-y-4 max-h-[calc(100vh-230px)] overflow-y-auto pr-1">
                 {displayedQuestions.map((q) => {
@@ -1055,8 +1063,15 @@ export default function TestRoom() {
                     >
                       {/* Section Title or Instruction */}
                       {q.sectionTitle && (
-                        <div className={`text-[11px] font-extrabold uppercase tracking-wider mb-1 ${currentTheme.headerSub}`}>
-                          {q.sectionTitle}
+                        <div className="mb-2">
+                          <div className={`text-[11px] font-extrabold uppercase tracking-wider mb-1 ${currentTheme.headerSub}`}>
+                            {q.sectionTitle}
+                          </div>
+                          {q.instruction && (
+                            <p className={`text-xs mt-1 ${currentTheme.subText} italic whitespace-pre-line`}>
+                              {q.instruction}
+                            </p>
+                          )}
                         </div>
                       )}
 
@@ -1077,7 +1092,7 @@ export default function TestRoom() {
                       {/* QUESTION TYPE: MULTIPLE CHOICE OR TRUE/FALSE */}
                       {q.type === 'choice' ? (
                         <div className="space-y-3">
-                          <p className={`${currentFont.question} leading-snug`}>
+                          <p className={`${currentFont.question} leading-snug whitespace-pre-line`}>
                             {q.question}
                           </p>
                           <div className="space-y-1.5">
@@ -1114,7 +1129,7 @@ export default function TestRoom() {
                       ) : (
                         /* QUESTION TYPE: FILL IN THE BLANKS / NOTES COMPLETION */
                         <div className="space-y-2">
-                          <div className={`${currentFont.body} font-medium leading-relaxed`}>
+                          <div className={`${currentFont.body} font-medium leading-relaxed whitespace-pre-line`}>
                             {q.label && <span>{q.label} </span>}
                             <input
                               type="text"
