@@ -4,49 +4,14 @@
 
 import { VOL1_LIS_1 } from './collections/vol1-lis-1.js';
 import { VOL1_READ_1 } from './collections/vol1-read-1.js';
+import { VOL1_LIS_2 } from './collections/vol1-lis-2.js';
+import { VOL1_READ_2 } from './collections/vol1-read-2.js';
 
 export const EXAM_COLLECTIONS = [
   VOL1_LIS_1,
   VOL1_READ_1,
-  {
-    id: 'vol1-lis-2',
-    vol: 1,
-    testNum: 2,
-    title: 'IELTS Collection 1 Listening Test 2',
-    category: 'IELTS Academic',
-    skill: 'Listening',
-    duration: 40,
-    participants: 193596,
-    commentsCount: 314,
-    partsCount: 4,
-    questionsCount: 40,
-    tags: ['#IELTS Academic', '#Listening'],
-    parts: [
-      { id: 1, title: 'Recording 1', name: 'Part 1: Customer Service Inquiry', questionRange: '1–10', questionCount: 10, tags: ['#[Listening] Form Completion'] },
-      { id: 2, title: 'Recording 2', name: 'Part 2: Museum Guide', questionRange: '11–20', questionCount: 10, tags: ['#[Listening] Multiple Choice'] },
-      { id: 3, title: 'Recording 3', name: 'Part 3: Project Meeting', questionRange: '21–30', questionCount: 10, tags: ['#[Listening] Matching'] },
-      { id: 4, title: 'Recording 4', name: 'Part 4: Renewable Energy', questionRange: '31–40', questionCount: 10, tags: ['#[Listening] Sentence Completion'] }
-    ]
-  },
-  {
-    id: 'vol1-read-2',
-    vol: 1,
-    testNum: 2,
-    title: 'IELTS Collection 1 Reading Test 2',
-    category: 'IELTS Academic',
-    skill: 'Reading',
-    duration: 60,
-    participants: 123519,
-    commentsCount: 291,
-    partsCount: 3,
-    questionsCount: 40,
-    tags: ['#IELTS Academic', '#Reading'],
-    parts: [
-      { id: 1, title: 'Passage 1', name: 'Urban Agriculture Innovations', questionRange: '1–13', questionCount: 13, tags: ['#[Reading] True/False/Not Given'] },
-      { id: 2, title: 'Passage 2', name: 'The Secret Life of Whales', questionRange: '14–26', questionCount: 13, tags: ['#[Reading] Headings Matching'] },
-      { id: 3, title: 'Passage 3', name: 'Artificial Intelligence and Human Labor', questionRange: '27–40', questionCount: 14, tags: ['#[Reading] Multiple Choice'] }
-    ]
-  },
+  VOL1_LIS_2,
+  VOL1_READ_2,
   {
     id: 'vol2-lis-1',
     vol: 2,
