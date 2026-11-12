@@ -999,7 +999,19 @@ export default function TestRoom() {
                 </div>
 
                 <div className={`whitespace-pre-line text-justify ${currentTheme.passageText} ${currentFont.passage}`}>
-                  {currentPart?.readingText}
+                  {(() => {
+                    if (!currentPart?.readingText) return null;
+                    let text = currentPart.readingText;
+                    if (currentPart?.name) {
+                      const titleClean = currentPart.name.trim().toLowerCase();
+                      const lines = text.split('\n');
+                      const firstLineClean = lines[0].replace(/^\*\*|\*\*$/g, '').trim().toLowerCase();
+                      if (firstLineClean === titleClean) {
+                        text = lines.slice(1).join('\n').trim();
+                      }
+                    }
+                    return text;
+                  })()}
                 </div>
               </div>
             </div>
@@ -1727,6 +1739,13 @@ export default function TestRoom() {
                   // 3. MATCHING SECTION
                   // =========================================================
                   if (sec.type === 'matching') {
+                    const matchingOptions = (sec.legend && sec.legend.length > 0)
+                      ? sec.legend.map(leg => leg.letter)
+                      : ['A', 'B', 'C'];
+                    const lettersRangeText = matchingOptions.length > 0
+                      ? `${matchingOptions[0]}–${matchingOptions[matchingOptions.length - 1]}`
+                      : 'A–C';
+
                     return (
                       <div key={secIdx} className={`rounded-3xl border p-5 sm:p-7 space-y-5 transition-colors ${currentTheme.card}`}>
                         <div className={`border-b pb-3.5 ${currentTheme.divider}`}>
@@ -1743,9 +1762,9 @@ export default function TestRoom() {
                         {sec.legend && (
                           <div className={`p-4 rounded-2xl border ${currentTheme.banner} space-y-2 text-xs sm:text-sm`}>
                             <div className="font-bold text-xs uppercase tracking-wider mb-1 text-gray-600 dark:text-gray-300">
-                              Các lựa chọn (Choose A, B, or C):
+                              Các lựa chọn (Choose {lettersRangeText}):
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                               {sec.legend.map((leg) => (
                                 <div key={leg.letter} className="flex items-center gap-2 p-2 rounded-xl bg-white/70 dark:bg-gray-800/70 border border-gray-200/70 dark:border-gray-700/70">
                                   <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-extrabold flex items-center justify-center text-xs shrink-0">
@@ -1764,6 +1783,7 @@ export default function TestRoom() {
                             if (!q) return null;
                             const evalResult = evaluation.results[q.id];
                             const isActive = activeQuestionId === q.id;
+                            const itemLabel = item.label || item.text || q.question || q.label || `Câu ${q.id}`;
 
                             return (
                               <div
@@ -1787,12 +1807,12 @@ export default function TestRoom() {
                                     {q.id}
                                   </span>
                                   <span className="font-medium text-xs sm:text-sm text-gray-800 dark:text-gray-200">
-                                    {item.label}
+                                    {itemLabel}
                                   </span>
                                 </div>
 
-                                <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
-                                  {['A', 'B', 'C'].map((optLetter) => {
+                                <div className="flex flex-wrap items-center gap-1.5 shrink-0 self-end sm:self-auto">
+                                  {matchingOptions.map((optLetter) => {
                                     const isSelected = userAnswers[q.id] === optLetter;
                                     const isCorrectChoice = isSubmitted && (q.answer === optLetter || q.primaryAnswer === optLetter);
                                     const isWrongSelected = isSubmitted && isSelected && !evalResult?.isCorrect;

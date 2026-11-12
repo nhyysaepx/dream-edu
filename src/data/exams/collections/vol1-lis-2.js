@@ -1145,19 +1145,23 @@ export const VOL1_LIS_2 = {
           "items": [
             {
               "questionId": 37,
-              "text": "quieter areas"
+              "text": "quieter areas",
+              "label": "quieter areas"
             },
             {
               "questionId": 38,
-              "text": "end of aisles"
+              "text": "end of aisles",
+              "label": "end of aisles"
             },
             {
               "questionId": 39,
-              "text": "middle shelves"
+              "text": "middle shelves",
+              "label": "middle shelves"
             },
             {
               "questionId": 40,
-              "text": "near the entrance"
+              "text": "near the entrance",
+              "label": "near the entrance"
             }
           ]
         }
