@@ -186,7 +186,7 @@ export default function Teachers() {
               </div>
               <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/40 text-on-secondary-container text-xs font-bold border border-secondary/20">
                 <span className="material-symbols-outlined text-[16px]">stars</span>
-                IELTS 7.5 • MA TESOL (Distinction)
+                IELTS 8.0 • MA TESOL (Distinction)
               </div>
             </div>
 
@@ -541,7 +541,7 @@ export default function Teachers() {
                     <div className="p-4 rounded-xl bg-surface-container-low/60 border border-outline-variant/20">
                       <span className="text-xs font-bold text-primary block mb-1">Năng lực ngôn ngữ</span>
                       <p className="text-xs text-on-surface-variant leading-relaxed">
-                        Tiếng Việt (Bản ngữ) • Tiếng Anh (IELTS 7.5).
+                        Tiếng Việt (Bản ngữ) • Tiếng Anh (IELTS 8.0).
                       </p>
                     </div>
 
