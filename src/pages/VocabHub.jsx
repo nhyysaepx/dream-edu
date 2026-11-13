@@ -198,7 +198,7 @@ export default function VocabHub() {
         { id: 'grade-7', name: 'Lớp 7', band: 'Global Success' },
         { id: 'grade-8', name: 'Lớp 8', band: 'Global Success' },
         { id: 'grade-9', name: 'Lớp 9', band: 'Global Success' },
-        { id: 'grade-10', name: 'Lớp 10', band: 'Unit 1 & Unit 2', isHot: true },
+        { id: 'grade-10', name: 'Lớp 10', band: 'Unit 1 (74 từ)', isHot: true },
         { id: 'grade-11', name: 'Lớp 11', band: 'Global Success' },
         { id: 'grade-12', name: 'Lớp 12', band: 'Global Success' }
       ]
@@ -735,9 +735,13 @@ export default function VocabHub() {
           {filteredSets.length === 0 && (
             <div className="bg-white rounded-3xl border border-gray-200/90 p-12 text-center max-w-md mx-auto my-6 shadow-xs">
               <Search size={36} className="text-gray-300 mx-auto mb-3" />
-              <h4 className="text-base font-bold text-gray-900 mb-1">Không tìm thấy bài học nào</h4>
+              <h4 className="text-base font-bold text-gray-900 mb-1">
+                {searchQuery ? 'Không tìm thấy bài học nào' : 'Chưa có bài học trong cấp độ này'}
+              </h4>
               <p className="text-xs text-gray-500 mb-6">
-                Chưa có bài học phù hợp với cấp độ hoặc từ khóa tìm kiếm "{searchQuery}".
+                {searchQuery
+                  ? `Chưa có bài học phù hợp với từ khóa "${searchQuery}".`
+                  : 'Vui lòng chọn cấp độ khác để tiếp tục học từ vựng.'}
               </p>
               <button
                 onClick={() => {

@@ -169,7 +169,9 @@ export default function TestPlatform() {
         {filteredExams.length === 0 && (
           <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
             <AlertCircle size={40} className="mx-auto text-gray-400 mb-3" />
-            <p className="text-gray-600 font-medium">Không tìm thấy đề thi phù hợp với từ khóa.</p>
+            <p className="text-gray-600 font-medium">
+              {searchQuery ? 'Không tìm thấy đề thi phù hợp với từ khóa.' : 'Chưa có đề thi trong mục này.'}
+            </p>
             <button 
               onClick={() => { setSearchQuery(''); setActiveCategory('Tất cả'); }}
               className="mt-4 text-[#2c4482] hover:underline text-sm font-semibold cursor-pointer"
