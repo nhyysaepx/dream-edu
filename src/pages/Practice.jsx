@@ -460,6 +460,16 @@ export default function Practice() {
                         </Link>
                       )}
 
+                      {item.id === 'pre-ielts-reading-2' && (
+                        <Link
+                          to="/vocab/pre-ielts-reading-2"
+                          className="w-full py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                        >
+                          <BookOpen size={13} className="text-amber-600" />
+                          <span>Học 30 từ vựng Reading 2</span>
+                        </Link>
+                      )}
+
                       <Link
                         to={`/practice/${item.id}`}
                         className={`w-full py-3 px-4 rounded-xl text-white font-extrabold text-xs text-center shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer ${
