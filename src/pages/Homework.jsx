@@ -285,7 +285,7 @@ export default function Homework() {
                             {item.vocabLabel || (
                               item.id === 'intermediate-reading-7' ? 'Học 36 từ vựng Reading 7' :
                               item.id === 'pre-ielts-reading-1' ? 'Học 30 từ vựng Reading 1' :
-                              item.id === 'pre-ielts-reading-2' ? 'Học từ vựng Reading 2' :
+                              item.id === 'pre-ielts-reading-2' ? 'Học 30 từ vựng Reading 2' :
                               item.id === 'intermediate-reading-6' ? 'Học 20 từ vựng Reading 6' :
                               item.id === 'intermediate-listening-6' ? 'Học 22 từ vựng Listening 6' :
                               'Học từ vựng bài tập'

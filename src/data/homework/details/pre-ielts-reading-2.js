@@ -251,7 +251,7 @@ Sociologists, then, are suggesting that we should not just view bodies and minds
             'the stomach',
             'a large belly'
           ],
-          primaryAnswer: '(a) large stomach',
+          primaryAnswer: 'a large stomach',
           evidence: '...while in middle-aged men, a large stomach indicated that they were financially successful in life.',
           explanation: 'Đoạn 5 nêu rõ: trong quá khứ, ở nam giới trung niên, một chiếc bụng lớn ("a large stomach" hoặc "noticeable belly") biểu thị rằng họ thành đạt về tài chính trong cuộc sống ("financially successful in life").'
         },

@@ -54,7 +54,7 @@ export const HOMEWORK_LIST = [
     isFeatured: true,
     vocabId: 'pre-ielts-reading-2',
     vocabCount: 30,
-    vocabLabel: 'Học từ vựng Reading 2'
+    vocabLabel: 'Học 30 từ vựng Reading 2'
   },
   {
     id: 'intermediate-reading-6',
