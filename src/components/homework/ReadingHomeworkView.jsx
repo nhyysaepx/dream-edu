@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
+  ArrowRight,
   CheckCircle2, 
   XCircle, 
   AlertTriangle, 
@@ -176,6 +177,8 @@ export default function ReadingHomeworkView({
 
   // Ref to the passage container for text selection
   const passageContainerRef = useRef(null);
+  // Ref to the questions scroll container
+  const questionsScrollContainerRef = useRef(null);
   // Ref to store cloned range across events
   const savedRangeRef = useRef(null);
 
@@ -276,6 +279,17 @@ export default function ReadingHomeworkView({
   const allQuestions = useMemo(() => {
     return homework.passages.flatMap(p => p.questions.map(q => ({ ...q, passageId: p.id, passageNumber: p.number })));
   }, [homework.passages]);
+
+  // Active focused question id for footer and list sync
+  const [activeQuestionId, setActiveQuestionId] = useState(() => {
+    return homework.passages?.[0]?.questions?.[0]?.id || null;
+  });
+
+  useEffect(() => {
+    if (!activeQuestionId && allQuestions.length > 0) {
+      setActiveQuestionId(allQuestions[0].id);
+    }
+  }, [allQuestions, activeQuestionId]);
 
   // Count answered questions
   const answeredCount = useMemo(() => {
@@ -464,6 +478,7 @@ export default function ReadingHomeworkView({
   // Handle Input Change for answers
   const handleInputChange = (qId, val) => {
     if (isSubmitted) return;
+    setActiveQuestionId(qId);
     setAnswers(prev => ({
       ...prev,
       [qId]: val
@@ -979,6 +994,47 @@ export default function ReadingHomeworkView({
     });
   }, [allQuestions, filterMode, evaluationResults.results]);
 
+  // Navigation helpers for footer and bi-directional passage sync
+  const currentQIndex = allQuestions.findIndex(q => q.id === activeQuestionId);
+  const isFirstQuestion = currentQIndex <= 0;
+  const isLastQuestion = currentQIndex >= allQuestions.length - 1;
+
+  const scrollToQuestion = useCallback((questionId) => {
+    const qObj = allQuestions.find(item => item.id === questionId);
+    if (!qObj) return;
+
+    setActiveQuestionId(questionId);
+
+    // If question belongs to another passage, switch activePassageId
+    if (qObj.passageId && qObj.passageId !== activePassageId) {
+      setActivePassageId(qObj.passageId);
+    }
+
+    // If filterMode is set to a specific passage/section that hides this question, update filterMode
+    if (filterMode !== 'all' && filterMode !== 'wrong_only' && filterMode !== qObj.passageId) {
+      setFilterMode(qObj.passageId);
+    }
+
+    setTimeout(() => {
+      const el = document.getElementById(`homework-question-${questionId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 60);
+  }, [allQuestions, activePassageId, filterMode]);
+
+  const handlePrevQuestion = () => {
+    if (currentQIndex > 0) {
+      scrollToQuestion(allQuestions[currentQIndex - 1].id);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (currentQIndex < allQuestions.length - 1) {
+      scrollToQuestion(allQuestions[currentQIndex + 1].id);
+    }
+  };
+
   const activePassage = homework.passages.find(p => p.id === activePassageId) || homework.passages[0];
 
   const passageFontClass = {
@@ -990,7 +1046,7 @@ export default function ReadingHomeworkView({
   const cleanTitle = (homework?.title || '').replace(/^E\s*[-–—]\s*/i, '');
 
   return (
-    <div className="pt-20 pb-16 bg-[#f8fafc] min-h-screen text-left">
+    <div className="pt-20 pb-24 bg-[#f8fafc] min-h-screen text-left">
       <div className="max-w-[1540px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* TOP BAR / BREADCRUMB */}
@@ -1150,7 +1206,7 @@ export default function ReadingHomeworkView({
         {/* MAIN IELTS 3-COLUMN SPLIT SCREEN (Passage | Questions | Dedicated Notes Column) WITH RESIZABLE DIVIDERS */}
         <div 
           ref={splitContainerRef}
-          className="flex flex-col lg:flex-row gap-4 lg:gap-0 h-auto lg:h-[calc(100vh-210px)] min-h-[650px] relative select-text"
+          className="flex flex-col lg:flex-row gap-4 lg:gap-0 h-auto lg:h-[calc(100vh-270px)] min-h-[600px] relative select-text"
         >
           
           {/* ============================================================== */}
@@ -1178,10 +1234,25 @@ export default function ReadingHomeworkView({
                     return (
                       <button
                         key={p.id}
+                        type="button"
                         onClick={() => {
                           setActivePassageId(p.id);
                           setActiveNoteId(null);
                           setSelectionPopup(null);
+                          setFilterMode(p.id);
+                          const firstQ = p.questions?.[0];
+                          if (firstQ) {
+                            setActiveQuestionId(firstQ.id);
+                            setTimeout(() => {
+                              if (questionsScrollContainerRef.current) {
+                                questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                              }
+                              const el = document.getElementById(`homework-question-${firstQ.id}`);
+                              if (el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 60);
+                          }
                         }}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                           isActive
@@ -1416,6 +1487,19 @@ export default function ReadingHomeworkView({
                         onClick={() => {
                           setFilterMode(p.id);
                           setActivePassageId(p.id);
+                          const firstQ = p.questions?.[0];
+                          if (firstQ) {
+                            setActiveQuestionId(firstQ.id);
+                            setTimeout(() => {
+                              if (questionsScrollContainerRef.current) {
+                                questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                              }
+                              const el = document.getElementById(`homework-question-${firstQ.id}`);
+                              if (el) {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }, 60);
+                          }
                         }}
                         className={`px-2.5 py-1 rounded-lg font-bold border transition-all cursor-pointer ${
                           filterMode === p.id ? 'bg-primary text-white border-primary shadow-2xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
@@ -1466,7 +1550,10 @@ export default function ReadingHomeworkView({
             </div>
 
             {/* Questions Body (Independently scrollable) */}
-            <div className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6">
+            <div 
+              ref={questionsScrollContainerRef}
+              className="flex-1 overflow-y-auto p-5 sm:p-7 space-y-6"
+            >
               
               {/* Official IELTS Rule Instruction Callout */}
               <div className="p-4 rounded-2xl bg-blue-50/80 border border-blue-200 text-xs sm:text-sm text-blue-950">
@@ -1487,7 +1574,7 @@ export default function ReadingHomeworkView({
               </div>
 
               {/* Passage Diagram / Flowchart Image (if provided) */}
-              {activePassage.diagramImage && filterMode === 'all' && (
+              {activePassage.diagramImage && (filterMode === 'all' || filterMode === activePassage.id) && (
                 <div className="p-4 rounded-2xl bg-white border border-blue-200 shadow-xs flex flex-col items-center">
                   {activePassage.diagramTitle && (
                     <h5 className="font-bold text-gray-800 text-xs sm:text-sm mb-2.5 text-center uppercase tracking-wide">
@@ -1527,7 +1614,7 @@ export default function ReadingHomeworkView({
                   return (
                     <React.Fragment key={q.id}>
                       {/* Section Header Divider if question starts a new section */}
-                      {q.isSectionStart && filterMode === 'all' && (q.number > 1 || q.sectionTitle || q.sectionWordBank) && (
+                      {q.isSectionStart && (filterMode === 'all' || filterMode === q.passageId) && (q.number > 1 || q.sectionTitle || q.sectionWordBank) && (
                         <div className="p-4 rounded-2xl bg-amber-50/90 border border-amber-200 text-xs sm:text-sm text-amber-950 mt-6 mb-2">
                           <div className="flex items-start gap-2.5">
                             <Info size={18} className="text-amber-700 flex-shrink-0 mt-0.5" />
@@ -1594,7 +1681,11 @@ export default function ReadingHomeworkView({
                       )}
 
                       <div 
-                        className={`p-4 sm:p-5 rounded-2xl border transition-all bg-white shadow-2xs ${cardBorderClass}`}
+                        id={`homework-question-${q.id}`}
+                        onClick={() => setActiveQuestionId(q.id)}
+                        className={`p-4 sm:p-5 rounded-2xl border transition-all bg-white shadow-2xs ${cardBorderClass} ${
+                          activeQuestionId === q.id ? 'ring-2 ring-primary/40 shadow-sm' : ''
+                        }`}
                       >
                         {/* Question Header & Question Number */}
                         <div className="flex items-start justify-between gap-3 mb-2.5">
@@ -1690,6 +1781,7 @@ export default function ReadingHomeworkView({
                               type="text"
                               disabled={isSubmitted}
                               value={userVal}
+                              onFocus={() => setActiveQuestionId(q.id)}
                               onChange={(e) => handleInputChange(q.id, e.target.value)}
                               onKeyDown={async (e) => {
                                 // Ensure Ctrl+V on Mac or Windows triggers paste if needed
@@ -2057,11 +2149,167 @@ export default function ReadingHomeworkView({
 
         {/* Floating Copy Feedback Toast */}
         {copyToast && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900/95 backdrop-blur-md text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2 animate-pop-in border border-white/10">
+          <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 bg-gray-900/95 backdrop-blur-md text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2 animate-pop-in border border-white/10">
             <Check size={15} className="text-emerald-400 flex-shrink-0" />
             <span>Đã sao chép vào bộ nhớ tạm! Bạn có thể nhấn Ctrl+V hoặc bấm nút "Dán" vào ô câu hỏi.</span>
           </div>
         )}
+
+        {/* ========================================================================= */}
+        {/* FIXED FOOTER QUESTION PALETTE: IELTS Exam Style Navigation */}
+        {/* ========================================================================= */}
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 text-gray-900 shadow-2xl select-none">
+          <div className="max-w-[1600px] mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-3 sm:gap-6">
+            
+            {/* Left: Scrollable Questions Palette by Part */}
+            <div className="flex-1 overflow-x-auto flex items-center gap-4 sm:gap-6 py-1 no-scrollbar">
+              {homework.passages?.map((part, pIdx) => {
+                const isCurrent = activePassageId === part.id;
+                const partQuestions = part.questions || [];
+                const answeredInPart = partQuestions.filter(q => !!(answers[q.id] || '').trim()).length;
+                const partLabel = `BÀI ĐỌC ${part.number || pIdx + 1}`;
+
+                return (
+                  <div key={part.id} className="flex items-center gap-2 shrink-0">
+                    {/* Current Active Part: Part Header + Question Numbers with Top Dashes */}
+                    {isCurrent ? (
+                      <div className="flex items-center gap-2.5 sm:gap-3 bg-gray-50/80 px-2 py-1 rounded-xl border border-gray-200/60">
+                        {/* Part Label with top segment line */}
+                        <div className="flex flex-col items-center shrink-0">
+                          <div className="w-full h-[2.5px] rounded-full mb-1 bg-primary" />
+                          <span className="text-[11px] sm:text-xs font-black tracking-wide uppercase px-1 text-primary">
+                            {partLabel}
+                          </span>
+                        </div>
+
+                        {/* Question numbers horizontally with individual dash above each */}
+                        <div className="flex items-center gap-1 sm:gap-1.5">
+                          {partQuestions.map((q) => {
+                            const isAns = !!(answers[q.id] || '').trim();
+                            const isActive = activeQuestionId === q.id;
+                            const evalResult = evaluationResults.results[q.id];
+                            const isCorrect = isSubmitted && evalResult?.isCorrect;
+
+                            return (
+                              <button
+                                key={q.id}
+                                type="button"
+                                onClick={() => scrollToQuestion(q.id)}
+                                className="group flex flex-col items-center cursor-pointer p-0.5 focus:outline-none transition-all"
+                                title={`Câu ${q.number}${isAns ? ' (Đã trả lời)' : ' (Chưa làm)'}`}
+                              >
+                                {/* Top dash indicator */}
+                                <span
+                                  className={`w-3.5 h-[2px] rounded-full mb-1 transition-all ${
+                                    isSubmitted
+                                      ? isCorrect ? 'bg-emerald-500' : 'bg-rose-500'
+                                      : isAns
+                                        ? 'bg-primary'
+                                        : 'bg-slate-300 group-hover:bg-slate-400'
+                                  }`}
+                                />
+
+                                {/* Question number pill / outline */}
+                                <div
+                                  className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center text-xs font-bold transition-all ${
+                                    isSubmitted
+                                      ? isCorrect
+                                        ? 'bg-emerald-500 text-white font-black shadow-xs'
+                                        : 'bg-rose-500 text-white font-black shadow-xs'
+                                      : isActive
+                                        ? 'border-2 border-primary text-primary bg-primary/10 font-black scale-105 shadow-2xs'
+                                        : 'text-slate-700 hover:text-primary hover:bg-white'
+                                  }`}
+                                >
+                                  {q.number}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ) : (
+                      /* Inactive Part Button (e.g. BÀI ĐỌC 2   0 of 9) with full-width top line */
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActivePassageId(part.id);
+                          setFilterMode(part.id);
+                          const firstQ = partQuestions[0];
+                          if (firstQ) {
+                            scrollToQuestion(firstQ.id);
+                          }
+                        }}
+                        className="group flex flex-col items-start cursor-pointer transition-all hover:opacity-100 opacity-75 px-1 py-0.5"
+                        title={`Chuyển sang ${partLabel}`}
+                      >
+                        {/* Top horizontal line spanning the part */}
+                        <div className="w-full h-[2.5px] rounded-full mb-1 transition-opacity bg-slate-300 group-hover:bg-primary/50" />
+                        
+                        <div className="flex items-center gap-1.5 py-0.5">
+                          <span className="text-[11px] sm:text-xs font-black uppercase tracking-wide text-slate-800">
+                            {partLabel}
+                          </span>
+                          <span className="text-[10px] sm:text-xs font-medium text-slate-500">
+                            {answeredInPart} of {partQuestions.length}
+                          </span>
+                        </div>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Right Navigation Controls: Arrows & Grade/Retake */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              {/* Arrow Left (Previous question) */}
+              <button
+                type="button"
+                onClick={handlePrevQuestion}
+                disabled={isFirstQuestion}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                title="Câu trước đó"
+              >
+                <ArrowLeft size={16} />
+              </button>
+
+              {/* Arrow Right (Next question) */}
+              <button
+                type="button"
+                onClick={handleNextQuestion}
+                disabled={isLastQuestion}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                title="Câu tiếp theo"
+              >
+                <ArrowRight size={16} />
+              </button>
+
+              {/* Action Button (Submit or Retake) */}
+              {!isSubmitted ? (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="h-8 sm:h-9 px-3 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer"
+                  title="Chấm bài & Xem giải thích"
+                >
+                  <Check size={16} strokeWidth={2.8} />
+                  <span className="hidden sm:inline">Chấm điểm</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleRetake}
+                  className="h-8 sm:h-9 px-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                  title="Làm lại bài này"
+                >
+                  <RotateCcw size={15} />
+                  <span className="hidden sm:inline">Làm lại</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

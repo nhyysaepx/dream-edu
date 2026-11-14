@@ -31,7 +31,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q1',
           number: 1,
-          question: 'Label 1 (Bình chứa chính đun nước tạo hơi bên dưới):',
+          question: 'Label 1:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['boiler', 'a boiler', 'Boiler', 'A boiler', 'the boiler', 'The boiler'],
           primaryAnswer: 'boiler',
@@ -41,7 +41,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q2',
           number: 2,
-          question: 'Label 2 (Hơi nước sinh ra bên trong nồi hơi):',
+          question: 'Label 2:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['steam', 'Steam', 'the steam', 'The steam'],
           primaryAnswer: 'steam',
@@ -51,7 +51,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q3',
           number: 3,
-          question: 'Label 3 (Bộ phận chuyển động tịnh tiến bên trong xi lanh):',
+          question: 'Label 3:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['piston', 'the piston', 'Piston', 'The piston'],
           primaryAnswer: 'piston',
@@ -61,7 +61,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q4',
           number: 4,
-          question: 'Label 4 (Buồng xi lanh hở phía trên nồi hơi):',
+          question: 'Label 4:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['cylinder', 'open top cylinder', 'open-top cylinder', 'the cylinder', 'Cylinder', 'an open top cylinder', 'the open top cylinder'],
           primaryAnswer: 'cylinder',
@@ -71,7 +71,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q5',
           number: 5,
-          question: 'Label 5 (Van đóng/mở điều tiết hơi từ nồi vào xi lanh):',
+          question: 'Label 5:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['first valve', 'the first valve', 'First valve', 'The first valve', 'a valve', 'valve'],
           primaryAnswer: 'first valve',
@@ -81,7 +81,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q6',
           number: 6,
-          question: 'Label 6 (Van dẫn nước lạnh từ bồn chứa vào xi lanh):',
+          question: 'Label 6:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['second valve', 'the second valve', 'Second valve', 'The second valve', 'valve'],
           primaryAnswer: 'second valve',
@@ -91,7 +91,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q7',
           number: 7,
-          question: 'Label 7 (Nước lạnh chứa trong bể để làm ngưng tụ hơi):',
+          question: 'Label 7:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['cold water', 'water', 'Cold water', 'Water', 'the cold water'],
           primaryAnswer: 'cold water',
@@ -101,7 +101,7 @@ export const INTERMEDIATE_READING_7_P1_DETAIL = {
         {
           id: 'ir7_p1_q8',
           number: 8,
-          question: 'Label 8 (Bể cấp nước lạnh đặt ở trên cao):',
+          question: 'Label 8:',
           placeholder: 'Điền câu trả lời (tối đa 2 từ)...',
           acceptedAnswers: ['cistern', 'a cistern', 'the cistern', 'Cistern', 'A cistern', 'The cistern'],
           primaryAnswer: 'cistern',
