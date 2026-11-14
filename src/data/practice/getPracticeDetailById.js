@@ -1,8 +1,15 @@
 // Practice detail lookup function
 import { PRE_IELTS_READING_2_PRACTICE_DETAIL } from './details/pre-ielts-reading-2.js';
-import { PRE_IELTS_READING_1_DETAIL, PRE_IELTS_LISTENING_1_DETAIL } from '../homework/index.js';
+import { 
+  PRE_IELTS_READING_1_DETAIL, 
+  PRE_IELTS_LISTENING_1_DETAIL,
+  INTERMEDIATE_LISTENING_6_DETAIL 
+} from '../homework/index.js';
 
 export function getPracticeDetailById(id) {
+  if (id === 'intermediate-listening-6') {
+    return INTERMEDIATE_LISTENING_6_DETAIL;
+  }
   if (id === 'pre-ielts-reading-2') {
     return PRE_IELTS_READING_2_PRACTICE_DETAIL;
   }

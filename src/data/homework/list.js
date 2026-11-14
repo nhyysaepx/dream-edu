@@ -66,5 +66,22 @@ export const HOMEWORK_LIST = [
     audioTracksCount: 0,
     tag: 'Intermediate 5.5 - 6.5',
     isFeatured: true
+  },
+  {
+    id: 'intermediate-listening-6',
+    levelId: 'ielts-foundation',
+    levelLabel: 'IELTS Intermediate',
+    session: 'Buổi 6',
+    skill: 'Listening',
+    title: 'Listening 6: Signposting Words & The Future of Fracking',
+    description: 'Trọn bộ 2 phần bài nghe Buổi 6: Bài 01 (Track 56 - Nhận diện từ nối Signposting & xác định chức năng) và Bài 02 (Track 57 - Multiple Choice về tương lai khí đá phiến & năng lượng tái tạo).',
+    totalQuestions: 25,
+    duration: '35 - 45 phút',
+    status: 'open',
+    dueDate: 'Không giới hạn thời gian',
+    exercisesCount: 2,
+    audioTracksCount: 2,
+    tag: 'Intermediate 5.0 - 6.5',
+    isFeatured: true
   }
 ];

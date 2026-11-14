@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import AudioPlayer from '../components/AudioPlayer';
 import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
+import ListeningHomeworkView from '../components/homework/ListeningHomeworkView';
 import { PRE_IELTS_LISTENING_1_DETAIL, getHomeworkDetailById } from '../data/homeworkData';
 
 export default function HomeworkDetail() {
@@ -28,6 +29,11 @@ export default function HomeworkDetail() {
   // If this is a Reading homework, render the specialized split-screen IELTS Reading component
   if (homework?.skill === 'Reading') {
     return <ReadingHomeworkView homework={homework} />;
+  }
+
+  // If this is a modern Listening homework with passages, render the specialized Listening component
+  if (homework?.skill === 'Listening' && homework?.passages) {
+    return <ListeningHomeworkView homework={homework} />;
   }
 
   // Answers state

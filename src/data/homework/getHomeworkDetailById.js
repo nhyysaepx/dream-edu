@@ -8,8 +8,12 @@ import {
   INTERMEDIATE_READING_6_EX9_DETAIL,
   INTERMEDIATE_READING_6_EX10_DETAIL,
 } from './details/intermediate-reading-6.js';
+import { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
 
 export function getHomeworkDetailById(id) {
+  if (id === 'intermediate-listening-6') {
+    return INTERMEDIATE_LISTENING_6_DETAIL;
+  }
   if (id === 'intermediate-reading-6') {
     return INTERMEDIATE_READING_6_DETAIL;
   }

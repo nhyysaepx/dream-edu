@@ -13,5 +13,6 @@ export {
   INTERMEDIATE_READING_6_EX10_DETAIL,
   INTERMEDIATE_READING_6_DETAIL,
 } from './details/intermediate-reading-6.js';
+export { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
 
 export { getHomeworkDetailById } from './getHomeworkDetailById.js';
