@@ -57,6 +57,26 @@ export const HOMEWORK_LIST = [
     vocabLabel: 'Học 30 từ vựng Reading 2'
   },
   {
+    id: 'pre-ielts-listening-2',
+    levelId: 'pre-ielts',
+    levelLabel: 'Pre IELTS',
+    session: 'Buổi 2',
+    skill: 'Listening',
+    title: 'Listening 2: Sailing Course & City Bike Tour',
+    description: 'Luyện tập nghe chi tiết, bắt số liệu, địa chỉ và tên riêng qua 2 bài nghe: Khóa học chèo thuyền buồm (Track 20) và Tour xe đạp tuần định hướng đại học (Track 21).',
+    totalQuestions: 12,
+    duration: '30 - 40 phút',
+    status: 'open',
+    dueDate: 'Không giới hạn thời gian',
+    exercisesCount: 2,
+    audioTracksCount: 2,
+    tag: 'Pre-Intermediate 4.0 - 5.0',
+    isFeatured: true,
+    vocabId: 'pre-ielts-listening-2',
+    vocabCount: 30,
+    vocabLabel: 'Học 30 từ vựng Listening 2'
+  },
+  {
     id: 'intermediate-reading-6',
     levelId: 'ielts-foundation',
     levelLabel: 'IELTS Intermediate',

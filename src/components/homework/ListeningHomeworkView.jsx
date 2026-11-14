@@ -1,22 +1,15 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useMemo, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
   ArrowRight,
   CheckCircle2, 
   XCircle, 
-  AlertTriangle, 
   RotateCcw, 
   Save, 
   Send, 
   Headphones, 
-  Sparkles, 
-  Info, 
-  Check, 
   Trophy, 
-  Filter, 
-  Eye, 
-  ChevronRight,
   ChevronDown,
   ChevronUp,
   FileText,
@@ -31,7 +24,7 @@ import AudioPlayer from '../AudioPlayer';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
 
 // Helper to normalize and check short-answer accuracy
-export function checkAnswer(userAnswer, acceptedList) {
+function checkAnswer(userAnswer, acceptedList = []) {
   if (!userAnswer || !userAnswer.toString().trim()) return false;
   
   const clean = (str) => {
@@ -39,7 +32,8 @@ export function checkAnswer(userAnswer, acceptedList) {
       .toString()
       .toLowerCase()
       .replace(/[‘'’"`]/g, '')
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
+      .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, ' ')
+      .replace(/\b(a|an|the)\b/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
   };
@@ -50,16 +44,16 @@ export function checkAnswer(userAnswer, acceptedList) {
   return acceptedList.some(accepted => {
     const acceptedClean = clean(accepted);
     if (userClean === acceptedClean) return true;
-    const normalizeConnectors = (s) => s.replace(/\s+(and|to|or)\s+/g, ' ').replace(/\s+/g, ' ');
+    const normalizeConnectors = (s) => s.replace(/\s+(and|to|or|of)\s+/g, ' ').replace(/\s+/g, ' ');
     if (normalizeConnectors(userClean) === normalizeConnectors(acceptedClean)) return true;
     return false;
   });
 }
 
 export default function ListeningHomeworkView({ homework }) {
-  const navigate = useNavigate();
   const homeworkId = homework?.id || 'intermediate-listening-6';
-  const passages = homework?.passages || [];
+  const rawPassages = homework?.passages;
+  const passages = useMemo(() => rawPassages || [], [rawPassages]);
 
   const [activeTabId, setActiveTabId] = useState(passages[0]?.id || 'p1');
   const [answers, setAnswers] = useState(() => {
@@ -78,14 +72,15 @@ export default function ListeningHomeworkView({ homework }) {
         const parsed = JSON.parse(history);
         return !!parsed[homeworkId];
       }
-    } catch {}
+    } catch (e) {
+      void e;
+    }
     return false;
   });
 
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
   const [expandedTranscripts, setExpandedTranscripts] = useState({});
-  const [filterMode, setFilterMode] = useState('all'); // 'all' | 'correct' | 'incorrect'
 
   // Flatten all questions
   const allQuestions = useMemo(() => {
@@ -98,7 +93,7 @@ export default function ListeningHomeworkView({ homework }) {
     return list;
   }, [passages]);
 
-  const totalQuestions = allQuestions.length || homework.totalQuestions || 25;
+  const totalQuestions = allQuestions.length || homework?.totalQuestions || 25;
 
   // Handle text input change
   const handleInputChange = (fieldId, val) => {
@@ -119,10 +114,10 @@ export default function ListeningHomeworkView({ homework }) {
   };
 
   // Check correctness of a question
-  const isQuestionCorrect = (q) => {
+  const isQuestionCorrect = useCallback((q) => {
     const userAns = answers[q.id];
     return checkAnswer(userAns, q.acceptedAnswers || []);
-  };
+  }, [answers]);
 
   // Score calculation
   const score = useMemo(() => {
@@ -131,7 +126,7 @@ export default function ListeningHomeworkView({ homework }) {
       if (isQuestionCorrect(q)) s++;
     });
     return s;
-  }, [allQuestions, answers]);
+  }, [allQuestions, isQuestionCorrect]);
 
   const answeredCount = useMemo(() => {
     return allQuestions.filter(q => answers[q.id] && answers[q.id].toString().trim() !== '').length;
@@ -196,6 +191,23 @@ export default function ListeningHomeworkView({ homework }) {
   };
 
   const activePassage = passages.find(p => p.id === activeTabId) || passages[0];
+  const currentPassageIndex = passages.findIndex(p => p.id === activeTabId);
+  const prevPassage = currentPassageIndex > 0 ? passages[currentPassageIndex - 1] : null;
+  const nextPassage = currentPassageIndex < passages.length - 1 ? passages[currentPassageIndex + 1] : null;
+
+  const scrollToQuestion = (questionId, passageId) => {
+    if (passageId && passageId !== activeTabId) {
+      setActiveTabId(passageId);
+    }
+    setTimeout(() => {
+      const el = document.getElementById(`q-${questionId}`);
+      if (el) {
+        const yOffset = -120;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      }
+    }, 120);
+  };
 
   return (
     <div className="pt-20 pb-36 bg-[#f8fafc] min-h-screen text-left text-gray-900 font-sans">
@@ -311,7 +323,7 @@ export default function ListeningHomeworkView({ homework }) {
                   {homework.level || 'IELTS Intermediate'}
                 </span>
                 <span className="px-2.5 py-0.5 rounded-md bg-purple-500/30 text-purple-200 text-xs font-semibold border border-purple-400/20">
-                  2 Audio Tracks • 25 Questions
+                  {passages.length} Audio Track{passages.length > 1 ? 's' : ''} • {totalQuestions} Questions
                 </span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black tracking-tight text-white mb-1.5">
@@ -376,8 +388,8 @@ export default function ListeningHomeworkView({ homework }) {
               )}
             </div>
 
-            {/* PART 1 RENDERER: Signposting Table */}
-            {activePassage.id === 'p1' && (
+            {/* PART RENDERER: Signposting Table or General Listening Questions */}
+            {activePassage.tableRows && activePassage.tableRows.length > 0 ? (
               <div className="space-y-6">
                 
                 {/* TIP 16 Banner */}
@@ -486,17 +498,14 @@ export default function ListeningHomeworkView({ homework }) {
 
                         {/* Interactive Rows 1 to 10 */}
                         {activePassage.tableRows?.map((row) => {
-                          const wordQ = activePassage.questions.find(q => q.id === row.wordQuestionId);
-                          const funcQ = activePassage.questions.find(q => q.id === row.funcQuestionId);
+                          const wordQ = activePassage.questions?.find(q => q.id === row.wordQuestionId);
+                          const funcQ = activePassage.questions?.find(q => q.id === row.funcQuestionId);
 
                           const wordVal = answers[row.wordQuestionId] || '';
                           const funcVal = answers[row.funcQuestionId] || '';
 
                           const wordCorrect = wordQ && isSubmitted && isQuestionCorrect(wordQ);
-                          const wordWrong = wordQ && isSubmitted && !isQuestionCorrect(wordQ);
-
                           const funcCorrect = funcQ && isSubmitted && isQuestionCorrect(funcQ);
-                          const funcWrong = funcQ && isSubmitted && !isQuestionCorrect(funcQ);
 
                           return (
                             <tr key={row.rowNumber} className="hover:bg-gray-50/60 transition-colors">
@@ -618,42 +627,54 @@ export default function ListeningHomeworkView({ homework }) {
                 {/* Next Part Button at bottom of Part 1 */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-gray-200 shadow-xs">
                   <div className="text-xs text-gray-500 font-medium">
-                    Đã hoàn thành Bài 1? Nhấn nút bên cạnh để chuyển sang phần trắc nghiệm Track 57.
+                    Đã hoàn thành Bài 1? Nhấn nút bên cạnh để chuyển sang phần tiếp theo.
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveTabId('p2');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer group shrink-0"
-                  >
-                    <span>Sang Bài 2: Multiple Choice (Track 57)</span>
-                    <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
-                  </button>
+                  {nextPassage && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTabId(nextPassage.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer group shrink-0"
+                    >
+                      <span>Sang {nextPassage.shortTitle || 'Bài tiếp theo'}</span>
+                      <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                  )}
                 </div>
 
               </div>
-            )}
+            ) : (
+              /* GENERAL LISTENING QUESTIONS RENDERER (Supports short-answer, fill-in-the-blank, multiple choice) */
+              <div className="space-y-6">
+                
+                {/* Instruction & Word Limit Banner */}
+                {(activePassage.instruction || activePassage.prompt) && (
+                  <div className="bg-blue-50 border-l-4 border-blue-500 rounded-r-xl p-4 text-blue-950 text-sm shadow-2xs">
+                    <div className="font-bold text-blue-900 mb-0.5">Hướng dẫn làm bài:</div>
+                    <p className="leading-relaxed">{activePassage.instruction || activePassage.prompt}</p>
+                    {activePassage.wordLimit && (
+                      <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-100/80 text-blue-900 text-xs font-bold border border-blue-200">
+                        <span>Quy chuẩn giới hạn từ:</span>
+                        <span className="font-mono text-blue-950 font-black">{activePassage.wordLimit}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
-            {/* PART 2 RENDERER: Multiple Choice Questions */}
-            {activePassage.id === 'p2' && (
-              <div className="space-y-5">
-                <div className="bg-blue-50 border-l-4 border-blue-500 rounded-r-xl p-4 text-blue-950 text-sm">
-                  <div className="font-bold text-blue-900 mb-0.5">Hướng dẫn làm bài:</div>
-                  <p className="leading-relaxed">{activePassage.instruction}</p>
-                </div>
-
+                {/* Questions List */}
                 <div className="space-y-4">
                   {activePassage.questions?.map((q) => {
-                    const selectedLetter = answers[q.id] || '';
+                    const isChoice = q.options && q.options.length > 0;
+                    const userVal = answers[q.id] || '';
                     const correct = isSubmitted && isQuestionCorrect(q);
-                    const wrong = isSubmitted && !isQuestionCorrect(q);
 
                     return (
                       <div 
                         key={q.id}
-                        className={`bg-white rounded-2xl p-5 sm:p-6 border transition-all ${
+                        id={`q-${q.id}`}
+                        className={`bg-white rounded-2xl p-5 sm:p-6 border transition-all scroll-mt-28 ${
                           isSubmitted 
                             ? (correct 
                                 ? 'border-emerald-300 bg-emerald-50/20 shadow-xs' 
@@ -687,46 +708,77 @@ export default function ListeningHomeworkView({ homework }) {
                           )}
                         </div>
 
-                        {/* Options */}
-                        <div className="grid grid-cols-1 gap-2.5">
-                          {q.options?.map((opt) => {
-                            const isSelected = selectedLetter.toUpperCase() === opt.letter.toUpperCase();
-                            const isPrimary = q.primaryAnswer.toUpperCase() === opt.letter.toUpperCase();
+                        {/* Options for Multiple Choice */}
+                        {isChoice ? (
+                          <div className="grid grid-cols-1 gap-2.5">
+                            {q.options?.map((opt) => {
+                              const isSelected = userVal.toUpperCase() === opt.letter.toUpperCase();
+                              const isPrimary = (q.primaryAnswer || '').toUpperCase() === opt.letter.toUpperCase();
 
-                            let cardStyle = 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/40 text-gray-800';
-                            if (isSelected) {
-                              cardStyle = 'border-blue-600 bg-blue-50 text-blue-900 shadow-xs ring-2 ring-blue-500/20';
-                            }
-                            if (isSubmitted) {
-                              if (isPrimary) {
-                                cardStyle = 'border-emerald-500 bg-emerald-100/70 text-emerald-950 font-semibold ring-2 ring-emerald-500/30';
-                              } else if (isSelected && !correct) {
-                                cardStyle = 'border-rose-500 bg-rose-100/70 text-rose-950 line-through ring-2 ring-rose-500/30';
-                              } else {
-                                cardStyle = 'border-gray-200 opacity-60 text-gray-500';
+                              let cardStyle = 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/40 text-gray-800';
+                              if (isSelected) {
+                                cardStyle = 'border-blue-600 bg-blue-50 text-blue-900 shadow-xs ring-2 ring-blue-500/20';
                               }
-                            }
+                              if (isSubmitted) {
+                                if (isPrimary) {
+                                  cardStyle = 'border-emerald-500 bg-emerald-100/70 text-emerald-950 font-semibold ring-2 ring-emerald-500/30';
+                                } else if (isSelected && !correct) {
+                                  cardStyle = 'border-rose-500 bg-rose-100/70 text-rose-950 line-through ring-2 ring-rose-500/30';
+                                } else {
+                                  cardStyle = 'border-gray-200 opacity-60 text-gray-500';
+                                }
+                              }
 
-                            return (
-                              <button
-                                key={opt.letter}
-                                type="button"
+                              return (
+                                <button
+                                  key={opt.letter}
+                                  type="button"
+                                  disabled={isSubmitted}
+                                  onClick={() => handleSelectChoice(q.id, opt.letter)}
+                                  className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all cursor-pointer ${cardStyle}`}
+                                >
+                                  <span className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
+                                    isSelected 
+                                      ? 'bg-blue-600 text-white' 
+                                      : (isSubmitted && isPrimary ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700')
+                                  }`}>
+                                    {opt.letter}
+                                  </span>
+                                  <span className="text-sm leading-relaxed">{opt.text}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          /* Text Input for Short Answer / Fill in the blank */
+                          <div className="space-y-3">
+                            <div className="relative max-w-lg">
+                              <input
+                                type="text"
                                 disabled={isSubmitted}
-                                onClick={() => handleSelectChoice(q.id, opt.letter)}
-                                className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all cursor-pointer ${cardStyle}`}
-                              >
-                                <span className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
-                                  isSelected 
-                                    ? 'bg-blue-600 text-white' 
-                                    : (isSubmitted && isPrimary ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700')
-                                }`}>
-                                  {opt.letter}
+                                value={userVal}
+                                onChange={(e) => handleInputChange(q.id, e.target.value)}
+                                placeholder={q.placeholder || 'Điền câu trả lời (tối đa 2 từ)...'}
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all focus:outline-none focus:ring-2 ${
+                                  isSubmitted 
+                                    ? (correct 
+                                        ? 'bg-emerald-50 border-emerald-400 text-emerald-900 ring-emerald-300' 
+                                        : 'bg-rose-50 border-rose-400 text-rose-900 ring-rose-300')
+                                    : 'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-100 text-gray-900'
+                                }`}
+                              />
+                              {isSubmitted && (
+                                <span className="absolute right-3 top-3">
+                                  {correct ? (
+                                    <CheckCircle2 size={18} className="text-emerald-600" />
+                                  ) : (
+                                    <XCircle size={18} className="text-rose-600" />
+                                  )}
                                 </span>
-                                <span className="text-sm leading-relaxed">{opt.text}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                         {/* Evidence & Explanation box when submitted */}
                         {isSubmitted && (
@@ -734,15 +786,19 @@ export default function ListeningHomeworkView({ homework }) {
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-gray-700">Đáp án chuẩn:</span>
                               <span className="font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
-                                {q.primaryAnswer}. {q.options?.find(o => o.letter === q.primaryAnswer)?.text}
+                                {isChoice ? `${q.primaryAnswer}. ${q.options?.find(o => o.letter === q.primaryAnswer)?.text || ''}` : q.primaryAnswer}
                               </span>
                             </div>
-                            <div className="text-gray-700">
-                              <strong className="text-gray-900">Trích dẫn Audio:</strong> "{q.evidence}"
-                            </div>
-                            <div className="text-gray-700 leading-relaxed">
-                              <strong className="text-gray-900">Giải thích chi tiết:</strong> {q.explanation}
-                            </div>
+                            {q.evidence && (
+                              <div className="text-gray-700">
+                                <strong className="text-gray-900">Trích dẫn Audio:</strong> "{q.evidence}"
+                              </div>
+                            )}
+                            {q.explanation && (
+                              <div className="text-gray-700 leading-relaxed">
+                                <strong className="text-gray-900">Giải thích chi tiết:</strong> {q.explanation}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -750,38 +806,54 @@ export default function ListeningHomeworkView({ homework }) {
                   })}
                 </div>
 
-                {/* Navigation at bottom of Part 2 */}
+                {/* Navigation at bottom of Active Part */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-gray-200 shadow-xs">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveTabId('p1');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs sm:text-sm transition-colors cursor-pointer group"
-                  >
-                    <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
-                    <span>Quay lại Bài 1: Signposting Words (Track 56)</span>
-                  </button>
-
-                  {!isSubmitted ? (
+                  {prevPassage ? (
                     <button
                       type="button"
-                      onClick={handleSubmit}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                      onClick={() => {
+                        setActiveTabId(prevPassage.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs sm:text-sm transition-colors cursor-pointer group"
                     >
-                      <CheckCircle2 size={16} />
-                      <span>Hoàn thành & Nộp bài chấm điểm</span>
+                      <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+                      <span>Quay lại {prevPassage.shortTitle || `Part ${currentPassageIndex}`}</span>
+                    </button>
+                  ) : <div />}
+
+                  {nextPassage ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTabId(nextPassage.id);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer group shrink-0"
+                    >
+                      <span>Sang {nextPassage.shortTitle || `Part ${currentPassageIndex + 2}`}</span>
+                      <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
                     </button>
                   ) : (
-                    <button
-                      type="button"
-                      onClick={() => setShowResultsModal(true)}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
-                    >
-                      <Trophy size={16} />
-                      <span>Xem bảng điểm tổng kết</span>
-                    </button>
+                    !isSubmitted ? (
+                      <button
+                        type="button"
+                        onClick={handleSubmit}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                      >
+                        <CheckCircle2 size={16} />
+                        <span>Hoàn thành & Nộp bài chấm điểm</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowResultsModal(true)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+                      >
+                        <Trophy size={16} />
+                        <span>Xem bảng điểm tổng kết</span>
+                      </button>
+                    )
                   )}
                 </div>
 
@@ -845,6 +917,41 @@ export default function ListeningHomeworkView({ homework }) {
                 </button>
               );
             })}
+
+            {/* Question Palette for active passage */}
+            {activePassage.questions && activePassage.questions.length > 0 && (
+              <div className="hidden sm:flex items-center gap-1 sm:gap-1.5 pl-2 border-l border-gray-200 shrink-0 overflow-x-auto no-scrollbar max-w-xs md:max-w-md">
+                {activePassage.questions.map(q => {
+                  const isAns = answers[q.id] && answers[q.id].toString().trim() !== '';
+                  const isCorrect = isSubmitted && isQuestionCorrect(q);
+                  return (
+                    <button
+                      key={q.id}
+                      type="button"
+                      onClick={() => scrollToQuestion(q.id, activePassage.id)}
+                      className="group flex flex-col items-center cursor-pointer p-0.5 focus:outline-none transition-all"
+                      title={`Câu ${q.number}${isAns ? ' (Đã làm)' : ' (Chưa làm)'}`}
+                    >
+                      {/* Top indicator dash */}
+                      <span className={`w-3.5 h-[2px] rounded-full mb-1 transition-all ${
+                        isSubmitted
+                          ? (isCorrect ? 'bg-emerald-500' : 'bg-rose-500')
+                          : (isAns ? 'bg-blue-600' : 'bg-gray-300 group-hover:bg-gray-400')
+                      }`} />
+                      
+                      {/* Number pill */}
+                      <div className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-all ${
+                        isSubmitted
+                          ? (isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white')
+                          : (isAns ? 'bg-blue-50 text-blue-700 border border-blue-200 font-extrabold' : 'text-gray-600 hover:bg-gray-100')
+                      }`}>
+                        {q.number}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Overall progress indicator */}
             <div className="hidden lg:flex items-center gap-2 ml-1 pl-3 border-l border-gray-200 shrink-0">
@@ -917,7 +1024,7 @@ export default function ListeningHomeworkView({ homework }) {
             </div>
 
             <h3 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight mb-1">
-              Kết Quả Bài Làm Listening 6
+              Kết Quả Bài Làm {homework.title}
             </h3>
             <p className="text-xs sm:text-sm text-gray-500 mb-6">
               {homework.title}
