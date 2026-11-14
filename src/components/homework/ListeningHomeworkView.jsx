@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
+  ArrowRight,
   CheckCircle2, 
   XCircle, 
   AlertTriangle, 
@@ -335,42 +336,6 @@ export default function ListeningHomeworkView({ homework }) {
           </div>
         </div>
 
-        {/* Tab Navigation for Parts */}
-        <div className="flex items-center gap-2 border-b border-gray-200 mb-6 overflow-x-auto pb-1">
-          {passages.map((p, idx) => {
-            const isActive = activeTabId === p.id;
-            const pQuestions = p.questions || [];
-            const pAnswered = pQuestions.filter(q => answers[q.id] && answers[q.id].toString().trim() !== '').length;
-            const pCorrect = isSubmitted ? pQuestions.filter(q => isQuestionCorrect(q)).length : 0;
-
-            return (
-              <button
-                key={p.id}
-                onClick={() => setActiveTabId(p.id)}
-                className={`flex items-center gap-2.5 px-4 py-3 rounded-t-xl font-bold text-sm transition-all whitespace-nowrap cursor-pointer border-t-2 border-l border-r ${
-                  isActive 
-                    ? 'bg-white border-t-blue-600 border-x-gray-200 text-blue-700 shadow-xs translate-y-px z-10' 
-                    : 'bg-gray-100/80 border-t-transparent border-x-transparent text-gray-600 hover:bg-gray-200/70 hover:text-gray-900'
-                }`}
-              >
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
-                  isActive ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-700'
-                }`}>
-                  {idx + 1}
-                </div>
-                <span>{p.shortTitle || p.title}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
-                  isSubmitted 
-                    ? (pCorrect === pQuestions.length ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700')
-                    : 'bg-gray-200 text-gray-700'
-                }`}>
-                  {isSubmitted ? `${pCorrect}/${pQuestions.length}` : `${pAnswered}/${pQuestions.length}`}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* Active Part Content */}
         {activePassage && (
           <div className="space-y-6">
@@ -649,6 +614,25 @@ export default function ListeningHomeworkView({ homework }) {
                     </table>
                   </div>
                 </div>
+
+                {/* Next Part Button at bottom of Part 1 */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-gray-200 shadow-xs">
+                  <div className="text-xs text-gray-500 font-medium">
+                    Đã hoàn thành Bài 1? Nhấn nút bên cạnh để chuyển sang phần trắc nghiệm Track 57.
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTabId('p2');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer group shrink-0"
+                  >
+                    <span>Sang Bài 2: Multiple Choice (Track 57)</span>
+                    <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+                </div>
+
               </div>
             )}
 
@@ -765,6 +749,42 @@ export default function ListeningHomeworkView({ homework }) {
                     );
                   })}
                 </div>
+
+                {/* Navigation at bottom of Part 2 */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-gray-200 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTabId('p1');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs sm:text-sm transition-colors cursor-pointer group"
+                  >
+                    <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+                    <span>Quay lại Bài 1: Signposting Words (Track 56)</span>
+                  </button>
+
+                  {!isSubmitted ? (
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer"
+                    >
+                      <CheckCircle2 size={16} />
+                      <span>Hoàn thành & Nộp bài chấm điểm</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowResultsModal(true)}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all cursor-pointer"
+                    >
+                      <Trophy size={16} />
+                      <span>Xem bảng điểm tổng kết</span>
+                    </button>
+                  )}
+                </div>
+
               </div>
             )}
 
@@ -772,58 +792,117 @@ export default function ListeningHomeworkView({ homework }) {
         )}
       </div>
 
-      {/* Floating Bottom Action Bar */}
-      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-gray-200 py-3 px-4 z-40 shadow-xl">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-32 sm:w-48 bg-gray-200 rounded-full h-2.5 overflow-hidden">
-              <div 
-                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                style={{ width: `${Math.round((answeredCount / totalQuestions) * 100)}%` }}
-              />
+      {/* Persistent CBT Bottom Action & Navigation Bar (Giống bên đề thi TestRoom) */}
+      <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2.5 px-3 sm:px-6 z-40 shadow-2xl select-none">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+          
+          {/* Left: CBT Part 1 / Part 2 Navigation Tabs */}
+          <div className="flex items-center gap-2.5 overflow-x-auto w-full md:w-auto py-0.5 no-scrollbar">
+            {passages.map((p, idx) => {
+              const isActive = activeTabId === p.id;
+              const pQuestions = p.questions || [];
+              const pAnswered = pQuestions.filter(q => answers[q.id] && answers[q.id].toString().trim() !== '').length;
+              const pCorrect = isSubmitted ? pQuestions.filter(q => isQuestionCorrect(q)).length : 0;
+              const partLabel = `PART ${idx + 1}`;
+
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveTabId(p.id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`group flex flex-col items-start cursor-pointer transition-all px-3 py-1.5 rounded-xl border shrink-0 ${
+                    isActive
+                      ? 'bg-blue-50/90 border-blue-500 shadow-2xs'
+                      : 'bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300'
+                  }`}
+                  title={`Chuyển sang ${p.shortTitle || p.title}`}
+                >
+                  {/* Top indicator bar */}
+                  <div className={`w-full h-[2.5px] rounded-full mb-1 transition-all ${
+                    isActive ? 'bg-blue-600' : 'bg-transparent group-hover:bg-gray-300'
+                  }`} />
+                  
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-black uppercase tracking-wider ${
+                      isActive ? 'text-blue-700' : 'text-gray-700'
+                    }`}>
+                      {partLabel}
+                    </span>
+                    <span className="text-xs text-gray-500 hidden sm:inline font-medium">
+                      {p.shortTitle ? p.shortTitle.split(':')[1] || p.shortTitle : p.title}
+                    </span>
+                    <span className={`text-[11px] font-bold px-1.5 py-0.2 rounded-md ${
+                      isSubmitted
+                        ? (pCorrect === pQuestions.length ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700')
+                        : (isActive ? 'bg-blue-200/70 text-blue-900' : 'bg-gray-200 text-gray-600')
+                    }`}>
+                      {isSubmitted ? `${pCorrect}/${pQuestions.length}` : `${pAnswered}/${pQuestions.length}`}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+
+            {/* Overall progress indicator */}
+            <div className="hidden lg:flex items-center gap-2 ml-1 pl-3 border-l border-gray-200 shrink-0">
+              <div className="w-20 bg-gray-200 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.round((answeredCount / totalQuestions) * 100)}%` }}
+                />
+              </div>
+              <span className="text-[11px] font-bold text-gray-500 whitespace-nowrap">
+                {answeredCount}/{totalQuestions} câu ({Math.round((answeredCount / totalQuestions) * 100)}%)
+              </span>
             </div>
-            <span className="text-xs font-bold text-gray-600">
-              {answeredCount}/{totalQuestions} câu ({Math.round((answeredCount / totalQuestions) * 100)}%)
-            </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Right: Action Buttons */}
+          <div className="flex items-center gap-2 shrink-0 w-full md:w-auto justify-end">
             {!isSubmitted ? (
               <>
                 <button
+                  type="button"
                   onClick={handleSaveDraft}
-                  className="px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5"
+                  className="px-3.5 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Save size={16} />
+                  <Save size={15} />
                   <span>Lưu nháp</span>
                 </button>
                 <button
+                  type="button"
                   onClick={handleSubmit}
-                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 active:scale-95"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
                 >
-                  <Send size={16} />
+                  <Send size={15} />
                   <span>Nộp bài chấm điểm</span>
                 </button>
               </>
             ) : (
               <>
                 <button
+                  type="button"
                   onClick={() => setShowResultsModal(true)}
-                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Trophy size={16} />
-                  <span>Xem bảng điểm ({score}/{totalQuestions})</span>
+                  <Trophy size={15} />
+                  <span>Xem kết quả ({score}/{totalQuestions})</span>
                 </button>
                 <button
+                  type="button"
                   onClick={handleRetake}
-                  className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <RotateCcw size={16} />
+                  <RotateCcw size={15} />
                   <span>Làm lại bài</span>
                 </button>
               </>
             )}
           </div>
+
         </div>
       </div>
 
