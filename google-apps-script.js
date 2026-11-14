@@ -8,13 +8,19 @@
  * 2. Vào Tiện ích mở rộng (Extensions) -> Apps Script.
  * 3. XÓA TOÀN BỘ CODE CŨ và DÁN TOÀN BỘ CODE DƯỚI ĐÂY VÀO.
  * 4. Bấm biểu tượng đĩa mềm 💾 (Lưu).
- * 5. Bấm Triển khai (Deploy) -> Quản lý bản triển khai (Manage deployments).
- *    - Bấm vào biểu tượng cây bút chỉnh sửa ✏️.
- *    - Phiên bản (Version): Chọn "Phiên bản mới" (New version).
- *    - Ai có quyền truy cập (Who has access): Chọn "Bất kỳ ai" (Anyone).
+ * 5. Bấm Triển khai (Deploy) -> Tùy chọn triển khai mới (New deployment).
+ *    - Bấm bánh răng ⚙️ -> chọn "Ứng dụng web" (Web app).
+ *    - Thực thi dưới dạng (Execute as): Tôi (Me / ngtquynh2001@gmail.com).
+ *    - Ai có quyền truy cập (Who has access): Bất kỳ ai (Anyone).
  *    - Bấm "Triển khai" (Deploy).
  * ==============================================================================
  */
+
+// Hàm kiểm tra trạng thái hoạt động khi mở link trực tiếp trên trình duyệt
+function doGet(e) {
+  return ContentService.createTextOutput("✅ Dream Education Webhook is ACTIVE and running successfully!")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
 
 function doPost(e) {
   try {

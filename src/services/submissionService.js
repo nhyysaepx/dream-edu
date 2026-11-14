@@ -1,5 +1,5 @@
 // Google Apps Script Web App URL provided by user
-export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8rkisR6gJk_ZAznSNGDPbt0ybXx15qz9bdjv0W1SgW2LWm27r9YfuROixfqZq_pZs4Q/exec";
+export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxThGxvwCZCIv9Z6AOwyR6zZjL2IWf0ba0mam5_wj7gieFbi4FlZku_rmprcSV_aoYP/exec";
 
 // Backup email recipient (FormSubmit service)
 export const BACKUP_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/ngtquynh2001@gmail.com";
