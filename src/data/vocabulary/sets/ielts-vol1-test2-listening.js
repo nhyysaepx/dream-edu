@@ -1,11 +1,11 @@
-// IELTS Vol 1 Test 2: Listening Core Vocabulary
+// IELTS Collection 1 Test 2: Listening Core Vocabulary
 // Vocabulary set for ielts-vol1-test2-listening
 
 export const IELTS_VOL1_TEST2_LISTENING_SET = {
   id: 'ielts-vol1-test2-listening',
-  title: 'IELTS Vol 1 Test 2: Listening Core Vocabulary',
+  title: 'IELTS Collection 1 Listening Test 2: Core Vocabulary',
   subtitle: 'IELTS Academic • Listening Test 2',
-  description: 'Bộ từ vựng trọng tâm xuất hiện trong bài thi Listening Test 2 (Vol 1): Thủ tục thuê nhà, trung tâm mầm non gia đình, phục hồi chức năng thể thao và thiết kế bố cục siêu thị.',
+  description: 'Bộ từ vựng trọng tâm xuất hiện trong bài thi Listening Test 2: Thủ tục thuê nhà, trung tâm mầm non gia đình, phục hồi chức năng thể thao và thiết kế bố cục siêu thị.',
   category: 'ielts',
   ieltsLevel: 'ielts-advanced',
   skill: 'listening',
@@ -13,7 +13,7 @@ export const IELTS_VOL1_TEST2_LISTENING_SET = {
   book: 'IELTS Collection 1',
   lesson: 'Listening Test 2',
   author: 'Dream Education Team',
-  tags: ['IELTS', 'Listening', 'Vol 1', 'Test 2', 'Vocabulary'],
+  tags: ['IELTS', 'Listening', 'Collection 1', 'Test 2', 'Vocabulary'],
   isOfficial: true,
   terms: [
     { id: 'v1t2-l1', term: 'rental property', definition: 'bất động sản cho thuê' },

@@ -312,7 +312,7 @@ export default function HomeworkDetail() {
             <div>
               <div className="flex items-center gap-2 text-blue-300 text-xs font-semibold uppercase tracking-wider mb-1">
                 <Sparkles size={14} />
-                <span>Bản quyền nội dung: Collins Get Ready for IELTS Listening</span>
+                <span>Học phần bài tập: Pre-IELTS Listening</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black">
                 Bài tập Listening Buổi 1: Friends Abroad

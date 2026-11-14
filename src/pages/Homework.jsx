@@ -116,7 +116,7 @@ export default function Homework() {
                 </div>
                 <div className="text-xs">
                   <p className="text-gray-500 font-medium">4 Phân hệ cấp độ</p>
-                  <p className="font-bold text-gray-900">Chuẩn Cambridge IELTS</p>
+                  <p className="font-bold text-gray-900">Chuẩn Quốc tế IELTS</p>
                 </div>
               </div>
             </div>
@@ -258,7 +258,7 @@ export default function Homework() {
                         {item.audioTracksCount > 0 && (
                           <div className="flex items-center gap-1.5 col-span-2 text-blue-700 font-medium">
                             <Headphones size={13} />
-                            <span>Kèm {item.audioTracksCount} file Audio chuẩn bản quyền</span>
+                            <span>Kèm {item.audioTracksCount} file Audio chuẩn phòng thi</span>
                           </div>
                         )}
                       </div>

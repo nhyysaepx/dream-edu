@@ -5,7 +5,7 @@ export const PRE_IELTS_READING_1_DETAIL = {
   id: 'pre-ielts-reading-1',
   title: 'HOMEWORK - Reading 1 - Short-answer Questions',
   level: 'Pre IELTS',
-  session: 'Buổi 1 - Giáo trình Collins Get Ready for IELTS Reading (Unit 1: Friendship)',
+  session: 'Buổi 1 - Pre-IELTS Reading (Unit 1: Friendship)',
   skill: 'Reading',
   description: 'Đọc kỹ 2 bài đọc về chủ đề tình bạn và trả lời 12 câu hỏi ngắn. Lưu ý quy tắc giới hạn từ: NO MORE THAN THREE WORDS AND/OR A NUMBER.',
   totalQuestions: 12,

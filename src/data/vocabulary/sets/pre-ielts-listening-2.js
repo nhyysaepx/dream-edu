@@ -10,7 +10,7 @@ export const PRE_IELTS_LISTENING_2_SET = {
   ieltsLevel: 'pre-ielts',
   skill: 'listening',
   grade: 'Pre IELTS',
-  book: 'Collins Get Ready for IELTS Listening',
+  book: 'Pre-IELTS Listening',
   lesson: 'Unit 2: Water Sports & Campus Life',
   author: 'Dream Education Team',
   tags: ['IELTS', 'Pre IELTS', 'Listening 2', 'Sailing', 'Orientation Week', 'Bike Tour'],

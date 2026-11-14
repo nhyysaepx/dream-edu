@@ -91,7 +91,7 @@ export default function PasswordScreen({ currentPath = '' }) {
         return {
           category: 'Phòng học • Thư viện đề thi',
           title: 'Nền tảng thi thử IELTS (Test Platform)',
-          description: 'Thư viện đề thi chuẩn format Cambridge với hệ thống tính giờ và chấm điểm tự động.',
+          description: 'Thư viện đề thi chuẩn format quốc tế với hệ thống tính giờ và chấm điểm tự động.',
           icon: GraduationCap,
           badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200'
         };

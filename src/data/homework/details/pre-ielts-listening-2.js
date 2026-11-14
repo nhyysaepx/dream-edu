@@ -7,7 +7,7 @@ export const PRE_IELTS_LISTENING_2_DETAIL = {
   title: 'HOMEWORK - Listening 2: Sailing Course & City Bike Tour',
   level: 'Pre IELTS',
   levelId: 'pre-ielts',
-  session: 'Buổi 2 - Giáo trình Collins Get Ready for IELTS Listening',
+  session: 'Buổi 2 - Pre-IELTS Listening (Unit 2: Water Sports & Campus Life)',
   skill: 'Listening',
   vocabId: 'pre-ielts-listening-2',
   description: 'Trọn bộ bài tập về nhà Listening Buổi 2 gồm 12 câu hỏi: Bài 01 (Track 20 - Nghe đoạn hội thoại về khóa học chèo thuyền) và Bài 02 (Track 21 - Nghe thông tin về chuyến tham quan thành phố bằng xe đạp trong tuần lễ định hướng).',

@@ -1,11 +1,11 @@
-// IELTS Vol 1 Test 2: Reading Academic Vocabulary
+// IELTS Collection 1 Test 2: Reading Academic Vocabulary
 // Vocabulary set for ielts-vol1-test2-reading
 
 export const IELTS_VOL1_TEST2_READING_SET = {
   id: 'ielts-vol1-test2-reading',
-  title: 'IELTS Vol 1 Test 2: Reading Academic Vocabulary',
+  title: 'IELTS Collection 1 Reading Test 2: Academic Vocabulary',
   subtitle: 'IELTS Academic • Reading Test 2',
-  description: 'Bộ từ vựng học thuật trọng điểm từ 3 bài đọc Reading Test 2 (Vol 1): Cuộc đua thuyền buồm clipper chở trà, khả năng định vị của loài chim, và vai trò của các phát minh tình cờ trong kinh doanh.',
+  description: 'Bộ từ vựng học thuật trọng điểm từ 3 bài đọc Reading Test 2: Cuộc đua thuyền buồm clipper chở trà, khả năng định vị của loài chim, và vai trò của các phát minh tình cờ trong kinh doanh.',
   category: 'ielts',
   ieltsLevel: 'ielts-advanced',
   skill: 'reading',
@@ -13,7 +13,7 @@ export const IELTS_VOL1_TEST2_READING_SET = {
   book: 'IELTS Collection 1',
   lesson: 'Reading Test 2',
   author: 'Dream Education Team',
-  tags: ['IELTS', 'Reading', 'Vol 1', 'Test 2', 'Academic Vocabulary'],
+  tags: ['IELTS', 'Reading', 'Collection 1', 'Test 2', 'Academic Vocabulary'],
   isOfficial: true,
   terms: [
     { id: 'v1t2-r1', term: 'monopoly', definition: 'vị thế độc quyền kinh doanh thương mại' },

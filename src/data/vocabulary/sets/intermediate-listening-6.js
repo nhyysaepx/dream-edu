@@ -10,7 +10,7 @@ export const INTERMEDIATE_LISTENING_6_SET = {
   ieltsLevel: 'ielts-foundation',
   skill: 'listening',
   grade: 'IELTS Intermediate',
-  book: 'Mindset for IELTS Level 2',
+  book: 'Intermediate Listening',
   lesson: 'Listening 6',
   author: 'Dream Education Team',
   tags: ['IELTS', 'Intermediate', 'Listening 6', 'Environment', 'Energy', 'Fracking', 'Signposting'],

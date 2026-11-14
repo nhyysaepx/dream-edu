@@ -65,7 +65,7 @@ export default function TestPlatform() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên sách, dạng câu hỏi ..."
+              placeholder="Nhập từ khoá bạn muốn tìm kiếm: tên đề thi, dạng câu hỏi ..."
               className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pr-10 text-sm text-gray-900 focus:outline-none focus:border-[#2c4482] focus:ring-1 focus:ring-[#2c4482] shadow-xs"
             />
             <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />

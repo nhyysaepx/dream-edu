@@ -381,7 +381,7 @@ export default function ListeningHomeworkView({ homework }) {
                 <div className="mt-4 p-4 rounded-xl bg-slate-900 text-slate-100 text-sm leading-relaxed font-mono whitespace-pre-wrap border border-slate-700 max-h-96 overflow-y-auto animate-in fade-in duration-200">
                   <div className="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2 pb-1 border-b border-slate-800 flex items-center justify-between">
                     <span>AUDIO TAPESCRIPT • {activePassage.trackLabel}</span>
-                    <span className="text-slate-500">Giáo trình Mindset for IELTS</span>
+                    <span className="text-slate-500">Dream Education</span>
                   </div>
                   {activePassage.transcript}
                 </div>

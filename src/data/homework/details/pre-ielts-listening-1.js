@@ -5,7 +5,7 @@ export const PRE_IELTS_LISTENING_1_DETAIL = {
   id: 'pre-ielts-listening-1',
   title: 'Listening 1: Friends Abroad (Names & Numbers)',
   level: 'Pre IELTS',
-  session: 'Buổi 1 - Giáo trình Collins Get Ready for IELTS Listening (Unit 1)',
+  session: 'Buổi 1 - Pre-IELTS Listening (Unit 1: Friends Abroad)',
   description: 'Hoàn thành các bài tập nghe về chủ đề tên người, địa chỉ, số điện thoại, giờ bay và đặt phòng khách sạn. Hãy đeo tai nghe và nghe kỹ phát âm trọng âm từ.',
   exercises: [
     {

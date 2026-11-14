@@ -1,13 +1,12 @@
 // IELTS Intermediate Listening 6: Signposting & The Future of Fracking
 // Detail data for homework assignment intermediate-listening-6
-// Source: Mindset for IELTS Level 2 - Unit 6 (The Natural Environment)
 
 export const INTERMEDIATE_LISTENING_6_DETAIL = {
   id: 'intermediate-listening-6',
   title: 'HOMEWORK - Listening 6: Signposting Words & The Future of Fracking',
   level: 'IELTS Intermediate',
   levelId: 'ielts-foundation',
-  session: 'Buổi 6 - Giáo trình Mindset for IELTS Level 2 (Unit 6: The Natural Environment)',
+  session: 'Buổi 6 - IELTS Intermediate Listening (Unit 6: The Natural Environment)',
   skill: 'Listening',
   vocabId: 'intermediate-listening-6',
   description: 'Trọn bộ bài tập về nhà Listening 6 gồm 25 câu hỏi: Bài 01 (Track 56 - Nhận diện từ nối Signposting và xác định chức năng) và Bài 02 (Track 57 - Trắc nghiệm Multiple Choice về tương lai của khí đá phiến fracking và năng lượng tái tạo).',

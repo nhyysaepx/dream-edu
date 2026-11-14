@@ -10,7 +10,7 @@ export const PRE_IELTS_READING_2_SET = {
   ieltsLevel: 'pre-ielts',
   skill: 'reading',
   grade: 'Pre IELTS',
-  book: 'Collins Get Ready for IELTS Reading',
+  book: 'Pre-IELTS Reading',
   lesson: 'Unit 2: The Body',
   author: 'Dream Education Team',
   tags: ['IELTS', 'Pre IELTS', 'Reading 2', 'The Body', 'Health', 'Sociology'],

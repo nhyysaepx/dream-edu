@@ -5,7 +5,7 @@ export const PRE_IELTS_READING_2_DETAIL = {
   id: 'pre-ielts-reading-2',
   title: 'HOMEWORK - Reading 2 - The Body',
   level: 'Pre IELTS',
-  session: 'Buổi 2 - Giáo trình Collins Get Ready for IELTS Reading (Unit 2: The Body)',
+  session: 'Buổi 2 - Pre-IELTS Reading (Unit 2: The Body)',
   skill: 'Reading',
   vocabId: 'pre-ielts-reading-2',
   description: 'Đọc kỹ văn bản học thuật "The body" và hoàn thiện 20 câu hỏi luyện thi IELTS gồm 2 phần: Short-answer questions (tối đa 4 từ) và Sentence completion (tối đa 3 từ). Chú ý giới hạn từ quy định trong từng phần.',

@@ -448,7 +448,7 @@ export default function TestDetail() {
             <div>
               <h3 className="font-bold text-gray-900 text-lg mb-2">Transcript & Đáp án chi tiết</h3>
               <p className="text-sm text-gray-600 mb-4">
-                Dữ liệu được trích xuất trực tiếp từ tài liệu gốc <strong>Full Original Exam VOL 1–9</strong>.
+                Dữ liệu được trích xuất trực tiếp từ tài liệu <strong>IELTS Academic Test Collection</strong>.
               </p>
               {exam.audioTracks?.[1] && (
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6 flex items-center gap-4">
