@@ -62,6 +62,29 @@ function countWords(str) {
   return str.trim().split(/\s+/).length;
 }
 
+// Helper to scroll an element smoothly inside a scrollable container without moving window.scrollY
+function scrollChildIntoContainer(container, child, block = 'center') {
+  if (!container || !child) return;
+  const containerRect = container.getBoundingClientRect();
+  const childRect = child.getBoundingClientRect();
+
+  let targetScrollTop;
+  if (block === 'start') {
+    targetScrollTop = childRect.top - containerRect.top + container.scrollTop - 16;
+  } else if (block === 'end') {
+    targetScrollTop = childRect.bottom - containerRect.bottom + container.scrollTop + 16;
+  } else {
+    // center
+    const offset = (containerRect.height - childRect.height) / 2;
+    targetScrollTop = childRect.top - containerRect.top + container.scrollTop - offset;
+  }
+
+  container.scrollTo({
+    top: Math.max(0, targetScrollTop),
+    behavior: 'smooth'
+  });
+}
+
 // Format raw text content into semantic HTML paragraphs
 function formatPassageToHtml(content, title) {
   const paragraphs = content.split('\n\n').filter(p => p.trim() && p.trim() !== (title || '').trim());
@@ -177,6 +200,8 @@ export default function ReadingHomeworkView({
 
   // Ref to the passage container for text selection
   const passageContainerRef = useRef(null);
+  // Ref to the passage scroll container
+  const passageScrollContainerRef = useRef(null);
   // Ref to the questions scroll container
   const questionsScrollContainerRef = useRef(null);
   // Ref to store cloned range across events
@@ -265,6 +290,11 @@ export default function ReadingHomeworkView({
       console.error(e);
     }
   }, [homeworkId, historyKey]);
+
+  // Keep page anchored at top on mount so header/tabs are fully visible
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [homeworkId]);
 
   // Synchronize draftNoteContent when activeNoteId changes
   useEffect(() => {
@@ -874,7 +904,9 @@ export default function ReadingHomeworkView({
     if (passageContainerRef.current) {
       const mark = passageContainerRef.current.querySelector(`mark[data-note-id="${noteId}"]`);
       if (mark) {
-        mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (passageScrollContainerRef.current) {
+          scrollChildIntoContainer(passageScrollContainerRef.current, mark, 'center');
+        }
         mark.classList.add('animate-correct-glow');
         setTimeout(() => mark.classList.remove('animate-correct-glow'), 1200);
       }
@@ -1008,6 +1040,9 @@ export default function ReadingHomeworkView({
     // If question belongs to another passage, switch activePassageId
     if (qObj.passageId && qObj.passageId !== activePassageId) {
       setActivePassageId(qObj.passageId);
+      if (passageScrollContainerRef.current) {
+        passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
     // If filterMode is set to a specific passage/section that hides this question, update filterMode
@@ -1017,8 +1052,8 @@ export default function ReadingHomeworkView({
 
     setTimeout(() => {
       const el = document.getElementById(`homework-question-${questionId}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (el && questionsScrollContainerRef.current) {
+        scrollChildIntoContainer(questionsScrollContainerRef.current, el, 'center');
       }
     }, 60);
   }, [allQuestions, activePassageId, filterMode]);
@@ -1240,16 +1275,15 @@ export default function ReadingHomeworkView({
                           setActiveNoteId(null);
                           setSelectionPopup(null);
                           setFilterMode(p.id);
+                          if (passageScrollContainerRef.current) {
+                            passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                          }
                           const firstQ = p.questions?.[0];
                           if (firstQ) {
                             setActiveQuestionId(firstQ.id);
                             setTimeout(() => {
                               if (questionsScrollContainerRef.current) {
                                 questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                              }
-                              const el = document.getElementById(`homework-question-${firstQ.id}`);
-                              if (el) {
-                                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                               }
                             }, 60);
                           }
@@ -1344,7 +1378,10 @@ export default function ReadingHomeworkView({
             </div>
 
             {/* Passage Body Text with Live Mouse Selection */}
-            <div className="flex-1 overflow-y-auto p-6 sm:p-7 space-y-4 text-justify select-text relative">
+            <div 
+              ref={passageScrollContainerRef}
+              className="flex-1 overflow-y-auto p-6 sm:p-7 space-y-4 text-justify select-text relative"
+            >
               {/* Highlight helper tip */}
               <div className="flex items-center gap-1.5 text-[11px] text-gray-400 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 mb-2 select-none">
                 <Highlighter size={12} className="text-amber-500" />
@@ -1487,16 +1524,15 @@ export default function ReadingHomeworkView({
                         onClick={() => {
                           setFilterMode(p.id);
                           setActivePassageId(p.id);
+                          if (passageScrollContainerRef.current) {
+                            passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                          }
                           const firstQ = p.questions?.[0];
                           if (firstQ) {
                             setActiveQuestionId(firstQ.id);
                             setTimeout(() => {
                               if (questionsScrollContainerRef.current) {
                                 questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                              }
-                              const el = document.getElementById(`homework-question-${firstQ.id}`);
-                              if (el) {
-                                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                               }
                             }, 60);
                           }
@@ -2235,6 +2271,9 @@ export default function ReadingHomeworkView({
                         onClick={() => {
                           setActivePassageId(part.id);
                           setFilterMode(part.id);
+                          if (passageScrollContainerRef.current) {
+                            passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                          }
                           const firstQ = partQuestions[0];
                           if (firstQ) {
                             scrollToQuestion(firstQ.id);
