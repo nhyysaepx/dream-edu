@@ -72,7 +72,7 @@ function doPost(e) {
     ]);
 
     // 2. Gửi email thông báo về hộp thư giáo viên
-    const teacherEmail = "ngtquynh@dream-edu.org";
+    const teacherEmail = "ngtquynh2001@gmail.com";
     const subject = `[Dream Edu - ${type}] ${studentName}${className ? ' (' + className + ')' : ''} - ${testTitle} (${scoreText})`;
 
     const htmlBody = `

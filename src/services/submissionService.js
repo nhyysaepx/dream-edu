@@ -2,7 +2,7 @@
 export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8rkisR6gJk_ZAznSNGDPbt0ybXx15qz9bdjv0W1SgW2LWm27r9YfuROixfqZq_pZs4Q/exec";
 
 // Backup email recipient (FormSubmit service)
-export const BACKUP_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/ngtquynh@dream-edu.org";
+export const BACKUP_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/ngtquynh2001@gmail.com";
 
 /**
  * Format current timestamp to Vietnamese time string (HH:mm dd/MM/yyyy)
