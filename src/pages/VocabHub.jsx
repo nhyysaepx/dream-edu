@@ -182,7 +182,7 @@ export default function VocabHub() {
       levels: [
         { id: 'ielts-beginner', name: 'IELTS Beginner', band: 'Band 3.0 - 4.0' },
         { id: 'pre-ielts', name: 'Pre-IELTS', band: 'Band 4.0 - 5.0 (Trọng tâm)', isHot: true },
-        { id: 'ielts-foundation', name: 'IELTS Foundation', band: 'Band 5.0 - 6.0' },
+        { id: 'ielts-foundation', name: 'IELTS Intermediate', band: 'Band 5.0 - 6.0' },
         { id: 'ielts-advanced', name: 'IELTS Advanced', band: 'Band 6.5+' }
       ]
     },

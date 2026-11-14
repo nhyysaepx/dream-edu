@@ -8,7 +8,7 @@ export const PRACTICE_CATEGORIES = [
     levels: [
       { id: 'ielts-beginner', name: 'IELTS Beginner', badge: 'Band 3.0 - 4.0' },
       { id: 'pre-ielts', name: 'Pre-IELTS', badge: 'Band 4.0 - 5.0 (Trọng tâm)', isHot: true },
-      { id: 'ielts-foundation', name: 'IELTS Foundation', badge: 'Band 5.0 - 6.0' },
+      { id: 'ielts-foundation', name: 'IELTS Intermediate', badge: 'Band 5.0 - 6.0' },
       { id: 'ielts-advanced', name: 'IELTS Advanced', badge: 'Band 6.5+' }
     ]
   },
