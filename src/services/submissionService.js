@@ -1,5 +1,5 @@
 // Google Apps Script Web App URL provided by user
-export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxThGxvwCZCIv9Z6AOwyR6zZjL2IWf0ba0mam5_wj7gieFbi4FlZku_rmprcSV_aoYP/exec";
+export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIeljAGljE4NHnElIlSDGwqUvkgkUELfhJr5vVNMM7sywURtWSdH8TUj4wW_HmhK4y1w/exec";
 
 // Backup email recipient (FormSubmit service)
 export const BACKUP_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/ngtquynh2001@gmail.com";
@@ -35,14 +35,15 @@ export function formatDuration(seconds) {
  */
 async function sendToAppsScript(payload) {
   try {
-    // Mode no-cors allows sending POST without CORS blocking from browser
+    const bodyStr = JSON.stringify(payload);
+    // Mode no-cors with text/plain ensures smooth direct POST across all browsers
     await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
       headers: {
-        "Content-Type": "text/plain;charset=utf-8"
+        "Content-Type": "text/plain"
       },
-      body: JSON.stringify(payload)
+      body: bodyStr
     });
     return { success: true };
   } catch (err) {

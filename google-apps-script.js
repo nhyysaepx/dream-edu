@@ -24,7 +24,11 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = (ss && ss.getActiveSheet()) ? ss.getActiveSheet() : (ss ? ss.getSheets()[0] : null);
+    if (!sheet) {
+      throw new Error("Không tìm thấy trang tính Google Sheets");
+    }
     const data = JSON.parse(e.postData.contents);
 
     const now = new Date();
