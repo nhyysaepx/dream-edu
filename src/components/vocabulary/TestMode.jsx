@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { 
   FileText, 
   Settings2, 
@@ -14,10 +14,14 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { speakWord, triggerCelebration } from '../../utils/speechUtils';
+import { getStoredStudent } from '../../utils/studentStorage';
+import { submitVocabTestResult } from '../../services/submissionService';
 
-export default function TestMode({ terms, starredIds }) {
+export default function TestMode({ terms, starredIds, vocabSet, student }) {
   // Test stages: 'config' | 'taking' | 'submitted'
   const [testStage, setTestStage] = useState('config');
+  const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting' | 'success' | 'error'
+  const startTimeRef = useRef(Date.now());
 
   // Config options
   const [questionCount, setQuestionCount] = useState(20);
@@ -138,6 +142,8 @@ export default function TestMode({ terms, starredIds }) {
     setQuestions(generated);
     setUserAnswers({});
     setScoreReport(null);
+    setSubmissionStatus(null);
+    startTimeRef.current = Date.now();
     setTestStage('taking');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -176,6 +182,39 @@ export default function TestMode({ terms, starredIds }) {
       percent: percent,
       details: details
     });
+
+    // Auto submit to Apps Script & Teacher Email
+    try {
+      const curStudent = student || getStoredStudent();
+      const durationSeconds = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+      const wrongList = details
+        .filter(d => !d.isCorrect)
+        .map(d => {
+          const userVal = (d.userAns !== undefined && d.userAns !== null && d.userAns !== '') ? String(d.userAns) : '(Bỏ trống)';
+          const targetTerm = d.term || d.promptText || 'Thuật ngữ';
+          const expected = d.type === 'tf' ? (d.isActuallyTrue ? 'Đúng' : 'Sai') : d.correctAnswer;
+          return `Từ "${targetTerm}": Chọn "${userVal}" [Đúng: "${expected}"]`;
+        });
+
+      setSubmissionStatus('submitting');
+      submitVocabTestResult({
+        studentName: curStudent.name || 'Học sinh',
+        className: curStudent.className || 'IELTS Vocab',
+        testTitle: `${vocabSet?.title || 'Bộ từ vựng IELTS'} (Test Mode)`,
+        score: correctCount,
+        total: questions.length,
+        percentage: percent,
+        duration: durationSeconds,
+        wrongAnswers: wrongList
+      }).then(() => {
+        setSubmissionStatus('success');
+      }).catch((err) => {
+        console.error('Vocab test submit error:', err);
+        setSubmissionStatus('error');
+      });
+    } catch (err) {
+      console.error('Tracking vocab submit failed:', err);
+    }
 
     setTestStage('submitted');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -353,7 +392,7 @@ export default function TestMode({ terms, starredIds }) {
           </h2>
           <p className="text-sm text-gray-500 mb-6">Kết quả chi tiết bài kiểm tra của bạn</p>
 
-          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto mb-8 bg-gray-50 p-4 rounded-2xl border border-gray-100">
+          <div className="grid grid-cols-3 gap-3 max-w-md mx-auto mb-6 bg-gray-50 p-4 rounded-2xl border border-gray-100">
             <div>
               <span className="text-xs text-gray-500 font-medium">Điểm số</span>
               <p className={`text-3xl font-black ${isPass ? 'text-emerald-600' : 'text-rose-600'}`}>
@@ -368,6 +407,26 @@ export default function TestMode({ terms, starredIds }) {
               <span className="text-xs text-gray-500 font-medium">Sai</span>
               <p className="text-3xl font-black text-rose-500">{scoreReport.total - scoreReport.correct}</p>
             </div>
+          </div>
+
+          {/* Submission status notice */}
+          <div className="mb-6 text-xs flex items-center justify-center gap-1.5 font-medium">
+            {submissionStatus === 'submitting' && (
+              <span className="text-blue-600 animate-pulse">
+                ⏳ Đang gửi kết quả bài test từ vựng về hệ thống giáo viên...
+              </span>
+            )}
+            {submissionStatus === 'success' && (
+              <span className="text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200 flex items-center gap-1.5">
+                <CheckCircle2 size={14} className="text-emerald-600" />
+                Đã gửi kết quả bài kiểm tra từ vựng về hệ thống giáo viên thành công!
+              </span>
+            )}
+            {submissionStatus === 'error' && (
+              <span className="text-amber-700 bg-amber-50 px-3 py-1 rounded-xl border border-amber-200">
+                ⚠️ Đã lưu điểm trên máy. Đang gửi đồng bộ dữ liệu về hệ thống...
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

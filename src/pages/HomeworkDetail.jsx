@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -19,6 +19,10 @@ import {
 import AudioPlayer from '../components/AudioPlayer';
 import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
 import ListeningHomeworkView from '../components/homework/ListeningHomeworkView';
+import StudentRequiredModal from '../components/StudentRequiredModal';
+import StudentBadge from '../components/StudentBadge';
+import { getStoredStudent } from '../utils/studentStorage';
+import { submitHomeworkOrPracticeResult } from '../services/submissionService';
 import { PRE_IELTS_LISTENING_1_DETAIL, getHomeworkDetailById } from '../data/homeworkData';
 
 export default function HomeworkDetail() {
@@ -61,6 +65,19 @@ export default function HomeworkDetail() {
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [expandedTranscripts, setExpandedTranscripts] = useState({});
   const [saveToast, setSaveToast] = useState(false);
+
+  // Student tracking state (Required for Homework)
+  const [student, setStudent] = useState(() => getStoredStudent());
+  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting' | 'success' | 'error'
+  const startTimeRef = useRef(Date.now());
+
+  // Auto show student info modal on mount
+  useEffect(() => {
+    const currentStudent = getStoredStudent();
+    setStudent(currentStudent);
+    setShowStudentModal(true);
+  }, []);
 
   // Check if previously submitted in history
   useEffect(() => {
@@ -194,6 +211,12 @@ export default function HomeworkDetail() {
 
   // Submit
   const handleSubmit = () => {
+    // Check mandatory student info
+    if (!student.name || !student.className) {
+      setShowStudentModal(true);
+      return;
+    }
+
     const finalScore = calculateScore();
     setIsSubmitted(true);
     setShowResultsModal(true);
@@ -210,11 +233,39 @@ export default function HomeworkDetail() {
     } catch (e) {
       console.error(e);
     }
+
+    // Automatically send tracking data to Google Apps Script & Teacher Email
+    try {
+      const durationSeconds = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+      const percentage = totalQuestions > 0 ? Math.round((finalScore / totalQuestions) * 100) : 0;
+      
+      setSubmissionStatus('submitting');
+      submitHomeworkOrPracticeResult({
+        studentName: student.name,
+        className: student.className,
+        testTitle: homework.title || 'Bài tập về nhà',
+        score: finalScore,
+        total: totalQuestions,
+        percentage: percentage,
+        duration: durationSeconds,
+        wrongAnswers: `Đạt ${finalScore}/${totalQuestions} câu`,
+        type: 'Homework'
+      }).then(() => {
+        setSubmissionStatus('success');
+      }).catch((err) => {
+        console.error('Submission error:', err);
+        setSubmissionStatus('error');
+      });
+    } catch (err) {
+      console.error('Tracking submission failure:', err);
+    }
   };
 
   const handleRetake = () => {
     setIsSubmitted(false);
     setShowResultsModal(false);
+    setSubmissionStatus(null);
+    startTimeRef.current = Date.now();
     setAnswers({});
     setCircledNumbers([]);
     try {
@@ -274,6 +325,11 @@ export default function HomeworkDetail() {
           </div>
 
           <div className="flex items-center gap-2">
+            <StudentBadge
+              student={student}
+              onEdit={() => setShowStudentModal(true)}
+            />
+
             <div className="text-right hidden sm:block">
               <span className="text-xs text-gray-500 block">Tiến độ điền:</span>
               <span className="text-sm font-bold text-blue-700">
@@ -1671,6 +1727,26 @@ export default function HomeworkDetail() {
                     ? '👍 Khá tốt! Hãy xem kỹ lại các câu sai để tránh bẫy phát âm đuôi -teen và -ty.'
                     : '💪 Cần cố gắng hơn! Hãy nghe lại các audio và đối chiếu tapescript.'}
               </div>
+
+              {/* Submission status notice */}
+              <div className="mt-3 pt-3 border-t border-gray-100 text-xs flex items-center justify-center gap-1.5 font-medium">
+                {submissionStatus === 'submitting' && (
+                  <span className="text-blue-600 animate-pulse">
+                    ⏳ Đang gửi kết quả về Google Sheets & Email giáo viên...
+                  </span>
+                )}
+                {submissionStatus === 'success' && (
+                  <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                    <CheckCircle2 size={13} className="text-emerald-600" />
+                    Đã gửi kết quả (Học sinh: <strong>{student.name}</strong> - <strong>{student.className}</strong>) về hệ thống thành công!
+                  </span>
+                )}
+                {submissionStatus === 'error' && (
+                  <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                    ⚠️ Đã lưu điểm trên máy. Đang gửi đồng bộ dữ liệu về hệ thống...
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-3">
@@ -1692,6 +1768,20 @@ export default function HomeworkDetail() {
           </div>
         </div>
       )}
+
+      {/* Student Required Modal for Homework */}
+      <StudentRequiredModal
+        isOpen={showStudentModal}
+        allowClose={!!(student.name && student.className)}
+        defaultLevel={homework?.level || homework?.title || ''}
+        onClose={() => setShowStudentModal(false)}
+        onConfirm={(updated) => {
+          setStudent(updated);
+          setShowStudentModal(false);
+        }}
+        title="Thông tin học sinh (Homework)"
+        subtitle="Vui lòng xác nhận Họ tên và Mã lớp trước khi làm bài để kết quả được lưu và gửi đến giáo viên."
+      />
 
     </div>
   );

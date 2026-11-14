@@ -26,6 +26,8 @@ import {
 import AudioPlayer from '../components/AudioPlayer';
 import { EXAM_COLLECTIONS } from '../data/examData';
 import { playCorrectSound, triggerCelebration } from '../utils/speechUtils';
+import { getStoredStudent, saveStoredStudent } from '../utils/studentStorage';
+import { submitTestPlatformResult } from '../services/submissionService';
 
 // =============================================================================
 // ACCESSIBILITY: THEMES & CONTRAST SCHEMES (CBT STANDARD)
@@ -402,6 +404,18 @@ export default function TestRoom() {
   const [saveToast, setSaveToast] = useState(false);
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'wrong_only'
 
+  // Candidate Info (Optional for Test Platform)
+  const [candidateInfo, setCandidateInfo] = useState(() => {
+    const stored = getStoredStudent();
+    return {
+      name: stored.name || '',
+      phone: stored.phone || '',
+      email: stored.email || ''
+    };
+  });
+  const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting' | 'success' | 'error'
+  const startTimeRef = useRef(Date.now());
+
   // Transcripts toggles for Listening parts
   const [expandedTranscripts, setExpandedTranscripts] = useState({});
   const [transcriptViewMode, setTranscriptViewMode] = useState({}); // { [partId]: 'part' | 'full' }
@@ -528,7 +542,49 @@ export default function TestRoom() {
     } catch (e) {
       console.error(e);
     }
-  }, [exam.id, exam.title, selectedPartIds, evaluation, totalQuestions]);
+
+    // Automatically send tracking data to Google Apps Script & Teacher Email (Test Platform)
+    try {
+      const durationSeconds = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+      const wrongItems = Object.entries(evaluation.results || {})
+        .filter(([, res]) => !res.isCorrect)
+        .map(([qId, res], idx) => {
+          const userVal = (res.userAnswer || '').toString().trim() || '(Bỏ trống)';
+          const correctVal = (res.correctAnswer || '').toString().trim();
+          return `Câu [${qId}]: Chọn "${userVal}" [Đúng: "${correctVal}"]`;
+        });
+
+      // Save optional candidate info if provided
+      if (candidateInfo.name || candidateInfo.phone || candidateInfo.email) {
+        saveStoredStudent({
+          name: candidateInfo.name,
+          phone: candidateInfo.phone,
+          email: candidateInfo.email
+        });
+      }
+
+      setSubmissionStatus('submitting');
+      submitTestPlatformResult({
+        studentName: candidateInfo.name,
+        phone: candidateInfo.phone,
+        email: candidateInfo.email,
+        testTitle: exam.title || 'Phòng thi IELTS',
+        score: evaluation.correctCount,
+        total: totalQuestions,
+        percentage: evaluation.percentage,
+        ieltsBand: evaluation.band,
+        duration: durationSeconds,
+        wrongAnswers: wrongItems
+      }).then(() => {
+        setSubmissionStatus('success');
+      }).catch((err) => {
+        console.error('Test platform submission error:', err);
+        setSubmissionStatus('error');
+      });
+    } catch (err) {
+      console.error('Tracking submission failure:', err);
+    }
+  }, [exam.id, exam.title, selectedPartIds, evaluation, totalQuestions, candidateInfo]);
 
   // Timer countdown hook
   useEffect(() => {
@@ -568,6 +624,8 @@ export default function TestRoom() {
     setIsSubmitted(false);
     setIsTimeUp(false);
     setShowResultsModal(false);
+    setSubmissionStatus(null);
+    startTimeRef.current = Date.now();
     setUserAnswers({});
     if (hasTimeLimit) {
       setTimeLeft(initialDuration);
@@ -2459,6 +2517,46 @@ export default function TestRoom() {
               Bạn đã hoàn thành <strong>{answeredCount}</strong> / <strong>{totalQuestions}</strong> câu hỏi. Sau khi nộp, hệ thống sẽ tự động chấm điểm và hiển thị đáp án cùng giải thích chi tiết.
             </p>
 
+            {/* Optional Candidate Info for Test Platform */}
+            <div className={`mb-4 p-3.5 rounded-2xl border text-xs space-y-2.5 ${currentTheme.cardSubtle}`}>
+              <div className="flex items-center justify-between">
+                <span className="font-bold opacity-80 uppercase text-[10px] tracking-wider">
+                  Thông tin thí sinh (Tùy chọn)
+                </span>
+                <span className="text-[10px] text-gray-500 italic">Optional</span>
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  value={candidateInfo.name}
+                  onChange={(e) => setCandidateInfo(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Họ và tên thí sinh (không bắt buộc)"
+                  className={`w-full px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${currentTheme.input}`}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="tel"
+                  value={candidateInfo.phone}
+                  onChange={(e) => setCandidateInfo(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="Số điện thoại (tùy chọn)"
+                  className={`w-full px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${currentTheme.input}`}
+                />
+                <input
+                  type="email"
+                  value={candidateInfo.email}
+                  onChange={(e) => setCandidateInfo(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Email nhận điểm (tùy chọn)"
+                  className={`w-full px-3 py-1.5 rounded-xl border text-xs font-medium transition-all ${currentTheme.input}`}
+                />
+              </div>
+              <p className="text-[10px] opacity-60 leading-tight">
+                * Bạn có thể để trống thông tin trên và bấm nộp bài ngay để xem kết quả.
+              </p>
+            </div>
+
             <div className="flex items-center justify-end gap-3">
               <button
                 type="button"
@@ -2534,6 +2632,26 @@ export default function TestRoom() {
                   {evaluation.band}
                 </span>
               </div>
+            </div>
+
+            {/* Submission Status Notice */}
+            <div className="mb-6 text-xs flex items-center justify-center gap-1.5 font-medium">
+              {submissionStatus === 'submitting' && (
+                <span className="text-blue-600 animate-pulse">
+                  ⏳ Đang gửi kết quả bài thi về Google Sheets & Email giáo viên...
+                </span>
+              )}
+              {submissionStatus === 'success' && (
+                <span className="text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200 flex items-center gap-1.5">
+                  <CheckCircle2 size={14} className="text-emerald-600" />
+                  Đã tự động gửi kết quả (IELTS Band {evaluation.band}) về hệ thống giáo viên thành công!
+                </span>
+              )}
+              {submissionStatus === 'error' && (
+                <span className="text-amber-700 bg-amber-50 px-3 py-1 rounded-xl border border-amber-200">
+                  ⚠️ Đã lưu điểm trên máy. Đang gửi đồng bộ dữ liệu về hệ thống...
+                </span>
+              )}
             </div>
 
             {/* Actions */}

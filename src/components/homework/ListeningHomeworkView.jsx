@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -22,6 +22,10 @@ import {
 } from 'lucide-react';
 import AudioPlayer from '../AudioPlayer';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
+import StudentRequiredModal from '../StudentRequiredModal';
+import StudentBadge from '../StudentBadge';
+import { getStoredStudent } from '../../utils/studentStorage';
+import { submitHomeworkOrPracticeResult } from '../../services/submissionService';
 
 // Helper to normalize and check short-answer accuracy
 function checkAnswer(userAnswer, acceptedList = []) {
@@ -81,6 +85,19 @@ export default function ListeningHomeworkView({ homework }) {
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
   const [expandedTranscripts, setExpandedTranscripts] = useState({});
+
+  // Student tracking state (Required for Homework)
+  const [student, setStudent] = useState(() => getStoredStudent());
+  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting' | 'success' | 'error'
+  const startTimeRef = useRef(Date.now());
+
+  // Auto show student info modal on mount
+  useEffect(() => {
+    const currentStudent = getStoredStudent();
+    setStudent(currentStudent);
+    setShowStudentModal(true);
+  }, []);
 
   // Flatten all questions
   const allQuestions = useMemo(() => {
@@ -145,6 +162,12 @@ export default function ListeningHomeworkView({ homework }) {
 
   // Submit test
   const handleSubmit = () => {
+    // Check mandatory student info
+    if (!student.name || !student.className) {
+      setShowStudentModal(true);
+      return;
+    }
+
     const unanswered = totalQuestions - answeredCount;
     if (unanswered > 0) {
       const confirmSubmit = window.confirm(`Bạn còn ${unanswered} câu chưa làm. Bạn có chắc chắn muốn nộp bài không?`);
@@ -166,6 +189,42 @@ export default function ListeningHomeworkView({ homework }) {
       console.error(e);
     }
 
+    // Automatically send tracking data to Google Apps Script & Teacher Email
+    try {
+      const durationSeconds = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+      const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+      const wrongItems = allQuestions
+        .filter(q => !isQuestionCorrect(q))
+        .map(q => {
+          const userVal = (answers[q.id] || '').toString().trim() || '(Bỏ trống)';
+          const correctVal = Array.isArray(q.acceptedAnswers) 
+            ? q.acceptedAnswers.join('/') 
+            : (q.acceptedAnswers || '');
+          const qNum = q.questionNumber || q.id;
+          return `Câu ${qNum}: Chọn "${userVal}" [Đúng: "${correctVal}"]`;
+        });
+
+      setSubmissionStatus('submitting');
+      submitHomeworkOrPracticeResult({
+        studentName: student.name,
+        className: student.className,
+        testTitle: homework.title || 'Bài tập Listening về nhà',
+        score: score,
+        total: totalQuestions,
+        percentage: percentage,
+        duration: durationSeconds,
+        wrongAnswers: wrongItems,
+        type: 'Homework'
+      }).then(() => {
+        setSubmissionStatus('success');
+      }).catch((err) => {
+        console.error('Submission error:', err);
+        setSubmissionStatus('error');
+      });
+    } catch (err) {
+      console.error('Tracking submission failure:', err);
+    }
+
     if (score >= Math.round(totalQuestions * 0.7)) {
       playCorrectSound();
       triggerCelebration();
@@ -179,6 +238,8 @@ export default function ListeningHomeworkView({ homework }) {
     if (!window.confirm('Bạn có chắc muốn làm lại từ đầu? Bài làm hiện tại sẽ được đặt lại.')) return;
     setIsSubmitted(false);
     setShowResultsModal(false);
+    setSubmissionStatus(null);
+    startTimeRef.current = Date.now();
     setAnswers({});
     try {
       localStorage.removeItem(`dream_hw_${homeworkId}_draft`);
@@ -246,6 +307,11 @@ export default function ListeningHomeworkView({ homework }) {
           </div>
 
           <div className="flex items-center gap-2.5">
+            <StudentBadge
+              student={student}
+              onEdit={() => setShowStudentModal(true)}
+            />
+
             {homework.vocabId && (
               <Link
                 to={`/vocab/${homework.vocabId}`}
@@ -1041,6 +1107,26 @@ export default function ListeningHomeworkView({ homework }) {
               <div className="text-sm font-bold text-emerald-600 mt-2">
                 Tỷ lệ chính xác: {Math.round((score / totalQuestions) * 100)}%
               </div>
+
+              {/* Submission status notice */}
+              <div className="mt-3 pt-3 border-t border-blue-100 text-xs flex items-center justify-center gap-1.5 font-medium">
+                {submissionStatus === 'submitting' && (
+                  <span className="text-blue-600 animate-pulse">
+                    ⏳ Đang gửi kết quả về Google Sheets & Email giáo viên...
+                  </span>
+                )}
+                {submissionStatus === 'success' && (
+                  <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                    <CheckCircle2 size={13} className="text-emerald-600" />
+                    Đã gửi kết quả (Học sinh: <strong>{student.name}</strong> - <strong>{student.className}</strong>) về hệ thống thành công!
+                  </span>
+                )}
+                {submissionStatus === 'error' && (
+                  <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                    ⚠️ Đã lưu điểm trên máy. Đang gửi đồng bộ dữ liệu về hệ thống...
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Part Breakdown */}
@@ -1079,6 +1165,20 @@ export default function ListeningHomeworkView({ homework }) {
           </div>
         </div>
       )}
+
+      {/* Student Required Modal for Listening Homework */}
+      <StudentRequiredModal
+        isOpen={showStudentModal}
+        allowClose={!!(student.name && student.className)}
+        defaultLevel={homework?.level || homework?.title || ''}
+        onClose={() => setShowStudentModal(false)}
+        onConfirm={(updated) => {
+          setStudent(updated);
+          setShowStudentModal(false);
+        }}
+        title="Thông tin học sinh (Homework)"
+        subtitle="Vui lòng xác nhận Họ tên và Mã lớp trước khi làm bài để kết quả được lưu và gửi đến giáo viên."
+      />
 
     </div>
   );

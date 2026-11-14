@@ -28,6 +28,10 @@ import {
   ClipboardPaste
 } from 'lucide-react';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
+import StudentRequiredModal from '../StudentRequiredModal';
+import StudentBadge from '../StudentBadge';
+import { getStoredStudent } from '../../utils/studentStorage';
+import { submitHomeworkOrPracticeResult } from '../../services/submissionService';
 
 // Helper to normalize and check short-answer accuracy in IELTS
 export function checkShortAnswer(userAnswer, acceptedList) {
@@ -197,6 +201,19 @@ export default function ReadingHomeworkView({
   const [saveToast, setSaveToast] = useState(false);
   const [filterMode, setFilterMode] = useState('all'); // 'all' | 'wrong_only' | 'p1' | 'p2'
   const [fontSize, setFontSize] = useState('base'); // 'sm' | 'base' | 'lg'
+
+  // Student tracking state (Required for Homework and Practice)
+  const [student, setStudent] = useState(() => getStoredStudent());
+  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting' | 'success' | 'error'
+  const startTimeRef = useRef(Date.now());
+
+  // Auto open student modal on entering each exercise
+  useEffect(() => {
+    const currentStudent = getStoredStudent();
+    setStudent(currentStudent);
+    setShowStudentModal(true);
+  }, []);
 
   // Ref to the passage container for text selection
   const passageContainerRef = useRef(null);
@@ -959,6 +976,12 @@ export default function ReadingHomeworkView({
   const handleSubmit = () => {
     if (isSubmitted) return;
 
+    // Check mandatory student info for Practice and Homework
+    if (!student.name || !student.className) {
+      setShowStudentModal(true);
+      return;
+    }
+
     if (answeredCount < allQuestions.length) {
       const confirmSubmit = window.confirm(
         `Bạn mới trả lời ${answeredCount}/${allQuestions.length} câu hỏi. Bạn có chắc chắn muốn nộp bài ngay bây giờ để chấm điểm không?`
@@ -981,6 +1004,41 @@ export default function ReadingHomeworkView({
       console.error(e);
     }
 
+    // Automatically send tracking data to Google Apps Script & Teacher Email
+    try {
+      const durationSeconds = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
+      const wrongItems = allQuestions
+        .filter(q => !evaluationResults.results[q.id]?.isCorrect)
+        .map(q => {
+          const userVal = (answers[q.id] || '').toString().trim() || '(Bỏ trống)';
+          const correctVal = Array.isArray(q.acceptedAnswers) 
+            ? q.acceptedAnswers.join('/') 
+            : (q.acceptedAnswers || q.answer || '');
+          const qNum = q.questionNumber || q.id;
+          return `Câu ${qNum}: Chọn "${userVal}" [Đúng: "${correctVal}"]`;
+        });
+
+      setSubmissionStatus('submitting');
+      submitHomeworkOrPracticeResult({
+        studentName: student.name,
+        className: student.className,
+        testTitle: homework.title || (mode === 'practice' ? 'Bài luyện tập Reading' : 'Bài tập Reading về nhà'),
+        score: evaluationResults.correctCount,
+        total: evaluationResults.totalCount,
+        percentage: evaluationResults.percentage,
+        duration: durationSeconds,
+        wrongAnswers: wrongItems,
+        type: mode === 'practice' ? 'Practice' : 'Homework'
+      }).then(() => {
+        setSubmissionStatus('success');
+      }).catch((err) => {
+        console.error('Submission error:', err);
+        setSubmissionStatus('error');
+      });
+    } catch (err) {
+      console.error('Tracking submission failure:', err);
+    }
+
     if (evaluationResults.percentage >= 70) {
       playCorrectSound();
       triggerCelebration();
@@ -996,6 +1054,8 @@ export default function ReadingHomeworkView({
 
     setAnswers({});
     setIsSubmitted(false);
+    setSubmissionStatus(null);
+    startTimeRef.current = Date.now();
     setFilterMode('all');
     try {
       localStorage.removeItem(`${storagePrefix}${homeworkId}_draft`);
@@ -1142,6 +1202,11 @@ export default function ReadingHomeworkView({
 
             {/* Quick Actions (Save, Progress, Submit) */}
             <div className="flex items-center gap-3 self-start lg:self-center flex-wrap">
+              <StudentBadge
+                student={student}
+                onEdit={() => setShowStudentModal(true)}
+              />
+
               <div className="px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-700">
                 Đã điền: <strong className="text-primary">{answeredCount}</strong> / {allQuestions.length} câu
               </div>
@@ -1207,6 +1272,26 @@ export default function ReadingHomeworkView({
                         ? 'Khá tốt! Bạn đã tìm được đa số thông tin trọng tâm. Hãy đọc kỹ phần giải thích chi tiết các câu sai bên dưới.'
                         : 'Cần củng cố thêm: Hãy đối chiếu dẫn chứng từng câu sai với bài đọc để rút kinh nghiệm.'}
                     </p>
+
+                    {/* Submission status notice */}
+                    <div className="mt-2 text-xs flex items-center gap-1.5 font-medium">
+                      {submissionStatus === 'submitting' && (
+                        <span className="text-blue-600 animate-pulse flex items-center gap-1">
+                          ⏳ Đang gửi kết quả về Google Sheets & Email giáo viên...
+                        </span>
+                      )}
+                      {submissionStatus === 'success' && (
+                        <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1">
+                          <CheckCircle2 size={13} className="text-emerald-600" />
+                          Đã tự động gửi kết quả (Tên: <strong>{student.name}</strong> - Lớp: <strong>{student.className}</strong>) về hệ thống thành công!
+                        </span>
+                      )}
+                      {submissionStatus === 'error' && (
+                        <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                          ⚠️ Đã lưu điểm trên máy. Đang gửi dữ liệu đồng bộ về hệ thống...
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -2350,6 +2435,20 @@ export default function ReadingHomeworkView({
           </div>
         </div>
       </div>
+
+      {/* Student Required Modal for Practice / Homework */}
+      <StudentRequiredModal
+        isOpen={showStudentModal}
+        allowClose={!!(student.name && student.className)}
+        defaultLevel={homework?.level || homework?.title || ''}
+        onClose={() => setShowStudentModal(false)}
+        onConfirm={(updated) => {
+          setStudent(updated);
+          setShowStudentModal(false);
+        }}
+        title={mode === 'practice' ? "Thông tin luyện tập (Practice)" : "Thông tin học sinh (Homework)"}
+        subtitle="Vui lòng xác nhận Họ tên và Mã lớp trước khi làm bài để kết quả được lưu và gửi đến giáo viên."
+      />
     </div>
   );
 }

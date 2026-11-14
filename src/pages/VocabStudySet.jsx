@@ -42,11 +42,18 @@ import TestMode from '../components/vocabulary/TestMode';
 import WriteSpellMode from '../components/vocabulary/WriteSpellMode';
 import DiagnosticTestMode from '../components/vocabulary/DiagnosticTestMode';
 import ExportModal from '../components/vocabulary/ExportModal';
+import StudentRequiredModal from '../components/StudentRequiredModal';
+import StudentBadge from '../components/StudentBadge';
+import { getStoredStudent } from '../utils/studentStorage';
 
 export default function VocabStudySet() {
   const { setId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  // Student tracking state
+  const [student, setStudent] = useState(() => getStoredStudent());
+  const [showStudentModal, setShowStudentModal] = useState(false);
 
   const vocabSet = useMemo(() => getVocabSetById(setId || 'unit-1-global-success-10'), [setId]);
 
@@ -72,6 +79,10 @@ export default function VocabStudySet() {
     if (vocabSet) {
       setStarredIds(getStarredTerms(vocabSet.id));
       setMasteryData(getMasteryData(vocabSet.id));
+      // Auto open student modal on entering vocab study set
+      const curStudent = getStoredStudent();
+      setStudent(curStudent);
+      setShowStudentModal(true);
     }
   }, [vocabSet]);
 
@@ -314,6 +325,11 @@ export default function VocabStudySet() {
 
               {/* Quick Actions (Share, Export, Backup, Homework Link) */}
               <div className="flex flex-wrap items-center gap-2 self-start md:self-center">
+                <StudentBadge
+                  student={student}
+                  onEdit={() => setShowStudentModal(true)}
+                />
+
                 {['intermediate-reading-7', 'intermediate-reading-6', 'intermediate-listening-6', 'pre-ielts-reading-1', 'pre-ielts-reading-2', 'pre-ielts-listening-2'].includes(vocabSet.id) && (
                   <Link
                     to={`/homework/${vocabSet.id}`}
@@ -434,6 +450,8 @@ export default function VocabStudySet() {
             <TestMode
               terms={vocabSet.terms}
               starredIds={starredIds}
+              vocabSet={vocabSet}
+              student={student}
             />
           )}
 
@@ -507,6 +525,20 @@ export default function VocabStudySet() {
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}
         vocabSet={vocabSet}
+      />
+
+      {/* Student Required Modal for Vocab Study */}
+      <StudentRequiredModal
+        isOpen={showStudentModal}
+        allowClose={!!(student.name && student.className)}
+        defaultLevel={vocabSet?.level || vocabSet?.category || ''}
+        onClose={() => setShowStudentModal(false)}
+        onConfirm={(updated) => {
+          setStudent(updated);
+          setShowStudentModal(false);
+        }}
+        title="Thông tin học từ vựng IELTS"
+        subtitle="Vui lòng xác nhận Họ tên và Mã lớp trước khi làm bài để kết quả ôn tập được lưu và gửi đến giáo viên."
       />
     </div>
   );
