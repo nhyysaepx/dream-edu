@@ -1486,6 +1486,27 @@ export default function ReadingHomeworkView({
                 </div>
               </div>
 
+              {/* Passage Diagram / Flowchart Image (if provided) */}
+              {activePassage.diagramImage && filterMode === 'all' && (
+                <div className="p-4 rounded-2xl bg-white border border-blue-200 shadow-xs flex flex-col items-center">
+                  {activePassage.diagramTitle && (
+                    <h5 className="font-bold text-gray-800 text-xs sm:text-sm mb-2.5 text-center uppercase tracking-wide">
+                      {activePassage.diagramTitle}
+                    </h5>
+                  )}
+                  <img
+                    src={activePassage.diagramImage}
+                    alt={activePassage.diagramTitle || 'IELTS Diagram'}
+                    className="max-h-[380px] w-auto max-w-full object-contain rounded-xl border border-gray-100 shadow-xs"
+                  />
+                  {activePassage.diagramCaption && (
+                    <p className="text-[11px] text-gray-500 mt-2 text-center italic">
+                      {activePassage.diagramCaption}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {/* Questions List */}
               <div className="space-y-4">
                 {displayedQuestions.map((q) => {
@@ -1523,6 +1544,27 @@ export default function ReadingHomeworkView({
                                 <p className="text-[11px] text-gray-600 mt-1">
                                   * Quy tắc giới hạn từ: <span className="underline font-black text-rose-700">{q.wordLimit}</span>. Lấy từ ngữ chính xác trực tiếp từ bài đọc.
                                 </p>
+                              )}
+
+                              {/* Section Diagram / Image (if provided) */}
+                              {q.sectionImage && (
+                                <div className="mt-3 p-3 bg-white rounded-xl border border-amber-200 flex flex-col items-center">
+                                  {q.sectionImageTitle && (
+                                    <p className="font-bold text-gray-800 text-xs mb-2 text-center uppercase tracking-wide">
+                                      {q.sectionImageTitle}
+                                    </p>
+                                  )}
+                                  <img
+                                    src={q.sectionImage}
+                                    alt={q.sectionImageTitle || q.sectionTitle || 'Section Diagram'}
+                                    className="max-h-[340px] w-auto max-w-full object-contain rounded-lg border border-gray-100 shadow-xs"
+                                  />
+                                  {q.sectionImageCaption && (
+                                    <p className="text-[11px] text-gray-500 mt-1.5 text-center italic">
+                                      {q.sectionImageCaption}
+                                    </p>
+                                  )}
+                                </div>
                               )}
 
                               {/* Word Bank if provided for this section */}

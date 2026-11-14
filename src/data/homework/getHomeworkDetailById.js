@@ -8,9 +8,27 @@ import {
   INTERMEDIATE_READING_6_EX9_DETAIL,
   INTERMEDIATE_READING_6_EX10_DETAIL,
 } from './details/intermediate-reading-6.js';
+import {
+  INTERMEDIATE_READING_7_DETAIL,
+  INTERMEDIATE_READING_7_P1_DETAIL,
+  INTERMEDIATE_READING_7_P2_DETAIL,
+  INTERMEDIATE_READING_7_P3_DETAIL,
+} from './details/intermediate-reading-7.js';
 import { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
 
 export function getHomeworkDetailById(id) {
+  if (id === 'intermediate-reading-7') {
+    return INTERMEDIATE_READING_7_DETAIL;
+  }
+  if (id === 'intermediate-reading-7-p1') {
+    return INTERMEDIATE_READING_7_P1_DETAIL;
+  }
+  if (id === 'intermediate-reading-7-p2') {
+    return INTERMEDIATE_READING_7_P2_DETAIL;
+  }
+  if (id === 'intermediate-reading-7-p3') {
+    return INTERMEDIATE_READING_7_P3_DETAIL;
+  }
   if (id === 'intermediate-listening-6') {
     return INTERMEDIATE_LISTENING_6_DETAIL;
   }

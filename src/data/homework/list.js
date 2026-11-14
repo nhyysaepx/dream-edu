@@ -83,5 +83,22 @@ export const HOMEWORK_LIST = [
     audioTracksCount: 2,
     tag: 'Intermediate 5.0 - 6.5',
     isFeatured: true
+  },
+  {
+    id: 'intermediate-reading-7',
+    levelId: 'ielts-foundation',
+    levelLabel: 'IELTS Intermediate',
+    session: 'Buổi 7',
+    skill: 'Reading',
+    title: 'Reading 7: Diagram Labelling, Flowchart & Coffee Rust',
+    description: 'Trọn bộ 3 bài đọc Buổi 7 (31 câu hỏi): Bài 1 (Diagram - Newcomen’s Steam Engine), Bài 2 (Flowchart - Fuel-Ethanol Production) và Bài 3 (Coffee Rust - Diagram, Multiple Choice & Sentence Matching).',
+    totalQuestions: 31,
+    duration: '50 - 60 phút',
+    status: 'open',
+    dueDate: 'Không giới hạn thời gian',
+    exercisesCount: 3,
+    audioTracksCount: 0,
+    tag: 'Intermediate 5.5 - 6.5',
+    isFeatured: true
   }
 ];
