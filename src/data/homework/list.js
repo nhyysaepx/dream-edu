@@ -31,7 +31,10 @@ export const HOMEWORK_LIST = [
     exercisesCount: 2,
     audioTracksCount: 0,
     tag: 'Pre-Intermediate 4.0 - 5.0',
-    isFeatured: true
+    isFeatured: true,
+    vocabId: 'pre-ielts-reading-1',
+    vocabCount: 30,
+    vocabLabel: 'Học 30 từ vựng Reading 1'
   },
   {
     id: 'pre-ielts-reading-2',
@@ -48,7 +51,10 @@ export const HOMEWORK_LIST = [
     exercisesCount: 2,
     audioTracksCount: 0,
     tag: 'Pre-Intermediate 4.0 - 5.0',
-    isFeatured: true
+    isFeatured: true,
+    vocabId: 'pre-ielts-reading-2',
+    vocabCount: 30,
+    vocabLabel: 'Học từ vựng Reading 2'
   },
   {
     id: 'intermediate-reading-6',
@@ -65,7 +71,10 @@ export const HOMEWORK_LIST = [
     exercisesCount: 3,
     audioTracksCount: 0,
     tag: 'Intermediate 5.5 - 6.5',
-    isFeatured: true
+    isFeatured: true,
+    vocabId: 'intermediate-reading-6',
+    vocabCount: 20,
+    vocabLabel: 'Học 20 từ vựng Reading 6'
   },
   {
     id: 'intermediate-listening-6',
@@ -82,7 +91,10 @@ export const HOMEWORK_LIST = [
     exercisesCount: 2,
     audioTracksCount: 2,
     tag: 'Intermediate 5.0 - 6.5',
-    isFeatured: true
+    isFeatured: true,
+    vocabId: 'intermediate-listening-6',
+    vocabCount: 22,
+    vocabLabel: 'Học 22 từ vựng Listening 6'
   },
   {
     id: 'intermediate-reading-7',
@@ -99,6 +111,9 @@ export const HOMEWORK_LIST = [
     exercisesCount: 3,
     audioTracksCount: 0,
     tag: 'Intermediate 5.5 - 6.5',
-    isFeatured: true
+    isFeatured: true,
+    vocabId: 'intermediate-reading-7',
+    vocabCount: 36,
+    vocabLabel: 'Học 36 từ vựng Reading 7'
   }
 ];

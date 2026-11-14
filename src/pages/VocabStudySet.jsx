@@ -312,8 +312,19 @@ export default function VocabStudySet() {
                 </p>
               </div>
 
-              {/* Quick Actions (Share, Export, Backup) */}
+              {/* Quick Actions (Share, Export, Backup, Homework Link) */}
               <div className="flex flex-wrap items-center gap-2 self-start md:self-center">
+                {['intermediate-reading-7', 'intermediate-reading-6', 'intermediate-listening-6', 'pre-ielts-reading-1', 'pre-ielts-reading-2'].includes(vocabSet.id) && (
+                  <Link
+                    to={`/homework/${vocabSet.id}`}
+                    className="px-3.5 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold rounded-xl border border-primary/20 flex items-center gap-1.5 transition-colors"
+                    title="Mở bài tập về nhà tương ứng"
+                  >
+                    <BookOpen size={14} className="text-primary" />
+                    <span>Làm bài tập BTVN</span>
+                  </Link>
+                )}
+
                 <button
                   onClick={handleShare}
                   className="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-200 flex items-center gap-1.5 transition-colors cursor-pointer"
