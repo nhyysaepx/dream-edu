@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, GraduationCap, Sparkles, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { User, GraduationCap, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
 import { getStoredStudent, saveStoredStudent } from '../utils/studentStorage';
 
 // Class code prefixes mapping
@@ -38,6 +38,17 @@ export default function StudentRequiredModal({
   const [classSuffix, setClassSuffix] = useState('');
   const [customClass, setCustomClass] = useState('');
   const [error, setError] = useState('');
+
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [isOpen]);
 
   // Load existing data or auto-detect from level
   useEffect(() => {
@@ -105,17 +116,6 @@ export default function StudentRequiredModal({
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-gray-100 text-left relative animate-in zoom-in-95 duration-200">
         
-        {/* Close button (only if allowed) */}
-        {allowClose && onClose && (
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute top-5 right-5 text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition-colors cursor-pointer"
-          >
-            <X size={18} />
-          </button>
-        )}
-
         {/* Header Icon */}
         <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#2c4482] flex items-center justify-center mb-4 shadow-xs">
           <GraduationCap size={26} />
@@ -260,7 +260,7 @@ export default function StudentRequiredModal({
             )}
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#2c4482] hover:bg-[#20325c] text-white text-xs sm:text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+              className={`${allowClose ? 'w-full sm:w-auto px-6 py-2.5' : 'w-full py-3'} rounded-xl bg-[#2c4482] hover:bg-[#20325c] text-white text-xs sm:text-sm font-extrabold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95`}
             >
               <CheckCircle2 size={16} />
               <span>Xác nhận & Bắt đầu làm bài</span>

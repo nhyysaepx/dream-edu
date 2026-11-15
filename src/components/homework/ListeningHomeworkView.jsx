@@ -88,7 +88,7 @@ export default function ListeningHomeworkView({ homework }) {
 
   // Student tracking state (Required for Homework)
   const [student, setStudent] = useState(() => getStoredStudent());
-  const [showStudentModal, setShowStudentModal] = useState(false);
+  const [showStudentModal, setShowStudentModal] = useState(true);
   const [submissionStatus, setSubmissionStatus] = useState(null); // 'submitting' | 'success' | 'error'
   const startTimeRef = useRef(Date.now());
 
@@ -1169,9 +1169,13 @@ export default function ListeningHomeworkView({ homework }) {
       {/* Student Required Modal for Listening Homework */}
       <StudentRequiredModal
         isOpen={showStudentModal}
-        allowClose={!!(student.name && student.className)}
+        allowClose={false}
         defaultLevel={homework?.level || homework?.title || ''}
-        onClose={() => setShowStudentModal(false)}
+        onClose={() => {
+          if (student.name && student.className) {
+            setShowStudentModal(false);
+          }
+        }}
         onConfirm={(updated) => {
           setStudent(updated);
           setShowStudentModal(false);
