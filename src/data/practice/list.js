@@ -1,6 +1,29 @@
 // Full list of in-class practice assignments
 // Only contains real practice assignments uploaded and verified
 export const PRACTICE_LIST = [
+  // ==================== TIẾNG ANH PHỔ THÔNG (THCS & THPT) ====================
+  {
+    id: 'unit-4-global-success-9',
+    category: 'school',
+    levelId: 'grade-9',
+    levelLabel: 'Lớp 9',
+    session: 'Unit 4 - Remembering the Past',
+    skill: 'Reading',
+    title: 'Unit 4: Remembering the Past (Reading & Vocabulary)',
+    description: 'Luyện tập kỹ năng đọc hiểu và củng cố 30 từ vựng trọng tâm Unit 4 SGK Tiếng Anh 9 Global Success về chủ đề gìn giữ di sản, phong tục truyền thống và ký ức lịch sử.',
+    totalQuestions: 12,
+    duration: '25 - 35 phút',
+    status: 'open',
+    dueDate: 'Luyện tập trực tiếp trên lớp',
+    exercisesCount: 2,
+    audioTracksCount: 0,
+    tag: 'THCS - Global Success',
+    vocabId: 'unit-4-global-success-9',
+    vocabCount: 30,
+    vocabLabel: 'Học 30 từ vựng Unit 4: Remembering the Past',
+    isFeatured: true
+  },
+
   // ==================== IELTS PRE ====================
   {
     id: 'pre-ielts-reading-2',

@@ -11,5 +11,6 @@ export {
   PRACTICE_CATEGORIES,
   PRACTICE_LIST,
   PRE_IELTS_READING_2_PRACTICE_DETAIL,
+  UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL,
   getPracticeDetailById,
 } from './practice/index.js';

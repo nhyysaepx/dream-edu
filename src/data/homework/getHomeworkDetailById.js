@@ -16,8 +16,12 @@ import {
   INTERMEDIATE_READING_7_P3_DETAIL,
 } from './details/intermediate-reading-7.js';
 import { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
+import { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from '../practice/details/unit-4-global-success-9.js';
 
 export function getHomeworkDetailById(id) {
+  if (id === 'unit-4-global-success-9') {
+    return UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL;
+  }
   if (id === 'intermediate-reading-7') {
     return INTERMEDIATE_READING_7_DETAIL;
   }

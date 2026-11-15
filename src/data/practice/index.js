@@ -4,5 +4,6 @@
 export { PRACTICE_CATEGORIES } from './categories.js';
 export { PRACTICE_LIST } from './list.js';
 export { PRE_IELTS_READING_2_PRACTICE_DETAIL } from './details/pre-ielts-reading-2.js';
+export { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from './details/unit-4-global-success-9.js';
 
 export { getPracticeDetailById } from './getPracticeDetailById.js';
