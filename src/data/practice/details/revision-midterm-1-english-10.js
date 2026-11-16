@@ -1,11 +1,12 @@
 // Đề cương Ôn tập Giữa Học kì I - Tiếng Anh 10 (Năm học 2026 – 2027)
 // Comprehensive practice detail for revision-midterm-1-english-10
+// Vertical layout structure for Tiếng Anh 6-12 (Global Success)
 // Sections:
 //   1. Section 1: Phonetics & Stress (Phát âm & Trọng âm: 8 câu)
-//   2. Section 2: Vocabulary & Grammar (Từ vựng, Ngữ pháp, Giới từ & Điền từ: 55 câu)
+//   2. Section 2: Vocabulary & Grammar (Từ vựng, Ngữ pháp, Giới từ & 5 bài điền từ Word Bank: 55 câu)
 //   3. Section 3: Communication & Everyday English (Tình huống giao tiếp: 8 câu)
-//   4. Section 4: Reading Comprehension & Cloze Test (Đọc hiểu & Điền từ đoạn văn: 45 câu)
-//   5. Section 5: Writing & Sentence Transformation (Sắp xếp, viết lại câu & Viết đoạn văn: 32 câu)
+//   4. Section 4: Reading Comprehension & Cloze Test (5 bài điền từ Cloze + 4 bài đọc hiểu chi tiết: 45 câu)
+//   5. Section 5: Writing & Sentence Transformation (Sắp xếp câu, viết lại câu & Viết đoạn văn: 32 câu)
 // Total questions: 148 questions
 
 export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
@@ -14,6 +15,8 @@ export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
   level: 'Lớp 10',
   session: 'Đề cương Ôn tập Giữa HK1 (Năm học 2026 – 2027)',
   skill: 'Reading',
+  category: 'school',
+  layout: 'vertical',
   skillBadge: 'Đề cương Giữa HK1 • Full 5 Chuyên đề',
   vocabId: 'revision-midterm-1-english-10',
   vocabCount: 30,
@@ -34,7 +37,7 @@ export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
       wordLimit: 'CHOOSE A, B, C OR D',
       maxWords: 1,
       instruction: 'Mark the letter A, B, C, or D on your answer sheet to indicate the word whose underlined part differs from the other three in pronunciation (Questions 1-4) or the word that differs from the other three in the position of primary stress (Questions 5-8).',
-      content: `I. PHONETICS - TÓM TẮT QUY TẮC PHÁT ÂM VÀ TRỌNG ÂM UNIT 1 - 3 (TIẾNG ANH 10)
+      rulesContent: `I. PHONETICS - TÓM TẮT QUY TẮC PHÁT ÂM VÀ TRỌNG ÂM UNIT 1 - 3 (TIẾNG ANH 10)
 
 1. Cụm phụ âm đầu (Consonant Clusters):
 - /br/: breadwinner, break, branch, brown, brother
@@ -54,6 +57,7 @@ export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
 - Đa số động từ 2 âm tiết nhấn âm 2: in'spire, a'dopt, pro'tect, per'form, re'cycle, re'duce.
 - Từ 3 âm tiết có hậu tố -ful, -ive thường giữ nguyên trọng âm gốc của từ: suc'cess ➔ suc'cessful; sup'port ➔ sup'portive; at'tract ➔ at'tractive.
 - Từ có hậu tố -ed, -ing không làm thay đổi trọng âm chính: 'talent ➔ 'talented.`,
+      content: `I. PHONETICS - TÓM TẮT QUY TẮC PHÁT ÂM VÀ TRỌNG ÂM UNIT 1 - 3 (TIẾNG ANH 10)...`,
       questions: [
         {
           id: 'sec1_q1',
@@ -187,7 +191,7 @@ export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
     },
 
     // =========================================================================
-    // SECTION 2: VOCABULARY & GRAMMAR
+    // SECTION 2: VOCABULARY & GRAMMAR (WITH 5 GUIDED WORD-BANK GAP PASSAGES)
     // =========================================================================
     {
       id: 'sec-2',
@@ -198,42 +202,101 @@ export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
       wordLimit: '1 WORD / LETTER',
       maxWords: 2,
       instruction: 'Complete Part 1 by choosing the best answer A, B, C, or D (Questions 9-38), and Part 2 by choosing the correct word from the word bank to fill in each blank (Questions 39-63).',
-      content: `II. USE OF ENGLISH - TỪ VỰNG & NGỮ PHÁP TRỌNG TÂM ĐỀ CƯƠNG
+      content: `II. USE OF ENGLISH - TỪ VỰNG & NGỮ PHÁP TRỌNG TÂM ĐỀ CƯƠNG...`,
+      parts: [
+        {
+          id: 'sec2_part1a',
+          title: 'Part 1A. Choose the word CLOSEST in meaning (Từ đồng nghĩa)',
+          badge: 'Đồng nghĩa (Closest)',
+          instruction: 'Choose the word that is CLOSEST in meaning to the underlined word in each of the following sentences.'
+        },
+        {
+          id: 'sec2_part1b',
+          title: 'Part 1B. Choose the word OPPOSITE in meaning (Từ trái nghĩa)',
+          badge: 'Trái nghĩa (Opposite)',
+          instruction: 'Choose the word that is OPPOSITE in meaning to the underlined word in each of the following sentences.'
+        },
+        {
+          id: 'sec2_part1c',
+          title: 'Part 1C. Vocabulary, Grammar & Collocations (Từ vựng & Cụm từ cố định)',
+          badge: 'Ngữ pháp & Cụm từ',
+          instruction: 'Choose the best answer A, B, C or D to complete each of the following sentences.'
+        },
+        {
+          id: 'sec2_part2_1',
+          title: 'Part 2.1: Bài đọc điền từ - Recycling Begins at Home',
+          badge: 'Word Bank Cloze 1',
+          type: 'wordBankGapFilling',
+          wordBank: ['number', 'reduce', 'which', 'amount', 'instead', 'and'],
+          extraWordNote: 'Có 1 từ thừa: number',
+          instruction: 'Read the passage and complete the gap with suitable words from the box. There is one extra word.',
+          passageText: `Recycling is important in today's world if we want to leave this planet for future generations. Recycling begins at home. If you are not throwing away your old products and (39) [Gap 6] ____________ using them for something new, then you are actually recycling.
 
-A. TỪ ĐỒNG NGHĨA & TRÁI NGHĨA QUAN TRỌNG:
-- gratitude = thanks (lòng biết ơn)
-- cut down on = reduce (cắt giảm) ➔ OPPOSITE: increase / raise
-- damage = destroy (hư hại, phá hủy)
-- collaborate with = cooperate with (hợp tác)
-- duties = responsibilities (bổn phận, trách nhiệm)
-- family bonds = close connections (mối gắn kết gia đình)
-- recycle = reprocess (tái chế)
-- organic = without the use of chemicals (hữu cơ)
-- talented = gifted (có tài, có khiếu)
-- inspired = motivated (được truyền cảm hứng)
-- adopt ➔ OPPOSITE: reject (áp dụng ➔ từ chối/bác bỏ)
-- achievements ➔ OPPOSITE: failures (thành tựu ➔ thất bại)
-- upload ➔ OPPOSITE: download (tải lên ➔ tải về)
-- supportive ➔ OPPOSITE: unhelpful (ủng hộ ➔ không giúp ích)
-- professional ➔ OPPOSITE: amateur (chuyên nghiệp ➔ nghiệp dư)
-- turn off ➔ OPPOSITE: turn on (tắt ➔ bật)
-- eliminate ➔ OPPOSITE: add (loại trừ ➔ thêm vào)
+When you think of recycling, you should really think about the whole idea: (40) [Gap 7] ____________, reuse and recycle. Recycling is good for the environment; in a sense, we are using old and waste products (41) [Gap 8] ____________ are of no use and then converting them back to the same new products.
 
-B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
-- do household chores (làm việc nhà)
-- take out the rubbish / trash (đổ rác)
-- homemaker: người nội trợ >< breadwinner: trụ cột gia đình
-- prepare dinner / make dinner (chuẩn bị bữa tối)
-- bring benefits to somebody (mang lại lợi ích cho ai)
-- play an important role in (đóng vai trò quan trọng trong)
-- take up a musical instrument (bắt đầu học chơi một nhạc cụ)
-- be responsible for + V-ing / N (chịu trách nhiệm về)
-- turn off electrical appliances (tắt các thiết bị điện)`,
+With each passing day, the population is increasing. With that, the quantity of waste produced is also increasing. The more the waste production, the more is the (42) [Gap 9] ____________ of space required to dump these wastes. Now, it must be remembered that the space available on earth is very limited, (43) [Gap 10] ____________ it is obviously up to us to use it judiciously.`
+        },
+        {
+          id: 'sec2_part2_2',
+          title: 'Part 2.2: Bài đọc điền từ - Sharing Household Chores and Family Teamwork',
+          badge: 'Word Bank Cloze 2',
+          type: 'wordBankGapFilling',
+          wordBank: ['making', 'taking', 'washing', 'clearing', 'doing', 'responsibility'],
+          extraWordNote: 'Có 1 từ thừa: doing',
+          instruction: 'Read the passage and complete the gap with suitable words from the box. There is one extra word.',
+          passageText: `In every family, each member plays an important role in maintaining a happy and organized home. Parents often have many responsibilities, including working and taking care of their children. However, it's important that everyone contributes to housework to lighten the load.
+
+Children, for example, can help by doing simple chores such as (44) [Gap 6] ____________ their beds in the morning or (45) [Gap 7] ____________ the table after meals. Older children can take on more tasks, like doing the laundry or (46) [Gap 8] ____________ the dishes. Working together not only keeps the house clean but also teaches (47) [Gap 9] ____________ and teamwork. Even small things, like (48) [Gap 10] ____________ out the trash, can make a big difference in creating a pleasant environment for the entire family.`
+        },
+        {
+          id: 'sec2_part2_3',
+          title: 'Part 2.3: Bài đọc điền từ - Traditional Family Values and Society',
+          badge: 'Word Bank Cloze 3',
+          type: 'wordBankGapFilling',
+          wordBank: ['changed', 'what', 'on', 'when', 'traditional', 'modern'],
+          extraWordNote: 'Có 1 từ thừa: modern',
+          instruction: 'Read the passage and complete the gap with suitable words from the box. There is one extra word.',
+          passageText: `Today children are growing up in a society that is technologically driven and are learning at a much faster pace than in the 70s. The fast pace of learning has kept parents lagging in getting a hold of their kid's moral values and helping them understand (49) [Gap 6] ____________ family values used to be.
+
+Family values have (50) [Gap 7] ____________ over time from my perspective, seeing all that is happening in our world today. To better appraise this conclusion, let us understand the definition of family values. Family values are (51) [Gap 8] ____________ values that are passed (52) [Gap 9] ____________ from generation to generation within the family that address the family roles, family structure, function, attitude, and ideas. These traditional values are like unwritten codes that guide the actions of individuals. They help people decide what is right or wrong.
+
+The family is a powerful institution with tremendous influence on society, and (53) [Gap 10] ____________ these family values become promoted by parents within the family, society will feel the effect.`
+        },
+        {
+          id: 'sec2_part2_4',
+          title: 'Part 2.4: Bài đọc điền từ - Advice on Getting Fit and Running Shoes',
+          badge: 'Word Bank Cloze 4',
+          type: 'wordBankGapFilling',
+          wordBank: ['effective', 'or', 'it', 'protect', 'instead', 'shoes'],
+          extraWordNote: 'Có 1 từ thừa: instead',
+          instruction: 'Read the passage and complete the gap with suitable words from the box. There is one extra word.',
+          passageText: `My first piece of advice to people who want to start getting fit is: don't buy an exercise bike. Typically, people who buy them use them for a week or so and then forget about them. They are (54) [Gap 6] ____________ if they are used regularly but you need to be determined. Most people will find (55) [Gap 7] ____________ much easier to go for a gentle jog around the park.
+
+As well as being easy to do, jogging is also relatively cheap compared to most other sports. You don't need to buy expensive clothes if you're just going running around the park (56) [Gap 8] ____________ on the beach. The main thing is that they're comfortable, and that they keep you warm in the winter and cool in the summer.
+
+There is one piece of equipment, however, that you will have to spend time and money on, and that's your running (57) [Gap 9] ____________. Remember that you are not looking for a fashion item, but for something that will support your feet and (58) [Gap 10] ____________ you from injury. They can be expensive, but if they are good quality they will last you a long time. It's always best to get expert advice, and the best place for that is a sports shop.`
+        },
+        {
+          id: 'sec2_part2_5',
+          title: 'Part 2.5: Bài đọc điền từ - The Japanese Intelligent Household Robot',
+          badge: 'Word Bank Cloze 5',
+          type: 'wordBankGapFilling',
+          wordBank: ['tidy', 'cleaner', 'routine', 'household', 'housework', 'instructions'],
+          extraWordNote: 'Có 1 từ thừa: housework',
+          instruction: 'Read the passage and complete the gap with suitable words from the box. There is one extra word.',
+          passageText: `Nobody wants to spend money on a different robot for every job. This is why Japanese engineers are building a robot (59) [Gap 6] ____________: a single robot that does all your (60) [Gap 7] ____________ chores.
+
+This intelligent robot has a human face and can (61) [Gap 8] ____________ rooms, mop the floors, or vacuum the living room rug. It is so helpful that it can even bring you a drink or snack from the refrigerator while you sit down and watch it do all the work.
+
+What makes this robot different is that it is always learning. It can study your (62) [Gap 9] ____________ and then clean when you are out of the house. The robot also understands lots of languages so everyone can give it (63) [Gap 10] ____________.`
+        }
+      ],
       questions: [
         // Closest in meaning (Questions 9 - 18)
         {
           id: 'sec2_q9',
           number: 9,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: I want to express my GRATITUDE to Mr. Davis for his valuable help.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -250,6 +313,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q10',
           number: 10,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: Encouraging students to plant more trees helps CUT DOWN ON CO2 and make the air clean.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -266,6 +330,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q11',
           number: 11,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: Sometimes adults think children may break or DAMAGE things when they do housework.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -282,6 +347,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q12',
           number: 12,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: Parents are recommended to COLLABORATE with teachers in educating children.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -298,6 +364,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q13',
           number: 13,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: In my family, everyone shares the household DUTIES.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -314,6 +381,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q14',
           number: 14,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: Doing chores together helps strengthen family BONDS.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -330,6 +398,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q15',
           number: 15,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: We should RECYCLE as much as possible because this prevents pollution.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -346,6 +415,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q16',
           number: 16,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: Buying products that are grown using more natural ORGANIC methods is one way to reduce carbon footprint.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -362,6 +432,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q17',
           number: 17,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: That teen idol was TALENTED to win second place in the Idol Contest in 2010.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -378,6 +449,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q18',
           number: 18,
+          partId: 'sec2_part1a',
           question: 'Choose the word CLOSEST in meaning to the underlined word: Her courage not only INSPIRED her followers but moved her rivals as well.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -396,6 +468,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q19',
           number: 19,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: More and more people ADOPT a green lifestyle, which is good for themselves and the environment.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -412,6 +485,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q20',
           number: 20,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: CUTTING DOWN ON plastic use really helps the environment because it takes many years to break down.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -428,6 +502,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q21',
           number: 21,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: He has got a lot of important ACHIEVEMENTS in music recently.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -444,6 +519,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q22',
           number: 22,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: When he was 17, his mother started to UPLOAD his cover song videos on social media.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -460,6 +536,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q23',
           number: 23,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: You are so lucky to have such a SUPPORTIVE brother.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -476,6 +553,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q24',
           number: 24,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: Small changes in your daily habits can help REDUCE the carbon footprint you produce.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -492,6 +570,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q25',
           number: 25,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: I admire him because he has a PROFESSIONAL voice.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -508,6 +587,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q26',
           number: 26,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: Remember to TURN OFF your devices when they are not used.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -524,6 +604,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q27',
           number: 27,
+          partId: 'sec2_part1b',
           question: 'Choose the word OPPOSITE in meaning to the underlined word: The contestants who receive the fewest viewers\' votes are ELIMINATED from the competition.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -542,6 +623,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q28',
           number: 28,
+          partId: 'sec2_part1c',
           question: 'The talented singer left a positive impression on both the judges and the ______ because of her friendliness and natural beauty.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -558,6 +640,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q29',
           number: 29,
+          partId: 'sec2_part1c',
           question: 'The amount of the greenhouse gases produced by human activities is known as ______.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -574,6 +657,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q30',
           number: 30,
+          partId: 'sec2_part1c',
           question: 'It takes me hours to ______ household chores.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -590,6 +674,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q31',
           number: 31,
+          partId: 'sec2_part1c',
           question: 'Doing housework brings great ______ to children as it helps them develop necessary life skills.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -606,6 +691,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q32',
           number: 32,
+          partId: 'sec2_part1c',
           question: "Linh can't go out with us to see a movie now because she's ______ dinner.",
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -622,6 +708,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q33',
           number: 33,
+          partId: 'sec2_part1c',
           question: 'Everyone should ______ all electrical appliances before going out of the room to save energy.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -638,6 +725,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q34',
           number: 34,
+          partId: 'sec2_part1c',
           question: 'Audiences play an important ______ in the success of a show on TV.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -654,6 +742,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q35',
           number: 35,
+          partId: 'sec2_part1c',
           question: 'A ______ is a person who works at home and takes care of the house and family.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -670,6 +759,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q36',
           number: 36,
+          partId: 'sec2_part1c',
           question: '______ the rubbish in the early morning is a part of my daily routine.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -686,6 +776,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q37',
           number: 37,
+          partId: 'sec2_part1c',
           question: "I'd love to take ______ a musical instrument but I don't have time.",
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -702,6 +793,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q38',
           number: 38,
+          partId: 'sec2_part1c',
           question: 'My father is responsible ______ the household finances.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -717,12 +809,13 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         },
 
         // Word Bank Gap Filling: Part 2.1 - 2.5 (Questions 39 - 63)
-        // Part 2.1: Recycling (Word bank: number, reduce, which, amount, instead, and)
+        // Part 2.1: Recycling
         {
           id: 'sec2_q39',
           number: 39,
-          question: 'Part 2.1 (Gap 6): If you are not throwing away your old products and (6) ______ using them for something new, then you are actually recycling.',
-          placeholder: 'Điền từ thích hợp (từ word bank)...',
+          partId: 'sec2_part2_1',
+          question: 'Chỗ trống (6) - Part 2.1 (Recycling): If you are not throwing away your old products and (6) ____________ using them for something new, then you are actually recycling.',
+          placeholder: 'Điền từ thích hợp (từ word bank: number, reduce, which, amount, instead, and)...',
           primaryAnswer: 'instead',
           acceptedAnswers: ['instead', 'Instead'],
           evidence: 'not throwing away ... and instead using them (thay vào đó sử dụng chúng)',
@@ -731,7 +824,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q40',
           number: 40,
-          question: 'Part 2.1 (Gap 7): When you think of recycling, you should really think about the whole idea: (7) ______, reuse and recycle.',
+          partId: 'sec2_part2_1',
+          question: 'Chỗ trống (7) - Part 2.1 (Recycling): When you think of recycling, you should really think about the whole idea: (7) ____________, reuse and recycle.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'reduce',
           acceptedAnswers: ['reduce', 'Reduce'],
@@ -741,7 +835,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q41',
           number: 41,
-          question: 'Part 2.1 (Gap 8): In a sense, we are using old and waste products (8) ______ are of no use and then converting them back.',
+          partId: 'sec2_part2_1',
+          question: 'Chỗ trống (8) - Part 2.1 (Recycling): In a sense, we are using old and waste products (8) ____________ are of no use and then converting them back.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'which',
           acceptedAnswers: ['which', 'Which'],
@@ -751,7 +846,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q42',
           number: 42,
-          question: 'Part 2.1 (Gap 9): The more the waste production, the more is the (9) ______ of space required to dump these wastes.',
+          partId: 'sec2_part2_1',
+          question: 'Chỗ trống (9) - Part 2.1 (Recycling): The more the waste production, the more is the (9) ____________ of space required to dump these wastes.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'amount',
           acceptedAnswers: ['amount', 'Amount'],
@@ -761,7 +857,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q43',
           number: 43,
-          question: 'Part 2.1 (Gap 10): Now, it must be remembered that the space available on earth is very limited, (10) ______ it is obviously up to us to use it judiciously.',
+          partId: 'sec2_part2_1',
+          question: 'Chỗ trống (10) - Part 2.1 (Recycling): Now, it must be remembered that the space available on earth is very limited, (10) ____________ it is obviously up to us to use it judiciously.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'and',
           acceptedAnswers: ['and', 'And'],
@@ -769,12 +866,13 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
           explanation: 'Liên từ đẳng lập "and" dùng để nối hai mệnh đề cùng mạch ý.'
         },
 
-        // Part 2.2: Household chores (Word bank: making, taking, washing, clearing, doing, responsibility)
+        // Part 2.2: Household chores
         {
           id: 'sec2_q44',
           number: 44,
-          question: 'Part 2.2 (Gap 6): Children, for example, can help by doing simple chores such as (6) ______ their beds in the morning...',
-          placeholder: 'Điền từ thích hợp (từ word bank)...',
+          partId: 'sec2_part2_2',
+          question: 'Chỗ trống (6) - Part 2.2 (Household chores): Children, for example, can help by doing simple chores such as (6) ____________ their beds in the morning...',
+          placeholder: 'Điền từ thích hợp (từ word bank: making, taking, washing, clearing, doing, responsibility)...',
           primaryAnswer: 'making',
           acceptedAnswers: ['making', 'Making'],
           evidence: 'make the bed = dọn dẹp/xếp giường sau khi ngủ dậy.',
@@ -783,7 +881,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q45',
           number: 45,
-          question: 'Part 2.2 (Gap 7): ...or (7) ______ the table after meals.',
+          partId: 'sec2_part2_2',
+          question: 'Chỗ trống (7) - Part 2.2 (Household chores): ...or (7) ____________ the table after meals.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'clearing',
           acceptedAnswers: ['clearing', 'Clearing'],
@@ -793,7 +892,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q46',
           number: 46,
-          question: 'Part 2.2 (Gap 8): Older children can take on more tasks, like doing the laundry or (8) ______ the dishes.',
+          partId: 'sec2_part2_2',
+          question: 'Chỗ trống (8) - Part 2.2 (Household chores): Older children can take on more tasks, like doing the laundry or (8) ____________ the dishes.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'washing',
           acceptedAnswers: ['washing', 'Washing'],
@@ -803,7 +903,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q47',
           number: 47,
-          question: 'Part 2.2 (Gap 9): Working together not only keeps the house clean but also teaches (9) ______ and teamwork.',
+          partId: 'sec2_part2_2',
+          question: 'Chỗ trống (9) - Part 2.2 (Household chores): Working together not only keeps the house clean but also teaches (9) ____________ and teamwork.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'responsibility',
           acceptedAnswers: ['responsibility', 'Responsibility'],
@@ -813,7 +914,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q48',
           number: 48,
-          question: 'Part 2.2 (Gap 10): Even small things, like (10) ______ out the trash, can make a big difference...',
+          partId: 'sec2_part2_2',
+          question: 'Chỗ trống (10) - Part 2.2 (Household chores): Even small things, like (10) ____________ out the trash, can make a big difference...',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'taking',
           acceptedAnswers: ['taking', 'Taking'],
@@ -821,12 +923,13 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
           explanation: 'Collocation: "take out the trash/rubbish" (đổ rác); sau "like" dùng V-ing ➔ "taking".'
         },
 
-        // Part 2.3: Family values (Word bank: changed, what, on, when, traditional, modern)
+        // Part 2.3: Family values
         {
           id: 'sec2_q49',
           number: 49,
-          question: "Part 2.3 (Gap 6): ...helping them understand (6) ______ family values used to be.",
-          placeholder: 'Điền từ thích hợp (từ word bank)...',
+          partId: 'sec2_part2_3',
+          question: "Chỗ trống (6) - Part 2.3 (Family values): ...helping them understand (6) ____________ family values used to be.",
+          placeholder: 'Điền từ thích hợp (từ word bank: changed, what, on, when, traditional, modern)...',
           primaryAnswer: 'what',
           acceptedAnswers: ['what', 'What'],
           evidence: 'what family values used to be = những giá trị gia đình xưa kia từng là gì.',
@@ -835,7 +938,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q50',
           number: 50,
-          question: 'Part 2.3 (Gap 7): Family values have (7) ______ over time from my perspective...',
+          partId: 'sec2_part2_3',
+          question: 'Chỗ trống (7) - Part 2.3 (Family values): Family values have (7) ____________ over time from my perspective...',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'changed',
           acceptedAnswers: ['changed', 'Changed'],
@@ -845,7 +949,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q51',
           number: 51,
-          question: 'Part 2.3 (Gap 8): Family values are (8) ______ values that are passed down...',
+          partId: 'sec2_part2_3',
+          question: 'Chỗ trống (8) - Part 2.3 (Family values): Family values are (8) ____________ values that are passed down...',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'traditional',
           acceptedAnswers: ['traditional', 'Traditional'],
@@ -855,7 +960,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q52',
           number: 52,
-          question: 'Part 2.3 (Gap 9): ...values that are passed (9) ______ from generation to generation within the family...',
+          partId: 'sec2_part2_3',
+          question: 'Chỗ trống (9) - Part 2.3 (Family values): ...values that are passed (9) ____________ from generation to generation within the family...',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'on',
           acceptedAnswers: ['on', 'On'],
@@ -865,7 +971,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q53',
           number: 53,
-          question: 'Part 2.3 (Gap 10): ...and (10) ______ these family values become promoted by parents within the family, society will feel the effect.',
+          partId: 'sec2_part2_3',
+          question: 'Chỗ trống (10) - Part 2.3 (Family values): ...and (10) ____________ these family values become promoted by parents within the family, society will feel the effect.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'when',
           acceptedAnswers: ['when', 'When'],
@@ -873,12 +980,13 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
           explanation: 'Liên từ chỉ thời gian / điều kiện "when" (khi mà).'
         },
 
-        // Part 2.4: Getting fit (Word bank: effective, or, it, protect, instead, shoes)
+        // Part 2.4: Getting fit
         {
           id: 'sec2_q54',
           number: 54,
-          question: 'Part 2.4 (Gap 6): They are (6) ______ if they are used regularly but you need to be determined.',
-          placeholder: 'Điền từ thích hợp (từ word bank)...',
+          partId: 'sec2_part2_4',
+          question: 'Chỗ trống (6) - Part 2.4 (Getting fit): They are (6) ____________ if they are used regularly but you need to be determined.',
+          placeholder: 'Điền từ thích hợp (từ word bank: effective, or, it, protect, instead, shoes)...',
           primaryAnswer: 'effective',
           acceptedAnswers: ['effective', 'Effective'],
           evidence: 'be effective = có hiệu quả, phát huy tác dụng.',
@@ -887,7 +995,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q55',
           number: 55,
-          question: 'Part 2.4 (Gap 7): Most people will find (7) ______ much easier to go for a gentle jog around the park.',
+          partId: 'sec2_part2_4',
+          question: 'Chỗ trống (7) - Part 2.4 (Getting fit): Most people will find (7) ____________ much easier to go for a gentle jog around the park.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'it',
           acceptedAnswers: ['it', 'It'],
@@ -897,7 +1006,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q56',
           number: 56,
-          question: "Part 2.4 (Gap 8): You don't need to buy expensive clothes if you're just going running around the park (8) ______ on the beach.",
+          partId: 'sec2_part2_4',
+          question: "Chỗ trống (8) - Part 2.4 (Getting fit): You don't need to buy expensive clothes if you're just going running around the park (8) ____________ on the beach.",
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'or',
           acceptedAnswers: ['or', 'Or'],
@@ -907,7 +1017,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q57',
           number: 57,
-          question: 'Part 2.4 (Gap 9): There is one piece of equipment, however, that you will have to spend time and money on, and that\'s your running (9) ______.',
+          partId: 'sec2_part2_4',
+          question: 'Chỗ trống (9) - Part 2.4 (Getting fit): There is one piece of equipment, however, that you will have to spend time and money on, and that\'s your running (9) ____________.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'shoes',
           acceptedAnswers: ['shoes', 'Shoes'],
@@ -917,7 +1028,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q58',
           number: 58,
-          question: 'Part 2.4 (Gap 10): ...something that will support your feet and (10) ______ you from injury.',
+          partId: 'sec2_part2_4',
+          question: 'Chỗ trống (10) - Part 2.4 (Getting fit): ...something that will support your feet and (10) ____________ you from injury.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'protect',
           acceptedAnswers: ['protect', 'Protect'],
@@ -925,12 +1037,13 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
           explanation: 'Cấu trúc động từ: "protect someone from something" (bảo vệ ai khỏi chấn thương).'
         },
 
-        // Part 2.5: Household robot (Word bank: tidy, cleaner, routine, household, housework, instructions)
+        // Part 2.5: Household robot
         {
           id: 'sec2_q59',
           number: 59,
-          question: 'Part 2.5 (Gap 6): This is why Japanese engineers are building a robot (6) ______: a single robot that does all your chores.',
-          placeholder: 'Điền từ thích hợp (từ word bank)...',
+          partId: 'sec2_part2_5',
+          question: 'Chỗ trống (6) - Part 2.5 (Household robot): This is why Japanese engineers are building a robot (6) ____________: a single robot that does all your chores.',
+          placeholder: 'Điền từ thích hợp (từ word bank: tidy, cleaner, routine, household, housework, instructions)...',
           primaryAnswer: 'cleaner',
           acceptedAnswers: ['cleaner', 'Cleaner'],
           evidence: 'robot cleaner = rô-bốt dọn dẹp vệ sinh.',
@@ -939,7 +1052,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q60',
           number: 60,
-          question: 'Part 2.5 (Gap 7): ...a single robot that does all your (7) ______ chores.',
+          partId: 'sec2_part2_5',
+          question: 'Chỗ trống (7) - Part 2.5 (Household robot): ...a single robot that does all your (7) ____________ chores.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'household',
           acceptedAnswers: ['household', 'Household'],
@@ -949,7 +1063,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q61',
           number: 61,
-          question: 'Part 2.5 (Gap 8): This intelligent robot has a human face and can (8) ______ rooms, mop the floors, or vacuum the rug.',
+          partId: 'sec2_part2_5',
+          question: 'Chỗ trống (8) - Part 2.5 (Household robot): This intelligent robot has a human face and can (8) ____________ rooms, mop the floors, or vacuum the rug.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'tidy',
           acceptedAnswers: ['tidy', 'Tidy'],
@@ -959,7 +1074,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q62',
           number: 62,
-          question: 'Part 2.5 (Gap 9): It can study your (9) ______ and then clean when you are out of the house.',
+          partId: 'sec2_part2_5',
+          question: 'Chỗ trống (9) - Part 2.5 (Household robot): It can study your (9) ____________ and then clean when you are out of the house.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'routine',
           acceptedAnswers: ['routine', 'Routine'],
@@ -969,7 +1085,8 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
         {
           id: 'sec2_q63',
           number: 63,
-          question: 'Part 2.5 (Gap 10): The robot also understands lots of languages so everyone can give it (10) ______.',
+          partId: 'sec2_part2_5',
+          question: 'Chỗ trống (10) - Part 2.5 (Household robot): The robot also understands lots of languages so everyone can give it (10) ____________.',
           placeholder: 'Điền từ thích hợp (từ word bank)...',
           primaryAnswer: 'instructions',
           acceptedAnswers: ['instructions', 'Instructions'],
@@ -991,26 +1108,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
       wordLimit: 'CHOOSE A, B, C OR D',
       maxWords: 1,
       instruction: 'Mark the letter A, B, C, or D on your answer sheet to indicate the sentence that best completes each of the following conversational exchanges.',
-      content: `III. COMMUNICATION & EVERYDAY ENGLISH - TỔNG HỢP MẪU CÂU GIAO TIẾP LỚP 10
-
-1. Bày tỏ quan điểm & sự đồng tình / phản đối:
-- Lan: "Nam, do you think family routines are necessary?"
-  ➔ Nam: "Yes. I strongly believe that each family should have some routines to help build strong family bonds."
-- Lisa: "We should limit the use of plastic bags."
-  ➔ Jennie: "I completely agree. We can use paper bags instead."
-
-2. Lời mời và cách đáp lại lịch sự:
-- "Shall we do something together this weekend?"
-  ➔ "Sorry, I can't. I have to prepare for my exam." (Từ chối lịch sự kèm nêu lý do)
-- "Would you like to have a picnic with us on the weekend?"
-  ➔ "Yes, I'd love to." (Đồng ý vui vẻ và nhiệt tình)
-
-3. Đưa ra đề xuất & lời khuyên bảo vệ môi trường:
-- "Why don't we...?" / "How about...?" / "We should..."
-
-4. Khen ngợi và cảm ơn:
-- "You gave a fantastic performance tonight!" ➔ "Thank you so much! I appreciate your kind words."
-- "Thank you for your help!" ➔ "You're welcome. / It's my pleasure."`,
+      content: `III. COMMUNICATION & EVERYDAY ENGLISH - TỔNG HỢP MẪU CÂU GIAO TIẾP LỚP 10...`,
       questions: [
         {
           id: 'sec3_q64',
@@ -1144,7 +1242,7 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
     },
 
     // =========================================================================
-    // SECTION 4: READING COMPREHENSION & CLOZE TEST
+    // SECTION 4: READING COMPREHENSION & CLOZE TEST (ALL 9 PASSAGES DETAILED)
     // =========================================================================
     {
       id: 'sec-4',
@@ -1155,45 +1253,130 @@ B. CÁC CỤM TỪ CỐ ĐỊNH & GIỚI TỪ (COLLOCATIONS & PREPOSITIONS):
       wordLimit: 'CHOOSE A, B, OR C',
       maxWords: 1,
       instruction: 'Read each passage carefully and mark the letter A, B, or C on your answer sheet to indicate the correct word or answer for each question (Questions 72-116).',
-      content: `IV. READING TEXTS - TỔNG HỢP CÁC BÀI ĐỌC HIỂU & ĐIỀN TỪ
+      content: `IV. READING TEXTS - TỔNG HỢP CÁC BÀI ĐỌC HIỂU & ĐIỀN TỪ...`,
+      parts: [
+        // PART 1: 5 CLOZE TESTS
+        {
+          id: 'sec4_cloze_1',
+          title: 'Passage 1.1: Basic Computer Skills for 21st-Century Students',
+          badge: 'Bài điền từ 1.1',
+          type: 'readingPassage',
+          instruction: 'Mark the letter A, B, or C to indicate the word that best fits each of the numbered blanks (Questions 72-76 / Q21-25).',
+          passageText: `What are the basic skills that (72) [21] ____________ child starting school should learn? For many centuries the obvious answer was reading, writing and arithmetic. Quite recently computer classes (ICT) have been made an obligatory part of national curriculums to teach students how to use basic programmes.
 
-PART 1: GUIDED CLOZE TESTS (BÀI ĐIỀN TỪ)
+These days, (73) [22] ____________, more and more countries are starting to realise that to succeed in the twenty-first century pupils should be able to create their own software.
 
-Passage 1.1: Computer Skills for the Future
-What are the basic skills that any child starting school should learn? For many centuries the obvious answer was reading, writing and arithmetic. Quite recently computer classes (ICT) have been made an obligatory part of national curriculums to teach students how to use basic programmes. These days, however, more and more countries are starting to realise that to succeed in the twenty-first century pupils should be able to create their own software. Some schools in the UK are planning to get rid of ICT lessons and replace them with programming classes that would involve building websites, designing games and mobile phone apps. They hope that today's generation of children, who are already familiar with smartphones and practically living in the world of social media, will soon become the designers of the future. Educational authorities have no problem convincing students' parents that such skills are important. A recent survey shows that 94 percent of them believe that computer skills are essential for the job market.
+Some schools in the UK are planning to get rid of ICT lessons and replace them (74) [23] ____________ programming classes that would involve building websites, designing games and mobile phone apps. They hope that today's generation of children, who are already familiar with smartphones and practically living in the world of social media, will soon become the designers of the future.
 
-Passage 1.2: Plastic Pollution & Marine Life
-Plastics which were produced from fossil fuels are just over a century old, but they have revolutionized our life completely. The great advantages plastic offered led to a throwaway trend that made us discover plastic's dark side: the threat it poses to our environment and life. Plastic pollution is one of the main causes of marine species extinction, health problems for human beings and animals alike, and the destruction of our ecosystems. According to Greenpeace, more than 100,000 sea creatures and a million sea birds die every year after eating plastic or getting trapped in plastic rubbish. Every year, the world produces more than 380 million tons of plastic. Because plastic isn't biodegradable, it won't decompose naturally, so all the plastic we have now in the world will exist forever. Experts are warning that if we don't take urgent action, plastics in the ocean will outweigh fish by 2050. There are many ways we can do to keep plastic out of the ocean.
+(75) [24] ____________ authorities have no problem convincing students' parents that such skills are important. A recent survey shows that 94 percent of them believe that computer skills are (76) [25] ____________ for the job market. Examples of British teenagers who have managed to sell their apps to big corporations also help make the decision easy.`
+        },
+        {
+          id: 'sec4_cloze_2',
+          title: 'Passage 1.2: Plastic Pollution & Threats to Marine Ecosystems',
+          badge: 'Bài điền từ 1.2',
+          type: 'readingPassage',
+          instruction: 'Mark the letter A, B, or C to indicate the word that best fits each of the numbered blanks (Questions 77-81 / Q21-25).',
+          passageText: `Plastics which were produced from fossil fuels are just over a century old, (77) [21] ____________ they have revolutionized our life completely. The great advantages plastic offered led to a throwaway trend that made us discover plastic's dark side: the threat it (78) [22] ____________ to our environment and life. Plastic pollution is one of the main causes of marine species extinction, health problems for human beings and animals alike, and the destruction of our ecosystems. According to Greenpeace, more than 100,000 sea creatures and a million sea birds die every year after eating plastic or getting trapped (79) [23] ____________ plastic rubbish.
 
-Passage 1.3: Green Living Path
-The world is experiencing the negative impacts of climate change, largely due to our reliance on fossil fuels and unsustainable habits. Green living offers a path to reduce these effects by adopting a more sustainable lifestyle which is a necessary practice to ensure the health of our planet and future generations. As you walk through the rooms of your home or visit your local market, you may notice an increasing number of eco-friendly alternatives to traditional products and practices. From planting your own food in your yard to discovering the benefits of electric cars, there are a variety of ways for you to have a greener, more sustainable way of living. Starting green living begins with becoming aware of your consumption habits, from the food you eat to the clothes you wear, and making a conscious effort to reduce waste and choose eco-friendly options.
+Every year, the world produces more than 380 million tons of plastic. In the next second while you're reading this paragraph, people around the globe will use more than 160,000 plastic bags and they'll throw away more than 20,000 plastic bottles. About 10% of plastic will be recycled, and some will go to landfills, but a lot of it will end up in the waterways and in the ocean. Experts estimate that there are 5.25 trillion pieces of plastic waste in the world's oceans.
 
-Passage 1.4: Attitudes Towards Chores
-How do you feel about chores? We all have them, and most children don't like doing them. They would rather do a free-time activity like playing a video game or going on a picnic. My opinion is different, and my friends don't understand me. None of my friends likes doing chores. They try to find reasons not to do them. Then they often text me and say, 'What about going to the park to play football?' I nearly always text back and say, 'No, thanks. I'm cleaning my bedroom.' They text me and say, 'I'm sorry.' Then I say, 'Don't be sorry for me. I like doing chores!' I love making my bed, and I love vacuuming and tidying my bedroom. My parents work hard, so I'm happy to help them with the cooking, loading the dishwasher and doing the ironing.
+Because plastic isn't biodegradable, it won't decompose (80) [24] ____________, so all the plastic we have now in the world will exist forever. Experts are warning that if we don't take urgent action, plastics in the ocean will outweigh fish by 2050. There are (81) [25] ____________ ways we can do to keep plastic out of the ocean. We can swap plastic bags for reusable ones, reduce the use of disposable food containers, and avoid plastic wrappings if possible. We can also join in clean-up campaigns.`
+        },
+        {
+          id: 'sec4_cloze_3',
+          title: 'Passage 1.3: Green Living & Sustainable Alternatives',
+          badge: 'Bài điền từ 1.3',
+          type: 'readingPassage',
+          instruction: 'Mark the letter A, B, or C to indicate the word that best fits each of the numbered blanks (Questions 82-86 / Q21-25).',
+          passageText: `The world is experiencing the negative impacts of climate change, largely due to our reliance (82) [21] ____________ fossil fuels and unsustainable habits. Green living offers a path to reduce these effects by adopting a more sustainable lifestyle (83) [22] ____________ is a necessary practice to ensure the health of our planet and future generations.
 
-Passage 1.5: Sophia's Life on Board
-Unlike most teenagers who live in flats or houses, Sophia's home is a 20-metre boat. She has spent half of her life sailing with her parents, who are both marine scientists. Sophia's unusual way of life means she regularly sees whales and gets to swim with dolphins. She does her schoolwork online and her studies are going well. She can speak four languages, so her knowledge of the world is greater than most children her age. Every day after studying, she helps do the housework. She believes family life is more pleasant when everyone shares the household chores. She often cleans the floors, sets the table for meals and does the washing-up. Life on board is sometimes uncomfortable because space is limited and storms at sea can be frightening. However, Sophia loves her boat and feels safe on it.
+As you walk through the rooms of your home or visit your local market, you may notice (84) [23] ____________ increasing number of eco-friendly (85) [24] ____________ to traditional products and practices. From planting your own food in your yard to discovering the benefits of electric cars, there are a variety of ways for you to have a greener, more sustainable way of living.
 
---------------------------------------------------------------------------------
+Starting green living begins with becoming aware of your consumption habits, from the food you eat to the clothes you wear, and (86) [25] ____________ a conscious effort to reduce waste and choose eco-friendly options. Joining a community of individuals who share the same interests can provide inspiration, support, and practical tips for making sustainable choices.`
+        },
+        {
+          id: 'sec4_cloze_4',
+          title: 'Passage 1.4: Children\'s Perspectives on Chores at Home',
+          badge: 'Bài điền từ 1.4',
+          type: 'readingPassage',
+          instruction: 'Mark the letter A, B, or C to indicate the word that best fits each of the numbered blanks (Questions 87-91 / Q21-25).',
+          passageText: `How do you feel about chores? We all have them, and most children don't like doing them. They would rather do a free-time activity like playing a video game or going on a (87) [1] ____________. My opinion is different, and my friends don't understand me.
 
-PART 2: READING COMPREHENSION PASSAGES (ĐỌC HIỂU CHI TIẾT)
+None of my friends likes (88) [2] ____________ chores. They try to find reasons not to do them. They say to their parents things like 'I have homework' or 'I need to help my friend with his homework'. Then they often text me and say, 'Let's go to the mall' or 'What about (89) [3] ____________ to the park to play football?'
 
-Passage 2.1: Types of Family Units
-Family types vary in different countries and among different cultures. In Western, industrialized societies, the nuclear family ranks as the most common family type. It consists of a father, a mother and their children. But nuclear families exist together with many other types of family units. In the single-parent family, for example, a mother or a father heads the family alone. A blended family is formed when a divorced or widowed parent remarries. As divorce rates have risen, the number of single-parent and blended families has increased. In many parts of the world, parents and children live together with other family members under the same roof. These complex families usually contain several generations of family members, including grandparents, parents and children, as well as uncles, aunts and cousins, forming an extended family.
+I nearly always text back and say, 'No, thanks. I'm cleaning my bedroom' or 'Sorry, I can't. I'm helping my mother to do the washing.' They understand that I have chores, so they text me and say, 'I'm sorry. Maybe tomorrow.' Then I say, 'Don't (90) [4] ____________ sorry for me. I like doing chores!'
 
-Passage 2.3: Clara's Musical Family
-My family is very musical, and my four brothers and sisters and I all play at least one instrument, including the piano, violin, cello and flute. My name's Clara, and I'm 15. When we were younger, my parents spent all their time taking us to various music lessons and concerts. But it was worth it, because my older brother and sister got accepted into a famous national music academy. Music is my life, so I hope to go there, too. I've learned two pieces for their summer school entry competition. People who get into the summer school have a better chance of a place at the main academy later. My parents are amazing, because it has taken a lot of their effort, time, and money for our musical education. Our family is now quite famous. We won a TV talent competition as a group. Usually, we all go off to different concerts and festivals. My mum says she likes it best when we just play together at home without an audience, and it is the best thing for me, too.
+I love making my bed, and I love vacuuming and tidying my bedroom. I hate a messy or untidy room. My parents work hard, so I'm happy to help (91) [5] ____________ with the cooking, loading the dishwasher and doing the ironing.`
+        },
+        {
+          id: 'sec4_cloze_5',
+          title: "Passage 1.5: Sophia's Floating Home on a 20-Metre Boat",
+          badge: 'Bài điền từ 1.5',
+          type: 'readingPassage',
+          instruction: 'Mark the letter A, B, or C to indicate the word that best fits each of the numbered blanks (Questions 92-96 / Q21-25).',
+          passageText: `Unlike most teenagers who live in flats or houses, Sophia's home is a 20-metre boat. She has spent half of her life (92) [21] ____________ with her parents, who are both marine scientists. Sophia's unusual way of life means she regularly sees whales and gets to swim with dolphins. She also has friends in different countries. She does her schoolwork online and her studies are going well.
 
-Passage 2.4: The Environmental Benefits of Green Living
-Many people go through life only thinking about their own well-being. In reality, the well-being of the environment is just as important. Without a healthy and sustainable environment, our own health is negatively affected. Therefore, two main environmental benefits can be realised with greener living. Firstly, people can conserve natural resources. Due to population growth, the use of natural resources has more than tripled since 1970. At that rate, these resources will eventually become depleted. Secondly, people can reduce the harmful effects of climate change. Primarily due to human's reliance on fossil fuels over the years, carbon dioxide continues to pollute the air. This activity of releasing greenhouse gases leads to dramatic temperature changes that need to be stopped. Greener living enables each person to make a difference by reducing their carbon footprint.
+She can speak four languages and has been to many countries, so her (93) [22] ____________ of the world is greater than most children her age. Every day after studying, she helps do the (94) [23] ____________. She feels she has a duty to help her parents. She believes family life is more pleasant when everyone shares the household chores. She often cleans the floors, (95) [24] ____________ the table for meals and does the washing-up. She also cooks dinner, especially when her parents are too busy.
 
-Passage 2.5: Urgent Action for Ocean Plastics
-Plastics produced from fossil fuels have revolutionized our life, but the throwaway trend has revealed a grave dark side: the threat it poses to our planet. Plastic pollution causes marine species extinction, severe health problems for human beings and animals, and ecosystem destruction. Over 100,000 sea creatures and a million seabirds die annually from plastic ingestion or entanglement. Every year 380 million tonnes of plastic are produced. Every second, people throw away more than 20,000 plastic bottles worldwide. Because plastic is not biodegradable, it will not decompose naturally. Experts warn that ocean plastic could outweigh fish by 2050. To solve this crisis, people should reduce single-use plastics, swap for reusable alternatives, and join local beach or river clean-up campaigns.`,
+Life on board is sometimes (96) [25] ____________. Space is limited, so there are no wide-screen TVs or soft sofas. Bad weather can last for days, especially in winter. Storms at sea can be frightening. However, Sophia loves her boat and she feels safe on it.`
+        },
+
+        // PART 2: 4 READING COMPREHENSION PASSAGES
+        {
+          id: 'sec4_rc_1',
+          title: 'Passage 2.1: Diversity of Family Units in Modern Society',
+          badge: 'Bài đọc hiểu 2.1',
+          type: 'readingPassage',
+          instruction: 'Read the following passage and mark the letter A, B, or C on your answer sheet to indicate the correct answer to each question (Questions 97-101 / Q26-30).',
+          passageText: `Family types vary in different countries and among different cultures. In Western, industrialized societies, the nuclear family ranks as the most common family type. It consists of a father, a mother and their children. But nuclear families exist together with many other types of family units. In the single-parent family, for example, a mother or a father heads the family alone. A blended family is formed when a divorced or widowed parent remarries. As divorce rates have risen, the number of single-parent and blended families has increased.
+
+In many parts of the world, parents and children live together with other family members under the same roof. These complex families usually contain several generations of family members, including grandparents, parents and children. They may also include brothers or sisters and their families, uncles, aunts and cousins. Even when relatives do not live together, they still consider themselves members of the same extended family which includes grandparents, uncles, aunts and cousins.`
+        },
+        {
+          id: 'sec4_rc_2',
+          title: "Passage 2.3: Clara's Musical Family & The Pursuit of Passion",
+          badge: 'Bài đọc hiểu 2.3',
+          type: 'readingPassage',
+          instruction: 'Read the following passage and mark the letter A, B, or C on your answer sheet to indicate the correct answer to each question (Questions 102-106 / Q26-30).',
+          passageText: `My family is very musical, and my four brothers and sisters and I all play at least one instrument, including the piano, violin, cello and flute. My name's Clara, and I'm 15. My oldest brother is 22, and the baby of the family, my sister Jenny, is 12. I wanted to learn the double bass, too, which is a stringed instrument as big as me, but my parents said they couldn't get it in our minibus.
+
+When we were younger, my parents spent all their time taking us to various music lessons and concerts. But it was worth it, because my older brother and sister got accepted into a famous national music academy. Music is my life, so I hope to go there, too. I've learned two pieces for their summer school entry competition. People who get into the summer school have a better chance of a place at the main academy later.
+
+My parents are amazing, because it has been very expensive for them to support our dreams, and it has taken a lot of their time and effort. Sometimes we had to travel a very long way. They could only buy a very old minibus to transport all of us plus our instruments. We were driving to a concert once when it broke down. We had to travel the rest of the way in three separate taxis!
+
+Our family is now quite famous. We won a TV talent competition as a group, and my sister played at a wedding for a very famous couple. We have just finished making our first album. That was great, because we all practiced together for once. Usually, we all go off to different concerts and festivals. My mum says she likes it best when we just play together at home, and it is the best thing for me, too, really.`
+        },
+        {
+          id: 'sec4_rc_3',
+          title: 'Passage 2.4: The Environmental Benefits of Green Living',
+          badge: 'Bài đọc hiểu 2.4',
+          type: 'readingPassage',
+          instruction: 'Read the following passage and mark the letter A, B, or C on your answer sheet to indicate the correct answer to each question (Questions 107-111 / Q26-30).',
+          passageText: `Many people go through life only thinking about their own well-being and that of those around them. In reality, the well-being of the environment is just as important in certain ways. Without a healthy and sustainable environment, their own health and ability to leave behind a sustainable planet to those who live after them is negatively affected. Therefore, two main environmental benefits can be realised with greener living.
+
+Firstly, people can conserve natural resources. The natural resources that man has been enjoying are beginning to disappear. Due to population growth, it is estimated that the use of natural resources has more than tripled since 1970. At that rate, it is not difficult to see how these same resources will eventually become depleted. It is important to conserve those precious resources so that others after this generation can enjoy the same quality of living on this planet.
+
+Secondly, people can reduce the harmful effects of climate change. Primarily due to human's reliance on fossil fuels over the years, climate change is a real concern. People continue to release carbon dioxide into the atmosphere, further polluting the air. This is leading to dramatic changes in temperatures that need to be stopped. Greener living aims to do exactly that. For every person who makes an effort to reduce his or her carbon footprint in the world, climate change can begin to become less of a concern over time.`
+        },
+        {
+          id: 'sec4_rc_4',
+          title: 'Passage 2.5: The Plastic Crisis in Our Oceans & Community Action',
+          badge: 'Bài đọc hiểu 2.5',
+          type: 'readingPassage',
+          instruction: 'Read the following passage and mark the letter A, B, or C on your answer sheet to indicate the correct answer to each question (Questions 112-116 / Q26-30).',
+          passageText: `Plastics which were produced from fossil fuels are just over a century old, but they have revolutionized our life completely. The great advantages plastic offered led to a throwaway trend that made us discover plastic's dark side: the threat it poses to our environment and life. Plastic pollution is one of the main causes of marine species extinction, health problems for human beings and animals alike, and the destruction of our ecosystems. According to Greenpeace, more than 100,000 sea creatures and a million sea birds die every year after eating plastic or getting trapped in plastic rubbish.
+
+Every year, the world produces more than 380 million tonnes of plastic. In the next second while you're reading this paragraph, people around the globe will use more than 160,000 plastic bags and they'll throw away more than 20,000 plastic bottles. About 10% of plastic will be recycled, and some will go to landfills, but a lot of it will end up in the waterways and eventually in the ocean. Experts estimate that there are already 5.25 trillion pieces of plastic waste in the world's oceans. Because plastic isn't biodegradable, it won't decompose naturally, so all the plastic that we have now in the world will exist forever.
+
+Experts are warning that if we don't take urgent action, plastics in the ocean will outweigh fish by 2050. There are many ways we can do to keep plastic out of the ocean. We can swap plastic bags for reusable ones which are made of cloth or fiber, reduce the use of disposable cutlery as well as food containers, and avoid plastic wrappings if possible. We can also join in clean-up campaigns in your local community. Every little helps!`
+        }
+      ],
       questions: [
         // Cloze 1.1 (Questions 72 - 76)
         {
           id: 'sec4_q72',
           number: 72,
+          partId: 'sec4_cloze_1',
           question: 'Passage 1.1 (Question 21): What are the basic skills that ______ child starting school should learn?',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1209,6 +1392,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q73',
           number: 73,
+          partId: 'sec4_cloze_1',
           question: 'Passage 1.1 (Question 22): These days, ______, more and more countries are starting to realise...',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1224,6 +1408,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q74',
           number: 74,
+          partId: 'sec4_cloze_1',
           question: 'Passage 1.1 (Question 23): ...replace them ______ programming classes that would involve building websites...',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1239,6 +1424,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q75',
           number: 75,
+          partId: 'sec4_cloze_1',
           question: "Passage 1.1 (Question 24): ______ authorities have no problem convincing students' parents...",
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1254,6 +1440,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q76',
           number: 76,
+          partId: 'sec4_cloze_1',
           question: 'Passage 1.1 (Question 25): ...believe that computer skills are ______ for the job market.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1271,6 +1458,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q77',
           number: 77,
+          partId: 'sec4_cloze_2',
           question: 'Passage 1.2 (Question 21): Plastics were produced just over a century old, ______ they have revolutionized our life completely.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1286,6 +1474,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q78',
           number: 78,
+          partId: 'sec4_cloze_2',
           question: 'Passage 1.2 (Question 22): ...the threat it ______ to our environment and life.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1301,6 +1490,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q79',
           number: 79,
+          partId: 'sec4_cloze_2',
           question: 'Passage 1.2 (Question 23): ...after eating plastic or getting trapped ______ plastic rubbish.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1316,6 +1506,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q80',
           number: 80,
+          partId: 'sec4_cloze_2',
           question: "Passage 1.2 (Question 24): Because plastic isn't biodegradable, it won't decompose ______...",
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1331,6 +1522,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q81',
           number: 81,
+          partId: 'sec4_cloze_2',
           question: 'Passage 1.2 (Question 25): There are ______ ways we can do to keep plastic out of the ocean.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1348,6 +1540,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q82',
           number: 82,
+          partId: 'sec4_cloze_3',
           question: 'Passage 1.3 (Question 21): ...largely due to our reliance ______ fossil fuels and unsustainable habits.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1363,6 +1556,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q83',
           number: 83,
+          partId: 'sec4_cloze_3',
           question: 'Passage 1.3 (Question 22): ...by adopting a more sustainable lifestyle ______ is a necessary practice...',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1378,6 +1572,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q84',
           number: 84,
+          partId: 'sec4_cloze_3',
           question: 'Passage 1.3 (Question 23): ...you may notice ______ increasing number of eco-friendly...',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1393,6 +1588,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q85',
           number: 85,
+          partId: 'sec4_cloze_3',
           question: 'Passage 1.3 (Question 24): ...increasing number of eco-friendly ______ to traditional products...',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1408,6 +1604,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q86',
           number: 86,
+          partId: 'sec4_cloze_3',
           question: 'Passage 1.3 (Question 25): ...from the food you eat to the clothes you wear, and ______ a conscious effort...',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1425,6 +1622,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q87',
           number: 87,
+          partId: 'sec4_cloze_4',
           question: 'Passage 1.4 (Question 21): They would rather do a free-time activity like playing a video game or going on a ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1440,6 +1638,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q88',
           number: 88,
+          partId: 'sec4_cloze_4',
           question: 'Passage 1.4 (Question 22): None of my friends likes ______ chores.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1455,6 +1654,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q89',
           number: 89,
+          partId: 'sec4_cloze_4',
           question: "Passage 1.4 (Question 23): What about ______ to the park to play football?",
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1470,6 +1670,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q90',
           number: 90,
+          partId: 'sec4_cloze_4',
           question: "Passage 1.4 (Question 24): Then I say, 'Don't ______ sorry for me. I like doing chores!'",
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1485,6 +1686,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q91',
           number: 91,
+          partId: 'sec4_cloze_4',
           question: "Passage 1.4 (Question 25): My parents work hard, so I'm happy to help ______ with the cooking...",
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1502,6 +1704,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q92',
           number: 92,
+          partId: 'sec4_cloze_5',
           question: 'Passage 1.5 (Question 21): She has spent half of her life ______ with her parents, who are both marine scientists.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1517,6 +1720,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q93',
           number: 93,
+          partId: 'sec4_cloze_5',
           question: 'Passage 1.5 (Question 22): ...so her ______ of the world is greater than most children her age.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1532,6 +1736,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q94',
           number: 94,
+          partId: 'sec4_cloze_5',
           question: 'Passage 1.5 (Question 23): Every day after studying, she helps do the ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1547,6 +1752,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q95',
           number: 95,
+          partId: 'sec4_cloze_5',
           question: 'Passage 1.5 (Question 24): She often cleans the floors, ______ the table for meals and does the washing-up.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1562,6 +1768,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q96',
           number: 96,
+          partId: 'sec4_cloze_5',
           question: 'Passage 1.5 (Question 25): Life on board is sometimes ______. Space is limited, so there are no wide-screen TVs or soft sofas.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1575,10 +1782,11 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
           explanation: '"uncomfortable" (không thoải mái, bất tiện) phù hợp với bối cảnh không gian chật hẹp trên thuyền.'
         },
 
-        // Reading Comprehension 2.1: Family types (Questions 97 - 101)
+        // Reading Comprehension 2.1 (Questions 97 - 101)
         {
           id: 'sec4_q97',
           number: 97,
+          partId: 'sec4_rc_1',
           question: 'Passage 2.1 (Question 26): The nuclear family ranks as the most common family type ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1594,6 +1802,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q98',
           number: 98,
+          partId: 'sec4_rc_1',
           question: 'Passage 2.1 (Question 27): In the single-parent family, ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1609,6 +1818,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q99',
           number: 99,
+          partId: 'sec4_rc_1',
           question: 'Passage 2.1 (Question 28): Grandparents, parents and children are mentioned as ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1624,6 +1834,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q100',
           number: 100,
+          partId: 'sec4_rc_1',
           question: 'Passage 2.1 (Question 29): The second paragraph is about ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1639,6 +1850,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q101',
           number: 101,
+          partId: 'sec4_rc_1',
           question: 'Passage 2.1 (Question 30): The word "blended" in paragraph 1 is closest in meaning to ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1652,10 +1864,11 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
           explanation: '"blended family" là gia đình hòa trộn/tái hôn (có con chung, con riêng) ➔ gần nghĩa nhất với "mixed".'
         },
 
-        // Reading Comprehension 2.3: Clara's musical family (Questions 102 - 106)
+        // Reading Comprehension 2.3 (Questions 102 - 106)
         {
           id: 'sec4_q102',
           number: 102,
+          partId: 'sec4_rc_2',
           question: "Passage 2.3 (Question 26): In Clara's family, ______.",
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1671,6 +1884,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q103',
           number: 103,
+          partId: 'sec4_rc_2',
           question: 'Passage 2.3 (Question 27): Why does Clara want to go to the summer school?',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1686,6 +1900,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q104',
           number: 104,
+          partId: 'sec4_rc_2',
           question: 'Passage 2.3 (Question 28): Why does Clara think her parents are amazing?',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1701,6 +1916,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q105',
           number: 105,
+          partId: 'sec4_rc_2',
           question: 'Passage 2.3 (Question 29): Clara is happiest when she is ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1716,6 +1932,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q106',
           number: 106,
+          partId: 'sec4_rc_2',
           question: 'Passage 2.3 (Question 30): The word "famous" in paragraph 4 is closest in meaning to ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1729,10 +1946,11 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
           explanation: '"famous" (nổi tiếng) đồng nghĩa với "well-known".'
         },
 
-        // Reading Comprehension 2.4: Benefits of green living (Questions 107 - 111)
+        // Reading Comprehension 2.4 (Questions 107 - 111)
         {
           id: 'sec4_q107',
           number: 107,
+          partId: 'sec4_rc_3',
           question: 'Passage 2.4 (Question 26): Which of the following can be the best title for the passage?',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1748,6 +1966,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q108',
           number: 108,
+          partId: 'sec4_rc_3',
           question: 'Passage 2.4 (Question 27): The word "depleted" in paragraph 2 is CLOSEST in meaning to ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1763,6 +1982,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q109',
           number: 109,
+          partId: 'sec4_rc_3',
           question: 'Passage 2.4 (Question 28): The word "This" in paragraph 3 refers to ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1778,6 +1998,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q110',
           number: 110,
+          partId: 'sec4_rc_3',
           question: 'Passage 2.4 (Question 29): According to paragraph 2, natural resources ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1793,6 +2014,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q111',
           number: 111,
+          partId: 'sec4_rc_3',
           question: 'Passage 2.4 (Question 30): Which of the following is NOT TRUE according to the passage?',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1806,10 +2028,11 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
           explanation: 'Bài viết khẳng định nỗ lực giảm dấu chân carbon của từng cá nhân đều tạo ra thay đổi, do đó tuyên bố "chỉ có chính phủ mới ngăn được" là SAI.'
         },
 
-        // Reading Comprehension 2.5: Plastic pollution (Questions 112 - 116)
+        // Reading Comprehension 2.5 (Questions 112 - 116)
         {
           id: 'sec4_q112',
           number: 112,
+          partId: 'sec4_rc_4',
           question: 'Passage 2.5 (Question 26): The word "poses" in the first paragraph is closest in meaning to ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1825,6 +2048,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q113',
           number: 113,
+          partId: 'sec4_rc_4',
           question: 'Passage 2.5 (Question 27): According to paragraph 1, plastic pollution ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1840,6 +2064,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q114',
           number: 114,
+          partId: 'sec4_rc_4',
           question: 'Passage 2.5 (Question 28): Around the world, people get rid of ______ per second.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1855,6 +2080,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q115',
           number: 115,
+          partId: 'sec4_rc_4',
           question: 'Passage 2.5 (Question 29): Plastic rubbish in the ocean ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1870,6 +2096,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec4_q116',
           number: 116,
+          partId: 'sec4_rc_4',
           question: 'Passage 2.5 (Question 30): All of the following statements are possible solutions to ocean plastic pollution EXCEPT ______.',
           placeholder: 'Chọn A, B, hoặc C...',
           options: [
@@ -1897,37 +2124,33 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
       wordLimit: 'SENTENCE TRANSFORMATION',
       maxWords: 20,
       instruction: 'Complete Part 1 by choosing the correct sentence order (Questions 117-130), Part 2 by rewriting the sentences as instructed (Questions 131-145), and review the guided paragraph writing models in Part 3 (Questions 146-148).',
-      content: `V. WRITING GUIDE - HƯỚNG DẪN VIẾT CÂU & ĐOẠN VĂN GIỮA KÌ I
-
-1. CẤU TRÚC BỊ ĐỘNG CÁC THÌ (PASSIVE VOICE):
-- Hiện tại đơn: S + am/is/are + V3/ed + (by O)
-  Ex: People clean the park every weekend. ➔ The park is cleaned every weekend.
-- Hiện tại tiếp diễn: S + am/is/are + being + V3/ed + (by O)
-  Ex: They are planting more trees. ➔ More trees are being planted.
-- Tương lai đơn: S + will be + V3/ed + (by O)
-  Ex: They will build a new bridge. ➔ A new bridge will be built.
-- Be going to: S + am/is/are going to be + V3/ed + (by O)
-  Ex: They are going to search for the jewels. ➔ The stolen jewels are going to be searched for.
-- Động từ khuyết thiếu (Modals): S + can/must/should + be + V3/ed
-  Ex: A flash flood can wipe out a village. ➔ A village can be wiped out.
-- Quá khứ đơn: S + was/were + V3/ed + (by O)
-  Ex: People built many large castles. ➔ Many large castles were built.
-
-2. CÂU GHÉP VỚI LIÊN TỪ ĐẲNG LẬP (COMPOUND SENTENCES):
-- SO: Chỉ kết quả (Nguyên nhân, SO + Kết quả)
-- BECAUSE: Chỉ nguyên nhân (Kết quả BECAUSE + Nguyên nhân)
-- BUT: Chỉ sự tương phản đối lập
-- AND: Chỉ sự bổ sung, kết hợp hai ý cùng chiều
-
-3. TIÊU CHÍ VIẾT ĐOẠN VĂN 60-80 TỪ (PARAGRAPH WRITING):
-- Topic sentence: Nêu chủ đề rõ ràng ngay câu mở đoạn.
-- Supporting sentences (2-3 ý): Triển khai mạch lạc kèm từ nối First, Second, Moreover...
-- Concluding sentence: Tóm tắt hoặc khẳng định lại cảm xúc/ý nghĩa.`,
+      content: `V. WRITING GUIDE - HƯỚNG DẪN VIẾT CÂU & ĐOẠN VĂN GIỮA KÌ I...`,
+      parts: [
+        {
+          id: 'sec5_part1',
+          title: 'Part 1. Sentence Arrangement (Sắp xếp cụm từ thành câu hoàn chỉnh)',
+          badge: 'Sắp xếp trật tự từ',
+          instruction: 'Choose the best answer A, B, C or D to rearrange the words into a correct meaningful sentence.'
+        },
+        {
+          id: 'sec5_part2',
+          title: 'Part 2. Sentence Transformation (Viết lại câu theo gợi ý)',
+          badge: 'Viết lại câu',
+          instruction: 'Rewrite the sentences using passive voice or compound conjunctions as guided in the prompt.'
+        },
+        {
+          id: 'sec5_part3',
+          title: 'Part 3. Paragraph Writing (Viết đoạn văn ngắn 60 - 80 từ)',
+          badge: 'Viết đoạn văn',
+          instruction: 'Write a paragraph of about 60-80 words based on the following cues. Review the model essays and scoring breakdown.'
+        }
+      ],
       questions: [
         // Sentence arrangement (Questions 117 - 130)
         {
           id: 'sec5_q117',
           number: 117,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: It is important / to learn / some life skills / at home/ for children /',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -1944,6 +2167,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q118',
           number: 118,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: You should buy/ harmful chemicals/ does not contain/ organic food/ because',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -1960,6 +2184,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q119',
           number: 119,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: he was 30./ He / started / to become / a famous composer / when /',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -1976,6 +2201,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q120',
           number: 120,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: yesterday./ She asked him / the school performance/ take part in/ to /',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -1992,6 +2218,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q121',
           number: 121,
+          partId: 'sec5_part1',
           question: "Arrange the words to make a complete sentence: in use. You shouldn't leave/ when they are not/ on/ the household appliances/",
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2008,6 +2235,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q122',
           number: 122,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: is cleaned/ The house/ /every weekend./ by my mom /',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2024,6 +2252,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q123',
           number: 123,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: Family time / when / do / is / things / family members / together',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2040,6 +2269,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q124',
           number: 124,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: provides shade / Planting trees / the environment / look beautiful / and/makes',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2056,6 +2286,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q125',
           number: 125,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: to support the family./so he/ is a breadwinner, /My dad/ is responsible for/ earning money /',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2072,6 +2303,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q126',
           number: 126,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: We/ should not/ leave the appliances on when not in use/ this / wastes electricity/ create/ dangerous situations.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2088,6 +2320,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q127',
           number: 127,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: /helps/ children/ to take care of/ Doing housework/ learn/ themselves.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2104,6 +2337,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q128',
           number: 128,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: catch / to school / Ms Green / doesn\'t / always/ the train.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2120,6 +2354,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q129',
           number: 129,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: on Friday./ are looking/ The students/ to the science museum/ forward to their school trip',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2136,6 +2371,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q130',
           number: 130,
+          partId: 'sec5_part1',
           question: 'Arrange the words to make a complete sentence: I/ sporting events/ attend/ sometimes fantastic/ with my cousins.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
@@ -2154,6 +2390,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q131',
           number: 131,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "They are planting more trees around the school." ➔ More trees...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'are being planted around the school.',
@@ -2169,6 +2406,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q132',
           number: 132,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "The police are going to search for the stolen jewels." ➔ The stolen jewels...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'are going to be searched for by the police.',
@@ -2186,6 +2424,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q133',
           number: 133,
+          partId: 'sec5_part2',
           question: 'Make a compound sentence using the correct conjunction in brackets: "The concert didn\'t happen. We decided to go shopping instead." (AND/SO) ➔',
           placeholder: 'Viết lại câu hoàn chỉnh với liên từ phù hợp...',
           primaryAnswer: "The concert didn't happen, so we decided to go shopping instead.",
@@ -2203,6 +2442,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q134',
           number: 134,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "People clean the park every weekend." ➔ The park...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'is cleaned every weekend.',
@@ -2220,6 +2460,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q135',
           number: 135,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "They will build a new bridge across the river next year." ➔ A new bridge...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'will be built across the river next year.',
@@ -2235,6 +2476,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q136',
           number: 136,
+          partId: 'sec5_part2',
           question: 'Make a compound sentence using the correct conjunction in brackets: "I like volunteering. I don\'t have much time." (BUT/SO) ➔',
           placeholder: 'Viết lại câu hoàn chỉnh với liên từ phù hợp...',
           primaryAnswer: "I like volunteering, but I don't have much time.",
@@ -2252,6 +2494,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q137',
           number: 137,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "More and more people adopt a green lifestyle." ➔ A green lifestyle...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'is adopted by more and more people.',
@@ -2267,6 +2510,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q138',
           number: 138,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "They are going to organize a fundraising event for poor children." ➔ A fundraising event...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'is going to be organized for poor children.',
@@ -2284,6 +2528,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q139',
           number: 139,
+          partId: 'sec5_part2',
           question: 'Make a compound sentence using the correct conjunction in brackets: "I got stuck in dense traffic. I came to the interview 15 minutes late." (OR/SO) ➔',
           placeholder: 'Viết lại câu hoàn chỉnh với liên từ phù hợp...',
           primaryAnswer: 'I got stuck in dense traffic, so I came to the interview 15 minutes late.',
@@ -2299,6 +2544,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q140',
           number: 140,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "Pollution affects the environment in many ways." ➔ The environment...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'is affected by pollution in many ways.',
@@ -2314,6 +2560,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q141',
           number: 141,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "The club\'s activities will raise people\'s awareness of environmental issues." ➔ People\'s awareness of environmental issues...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: "will be raised by the club's activities.",
@@ -2329,6 +2576,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q142',
           number: 142,
+          partId: 'sec5_part2',
           question: 'Make a compound sentence using the correct conjunction in brackets: "She has bought some sugar and flour. She is going to make a cake this evening." (OR/ BECAUSE) ➔',
           placeholder: 'Viết lại câu hoàn chỉnh với liên từ phù hợp...',
           primaryAnswer: 'She has bought some sugar and flour because she is going to make a cake this evening.',
@@ -2344,6 +2592,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q143',
           number: 143,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "People built many large castles in Britain hundreds of years ago." ➔ Many large castles...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'were built in Britain hundreds of years ago.',
@@ -2359,6 +2608,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q144',
           number: 144,
+          partId: 'sec5_part2',
           question: 'Rewrite using passive voice: "A sudden flash flood can wipe out a village within seconds." ➔ A village...',
           placeholder: 'Điền phần còn lại của câu bị động...',
           primaryAnswer: 'can be wiped out within seconds by a sudden flash flood.',
@@ -2376,6 +2626,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q145',
           number: 145,
+          partId: 'sec5_part2',
           question: 'Make a compound sentence using the correct conjunction in brackets: "She likes listening to pop music. She also enjoys watching music shows." (AND) ➔',
           placeholder: 'Viết lại câu hoàn chỉnh với liên từ phù hợp...',
           primaryAnswer: 'She likes listening to pop music and she also enjoys watching music shows.',
@@ -2395,6 +2646,7 @@ Plastics produced from fossil fuels have revolutionized our life, but the throwa
         {
           id: 'sec5_q146',
           number: 146,
+          partId: 'sec5_part3',
           question: 'Writing Prompt 1: In about 60-80 words, write a paragraph about one of your family routines (having dinner together). Follow the cues: What is the routine? How often / When do you do it? What are the activities and what does each member do? How do you feel about it?',
           placeholder: 'Viết bài văn ngắn (60-80 từ) hoặc nhập câu trả lời của bạn...',
           primaryAnswer: 'One of my favourite family routines is having dinner together. We usually have dinner at 7 p.m. every evening. My mother prepares the food, my father sets the table, and I help wash the dishes after the meal. During dinner, we talk about our day and share funny stories. I really enjoy this routine because it helps us relax, understand one another, and strengthen our family bonds.',
@@ -2416,6 +2668,7 @@ PHÂN TÍCH TIÊU CHÍ CHẤM ĐIỂM:
         {
           id: 'sec5_q147',
           number: 147,
+          partId: 'sec5_part3',
           question: 'Writing Prompt 2: In about 60-80 words, write a paragraph about things you can do to protect the environment. Follow the cues: Topic sentence; First action & its impact; Second action & its impact; Concluding sentence.',
           placeholder: 'Viết bài văn ngắn (60-80 từ) hoặc nhập câu trả lời của bạn...',
           primaryAnswer: 'There are several simple things we can do to protect the environment. First, we should save electricity by turning off lights and electrical appliances when they are not in use. This helps reduce energy consumption. Second, we should use reusable bags and bottles instead of single-use plastic products. This can reduce plastic waste. If everyone takes these small actions every day, our environment will become cleaner and greener.',
@@ -2435,6 +2688,7 @@ PHÂN TÍCH TIÊU CHÍ CHẤM ĐIỂM:
         {
           id: 'sec5_q148',
           number: 148,
+          partId: 'sec5_part3',
           question: 'Writing Prompt 3: In about 60-80 words, write a paragraph about ways to reduce your carbon footprint. Follow the cues: Topic sentence; First action & explain; Second action & explain; Concluding sentence.',
           placeholder: 'Viết bài văn ngắn (60-80 từ) hoặc nhập câu trả lời của bạn...',
           primaryAnswer: 'We can reduce our carbon footprint in many simple ways. First, we should walk, cycle, or use public transport instead of travelling by motorbike or car whenever possible. This reduces fuel use and greenhouse gas emissions. Second, we should save electricity at home by switching off unused devices and using energy-efficient appliances. We can also plant more trees. Small daily changes can make a big difference to our planet.',
@@ -2455,6 +2709,9 @@ PHÂN TÍCH TIÊU CHÍ CHẤM ĐIỂM:
     }
   ]
 };
+
+// Flatten all questions for quick lookup and scoring
+REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL.questions = REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL.passages.flatMap(p => p.questions || []);
 
 // Backward-compatible alias
 export const REVISION_MIDTERM_1_ENGLISH_10_DETAIL = REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL;

@@ -2,11 +2,32 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, BookOpen, AlertCircle } from 'lucide-react';
 import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
+import SchoolPracticeView from '../components/homework/SchoolPracticeView';
 import { getPracticeDetailById, PRE_IELTS_READING_2_PRACTICE_DETAIL } from '../data/practiceData';
 
 export default function PracticeDetail() {
   const { id } = useParams();
   const practice = getPracticeDetailById(id) || PRE_IELTS_READING_2_PRACTICE_DETAIL;
+
+  // School English exercises (Lớp 6-12 / Đề cương / SGK Global Success):
+  // Render the vertical worksheet layout with all reading passages visible
+  if (
+    practice?.category === 'school' ||
+    practice?.layout === 'vertical' ||
+    practice?.levelId?.startsWith('grade-') ||
+    practice?.level?.includes('Lớp')
+  ) {
+    return (
+      <SchoolPracticeView
+        practice={practice}
+        mode="practice"
+        parentPath="/practice"
+        parentLabel="Phòng Luyện tập"
+        storagePrefix="dream_practice_"
+        historyKey="dream_practice_history"
+      />
+    );
+  }
 
   // Reading exercises: Render the full-fledged 3-column IELTS Reading layout
   // (Passage with interactive text highlighting & notes, Questions with real-time word limits, Dedicated Notes Column)

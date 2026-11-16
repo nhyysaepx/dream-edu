@@ -19,6 +19,7 @@ import {
 import AudioPlayer from '../components/AudioPlayer';
 import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
 import ListeningHomeworkView from '../components/homework/ListeningHomeworkView';
+import SchoolPracticeView from '../components/homework/SchoolPracticeView';
 import StudentRequiredModal from '../components/StudentRequiredModal';
 import StudentBadge from '../components/StudentBadge';
 import { getStoredStudent } from '../utils/studentStorage';
@@ -29,6 +30,25 @@ export default function HomeworkDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const homework = getHomeworkDetailById(id) || PRE_IELTS_LISTENING_1_DETAIL;
+
+  // School English exercises (Lớp 6-12 / Đề cương): Render the vertical layout
+  if (
+    homework?.category === 'school' ||
+    homework?.layout === 'vertical' ||
+    homework?.levelId?.startsWith('grade-') ||
+    homework?.level?.includes('Lớp')
+  ) {
+    return (
+      <SchoolPracticeView
+        practice={homework}
+        mode="homework"
+        parentPath="/homework"
+        parentLabel="Bài tập về nhà"
+        storagePrefix="dream_hw_"
+        historyKey="dream_homework_history"
+      />
+    );
+  }
 
   // If this is a Reading homework, render the specialized split-screen IELTS Reading component
   if (homework?.skill === 'Reading') {
