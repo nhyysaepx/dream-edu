@@ -275,7 +275,7 @@ export default function Homework() {
                     {/* Card Action Footer */}
                     <div className="p-4 sm:p-5 pt-0 space-y-2">
                       {/* Vocabulary learning button */}
-                      {(item.vocabId || item.id === 'intermediate-reading-7' || item.id === 'pre-ielts-reading-1' || item.id === 'pre-ielts-reading-2' || item.id === 'pre-ielts-reading-3' || item.id === 'intermediate-reading-6' || item.id === 'intermediate-listening-6') && (
+                      {(item.vocabId || item.id === 'intermediate-reading-7' || item.id === 'pre-ielts-reading-1' || item.id === 'pre-ielts-reading-2' || item.id === 'intermediate-reading-6' || item.id === 'intermediate-listening-6') && (
                         <Link
                           to={`/vocab/${item.vocabId || item.id}`}
                           className="w-full py-2 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
@@ -286,7 +286,6 @@ export default function Homework() {
                               item.id === 'intermediate-reading-7' ? 'Học 36 từ vựng Reading 7' :
                               item.id === 'pre-ielts-reading-1' ? 'Học 30 từ vựng Reading 1' :
                               item.id === 'pre-ielts-reading-2' ? 'Học 30 từ vựng Reading 2' :
-                              item.id === 'pre-ielts-reading-3' ? 'Học 20 từ vựng Reading 3' :
                               item.id === 'intermediate-reading-6' ? 'Học 20 từ vựng Reading 6' :
                               item.id === 'intermediate-listening-6' ? 'Học 22 từ vựng Listening 6' :
                               'Học từ vựng bài tập'

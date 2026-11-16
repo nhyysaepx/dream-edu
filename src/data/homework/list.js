@@ -77,6 +77,23 @@ export const HOMEWORK_LIST = [
     vocabLabel: 'Học 30 từ vựng Listening 2'
   },
   {
+    id: 'pre-ielts-reading-3',
+    levelId: 'pre-ielts',
+    levelLabel: 'Pre IELTS',
+    session: 'Buổi 3',
+    skill: 'Reading',
+    title: 'Reading 3: Is It Better to Go Abroad to Study? (Multiple Choice Questions)',
+    description: 'Luyện tập kỹ thuật Skimming, Scanning và kỹ năng giải quyết dạng bài Multiple Choice (Questions 1–8: Choose ONE answer; Questions 9–10: Choose TWO answers) về chủ đề du học và môi trường quốc tế.',
+    totalQuestions: 10,
+    duration: '25 - 35 phút',
+    status: 'open',
+    dueDate: 'Không giới hạn thời gian',
+    exercisesCount: 2,
+    audioTracksCount: 0,
+    tag: 'Pre-Intermediate 4.0 - 5.0',
+    isFeatured: true
+  },
+  {
     id: 'intermediate-reading-6',
     levelId: 'ielts-foundation',
     levelLabel: 'IELTS Intermediate',
