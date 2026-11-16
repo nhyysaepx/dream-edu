@@ -35,23 +35,43 @@ import { submitHomeworkOrPracticeResult } from '../../services/submissionService
 
 // Helper to normalize and check short-answer accuracy in IELTS
 export function checkShortAnswer(userAnswer, acceptedList) {
-  if (!userAnswer || !userAnswer.trim()) return false;
+  if (!userAnswer || !userAnswer.toString().trim()) return false;
   
+  const list = Array.isArray(acceptedList) 
+    ? acceptedList 
+    : (acceptedList ? [acceptedList] : []);
+
+  if (list.length === 0) return false;
+
+  const rawUser = userAnswer.toString().trim().toLowerCase();
+
+  // 1. Direct trimmed, case-insensitive match (handles single letters 'a', 'b', 'c', 'd' or exact matches)
+  if (list.some(accepted => (accepted || '').toString().trim().toLowerCase() === rawUser)) {
+    return true;
+  }
+
   const clean = (str) => {
-    return (str || '')
+    let s = (str || '')
       .toString()
       .toLowerCase()
       .replace(/[‘'’"`]/g, '')
       .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
-      .replace(/\b(a|an|the)\b/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+
+    // Only strip standalone articles if the phrase contains other words
+    // e.g. "a certificate" -> "certificate", but "a" remains "a"
+    const withoutArticles = s.replace(/\b(a|an|the)\b/g, ' ').replace(/\s+/g, ' ').trim();
+    if (withoutArticles.length > 0) {
+      s = withoutArticles;
+    }
+    return s;
   };
 
   const userClean = clean(userAnswer);
   if (!userClean) return false;
 
-  return acceptedList.some(accepted => {
+  return list.some(accepted => {
     const acceptedClean = clean(accepted);
     if (userClean === acceptedClean) return true;
     const normalizeConnectors = (s) => s.replace(/\s+(and|to|or)\s+/g, ' ').replace(/\s+/g, ' ');
@@ -355,7 +375,12 @@ export default function ReadingHomeworkView({
 
     allQuestions.forEach(q => {
       const userAns = answers[q.id] || '';
-      const isAnsCorrect = checkShortAnswer(userAns, q.acceptedAnswers);
+      const validAnswers = [
+        ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
+        q.primaryAnswer,
+        q.answer
+      ].filter(Boolean);
+      const isAnsCorrect = checkShortAnswer(userAns, validAnswers);
       if (isAnsCorrect) correctCount++;
       results[q.id] = {
         userAnswer: userAns,
@@ -1861,8 +1886,14 @@ export default function ReadingHomeworkView({
                               if (isSelected && !isSubmitted) {
                                 optStyle = 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary/30';
                               } else if (isSubmitted) {
-                                const isThisOptCorrect = (q.acceptedAnswers || []).some(a => 
-                                  a.toUpperCase() === optLetter.toUpperCase() || a.toLowerCase() === optText.toLowerCase()
+                                const validOptions = [
+                                  ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
+                                  q.primaryAnswer,
+                                  q.answer
+                                ].filter(Boolean);
+                                const isThisOptCorrect = validOptions.some(a => 
+                                  a.toString().trim().toUpperCase() === optLetter.toUpperCase() || 
+                                  a.toString().trim().toLowerCase() === optText.toLowerCase()
                                 );
                                 if (isThisOptCorrect) {
                                   optStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold';

@@ -264,23 +264,36 @@ export function calculateIELTSBand(correctCount, totalQuestions, skill = 'Listen
 // Clean and normalize text for IELTS answer comparison
 function normalizeAnswer(text) {
   if (!text) return '';
-  return text
+  let s = text
     .toString()
     .trim()
     .toLowerCase()
     .replace(/[‘'’"`]/g, '')
     .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
-    .replace(/\b(a|an|the)\b/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+
+  // Only strip standalone articles if the phrase contains other words
+  const withoutArticles = s.replace(/\b(a|an|the)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  if (withoutArticles.length > 0) {
+    s = withoutArticles;
+  }
+  return s;
 }
 
 // Check short answer accuracy
 function checkAccuracy(userAnswer, primaryAnswer, acceptableList = []) {
+  if (!userAnswer || !userAnswer.toString().trim()) return false;
+  const rawUser = userAnswer.toString().trim().toLowerCase();
+
+  const targetList = [primaryAnswer, ...acceptableList].filter(Boolean);
+  if (targetList.some(target => (target || '').toString().trim().toLowerCase() === rawUser)) {
+    return true;
+  }
+
   const userClean = normalizeAnswer(userAnswer);
   if (!userClean) return false;
 
-  const targetList = [primaryAnswer, ...acceptableList].filter(Boolean);
   return targetList.some(target => {
     const targetClean = normalizeAnswer(target);
     if (userClean === targetClean) return true;

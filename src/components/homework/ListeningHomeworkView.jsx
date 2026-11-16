@@ -31,21 +31,38 @@ import { submitHomeworkOrPracticeResult } from '../../services/submissionService
 function checkAnswer(userAnswer, acceptedList = []) {
   if (!userAnswer || !userAnswer.toString().trim()) return false;
   
+  const list = Array.isArray(acceptedList) ? acceptedList : (acceptedList ? [acceptedList] : []);
+  if (list.length === 0) return false;
+
+  const rawUser = userAnswer.toString().trim().toLowerCase();
+
+  // 1. Direct trimmed, case-insensitive match (handles single letters 'a', 'b', 'c', 'd' or exact matches)
+  if (list.some(accepted => (accepted || '').toString().trim().toLowerCase() === rawUser)) {
+    return true;
+  }
+
   const clean = (str) => {
-    return (str || '')
+    let s = (str || '')
       .toString()
       .toLowerCase()
       .replace(/[‘'’"`]/g, '')
       .replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, ' ')
-      .replace(/\b(a|an|the)\b/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+
+    // Only strip standalone articles if the phrase contains other words
+    // e.g. "a certificate" -> "certificate", but "a" remains "a"
+    const withoutArticles = s.replace(/\b(a|an|the)\b/g, ' ').replace(/\s+/g, ' ').trim();
+    if (withoutArticles.length > 0) {
+      s = withoutArticles;
+    }
+    return s;
   };
 
   const userClean = clean(userAnswer);
   if (!userClean) return false;
 
-  return acceptedList.some(accepted => {
+  return list.some(accepted => {
     const acceptedClean = clean(accepted);
     if (userClean === acceptedClean) return true;
     const normalizeConnectors = (s) => s.replace(/\s+(and|to|or|of)\s+/g, ' ').replace(/\s+/g, ' ');
