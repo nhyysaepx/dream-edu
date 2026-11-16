@@ -1,5 +1,6 @@
 // Practice detail lookup function
 import { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from './details/revision-midterm-1-english-10.js';
+import { PRE_IELTS_READING_3_PRACTICE_DETAIL } from './details/pre-ielts-reading-3.js';
 import { PRE_IELTS_READING_2_PRACTICE_DETAIL } from './details/pre-ielts-reading-2.js';
 import { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from './details/unit-4-global-success-9.js';
 import { 
@@ -26,6 +27,9 @@ export function getPracticeDetailById(id) {
       session: 'Buổi 2 - Luyện tập trên lớp (In-Class Practice)',
       title: 'PRACTICE - Listening 2 - Sailing Course & City Bike Tour'
     };
+  }
+  if (id === 'pre-ielts-reading-3') {
+    return PRE_IELTS_READING_3_PRACTICE_DETAIL;
   }
   if (id === 'pre-ielts-reading-2') {
     return PRE_IELTS_READING_2_PRACTICE_DETAIL;

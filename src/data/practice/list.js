@@ -47,6 +47,27 @@ export const PRACTICE_LIST = [
 
   // ==================== IELTS PRE ====================
   {
+    id: 'pre-ielts-reading-3',
+    category: 'ielts',
+    levelId: 'pre-ielts',
+    levelLabel: 'Pre IELTS',
+    session: 'Buổi 3',
+    skill: 'Reading',
+    title: 'Reading 3: Multiple Choice Questions (Education & Workplace)',
+    description: 'Thực hành kỹ thuật Skimming, phân tích câu hỏi và chiến lược làm bài Multiple Choice (A-D) qua bài đọc "Education and the Workplace in the UK".',
+    totalQuestions: 4,
+    duration: '15 - 20 phút',
+    status: 'open',
+    dueDate: 'Luyện tập trực tiếp trên lớp',
+    exercisesCount: 1,
+    audioTracksCount: 0,
+    tag: 'Pre-Intermediate 4.0 - 5.0',
+    vocabId: 'pre-ielts-reading-3',
+    vocabCount: 20,
+    vocabLabel: 'Học 20 từ vựng Reading 3',
+    isFeatured: true
+  },
+  {
     id: 'pre-ielts-reading-2',
     category: 'ielts',
     levelId: 'pre-ielts',

@@ -6,6 +6,7 @@ import { REVISION_MIDTERM_1_ENGLISH_10_SET } from './sets/revision-midterm-1-eng
 import { UNIT_4_GLOBAL_SUCCESS_9_SET } from './sets/unit-4-global-success-9.js';
 import { PRE_IELTS_READING_1_SET } from './sets/pre-ielts-reading-1.js';
 import { PRE_IELTS_READING_2_SET } from './sets/pre-ielts-reading-2.js';
+import { PRE_IELTS_READING_3_SET } from './sets/pre-ielts-reading-3.js';
 import { PRE_IELTS_LISTENING_2_SET } from './sets/pre-ielts-listening-2.js';
 import { INTERMEDIATE_READING_6_SET } from './sets/intermediate-reading-6.js';
 import { INTERMEDIATE_LISTENING_6_SET } from './sets/intermediate-listening-6.js';
@@ -22,6 +23,7 @@ export const DEFAULT_VOCAB_SETS = [
   // Lộ trình IELTS - Pre-IELTS
   PRE_IELTS_READING_1_SET,
   PRE_IELTS_READING_2_SET,
+  PRE_IELTS_READING_3_SET,
   PRE_IELTS_LISTENING_2_SET,
 
   // Lộ trình IELTS - Intermediate

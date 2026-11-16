@@ -9,6 +9,7 @@ export { REVISION_MIDTERM_1_ENGLISH_10_SET } from './sets/revision-midterm-1-eng
 export { UNIT_4_GLOBAL_SUCCESS_9_SET } from './sets/unit-4-global-success-9.js';
 export { PRE_IELTS_READING_1_SET } from './sets/pre-ielts-reading-1.js';
 export { PRE_IELTS_READING_2_SET } from './sets/pre-ielts-reading-2.js';
+export { PRE_IELTS_READING_3_SET } from './sets/pre-ielts-reading-3.js';
 export { PRE_IELTS_LISTENING_2_SET } from './sets/pre-ielts-listening-2.js';
 export { INTERMEDIATE_READING_6_SET } from './sets/intermediate-reading-6.js';
 export { INTERMEDIATE_LISTENING_6_SET } from './sets/intermediate-listening-6.js';
