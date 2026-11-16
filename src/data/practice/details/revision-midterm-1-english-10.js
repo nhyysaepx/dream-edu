@@ -62,64 +62,64 @@ export const REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL = {
         {
           id: 'sec1_q1',
           number: 1,
-          question: 'Choose the word whose underlined part differs from the other three in pronunciation: A. breadwinner | B. break | C. branch | D. clean',
+          question: 'Choose the word whose underlined part differs from the other three in pronunciation:',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
-            { letter: 'A', text: 'breadwinner' },
-            { letter: 'B', text: 'break' },
-            { letter: 'C', text: 'branch' },
-            { letter: 'D', text: 'clean' }
+            { letter: 'A', text: '<u>br</u>eadwinner' },
+            { letter: 'B', text: '<u>br</u>eak' },
+            { letter: 'C', text: '<u>br</u>anch' },
+            { letter: 'D', text: '<u>cl</u>ean' }
           ],
           primaryAnswer: 'D',
-          acceptedAnswers: ['D', 'd', 'clean'],
+          acceptedAnswers: ['D', 'd', 'clean', '<u>cl</u>ean'],
           evidence: 'breadwinner /br/, break /br/, branch /br/ vs. clean /kl/',
           explanation: 'Phần gạch chân của "clean" phát âm là /kl/, trong khi ba từ còn lại đều bắt đầu bằng cụm phụ âm /br/.'
         },
         {
           id: 'sec1_q2',
           number: 2,
-          question: 'Choose the word whose underlined part differs from the other three in pronunciation: A. crash | B. credit | C. crab | D. train',
+          question: 'Choose the word whose underlined part differs from the other three in pronunciation:',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
-            { letter: 'A', text: 'crash' },
-            { letter: 'B', text: 'credit' },
-            { letter: 'C', text: 'crab' },
-            { letter: 'D', text: 'train' }
+            { letter: 'A', text: '<u>cr</u>ash' },
+            { letter: 'B', text: '<u>cr</u>edit' },
+            { letter: 'C', text: '<u>cr</u>ab' },
+            { letter: 'D', text: '<u>tr</u>ain' }
           ],
           primaryAnswer: 'D',
-          acceptedAnswers: ['D', 'd', 'train'],
+          acceptedAnswers: ['D', 'd', 'train', '<u>tr</u>ain'],
           evidence: 'crash /kr/, credit /kr/, crab /kr/ vs. train /tr/',
           explanation: 'Phần gạch chân của "train" phát âm là /tr/, ba từ còn lại đều bắt đầu bằng cụm phụ âm /kr/.'
         },
         {
           id: 'sec1_q3',
           number: 3,
-          question: 'Choose the word whose underlined part differs from the other three in pronunciation: A. clean | B. break | C. great | D. steak',
+          question: 'Choose the word whose underlined part differs from the other three in pronunciation:',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
-            { letter: 'A', text: 'clean' },
-            { letter: 'B', text: 'break' },
-            { letter: 'C', text: 'great' },
-            { letter: 'D', text: 'steak' }
+            { letter: 'A', text: 'cl<u>ea</u>n' },
+            { letter: 'B', text: 'br<u>ea</u>k' },
+            { letter: 'C', text: 'gr<u>ea</u>t' },
+            { letter: 'D', text: 'st<u>ea</u>k' }
           ],
           primaryAnswer: 'A',
-          acceptedAnswers: ['A', 'a', 'clean'],
+          acceptedAnswers: ['A', 'a', 'clean', 'cl<u>ea</u>n'],
           evidence: 'clean /kliːn/ vs. break /breɪk/, great /ɡreɪt/, steak /steɪk/',
           explanation: '"clean" có nhóm -ea- phát âm là /iː/, trong khi "break", "great", "steak" đều có nhóm -ea- phát âm là /eɪ/.'
         },
         {
           id: 'sec1_q4',
           number: 4,
-          question: 'Choose the word whose underlined part differs from the other three in pronunciation: A. damage | B. plastic | C. carbon | D. trash',
+          question: 'Choose the word whose underlined part differs from the other three in pronunciation:',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
-            { letter: 'A', text: 'damage' },
-            { letter: 'B', text: 'plastic' },
-            { letter: 'C', text: 'carbon' },
-            { letter: 'D', text: 'trash' }
+            { letter: 'A', text: 'd<u>a</u>mage' },
+            { letter: 'B', text: 'pl<u>a</u>stic' },
+            { letter: 'C', text: 'c<u>a</u>rbon' },
+            { letter: 'D', text: 'tr<u>a</u>sh' }
           ],
           primaryAnswer: 'C',
-          acceptedAnswers: ['C', 'c', 'carbon'],
+          acceptedAnswers: ['C', 'c', 'carbon', 'c<u>a</u>rbon'],
           evidence: 'carbon /ˈkɑːbən/ vs. damage /ˈdæmɪdʒ/, plastic /ˈplæstɪk/, trash /træʃ/',
           explanation: '"carbon" có chữ cái "a" phát âm là /ɑː/, trong khi ba từ còn lại đều phát âm là /æ/.'
         },
@@ -297,7 +297,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q9',
           number: 9,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: I want to express my GRATITUDE to Mr. Davis for his valuable help.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: I want to express my <u>GRATITUDE</u> to Mr. Davis for his valuable help.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'thanks' },
@@ -314,7 +314,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q10',
           number: 10,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: Encouraging students to plant more trees helps CUT DOWN ON CO2 and make the air clean.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: Encouraging students to plant more trees helps <u>CUT DOWN ON</u> CO2 and make the air clean.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'increase' },
@@ -331,7 +331,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q11',
           number: 11,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: Sometimes adults think children may break or DAMAGE things when they do housework.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: Sometimes adults think children may break or <u>DAMAGE</u> things when they do housework.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'destroy' },
@@ -348,7 +348,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q12',
           number: 12,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: Parents are recommended to COLLABORATE with teachers in educating children.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: Parents are recommended to <u>COLLABORATE</u> with teachers in educating children.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'part' },
@@ -365,7 +365,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q13',
           number: 13,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: In my family, everyone shares the household DUTIES.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: In my family, everyone shares the household <u>DUTIES</u>.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'responsibilities' },
@@ -382,7 +382,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q14',
           number: 14,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: Doing chores together helps strengthen family BONDS.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: Doing chores together helps strengthen family <u>BONDS</u>.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'common interests' },
@@ -399,7 +399,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q15',
           number: 15,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: We should RECYCLE as much as possible because this prevents pollution.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: We should <u>RECYCLE</u> as much as possible because this prevents pollution.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'reprocess' },
@@ -416,7 +416,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q16',
           number: 16,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: Buying products that are grown using more natural ORGANIC methods is one way to reduce carbon footprint.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: Buying products that are grown using more natural <u>ORGANIC</u> methods is one way to reduce carbon footprint.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'without the use of animal organs' },
@@ -433,7 +433,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q17',
           number: 17,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: That teen idol was TALENTED to win second place in the Idol Contest in 2010.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: That teen idol was <u>TALENTED</u> to win second place in the Idol Contest in 2010.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'clever' },
@@ -450,7 +450,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q18',
           number: 18,
           partId: 'sec2_part1a',
-          question: 'Choose the word CLOSEST in meaning to the underlined word: Her courage not only INSPIRED her followers but moved her rivals as well.',
+          question: 'Choose the word CLOSEST in meaning to the underlined word: Her courage not only <u>INSPIRED</u> her followers but moved her rivals as well.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'depressed' },
@@ -469,7 +469,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q19',
           number: 19,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: More and more people ADOPT a green lifestyle, which is good for themselves and the environment.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: More and more people <u>ADOPT</u> a green lifestyle, which is good for themselves and the environment.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'choose' },
@@ -486,7 +486,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q20',
           number: 20,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: CUTTING DOWN ON plastic use really helps the environment because it takes many years to break down.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: <u>CUTTING DOWN ON</u> plastic use really helps the environment because it takes many years to break down.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'increasing' },
@@ -503,7 +503,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q21',
           number: 21,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: He has got a lot of important ACHIEVEMENTS in music recently.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: He has got a lot of important <u>ACHIEVEMENTS</u> in music recently.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'failures' },
@@ -520,7 +520,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q22',
           number: 22,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: When he was 17, his mother started to UPLOAD his cover song videos on social media.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: When he was 17, his mother started to <u>UPLOAD</u> his cover song videos on social media.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'share' },
@@ -537,7 +537,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q23',
           number: 23,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: You are so lucky to have such a SUPPORTIVE brother.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: You are so lucky to have such a <u>SUPPORTIVE</u> brother.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'unhelpful' },
@@ -554,7 +554,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q24',
           number: 24,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: Small changes in your daily habits can help REDUCE the carbon footprint you produce.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: Small changes in your daily habits can help <u>REDUCE</u> the carbon footprint you produce.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'lower' },
@@ -571,7 +571,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q25',
           number: 25,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: I admire him because he has a PROFESSIONAL voice.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: I admire him because he has a <u>PROFESSIONAL</u> voice.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'skillful' },
@@ -588,7 +588,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q26',
           number: 26,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: Remember to TURN OFF your devices when they are not used.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: Remember to <u>TURN OFF</u> your devices when they are not used.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'turn into' },
@@ -605,7 +605,7 @@ What makes this robot different is that it is always learning. It can study your
           id: 'sec2_q27',
           number: 27,
           partId: 'sec2_part1b',
-          question: 'Choose the word OPPOSITE in meaning to the underlined word: The contestants who receive the fewest viewers\' votes are ELIMINATED from the competition.',
+          question: 'Choose the word OPPOSITE in meaning to the underlined word: The contestants who receive the fewest viewers\' votes are <u>ELIMINATED</u> from the competition.',
           placeholder: 'Chọn A, B, C hoặc D...',
           options: [
             { letter: 'A', text: 'got rid of' },

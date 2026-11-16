@@ -35,22 +35,59 @@ import { getStoredStudent } from '../../utils/studentStorage';
 import { submitHomeworkOrPracticeResult } from '../../services/submissionService';
 import { checkShortAnswer } from './ReadingHomeworkView';
 
+// =============================================================================
+// HELPER: RENDER TEXT WITH UNDERLINE & HIGHLIGHT
+// =============================================================================
+export function FormattedText({ text, className = '' }) {
+  if (!text) return null;
+  const str = text.toString();
+  if (!str.includes('<u>')) {
+    return <span className={className}>{str}</span>;
+  }
+
+  // Split keeping <u>...</u> delimiters
+  const parts = str.split(/(<u>.*?<\/u>)/g);
+  return (
+    <span className={className}>
+      {parts.map((part, index) => {
+        if (part.startsWith('<u>') && part.endsWith('</u>')) {
+          const content = part.slice(3, -4);
+          return (
+            <span
+              key={index}
+              className="underline underline-offset-[3px] decoration-2 decoration-primary font-black text-gray-950 inline-block px-0.5"
+            >
+              {content}
+            </span>
+          );
+        }
+        return <React.Fragment key={index}>{part}</React.Fragment>;
+      })}
+    </span>
+  );
+}
+
+// Strip HTML tags for clean text comparison
+function stripHtml(s) {
+  return (s || '').toString().replace(/<[^>]*>/g, '').trim();
+}
+
 // Evaluate a user's answer against accepted answers
 export function evaluateSchoolAnswer(question, rawUserAnswer) {
   if (rawUserAnswer === undefined || rawUserAnswer === null || rawUserAnswer === '') {
     return { isCorrect: false, isEmpty: true };
   }
-  const userAnswer = rawUserAnswer.toString().trim();
+  const userAnswer = stripHtml(rawUserAnswer);
   if (!userAnswer) return { isCorrect: false, isEmpty: true };
 
   const acceptedList = Array.isArray(question.acceptedAnswers) && question.acceptedAnswers.length > 0
-    ? question.acceptedAnswers
-    : [question.primaryAnswer].filter(Boolean);
+    ? question.acceptedAnswers.map(stripHtml)
+    : [stripHtml(question.primaryAnswer)].filter(Boolean);
 
   // If question has options (multiple-choice A, B, C, D)
   if (Array.isArray(question.options) && question.options.length > 0) {
     const userClean = userAnswer.toUpperCase().trim();
-    const primaryClean = (question.primaryAnswer || '').toUpperCase().trim();
+    const primaryClean = stripHtml(question.primaryAnswer || '').toUpperCase().trim();
 
     if (userClean === primaryClean) {
       return { isCorrect: true, isEmpty: false };
@@ -62,10 +99,10 @@ export function evaluateSchoolAnswer(question, rawUserAnswer) {
     });
     if (acceptedMatch) return { isCorrect: true, isEmpty: false };
 
-    // Also match full option text
+    // Also match full option text (with HTML tags stripped)
     const cleanText = userAnswer.toLowerCase().trim();
-    const primaryOption = question.options.find(opt => (opt.letter || '').toUpperCase() === primaryClean);
-    if (primaryOption && primaryOption.text.toLowerCase().trim() === cleanText) {
+    const primaryOption = question.options.find(opt => stripHtml(opt.letter || '').toUpperCase() === primaryClean);
+    if (primaryOption && stripHtml(primaryOption.text).toLowerCase().trim() === cleanText) {
       return { isCorrect: true, isEmpty: false };
     }
     return { isCorrect: false, isEmpty: false };
@@ -125,7 +162,17 @@ export default function SchoolPracticeView({
     }
   });
 
-  // Submission state
+  // Track per-exercise graded state: { [exerciseKey]: { score, total, percentage, gradedAt } }
+  const [gradedExercises, setGradedExercises] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storagePrefix}${id}_graded_exercises`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // Global full-test submission state
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showResultsModal, setShowResultsModal] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState(null);
@@ -160,6 +207,13 @@ export default function SchoolPracticeView({
     }).length;
   }, [allQuestions, answers]);
 
+  // Helper: check if a specific question is graded (either globally or via per-part grading)
+  const isQuestionGraded = useCallback((q) => {
+    if (isSubmitted) return true;
+    const key = q.partId || q.passageId || 'general';
+    return !!gradedExercises[key];
+  }, [isSubmitted, gradedExercises]);
+
   // Load previous submission from history if available
   useEffect(() => {
     try {
@@ -176,7 +230,7 @@ export default function SchoolPracticeView({
     }
   }, [id, historyKey]);
 
-  // Auto-save draft every 5 seconds if answers changed
+  // Auto-save draft every 2 seconds if answers changed
   useEffect(() => {
     if (isSubmitted) return;
     const timer = setTimeout(() => {
@@ -202,17 +256,137 @@ export default function SchoolPracticeView({
 
   // Handle answer change
   const handleAnswerChange = (questionId, value) => {
-    if (isSubmitted) return;
+    // If this question is already graded, do not allow change unless reset
+    const targetQ = allQuestions.find(q => q.id === questionId);
+    if (targetQ && isQuestionGraded(targetQ)) return;
+
     setAnswers(prev => ({
       ...prev,
       [questionId]: value
     }));
   };
 
-  // Evaluation results
-  const evaluationResults = useMemo(() => {
-    if (!isSubmitted) return null;
+  // ===========================================================================
+  // PER-EXERCISE GRADING LOGIC ("Chấm điểm từng bài")
+  // ===========================================================================
+  const handleGradeExercise = (exerciseKey, exerciseQuestions, exerciseTitle) => {
+    if (!exerciseQuestions || exerciseQuestions.length === 0) return;
 
+    // Check unanswered questions
+    const unansweredCount = exerciseQuestions.filter(q => {
+      const v = answers[q.id];
+      return v === undefined || v === null || v.toString().trim() === '';
+    }).length;
+
+    if (unansweredCount > 0) {
+      const confirmGrade = window.confirm(
+        `Bạn vẫn còn ${unansweredCount} câu chưa trả lời ở phần này. Bạn có chắc muốn chấm điểm ngay không?`
+      );
+      if (!confirmGrade) return;
+    }
+
+    // Evaluate exercise questions
+    let correctCount = 0;
+    exerciseQuestions.forEach(q => {
+      const userAns = answers[q.id];
+      const res = evaluateSchoolAnswer(q, userAns);
+      if (res.isCorrect) correctCount++;
+    });
+
+    const total = exerciseQuestions.length;
+    const percentage = Math.round((correctCount / total) * 100);
+
+    // Save to gradedExercises
+    const updatedGraded = {
+      ...gradedExercises,
+      [exerciseKey]: {
+        score: correctCount,
+        total,
+        percentage,
+        gradedAt: new Date().toISOString()
+      }
+    };
+    setGradedExercises(updatedGraded);
+    try {
+      localStorage.setItem(`${storagePrefix}${id}_graded_exercises`, JSON.stringify(updatedGraded));
+    } catch (e) {
+      console.error('Failed to save graded exercises:', e);
+    }
+
+    // Auto expand explanations for all questions in this exercise
+    setExpandedExplanations(prev => {
+      const next = { ...prev };
+      exerciseQuestions.forEach(q => {
+        next[q.id] = true;
+      });
+      return next;
+    });
+
+    // Sound feedback
+    if (percentage >= 70) {
+      playCorrectSound();
+    } else {
+      playWrongSound();
+    }
+  };
+
+  // Reset a single exercise
+  const handleResetExercise = (exerciseKey, exerciseQuestions) => {
+    const confirmReset = window.confirm('Bạn có chắc muốn làm lại bài tập này? Câu trả lời của bài tập này sẽ được xóa.');
+    if (!confirmReset) return;
+
+    // Clear answers for this exercise
+    setAnswers(prev => {
+      const next = { ...prev };
+      exerciseQuestions.forEach(q => {
+        delete next[q.id];
+      });
+      try {
+        localStorage.setItem(`${storagePrefix}${id}_draft`, JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+
+    // Remove from gradedExercises
+    setGradedExercises(prev => {
+      const next = { ...prev };
+      delete next[exerciseKey];
+      try {
+        localStorage.setItem(`${storagePrefix}${id}_graded_exercises`, JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+
+    // Collapse explanations
+    setExpandedExplanations(prev => {
+      const next = { ...prev };
+      exerciseQuestions.forEach(q => {
+        delete next[q.id];
+      });
+      return next;
+    });
+  };
+
+  // Toggle all explanations for a single exercise
+  const handleToggleAllExplanations = (exerciseQuestions) => {
+    const allExpanded = exerciseQuestions.every(q => expandedExplanations[q.id]);
+    setExpandedExplanations(prev => {
+      const next = { ...prev };
+      exerciseQuestions.forEach(q => {
+        next[q.id] = !allExpanded;
+      });
+      return next;
+    });
+  };
+
+  // ===========================================================================
+  // OVERALL EVALUATION RESULTS (FULL TEST)
+  // ===========================================================================
+  const evaluationResults = useMemo(() => {
     let correctCount = 0;
     const details = {};
     const sectionStats = {};
@@ -223,7 +397,6 @@ export default function SchoolPracticeView({
       details[q.id] = res;
       if (res.isCorrect) correctCount++;
 
-      // Section stats
       const secKey = q.passageId || 'general';
       if (!sectionStats[secKey]) {
         sectionStats[secKey] = { correct: 0, total: 0 };
@@ -244,26 +417,24 @@ export default function SchoolPracticeView({
       details,
       sectionStats
     };
-  }, [isSubmitted, allQuestions, answers]);
+  }, [allQuestions, answers]);
 
-  // Handle submission
-  const handleSubmit = () => {
+  // Handle final overall submission
+  const handleSubmitAll = () => {
     if (isSubmitted) {
       setShowResultsModal(true);
       return;
     }
 
-    // Require student name if in homework mode
     if (mode === 'homework' && (!student || !student.name || !student.className)) {
       setShowStudentModal(true);
       return;
     }
 
-    // Confirm if questions are unanswered
     const unAnswered = totalQuestionsCount - answeredCount;
     if (unAnswered > 0) {
       const confirmSubmit = window.confirm(
-        `Bạn vẫn còn ${unAnswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài chấm điểm ngay không?`
+        `Bạn vẫn còn ${unAnswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp toàn bộ bài tập và xem bảng điểm tổng kết ngay không?`
       );
       if (!confirmSubmit) return;
     }
@@ -271,15 +442,23 @@ export default function SchoolPracticeView({
     setIsSubmitted(true);
     setShowResultsModal(true);
 
-    // Calculate score
-    let correctCount = 0;
+    // Expand all explanations
+    const allExpandedMap = {};
+    allQuestions.forEach(q => {
+      allExpandedMap[q.id] = true;
+    });
+    setExpandedExplanations(allExpandedMap);
+
+    const total = allQuestions.length || 1;
+    const correctCount = evaluationResults.correctCount;
+    const percentage = evaluationResults.percentage;
+    const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+
     const wrongItems = [];
     allQuestions.forEach(q => {
       const userAns = answers[q.id];
-      const res = evaluateSchoolAnswer(q, userAns);
-      if (res.isCorrect) {
-        correctCount++;
-      } else {
+      const res = evaluationResults.details[q.id];
+      if (!res.isCorrect) {
         wrongItems.push({
           questionId: q.id,
           number: q.number,
@@ -290,11 +469,6 @@ export default function SchoolPracticeView({
       }
     });
 
-    const total = allQuestions.length || 1;
-    const percentage = Math.round((correctCount / total) * 100);
-    const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
-
-    // Save to localStorage history
     try {
       const historyStr = localStorage.getItem(historyKey) || '{}';
       const historyObj = JSON.parse(historyStr);
@@ -310,7 +484,6 @@ export default function SchoolPracticeView({
       console.error('Failed to save to history:', e);
     }
 
-    // Track submission to backend/Google Sheets
     if (student && student.name) {
       submitHomeworkOrPracticeResult({
         studentName: student.name,
@@ -330,7 +503,6 @@ export default function SchoolPracticeView({
       });
     }
 
-    // Celebratory sound
     if (percentage >= 70) {
       playCorrectSound();
       triggerCelebration();
@@ -339,16 +511,19 @@ export default function SchoolPracticeView({
     }
   };
 
-  // Reset exercise
-  const handleReset = () => {
-    const confirmReset = window.confirm('Bạn có chắc chắn muốn làm lại từ đầu không? Toàn bộ câu trả lời hiện tại sẽ được xoá.');
+  // Reset entire exercise
+  const handleResetAll = () => {
+    const confirmReset = window.confirm('Bạn có chắc chắn muốn làm lại toàn bộ đề từ đầu? Toàn bộ câu trả lời và điểm số từng bài sẽ được xoá.');
     if (!confirmReset) return;
 
     setAnswers({});
+    setGradedExercises({});
     setIsSubmitted(false);
     setShowResultsModal(false);
+    setExpandedExplanations({});
     try {
       localStorage.removeItem(`${storagePrefix}${id}_draft`);
+      localStorage.removeItem(`${storagePrefix}${id}_graded_exercises`);
       const historyStr = localStorage.getItem(historyKey);
       if (historyStr) {
         const historyObj = JSON.parse(historyStr);
@@ -391,7 +566,7 @@ export default function SchoolPracticeView({
     }));
   };
 
-  // Toggle explanation card
+  // Toggle explanation card for a single question
   const toggleExplanation = (questionId) => {
     setExpandedExplanations(prev => ({
       ...prev,
@@ -475,7 +650,7 @@ export default function SchoolPracticeView({
                   <span>{practice.vocabLabel || `Học ${practice.vocabCount || 30} từ vựng bài này`}</span>
                 </Link>
                 <span className="text-xs text-gray-500 italic">
-                  💡 Học trước từ vựng giúp bạn làm nhanh và đạt điểm cao hơn ở các bài đọc hiểu!
+                  💡 Bạn có thể bấm nút "Chấm điểm bài tập này" sau mỗi bài để xem điểm và giải thích ngay lập tức!
                 </span>
               </div>
             )}
@@ -544,7 +719,7 @@ export default function SchoolPracticeView({
 
                 {/* Submit button */}
                 <button
-                  onClick={handleSubmit}
+                  onClick={handleSubmitAll}
                   className={`px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all ${
                     isSubmitted
                       ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
@@ -554,12 +729,12 @@ export default function SchoolPracticeView({
                   {isSubmitted ? (
                     <>
                       <Trophy size={16} />
-                      <span>Xem điểm số</span>
+                      <span>Xem bảng điểm tổng kết</span>
                     </>
                   ) : (
                     <>
                       <Send size={15} />
-                      <span>Nộp bài chấm điểm</span>
+                      <span>Nộp toàn bộ đề</span>
                     </>
                   )}
                 </button>
@@ -627,13 +802,27 @@ export default function SchoolPracticeView({
 
               {/* SECTION SUB-PARTS (e.g. Word Bank Cloze texts in Section 2, or Reading Passages in Section 4, or Writing in Section 5) */}
               {passage.parts && passage.parts.length > 0 ? (
-                <div className="space-y-10">
+                <div className="space-y-12">
                   {passage.parts.map((part) => {
                     // Filter questions belonging to this part
                     const partQuestions = (passage.questions || []).filter(q => q.partId === part.id);
+                    const isPartGraded = isSubmitted || !!gradedExercises[part.id];
+                    const partGradeInfo = isSubmitted
+                      ? {
+                          score: partQuestions.filter(q => evaluationResults.details[q.id]?.isCorrect).length,
+                          total: partQuestions.length,
+                          percentage: Math.round(
+                            (partQuestions.filter(q => evaluationResults.details[q.id]?.isCorrect).length /
+                              (partQuestions.length || 1)) *
+                              100
+                          )
+                        }
+                      : gradedExercises[part.id];
+
+                    const areAllPartExplanationsExpanded = partQuestions.every(q => expandedExplanations[q.id]);
 
                     return (
-                      <div key={part.id} className="pt-2 border-t border-gray-100 first:border-t-0 first:pt-0">
+                      <div key={part.id} className="pt-4 border-t border-gray-100 first:border-t-0 first:pt-0">
                         {/* Part Header */}
                         <div className="mb-6">
                           <div className="flex flex-wrap items-center gap-2 mb-1.5">
@@ -642,6 +831,9 @@ export default function SchoolPracticeView({
                                 {part.badge}
                               </span>
                             )}
+                            <span className="text-xs font-semibold text-gray-500">
+                              ({partQuestions.length} câu)
+                            </span>
                           </div>
                           <h3 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight mb-1">
                             {part.title}
@@ -715,19 +907,32 @@ export default function SchoolPracticeView({
                               question={question}
                               userAnswer={answers[question.id]}
                               onChangeAnswer={handleAnswerChange}
-                              isSubmitted={isSubmitted}
+                              isGraded={isPartGraded}
                               evaluation={evaluationResults?.details?.[question.id]}
                               isExpandedExplanation={expandedExplanations[question.id]}
                               onToggleExplanation={() => toggleExplanation(question.id)}
                             />
                           ))}
                         </div>
+
+                        {/* PER-EXERCISE GRADING BUTTON & FEEDBACK BAR */}
+                        <ExerciseGradeBar
+                          exerciseKey={part.id}
+                          questions={partQuestions}
+                          title={part.title}
+                          answers={answers}
+                          gradeInfo={partGradeInfo}
+                          onGrade={handleGradeExercise}
+                          onReset={handleResetExercise}
+                          onToggleAllExplanations={handleToggleAllExplanations}
+                          isAllExplanationsExpanded={areAllPartExplanationsExpanded}
+                        />
                       </div>
                     );
                   })}
                 </div>
               ) : (
-                /* Fallback if passage does not have parts (e.g. Section 1 or standard single passage) */
+                /* Fallback if passage does not have parts (e.g. Section 1 or Section 3) */
                 <div className="space-y-6">
                   {/* Single passage text if present */}
                   {passage.passageText && (
@@ -744,18 +949,52 @@ export default function SchoolPracticeView({
                     </div>
                   )}
 
-                  {(passage.questions || []).map((question) => (
-                    <QuestionCard
-                      key={question.id}
-                      question={question}
-                      userAnswer={answers[question.id]}
-                      onChangeAnswer={handleAnswerChange}
-                      isSubmitted={isSubmitted}
-                      evaluation={evaluationResults?.details?.[question.id]}
-                      isExpandedExplanation={expandedExplanations[question.id]}
-                      onToggleExplanation={() => toggleExplanation(question.id)}
-                    />
-                  ))}
+                  {(passage.questions || []).map((question) => {
+                    const isSecGraded = isSubmitted || !!gradedExercises[passage.id];
+                    return (
+                      <QuestionCard
+                        key={question.id}
+                        question={question}
+                        userAnswer={answers[question.id]}
+                        onChangeAnswer={handleAnswerChange}
+                        isGraded={isSecGraded}
+                        evaluation={evaluationResults?.details?.[question.id]}
+                        isExpandedExplanation={expandedExplanations[question.id]}
+                        onToggleExplanation={() => toggleExplanation(question.id)}
+                      />
+                    );
+                  })}
+
+                  {/* PER-EXERCISE GRADING BAR FOR SECTION */}
+                  <ExerciseGradeBar
+                    exerciseKey={passage.id}
+                    questions={passage.questions || []}
+                    title={passage.shortTitle || passage.title}
+                    answers={answers}
+                    gradeInfo={
+                      isSubmitted
+                        ? {
+                            score: (passage.questions || []).filter(
+                              q => evaluationResults.details[q.id]?.isCorrect
+                            ).length,
+                            total: (passage.questions || []).length,
+                            percentage: Math.round(
+                              ((passage.questions || []).filter(
+                                q => evaluationResults.details[q.id]?.isCorrect
+                              ).length /
+                                ((passage.questions || []).length || 1)) *
+                                100
+                            )
+                          }
+                        : gradedExercises[passage.id]
+                    }
+                    onGrade={handleGradeExercise}
+                    onReset={handleResetExercise}
+                    onToggleAllExplanations={handleToggleAllExplanations}
+                    isAllExplanationsExpanded={(passage.questions || []).every(
+                      q => expandedExplanations[q.id]
+                    )}
+                  />
                 </div>
               )}
             </section>
@@ -765,12 +1004,12 @@ export default function SchoolPracticeView({
         {/* BOTTOM SUBMISSION CARD */}
         <div className="mt-12 bg-white rounded-3xl p-6 sm:p-8 border border-gray-200 text-center shadow-xs">
           <h3 className="text-lg sm:text-xl font-black text-gray-900 mb-2">
-            {isSubmitted ? 'Bạn đã hoàn thành bài luyện tập' : 'Sẵn sàng nộp bài chấm điểm?'}
+            {isSubmitted ? 'Bạn đã hoàn thành bài luyện tập' : 'Tổng kết & Nộp toàn bộ đề thi'}
           </h3>
           <p className="text-gray-600 text-sm max-w-lg mx-auto mb-6">
             {isSubmitted
               ? `Điểm của bạn: ${evaluationResults?.correctCount} / ${evaluationResults?.totalCount} câu đúng (${evaluationResults?.scoreOutOf10}/10 điểm).`
-              : `Bạn đã làm được ${answeredCount} / ${totalQuestionsCount} câu. Kiểm tra kỹ trước khi bấm nộp bài.`}
+              : `Bạn đã làm được ${answeredCount} / ${totalQuestionsCount} câu. Bạn có thể bấm nút bên dưới để tổng kết điểm toàn bài và lưu kết quả vào hệ thống.`}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
@@ -781,10 +1020,10 @@ export default function SchoolPracticeView({
                   className="px-6 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-primary-container shadow-md shadow-primary/20 flex items-center gap-2"
                 >
                   <Trophy size={18} />
-                  <span>Xem chi tiết bảng điểm</span>
+                  <span>Xem chi tiết bảng điểm toàn bài</span>
                 </button>
                 <button
-                  onClick={handleReset}
+                  onClick={handleResetAll}
                   className="px-5 py-3 rounded-2xl border border-gray-200 text-gray-700 font-bold text-sm hover:bg-gray-50 flex items-center gap-2"
                 >
                   <RotateCcw size={16} />
@@ -801,11 +1040,11 @@ export default function SchoolPracticeView({
                   <span>Lưu bản nháp</span>
                 </button>
                 <button
-                  onClick={handleSubmit}
+                  onClick={handleSubmitAll}
                   className="px-7 py-3 rounded-2xl bg-primary text-white font-bold text-sm hover:bg-primary-container shadow-lg shadow-primary/25 flex items-center gap-2"
                 >
                   <Send size={16} />
-                  <span>Nộp bài & Chấm điểm</span>
+                  <span>Nộp bài & Tổng kết toàn bộ</span>
                 </button>
               </>
             )}
@@ -877,22 +1116,18 @@ export default function SchoolPracticeView({
               >
                 Đã làm ({answeredCount})
               </button>
-              {isSubmitted && (
-                <>
-                  <button
-                    onClick={() => setPaletteFilter('correct')}
-                    className={`px-3 py-1.5 rounded-xl ${paletteFilter === 'correct' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800'}`}
-                  >
-                    Đúng ({evaluationResults?.correctCount})
-                  </button>
-                  <button
-                    onClick={() => setPaletteFilter('wrong')}
-                    className={`px-3 py-1.5 rounded-xl ${paletteFilter === 'wrong' ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-800'}`}
-                  >
-                    Sai ({totalQuestionsCount - (evaluationResults?.correctCount || 0)})
-                  </button>
-                </>
-              )}
+              <button
+                onClick={() => setPaletteFilter('correct')}
+                className={`px-3 py-1.5 rounded-xl ${paletteFilter === 'correct' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-800'}`}
+              >
+                Đúng (Đã chấm)
+              </button>
+              <button
+                onClick={() => setPaletteFilter('wrong')}
+                className={`px-3 py-1.5 rounded-xl ${paletteFilter === 'wrong' ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-800'}`}
+              >
+                Sai (Đã chấm)
+              </button>
             </div>
 
             {/* Questions Grid */}
@@ -900,11 +1135,13 @@ export default function SchoolPracticeView({
               {passages.map((p, idx) => {
                 const sectionQs = (p.questions || []).filter(q => {
                   const hasAns = answers[q.id] !== undefined && answers[q.id] !== null && answers[q.id].toString().trim() !== '';
+                  const graded = isQuestionGraded(q);
                   const evalRes = evaluationResults?.details?.[q.id];
+
                   if (paletteFilter === 'unanswered') return !hasAns;
                   if (paletteFilter === 'answered') return hasAns;
-                  if (paletteFilter === 'correct') return isSubmitted && evalRes?.isCorrect;
-                  if (paletteFilter === 'wrong') return isSubmitted && !evalRes?.isCorrect;
+                  if (paletteFilter === 'correct') return graded && evalRes?.isCorrect;
+                  if (paletteFilter === 'wrong') return graded && !evalRes?.isCorrect;
                   return true;
                 });
 
@@ -918,14 +1155,15 @@ export default function SchoolPracticeView({
                     <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-2">
                       {sectionQs.map(q => {
                         const hasAns = answers[q.id] !== undefined && answers[q.id] !== null && answers[q.id].toString().trim() !== '';
+                        const graded = isQuestionGraded(q);
                         const evalRes = evaluationResults?.details?.[q.id];
 
                         let btnClass = 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-200';
-                        if (isSubmitted) {
+                        if (graded) {
                           if (evalRes?.isCorrect) {
-                            btnClass = 'bg-emerald-500 text-white font-bold border-emerald-600';
+                            btnClass = 'bg-emerald-500 text-white font-bold border-emerald-600 shadow-2xs';
                           } else {
-                            btnClass = 'bg-rose-500 text-white font-bold border-rose-600';
+                            btnClass = 'bg-rose-500 text-white font-bold border-rose-600 shadow-2xs';
                           }
                         } else if (hasAns) {
                           btnClass = 'bg-primary text-white font-bold border-primary';
@@ -952,7 +1190,7 @@ export default function SchoolPracticeView({
       )}
 
       {/* ========================================================================= */}
-      {/* RESULTS MODAL (CELEBRATION & SCORE BREAKDOWN) */}
+      {/* FINAL RESULTS MODAL (CELEBRATION & SCORE BREAKDOWN) */}
       {/* ========================================================================= */}
       {showResultsModal && evaluationResults && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
@@ -969,11 +1207,11 @@ export default function SchoolPracticeView({
             </div>
 
             <h3 className="text-2xl font-black text-gray-900 mb-1">
-              Kết quả bài luyện tập
+              Kết quả toàn bộ đề thi
             </h3>
             <p className="text-xs text-gray-500 mb-6">{practice.title}</p>
 
-            {/* Score Ring / Box */}
+            {/* Score Box */}
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl p-6 mb-6">
               <div className="text-5xl font-black text-primary mb-1">
                 {evaluationResults.scoreOutOf10}
@@ -1015,7 +1253,7 @@ export default function SchoolPracticeView({
             <div className="space-y-2.5">
               <button
                 onClick={() => setShowResultsModal(false)}
-                className="w-full py-3 rounded-2xl bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md shadow-primary/20 transition-all"
+                className="w-full py-3 rounded-2xl bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-md shadow-primary/20 transition-all cursor-pointer"
               >
                 Xem lại đáp án & giải thích chi tiết
               </button>
@@ -1031,8 +1269,8 @@ export default function SchoolPracticeView({
               )}
 
               <button
-                onClick={handleReset}
-                className="w-full py-2.5 rounded-2xl text-xs font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors"
+                onClick={handleResetAll}
+                className="w-full py-2.5 rounded-2xl text-xs font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 Làm lại từ đầu
               </button>
@@ -1061,19 +1299,116 @@ export default function SchoolPracticeView({
 }
 
 // =============================================================================
+// SUB-COMPONENT: EXERCISE GRADE BAR (Chấm điểm từng bài & hiển thị điểm số)
+// =============================================================================
+function ExerciseGradeBar({
+  exerciseKey,
+  questions,
+  title,
+  answers,
+  gradeInfo,
+  onGrade,
+  onReset,
+  onToggleAllExplanations,
+  isAllExplanationsExpanded
+}) {
+  const answeredInPart = questions.filter(q => {
+    const v = answers[q.id];
+    return v !== undefined && v !== null && v.toString().trim() !== '';
+  }).length;
+  const isGraded = !!gradeInfo;
+
+  return (
+    <div className={`mt-6 p-4 sm:p-5 rounded-2xl border transition-all ${
+      isGraded
+        ? 'bg-emerald-50/80 border-emerald-200'
+        : 'bg-gradient-to-r from-blue-50/70 to-indigo-50/70 border-blue-100 shadow-2xs'
+    }`}>
+      {!isGraded ? (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-left w-full sm:w-auto">
+            <div className="text-xs sm:text-sm font-bold text-gray-800 flex items-center gap-2">
+              <Sparkles size={15} className="text-primary" />
+              <span>Tiến độ bài này: </span>
+              <span className="text-primary font-black">{answeredInPart} / {questions.length} câu đã làm</span>
+            </div>
+            <p className="text-[11px] text-gray-500 mt-0.5">
+              💡 Bấm chấm điểm ngay để biết kết quả và xem giải thích chi tiết cho bài tập này mà không cần chờ làm hết đề!
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onGrade(exerciseKey, questions, title)}
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-xs sm:text-sm shadow-md shadow-primary/20 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <CheckCircle2 size={16} />
+            <span>Chấm điểm bài tập này ({questions.length} câu)</span>
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
+              <span className="text-sm font-black leading-none">{gradeInfo.score}</span>
+              <span className="text-[10px] opacity-80 leading-none">/{gradeInfo.total}</span>
+            </div>
+            <div className="text-left">
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-black text-emerald-950">
+                  Kết quả: Đúng {gradeInfo.score} / {gradeInfo.total} câu ({gradeInfo.percentage}%)
+                </span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  gradeInfo.percentage >= 80 ? 'bg-emerald-200 text-emerald-900' : gradeInfo.percentage >= 50 ? 'bg-amber-100 text-amber-900' : 'bg-rose-100 text-rose-900'
+                }`}>
+                  {gradeInfo.percentage >= 80 ? 'Xuất sắc' : gradeInfo.percentage >= 50 ? 'Đạt' : 'Cần ôn thêm'}
+                </span>
+              </div>
+              <p className="text-[11px] text-emerald-800 mt-0.5">
+                Đã mở đáp án đúng & giải thích chi tiết cho các câu trong bài này.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button
+              type="button"
+              onClick={() => onToggleAllExplanations(questions)}
+              className="px-3.5 py-2 rounded-xl bg-white border border-emerald-300 text-emerald-900 font-bold text-xs hover:bg-emerald-50 flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+            >
+              <Eye size={14} />
+              <span>{isAllExplanationsExpanded ? 'Thu gọn giải thích' : 'Mở tất cả giải thích'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onReset(exerciseKey, questions)}
+              className="px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50 flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              title="Làm lại bài tập này"
+            >
+              <RotateCcw size={14} />
+              <span>Làm lại bài này</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// =============================================================================
 // SUB-COMPONENT: QUESTION CARD RENDERER
 // =============================================================================
 function QuestionCard({
   question,
   userAnswer,
   onChangeAnswer,
-  isSubmitted,
+  isGraded,
   evaluation,
   isExpandedExplanation,
   onToggleExplanation
 }) {
-  const isCorrect = isSubmitted && evaluation?.isCorrect;
-  const isWrong = isSubmitted && !evaluation?.isCorrect;
+  const isCorrect = isGraded && evaluation?.isCorrect;
+  const isWrong = isGraded && !evaluation?.isCorrect;
 
   // Options check
   const hasOptions = Array.isArray(question.options) && question.options.length > 0;
@@ -1083,7 +1418,7 @@ function QuestionCard({
     <div
       id={`question-card-${question.id}`}
       className={`rounded-2xl p-5 sm:p-6 border transition-all ${
-        isSubmitted
+        isGraded
           ? isCorrect
             ? 'bg-emerald-50/20 border-emerald-300'
             : 'bg-rose-50/20 border-rose-300'
@@ -1094,7 +1429,7 @@ function QuestionCard({
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
           <span className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
-            isSubmitted
+            isGraded
               ? isCorrect
                 ? 'bg-emerald-500 text-white'
                 : 'bg-rose-500 text-white'
@@ -1107,8 +1442,8 @@ function QuestionCard({
           </span>
         </div>
 
-        {/* Status icon when submitted */}
-        {isSubmitted && (
+        {/* Status icon when graded */}
+        {isGraded && (
           <div className="flex items-center gap-1.5 text-xs font-bold">
             {isCorrect ? (
               <span className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-full">
@@ -1125,9 +1460,9 @@ function QuestionCard({
         )}
       </div>
 
-      {/* Question Text */}
+      {/* Question Text with Underline Formatting */}
       <div className="text-gray-900 font-semibold text-sm sm:text-base mb-4 leading-relaxed">
-        {question.question}
+        <FormattedText text={question.question} />
       </div>
 
       {/* ========================================================================= */}
@@ -1138,10 +1473,10 @@ function QuestionCard({
           {question.options.map((opt) => {
             const letter = (opt.letter || '').toUpperCase();
             const isSelected = (userAnswer || '').toString().toUpperCase() === letter;
-            const isThisOptionCorrect = (question.primaryAnswer || '').toUpperCase() === letter;
+            const isThisOptionCorrect = stripHtml(question.primaryAnswer || '').toUpperCase() === letter;
 
             let btnStyle = 'bg-gray-50/70 border-gray-200 text-gray-800 hover:bg-gray-100';
-            if (isSubmitted) {
+            if (isGraded) {
               if (isThisOptionCorrect) {
                 btnStyle = 'bg-emerald-100 border-emerald-500 text-emerald-950 font-bold ring-2 ring-emerald-500/30';
               } else if (isSelected && !isThisOptionCorrect) {
@@ -1157,7 +1492,7 @@ function QuestionCard({
               <button
                 key={opt.letter}
                 type="button"
-                disabled={isSubmitted}
+                disabled={isGraded}
                 onClick={() => onChangeAnswer(question.id, letter)}
                 className={`p-3 rounded-xl border text-left text-xs sm:text-sm flex items-start gap-3 transition-all ${btnStyle}`}
               >
@@ -1166,7 +1501,9 @@ function QuestionCard({
                 }`}>
                   {letter}
                 </span>
-                <span className="leading-snug pt-0.5">{opt.text}</span>
+                <span className="leading-snug pt-0.5">
+                  <FormattedText text={opt.text} />
+                </span>
               </button>
             );
           })}
@@ -1175,13 +1512,13 @@ function QuestionCard({
         /* Paragraph Writing (Q146-148) with live word counter */
         <div className="space-y-2 mb-3">
           <textarea
-            disabled={isSubmitted}
+            disabled={isGraded}
             value={userAnswer || ''}
             onChange={(e) => onChangeAnswer(question.id, e.target.value)}
             placeholder={question.placeholder || 'Viết đoạn văn ngắn 60 - 80 từ vào đây...'}
             rows={5}
             className={`w-full p-4 rounded-2xl border text-sm focus:outline-none transition-all leading-relaxed ${
-              isSubmitted
+              isGraded
                 ? isCorrect
                   ? 'border-emerald-400 bg-white'
                   : 'border-rose-400 bg-white'
@@ -1200,12 +1537,12 @@ function QuestionCard({
         <div className="mb-3 space-y-2">
           <input
             type="text"
-            disabled={isSubmitted}
+            disabled={isGraded}
             value={userAnswer || ''}
             onChange={(e) => onChangeAnswer(question.id, e.target.value)}
             placeholder={question.placeholder || 'Nhập câu trả lời của bạn...'}
             className={`w-full px-4 py-3 rounded-xl border text-xs sm:text-sm font-medium focus:outline-none transition-all ${
-              isSubmitted
+              isGraded
                 ? isCorrect
                   ? 'border-emerald-400 bg-emerald-50/50 text-emerald-900 font-bold'
                   : 'border-rose-400 bg-rose-50/50 text-rose-900 font-bold'
@@ -1213,7 +1550,7 @@ function QuestionCard({
             }`}
           />
 
-          {isSubmitted && isWrong && (
+          {isGraded && isWrong && (
             <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 flex items-start gap-2">
               <Check className="text-emerald-600 shrink-0 mt-0.5" size={15} />
               <div>
@@ -1226,13 +1563,13 @@ function QuestionCard({
       )}
 
       {/* ========================================================================= */}
-      {/* EVIDENCE & EXPLANATION (EXPANDABLE / REVEALED ON SUBMIT) */}
+      {/* EVIDENCE & EXPLANATION (EXPANDABLE / REVEALED ON SUBMIT OR PER-PART GRADE) */}
       {/* ========================================================================= */}
-      {isSubmitted && (question.evidence || question.explanation) && (
+      {isGraded && (question.evidence || question.explanation) && (
         <div className="mt-3 pt-3 border-t border-gray-100">
           <button
             onClick={onToggleExplanation}
-            className="flex items-center gap-1.5 text-xs font-bold text-gray-600 hover:text-primary transition-colors mb-2"
+            className="flex items-center gap-1.5 text-xs font-bold text-gray-600 hover:text-primary transition-colors mb-2 cursor-pointer"
           >
             <HelpCircle size={14} />
             <span>{isExpandedExplanation ? 'Thu gọn giải thích' : 'Xem dẫn chứng & giải thích chi tiết'}</span>
