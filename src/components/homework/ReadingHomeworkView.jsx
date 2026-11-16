@@ -25,13 +25,81 @@ import {
   X,
   Quote,
   Copy,
-  ClipboardPaste
+  ClipboardPaste,
+  CheckSquare
 } from 'lucide-react';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
 import StudentRequiredModal from '../StudentRequiredModal';
 import StudentBadge from '../StudentBadge';
 import { getStoredStudent } from '../../utils/studentStorage';
 import { submitHomeworkOrPracticeResult } from '../../services/submissionService';
+
+// Determine how many options can be selected for multiple-choice questions
+export function getMaxChoices(q) {
+  if (typeof q?.maxChoices === 'number' && q.maxChoices > 0) return q.maxChoices;
+  if (typeof q?.maxAnswers === 'number' && q.maxAnswers > 0) return q.maxAnswers;
+
+  const textToScan = [
+    q?.wordLimit,
+    q?.question,
+    q?.sectionInstruction,
+    q?.sectionTitle,
+    q?.placeholder
+  ].filter(Boolean).join(' ').toLowerCase();
+
+  if (/choose\s+(three|3)|\bthree\s+letters|\b3\s+answers|\bthree\s+answers|which\s+(three|3)/i.test(textToScan)) return 3;
+  if (/choose\s+(two|2)|\btwo\s+letters|\b2\s+answers|\btwo\s+answers|which\s+(two|2)/i.test(textToScan)) return 2;
+  if (/choose\s+(four|4)|\bfour\s+letters|\b4\s+answers/i.test(textToScan)) return 4;
+  if (/choose\s+(five|5)|\bfive\s+letters|\b5\s+answers/i.test(textToScan)) return 5;
+
+  if (q?.primaryAnswer && typeof q.primaryAnswer === 'string') {
+    const parts = q.primaryAnswer.split(/[,&/]/).map(s => s.trim()).filter(Boolean);
+    const letterParts = parts.filter(p => /^[A-G]$/i.test(p));
+    if (letterParts.length > 1) {
+      return letterParts.length;
+    }
+  }
+
+  return 1;
+}
+
+// Extract selected option letters from user's answer text
+export function parseSelectedOptions(userVal, options = []) {
+  if (!userVal || typeof userVal !== 'string') return [];
+  const valTrimmed = userVal.trim();
+  if (!valTrimmed) return [];
+
+  const selectedLetters = new Set();
+  const upperVal = valTrimmed.toUpperCase();
+  const cleanVal = (valTrimmed || '')
+    .toLowerCase()
+    .replace(/[‘'’"`]/g, '')
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  options.forEach(opt => {
+    const letter = (opt.letter || opt.key || (typeof opt === 'string' ? opt.charAt(0) : '')).toUpperCase().trim();
+    const cleanText = (opt.text || (typeof opt === 'string' ? opt : ''))
+      .toLowerCase()
+      .replace(/[‘'’"`]/g, '')
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!letter) return;
+
+    // Check if letter appears as a distinct letter token, e.g. "B, C", "B", "B C", "B and C", "B,C"
+    const tokenRegex = new RegExp(`(^|[^A-Z0-9])${letter}([^A-Z0-9]|$)`, 'i');
+    if (tokenRegex.test(upperVal)) {
+      selectedLetters.add(letter);
+    } else if (cleanText && cleanText.length > 5 && cleanVal.includes(cleanText)) {
+      selectedLetters.add(letter);
+    }
+  });
+
+  return Array.from(selectedLetters);
+}
 
 // Helper to normalize and check short-answer accuracy in IELTS
 export function checkShortAnswer(userAnswer, acceptedList) {
@@ -48,6 +116,31 @@ export function checkShortAnswer(userAnswer, acceptedList) {
   // 1. Direct trimmed, case-insensitive match (handles single letters 'a', 'b', 'c', 'd' or exact matches)
   if (list.some(accepted => (accepted || '').toString().trim().toLowerCase() === rawUser)) {
     return true;
+  }
+
+  // 2. Order-insensitive comparison for multiple letter options (e.g. "B, C" vs "C, B", "B and C", "B C")
+  const extractLetterTokens = (str) => {
+    return (str || '')
+      .toString()
+      .toLowerCase()
+      .replace(/\b(and|or)\b/g, ' ')
+      .replace(/[^a-z0-9]/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  };
+
+  const userTokens = extractLetterTokens(userAnswer);
+  if (userTokens.length > 1 && userTokens.every(t => t.length === 1)) {
+    const userSorted = [...userTokens].sort().join('');
+    const matchMulti = list.some(accepted => {
+      const acceptedTokens = extractLetterTokens(accepted);
+      if (acceptedTokens.length === userTokens.length && acceptedTokens.every(t => t.length === 1)) {
+        return [...acceptedTokens].sort().join('') === userSorted;
+      }
+      return false;
+    });
+    if (matchMulti) return true;
   }
 
   const clean = (str) => {
@@ -1874,53 +1967,128 @@ export default function ReadingHomeworkView({
                         </p>
 
                         {/* Multiple Choice / Pick from List Options if provided */}
-                        {q.options && q.options.length > 0 && (
-                          <div className="grid grid-cols-1 gap-2 my-3">
-                            {q.options.map((opt) => {
-                              const optLetter = opt.letter || opt.key || (typeof opt === 'string' ? opt.charAt(0) : '');
-                              const optText = opt.text || (typeof opt === 'string' ? opt : '');
-                              const cleanUser = (userVal || '').trim().toUpperCase();
-                              const isSelected = cleanUser === optLetter.toUpperCase() || cleanUser === optText.toUpperCase();
-                              
-                              let optStyle = 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700';
-                              if (isSelected && !isSubmitted) {
-                                optStyle = 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary/30';
-                              } else if (isSubmitted) {
-                                const validOptions = [
-                                  ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
-                                  q.primaryAnswer,
-                                  q.answer
-                                ].filter(Boolean);
-                                const isThisOptCorrect = validOptions.some(a => 
-                                  a.toString().trim().toUpperCase() === optLetter.toUpperCase() || 
-                                  a.toString().trim().toLowerCase() === optText.toLowerCase()
-                                );
-                                if (isThisOptCorrect) {
-                                  optStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold';
-                                } else if (isSelected && !evalItem?.isCorrect) {
-                                  optStyle = 'border-rose-400 bg-rose-50 text-rose-950 line-through';
+                        {q.options && q.options.length > 0 && (() => {
+                          const maxChoices = getMaxChoices(q);
+                          const selectedLetters = parseSelectedOptions(userVal, q.options);
+
+                          const handleOptionToggle = (optLetter) => {
+                            if (isSubmitted) return;
+                            const normalizedLetter = optLetter.toUpperCase();
+                            const isAlreadySelected = selectedLetters.includes(normalizedLetter);
+
+                            if (maxChoices <= 1) {
+                              if (isAlreadySelected) {
+                                handleInputChange(q.id, '');
+                              } else {
+                                handleInputChange(q.id, optLetter);
+                              }
+                            } else {
+                              let nextSelected;
+                              if (isAlreadySelected) {
+                                nextSelected = selectedLetters.filter(l => l !== normalizedLetter);
+                              } else {
+                                if (selectedLetters.length < maxChoices) {
+                                  nextSelected = [...selectedLetters, normalizedLetter];
+                                } else {
+                                  // FIFO: drop oldest, add new
+                                  nextSelected = [...selectedLetters.slice(1), normalizedLetter];
                                 }
                               }
+                              nextSelected.sort((a, b) => a.localeCompare(b));
+                              handleInputChange(q.id, nextSelected.join(', '));
+                            }
+                          };
 
-                              return (
-                                <button
-                                  key={optLetter}
-                                  type="button"
-                                  disabled={isSubmitted}
-                                  onClick={() => handleInputChange(q.id, optLetter)}
-                                  className={`text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition-all flex items-start gap-2.5 cursor-pointer ${optStyle}`}
-                                >
-                                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black flex-shrink-0 ${
-                                    isSelected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'
-                                  }`}>
-                                    {optLetter}
+                          // Extract correct letters for this question after submit
+                          const correctLetters = new Set();
+                          if (isSubmitted) {
+                            const validOptions = [
+                              ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
+                              q.primaryAnswer,
+                              q.answer
+                            ].filter(Boolean);
+
+                            validOptions.forEach(item => {
+                              const str = item.toString().trim().toUpperCase();
+                              const tokens = str.split(/[^A-Z0-9]+/).filter(t => t.length === 1);
+                              tokens.forEach(t => correctLetters.add(t));
+                            });
+                          }
+
+                          return (
+                            <div className="space-y-2 my-3">
+                              {/* Multi-choice indicator header if maxChoices > 1 */}
+                              {maxChoices > 1 && (
+                                <div className="flex items-center justify-between text-xs px-1 text-gray-500">
+                                  <span className="font-bold text-primary flex items-center gap-1.5">
+                                    <CheckSquare size={14} className="text-primary" />
+                                    <span>Chọn {maxChoices} đáp án</span>
                                   </span>
-                                  <span className="flex-1 leading-snug">{optText}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
+                                  <span className={`font-mono text-xs font-black px-2 py-0.5 rounded-md border ${
+                                    selectedLetters.length === maxChoices 
+                                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                                      : selectedLetters.length > 0 
+                                        ? 'bg-blue-50 text-blue-700 border-blue-200' 
+                                        : 'bg-gray-100 text-gray-600 border-gray-200'
+                                  }`}>
+                                    Đã chọn: {selectedLetters.length} / {maxChoices}
+                                  </span>
+                                </div>
+                              )}
+
+                              <div className="grid grid-cols-1 gap-2">
+                                {q.options.map((opt) => {
+                                  const optLetter = opt.letter || opt.key || (typeof opt === 'string' ? opt.charAt(0) : '');
+                                  const optText = opt.text || (typeof opt === 'string' ? opt : '');
+                                  const isSelected = selectedLetters.includes(optLetter.toUpperCase());
+                                  
+                                  let optStyle = 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700';
+                                  let badgeStyle = isSelected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600';
+
+                                  if (isSelected && !isSubmitted) {
+                                    optStyle = 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary/30';
+                                    badgeStyle = 'bg-primary text-white shadow-2xs';
+                                  } else if (isSubmitted) {
+                                    const isThisOptCorrect = correctLetters.has(optLetter.toUpperCase()) || 
+                                      (q.acceptedAnswers || []).some(a => a.toString().trim().toLowerCase() === optText.toLowerCase());
+
+                                    if (isThisOptCorrect) {
+                                      optStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold';
+                                      badgeStyle = 'bg-emerald-600 text-white';
+                                    } else if (isSelected && !isThisOptCorrect) {
+                                      optStyle = 'border-rose-400 bg-rose-50 text-rose-950 line-through';
+                                      badgeStyle = 'bg-rose-500 text-white';
+                                    } else {
+                                      optStyle = 'border-gray-200 opacity-60 text-gray-500';
+                                      badgeStyle = 'bg-gray-100 text-gray-400';
+                                    }
+                                  }
+
+                                  return (
+                                    <button
+                                      key={optLetter}
+                                      type="button"
+                                      disabled={isSubmitted}
+                                      onClick={() => handleOptionToggle(optLetter)}
+                                      className={`text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition-all flex items-start gap-2.5 cursor-pointer ${optStyle}`}
+                                    >
+                                      <span className={`w-5 h-5 ${maxChoices > 1 ? 'rounded-md' : 'rounded-full'} flex items-center justify-center text-xs font-black flex-shrink-0 transition-all ${badgeStyle}`}>
+                                        {isSelected && maxChoices > 1 && !isSubmitted ? (
+                                          <Check size={12} strokeWidth={3} />
+                                        ) : isSubmitted && correctLetters.has(optLetter.toUpperCase()) ? (
+                                          <Check size={12} strokeWidth={3} />
+                                        ) : (
+                                          optLetter
+                                        )}
+                                      </span>
+                                      <span className="flex-1 leading-snug">{optText}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })()}
 
                         {/* Answer Input Box (Box format like IELTS) */}
                         <div className="space-y-1.5">

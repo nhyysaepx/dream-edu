@@ -269,9 +269,10 @@ Well, all of them make it easy for international students to apply, and provide 
           sectionInstruction: 'Choose TWO correct answers (Questions 9–10)',
           wordLimit: 'TWO LETTERS (A, B, C, or D)',
           maxWords: 2,
+          maxChoices: 2,
           isSectionStart: true,
           question: 'According to the article, what are advantages of international experience for students? (Choose TWO answers: B and C)',
-          placeholder: 'Chọn hoặc điền B hoặc C (hoặc B, C)...',
+          placeholder: 'Chọn 2 đáp án (ví dụ B, C)...',
           options: [
             { letter: 'A', text: 'It guarantees a high salary after graduation.' },
             { letter: 'B', text: 'It improves problem-solving and independence.' },
@@ -280,10 +281,6 @@ Well, all of them make it easy for international students to apply, and provide 
           ],
           primaryAnswer: 'B, C',
           acceptedAnswers: [
-            'B',
-            'C',
-            'b',
-            'c',
             'B, C',
             'B and C',
             'C, B',
@@ -292,8 +289,7 @@ Well, all of them make it easy for international students to apply, and provide 
             'C B',
             'B & C',
             'C & B',
-            'It improves problem-solving and independence',
-            'It builds cultural awareness'
+            'It improves problem-solving and independence, It builds cultural awareness'
           ],
           evidence: 'Living away from home teaches independence, adaptability, and problem-solving in real-life situations. ... I wanted to broaden my understanding of the world. I have made new friends, learnt about new ideas... So the whole experience is enhancing my global perspective.',
           explanation: 'Theo bài viết, hai lợi ích rõ rệt của kinh nghiệm quốc tế đối với sinh viên là: 1) Nâng cao khả năng giải quyết vấn đề và tính độc lập tự chủ (B - "teaches independence, adaptability, and problem-solving in real-life situations"); 2) Xây dựng nhận thức văn hóa và góc nhìn toàn cầu (C - "broaden my understanding of the world", "enhancing my global perspective"). Bài không hề nhắc đến việc đảm bảo mức lương cao (A) hay giúp phỏng vấn xin việc dễ dàng hơn (D). Do đó hai đáp án đúng là B và C.'
@@ -305,8 +301,9 @@ Well, all of them make it easy for international students to apply, and provide 
           sectionId: 'sec2',
           wordLimit: 'TWO LETTERS (A, B, C, or D)',
           maxWords: 2,
+          maxChoices: 2,
           question: 'Why do employers value international graduates? (Choose TWO answers: B and D)',
-          placeholder: 'Chọn hoặc điền B hoặc D (hoặc B, D)...',
+          placeholder: 'Chọn 2 đáp án (ví dụ B, D)...',
           options: [
             { letter: 'A', text: 'They are fluent in multiple languages.' },
             { letter: 'B', text: 'They are more adaptable and open-minded.' },
@@ -315,10 +312,6 @@ Well, all of them make it easy for international students to apply, and provide 
           ],
           primaryAnswer: 'B, D',
           acceptedAnswers: [
-            'B',
-            'D',
-            'b',
-            'd',
             'B, D',
             'B and D',
             'D, B',
@@ -327,8 +320,7 @@ Well, all of them make it easy for international students to apply, and provide 
             'D B',
             'B & D',
             'D & B',
-            'They are more adaptable and open-minded',
-            'They can work in diverse teams'
+            'They are more adaptable and open-minded, They can work in diverse teams'
           ],
           evidence: 'Employers often favour applicants with international experience, who are more likely to be open-minded, independent, and capable of working in multicultural environments.',
           explanation: 'Đoạn cuối nhấn mạnh các nhà tuyển dụng thường ưu ái những ứng viên có kinh nghiệm quốc tế vì họ có tư duy cởi mở, tự lập và khả năng thích nghi tốt (B - "open-minded, independent") cũng như có năng lực làm việc trong môi trường đa văn hóa với các đội nhóm đa dạng (D - "capable of working in multicultural environments"). Bài không đề cập họ nói trôi chảy nhiều ngoại ngữ (A) hay gắn bó lâu dài hơn với một công việc (C). Do đó hai đáp án đúng là B và D.'

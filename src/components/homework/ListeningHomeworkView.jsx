@@ -18,7 +18,9 @@ import {
   HelpCircle,
   Lightbulb,
   Clock,
-  Layers
+  Layers,
+  CheckSquare,
+  Check
 } from 'lucide-react';
 import AudioPlayer from '../AudioPlayer';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
@@ -26,6 +28,7 @@ import StudentRequiredModal from '../StudentRequiredModal';
 import StudentBadge from '../StudentBadge';
 import { getStoredStudent } from '../../utils/studentStorage';
 import { submitHomeworkOrPracticeResult } from '../../services/submissionService';
+import { getMaxChoices, parseSelectedOptions } from './ReadingHomeworkView';
 
 // Helper to normalize and check short-answer accuracy
 function checkAnswer(userAnswer, acceptedList = []) {
@@ -39,6 +42,31 @@ function checkAnswer(userAnswer, acceptedList = []) {
   // 1. Direct trimmed, case-insensitive match (handles single letters 'a', 'b', 'c', 'd' or exact matches)
   if (list.some(accepted => (accepted || '').toString().trim().toLowerCase() === rawUser)) {
     return true;
+  }
+
+  // 2. Order-insensitive comparison for multiple letter options (e.g. "B, C" vs "C, B", "B and C", "B C")
+  const extractLetterTokens = (str) => {
+    return (str || '')
+      .toString()
+      .toLowerCase()
+      .replace(/\b(and|or)\b/g, ' ')
+      .replace(/[^a-z0-9]/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  };
+
+  const userTokens = extractLetterTokens(userAnswer);
+  if (userTokens.length > 1 && userTokens.every(t => t.length === 1)) {
+    const userSorted = [...userTokens].sort().join('');
+    const matchMulti = list.some(accepted => {
+      const acceptedTokens = extractLetterTokens(accepted);
+      if (acceptedTokens.length === userTokens.length && acceptedTokens.every(t => t.length === 1)) {
+        return [...acceptedTokens].sort().join('') === userSorted;
+      }
+      return false;
+    });
+    if (matchMulti) return true;
   }
 
   const clean = (str) => {
@@ -139,12 +167,36 @@ export default function ListeningHomeworkView({ homework }) {
   };
 
   // Handle multiple-choice selection
-  const handleSelectChoice = (fieldId, letter) => {
+  const handleSelectChoice = (q, letter) => {
     if (isSubmitted) return;
-    setAnswers(prev => ({
-      ...prev,
-      [fieldId]: letter
-    }));
+    const maxChoices = getMaxChoices(q);
+    const userVal = answers[q.id] || '';
+    const selectedLetters = parseSelectedOptions(userVal, q.options);
+    const normLetter = letter.toUpperCase();
+    const isAlreadySelected = selectedLetters.includes(normLetter);
+
+    if (maxChoices <= 1) {
+      setAnswers(prev => ({
+        ...prev,
+        [q.id]: isAlreadySelected ? '' : letter
+      }));
+    } else {
+      let nextSelected;
+      if (isAlreadySelected) {
+        nextSelected = selectedLetters.filter(l => l !== normLetter);
+      } else {
+        if (selectedLetters.length < maxChoices) {
+          nextSelected = [...selectedLetters, normLetter];
+        } else {
+          nextSelected = [...selectedLetters.slice(1), normLetter];
+        }
+      }
+      nextSelected.sort((a, b) => a.localeCompare(b));
+      setAnswers(prev => ({
+        ...prev,
+        [q.id]: nextSelected.join(', ')
+      }));
+    }
   };
 
   // Check correctness of a question
@@ -792,47 +844,97 @@ export default function ListeningHomeworkView({ homework }) {
                         </div>
 
                         {/* Options for Multiple Choice */}
-                        {isChoice ? (
-                          <div className="grid grid-cols-1 gap-2.5">
-                            {q.options?.map((opt) => {
-                              const isSelected = userVal.toUpperCase() === opt.letter.toUpperCase();
-                              const isPrimary = (q.primaryAnswer || '').toUpperCase() === opt.letter.toUpperCase();
+                        {isChoice ? (() => {
+                          const maxChoices = getMaxChoices(q);
+                          const selectedLetters = parseSelectedOptions(userVal, q.options);
 
-                              let cardStyle = 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/40 text-gray-800';
-                              if (isSelected) {
-                                cardStyle = 'border-blue-600 bg-blue-50 text-blue-900 shadow-xs ring-2 ring-blue-500/20';
-                              }
-                              if (isSubmitted) {
-                                if (isPrimary) {
-                                  cardStyle = 'border-emerald-500 bg-emerald-100/70 text-emerald-950 font-semibold ring-2 ring-emerald-500/30';
-                                } else if (isSelected && !correct) {
-                                  cardStyle = 'border-rose-500 bg-rose-100/70 text-rose-950 line-through ring-2 ring-rose-500/30';
-                                } else {
-                                  cardStyle = 'border-gray-200 opacity-60 text-gray-500';
-                                }
-                              }
+                          const correctLetters = new Set();
+                          if (isSubmitted) {
+                            const validOptions = [
+                              ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
+                              q.primaryAnswer,
+                              q.answer
+                            ].filter(Boolean);
+                            validOptions.forEach(item => {
+                              const str = item.toString().trim().toUpperCase();
+                              const tokens = str.split(/[^A-Z0-9]+/).filter(t => t.length === 1);
+                              tokens.forEach(t => correctLetters.add(t));
+                            });
+                          }
 
-                              return (
-                                <button
-                                  key={opt.letter}
-                                  type="button"
-                                  disabled={isSubmitted}
-                                  onClick={() => handleSelectChoice(q.id, opt.letter)}
-                                  className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all cursor-pointer ${cardStyle}`}
-                                >
-                                  <span className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
-                                    isSelected 
-                                      ? 'bg-blue-600 text-white' 
-                                      : (isSubmitted && isPrimary ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700')
-                                  }`}>
-                                    {opt.letter}
+                          return (
+                            <div className="space-y-2">
+                              {maxChoices > 1 && (
+                                <div className="flex items-center justify-between text-xs px-1 text-gray-500 mb-1">
+                                  <span className="font-bold text-blue-700 flex items-center gap-1.5">
+                                    <CheckSquare size={14} className="text-blue-600" />
+                                    <span>Chọn {maxChoices} đáp án</span>
                                   </span>
-                                  <span className="text-sm leading-relaxed">{opt.text}</span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        ) : (
+                                  <span className={`font-mono text-xs font-black px-2 py-0.5 rounded-md border ${
+                                    selectedLetters.length === maxChoices 
+                                      ? 'bg-emerald-100 text-emerald-800 border-emerald-300' 
+                                      : selectedLetters.length > 0 
+                                        ? 'bg-blue-50 text-blue-700 border-blue-200' 
+                                        : 'bg-gray-100 text-gray-600 border-gray-200'
+                                  }`}>
+                                    Đã chọn: {selectedLetters.length} / {maxChoices}
+                                  </span>
+                                </div>
+                              )}
+
+                              <div className="grid grid-cols-1 gap-2.5">
+                                {q.options?.map((opt) => {
+                                  const isSelected = selectedLetters.includes(opt.letter.toUpperCase());
+                                  const isOptCorrect = isSubmitted && (
+                                    correctLetters.has(opt.letter.toUpperCase()) ||
+                                    (q.acceptedAnswers || []).some(a => a.toString().trim().toLowerCase() === (opt.text || '').toLowerCase())
+                                  );
+
+                                  let cardStyle = 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/40 text-gray-800';
+                                  if (isSelected && !isSubmitted) {
+                                    cardStyle = 'border-blue-600 bg-blue-50 text-blue-900 shadow-xs ring-2 ring-blue-500/20';
+                                  }
+                                  if (isSubmitted) {
+                                    if (isOptCorrect) {
+                                      cardStyle = 'border-emerald-500 bg-emerald-100/70 text-emerald-950 font-semibold ring-2 ring-emerald-500/30';
+                                    } else if (isSelected && !isOptCorrect) {
+                                      cardStyle = 'border-rose-500 bg-rose-100/70 text-rose-950 line-through ring-2 ring-rose-500/30';
+                                    } else {
+                                      cardStyle = 'border-gray-200 opacity-60 text-gray-500';
+                                    }
+                                  }
+
+                                  return (
+                                    <button
+                                      key={opt.letter}
+                                      type="button"
+                                      disabled={isSubmitted}
+                                      onClick={() => handleSelectChoice(q, opt.letter)}
+                                      className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all cursor-pointer ${cardStyle}`}
+                                    >
+                                      <span className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
+                                        isSelected && maxChoices > 1 && !isSubmitted
+                                          ? 'bg-blue-600 text-white'
+                                          : isSelected
+                                            ? 'bg-blue-600 text-white' 
+                                            : (isSubmitted && isOptCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700')
+                                      }`}>
+                                        {isSelected && maxChoices > 1 && !isSubmitted ? (
+                                          <Check size={14} strokeWidth={3} />
+                                        ) : isSubmitted && isOptCorrect ? (
+                                          <Check size={14} strokeWidth={3} />
+                                        ) : (
+                                          opt.letter
+                                        )}
+                                      </span>
+                                      <span className="text-sm leading-relaxed">{opt.text}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })() : (
                           /* Text Input for Short Answer / Fill in the blank */
                           <div className="space-y-3">
                             <div className="relative max-w-lg">
