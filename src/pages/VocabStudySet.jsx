@@ -330,7 +330,7 @@ export default function VocabStudySet() {
                   onEdit={() => setShowStudentModal(true)}
                 />
 
-                {['intermediate-reading-7', 'intermediate-reading-6', 'intermediate-listening-6', 'pre-ielts-reading-1', 'pre-ielts-reading-2', 'pre-ielts-listening-2', 'unit-4-global-success-9'].includes(vocabSet.id) && (
+                {['intermediate-reading-7', 'intermediate-reading-6', 'intermediate-listening-6', 'pre-ielts-reading-1', 'pre-ielts-reading-2', 'pre-ielts-listening-2', 'unit-4-global-success-9', 'revision-midterm-1-english-10'].includes(vocabSet.id) && (
                   <Link
                     to={vocabSet.category === 'school' ? `/practice/${vocabSet.id}` : `/homework/${vocabSet.id}`}
                     className="px-3.5 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold rounded-xl border border-primary/20 flex items-center gap-1.5 transition-colors"

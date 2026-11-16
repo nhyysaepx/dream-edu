@@ -5,6 +5,7 @@ export { CATEGORIES } from './categories.js';
 export { DEFAULT_VOCAB_SETS } from './defaultSets.js';
 
 export { UNIT_1_GLOBAL_SUCCESS_10_SET } from './sets/unit-1-global-success-10.js';
+export { REVISION_MIDTERM_1_ENGLISH_10_SET } from './sets/revision-midterm-1-english-10.js';
 export { UNIT_4_GLOBAL_SUCCESS_9_SET } from './sets/unit-4-global-success-9.js';
 export { PRE_IELTS_READING_1_SET } from './sets/pre-ielts-reading-1.js';
 export { PRE_IELTS_READING_2_SET } from './sets/pre-ielts-reading-2.js';

@@ -1169,7 +1169,7 @@ export default function ReadingHomeworkView({
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl shadow-2xs transition-colors"
               >
                 <BookOpen size={14} className="text-amber-600" />
-                <span>Học từ vựng bài đọc</span>
+                <span>Học từ vựng bài học</span>
               </Link>
             )}
           </div>
@@ -1380,7 +1380,7 @@ export default function ReadingHomeworkView({
                         }`}
                       >
                         <BookOpen size={13} />
-                        <span>Bài đọc {p.number}</span>
+                        <span>{p.shortTitle || `Bài đọc ${p.number}`}</span>
                         <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${
                           isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
                         }`}>
@@ -2288,7 +2288,7 @@ export default function ReadingHomeworkView({
                 const isCurrent = activePassageId === part.id;
                 const partQuestions = part.questions || [];
                 const answeredInPart = partQuestions.filter(q => !!(answers[q.id] || '').trim()).length;
-                const partLabel = `BÀI ĐỌC ${part.number || pIdx + 1}`;
+                const partLabel = part.shortLabel || part.shortTitle || `BÀI ĐỌC ${part.number || pIdx + 1}`;
 
                 return (
                   <div key={part.id} className="flex items-center gap-2 shrink-0">

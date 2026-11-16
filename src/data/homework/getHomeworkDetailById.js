@@ -17,8 +17,12 @@ import {
 } from './details/intermediate-reading-7.js';
 import { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
 import { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from '../practice/details/unit-4-global-success-9.js';
+import { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from '../practice/details/revision-midterm-1-english-10.js';
 
 export function getHomeworkDetailById(id) {
+  if (id === 'revision-midterm-1-english-10') {
+    return REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL;
+  }
   if (id === 'unit-4-global-success-9') {
     return UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL;
   }

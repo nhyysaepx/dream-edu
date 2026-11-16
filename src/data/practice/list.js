@@ -3,6 +3,27 @@
 export const PRACTICE_LIST = [
   // ==================== TIẾNG ANH PHỔ THÔNG (THCS & THPT) ====================
   {
+    id: 'revision-midterm-1-english-10',
+    category: 'school',
+    levelId: 'grade-10',
+    levelLabel: 'Lớp 10',
+    session: 'Đề cương Ôn tập Giữa HK1',
+    skill: 'Reading',
+    title: 'Đề cương Ôn tập Giữa Học kì I - Tiếng Anh 10 (Năm học 2026 – 2027)',
+    description: 'Bộ đề cương ôn tập tổng hợp toàn diện Giữa Học kì 1 Tiếng Anh 10 (Global Success - Units 1, 2, 3) gồm 5 phần chuẩn mực: Phonetics & Stress, Vocabulary & Grammar, Everyday Communication, Reading & Cloze Test, và Writing & Sentence Transformation.',
+    totalQuestions: 148,
+    duration: '90 - 120 phút',
+    status: 'open',
+    dueDate: 'Luyện tập trực tiếp trên lớp & Ôn thi Giữa kì',
+    exercisesCount: 5,
+    audioTracksCount: 0,
+    tag: 'THPT - Global Success (Trọng tâm)',
+    vocabId: 'revision-midterm-1-english-10',
+    vocabCount: 30,
+    vocabLabel: 'Học 30 từ vựng Đề cương Ôn tập Giữa HK1',
+    isFeatured: true
+  },
+  {
     id: 'unit-4-global-success-9',
     category: 'school',
     levelId: 'grade-9',
