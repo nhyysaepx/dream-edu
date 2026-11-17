@@ -16,6 +16,8 @@ import {
   Trophy, 
   Filter, 
   Eye, 
+  EyeOff,
+  ChevronLeft,
   ChevronRight,
   FileText,
   Highlighter,
@@ -26,7 +28,9 @@ import {
   Quote,
   Copy,
   ClipboardPaste,
-  CheckSquare
+  CheckSquare,
+  Award,
+  Target
 } from 'lucide-react';
 import { playCorrectSound, playWrongSound, triggerCelebration } from '../../utils/speechUtils';
 import StudentRequiredModal from '../StudentRequiredModal';
@@ -364,6 +368,27 @@ export default function ReadingHomeworkView({
     }
   });
 
+  // Per-passage modular grading state: { [passageId]: { score, total, percentage, gradedAt } }
+  const [gradedPassages, setGradedPassages] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_graded_passages`);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // Track expanded explanations per passage & individually
+  const [expandedPassageExplanations, setExpandedPassageExplanations] = useState({});
+  const [expandedIndividualExplanations, setExpandedIndividualExplanations] = useState({});
+
+  // Refs for scrollable sliders
+  const passageTabsScrollRef = useRef(null);
+  const passageTabRefs = useRef({});
+  const partTabsScrollRef = useRef(null);
+  const partTabRefs = useRef({});
+  const bottomPaletteScrollRef = useRef(null);
+
   // If active passage changes and has no notes, default to closed
   useEffect(() => {
     const hasNotesForPassage = Object.values(notes).some(n => n.passageId === activePassageId);
@@ -437,8 +462,13 @@ export default function ReadingHomeworkView({
 
   // Flatten all questions
   const allQuestions = useMemo(() => {
-    return homework.passages.flatMap(p => p.questions.map(q => ({ ...q, passageId: p.id, passageNumber: p.number })));
+    return (homework.passages || []).flatMap(p => (p.questions || []).map(q => ({ ...q, passageId: p.id, passageNumber: p.number })));
   }, [homework.passages]);
+
+  // Active Passage object
+  const activePassage = useMemo(() => {
+    return homework.passages?.find(p => p.id === activePassageId) || homework.passages?.[0] || {};
+  }, [homework.passages, activePassageId]);
 
   // Active focused question id for footer and list sync
   const [activeQuestionId, setActiveQuestionId] = useState(() => {
@@ -640,9 +670,223 @@ export default function ReadingHomeworkView({
     }
   }, [activeDragDivider, handleMouseMove, handleMouseUp]);
 
+  // ===========================================================================
+  // SLIDER SCROLL CONTROLS FOR TABS & PALETTES
+  // ===========================================================================
+  const scrollPassageTabs = (direction) => {
+    if (!passageTabsScrollRef.current) return;
+    const offset = direction === 'left' ? -220 : 220;
+    passageTabsScrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+  };
+
+  const scrollPartTabs = (direction) => {
+    if (!partTabsScrollRef.current) return;
+    const offset = direction === 'left' ? -200 : 200;
+    partTabsScrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+  };
+
+  const scrollBottomPalette = (direction) => {
+    if (!bottomPaletteScrollRef.current) return;
+    const offset = direction === 'left' ? -260 : 260;
+    bottomPaletteScrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+  };
+
+  // Auto-scroll active passage tab into view
+  useEffect(() => {
+    const activeEl = passageTabRefs.current[activePassageId];
+    if (activeEl && passageTabsScrollRef.current) {
+      activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [activePassageId]);
+
+  // Auto-scroll active part tab into view
+  useEffect(() => {
+    const activeEl = partTabRefs.current[filterMode];
+    if (activeEl && partTabsScrollRef.current) {
+      activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [filterMode]);
+
+  // Auto-scroll active question in bottom palette into view
+  useEffect(() => {
+    const activeBtn = document.getElementById(`bottom-q-btn-${activeQuestionId}`);
+    if (activeBtn && bottomPaletteScrollRef.current) {
+      activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [activeQuestionId]);
+
+  // ===========================================================================
+  // MODULAR PER-PASSAGE GRADING LOGIC
+  // ===========================================================================
+  const isQuestionGraded = useCallback((q) => {
+    if (isSubmitted) return true;
+    if (!q) return false;
+    const pId = q.passageId || activePassageId;
+    return !!gradedPassages[pId];
+  }, [isSubmitted, gradedPassages, activePassageId]);
+
+  const isQuestionLocked = useCallback((qId) => {
+    if (isSubmitted) return true;
+    const q = allQuestions.find(item => item.id === qId);
+    const pId = q?.passageId || activePassageId;
+    return !!gradedPassages[pId];
+  }, [isSubmitted, allQuestions, activePassageId, gradedPassages]);
+
+  const isExplanationShown = useCallback((q) => {
+    if (!isQuestionGraded(q)) return false;
+    if (expandedIndividualExplanations[q.id] !== undefined) {
+      return expandedIndividualExplanations[q.id];
+    }
+    const pId = q.passageId || activePassageId;
+    return expandedPassageExplanations[pId] !== false;
+  }, [isQuestionGraded, expandedIndividualExplanations, activePassageId, expandedPassageExplanations]);
+
+  const toggleSingleExplanation = useCallback((qId) => {
+    setExpandedIndividualExplanations(prev => ({
+      ...prev,
+      [qId]: !prev[qId]
+    }));
+  }, []);
+
+  const handleTogglePassageExplanations = useCallback((passageId) => {
+    setExpandedPassageExplanations(prev => {
+      const current = prev[passageId] !== false;
+      return {
+        ...prev,
+        [passageId]: !current
+      };
+    });
+  }, []);
+
+  const handleGradePassage = useCallback((passageId) => {
+    const targetPassage = homework.passages?.find(p => p.id === passageId) || activePassage;
+    const passageQuestions = targetPassage?.questions || allQuestions.filter(q => q.passageId === passageId);
+    if (!passageQuestions || passageQuestions.length === 0) return;
+
+    const unansweredCount = passageQuestions.filter(q => {
+      const v = answers[q.id];
+      return v === undefined || v === null || v.toString().trim() === '';
+    }).length;
+
+    if (unansweredCount > 0) {
+      const confirmGrade = window.confirm(
+        `Bạn vẫn còn ${unansweredCount} câu chưa điền đáp án ở bài đọc này. Bạn có chắc muốn chấm điểm ngay không?`
+      );
+      if (!confirmGrade) return;
+    }
+
+    let correctCount = 0;
+    passageQuestions.forEach(q => {
+      const evalItem = evaluationResults.results[q.id];
+      if (evalItem?.isCorrect) correctCount++;
+    });
+
+    const total = passageQuestions.length;
+    const percentage = Math.round((correctCount / total) * 100);
+
+    const updatedGraded = {
+      ...gradedPassages,
+      [passageId]: {
+        score: correctCount,
+        total,
+        percentage,
+        gradedAt: new Date().toISOString()
+      }
+    };
+
+    setGradedPassages(updatedGraded);
+    try {
+      localStorage.setItem(`${storagePrefix}${homeworkId}_graded_passages`, JSON.stringify(updatedGraded));
+    } catch (e) {
+      console.error('Failed to save graded passages:', e);
+    }
+
+    setExpandedPassageExplanations(prev => ({
+      ...prev,
+      [passageId]: true
+    }));
+
+    if (percentage >= 70) {
+      playCorrectSound();
+    } else {
+      playWrongSound();
+    }
+  }, [homework.passages, activePassage, allQuestions, answers, evaluationResults.results, gradedPassages, storagePrefix, homeworkId]);
+
+  const handleResetPassage = useCallback((passageId) => {
+    const targetPassage = homework.passages?.find(p => p.id === passageId) || activePassage;
+    const passageTitle = targetPassage?.shortTitle || `Bài đọc ${targetPassage?.number || ''}`;
+    const confirmReset = window.confirm(`Bạn có chắc muốn làm lại ${passageTitle}? Các câu trả lời của bài đọc này sẽ được xóa để bạn làm lại.`);
+    if (!confirmReset) return;
+
+    const passageQuestions = targetPassage?.questions || allQuestions.filter(q => q.passageId === passageId);
+
+    setAnswers(prev => {
+      const next = { ...prev };
+      passageQuestions.forEach(q => {
+        delete next[q.id];
+      });
+      try {
+        localStorage.setItem(`${storagePrefix}${homeworkId}_draft`, JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+
+    setGradedPassages(prev => {
+      const next = { ...prev };
+      delete next[passageId];
+      try {
+        localStorage.setItem(`${storagePrefix}${homeworkId}_graded_passages`, JSON.stringify(next));
+      } catch (e) {
+        console.error(e);
+      }
+      return next;
+    });
+
+    setExpandedPassageExplanations(prev => {
+      const next = { ...prev };
+      delete next[passageId];
+      return next;
+    });
+  }, [homework.passages, activePassage, allQuestions, storagePrefix, homeworkId]);
+
+  const handleNextPassage = useCallback((currentPassageId) => {
+    const currentIdx = homework.passages?.findIndex(p => p.id === currentPassageId);
+    if (currentIdx !== -1 && currentIdx < (homework.passages?.length || 0) - 1) {
+      const nextPassage = homework.passages[currentIdx + 1];
+      setActivePassageId(nextPassage.id);
+      setActiveNoteId(null);
+      setSelectionPopup(null);
+      setFilterMode(nextPassage.id);
+      if (passageScrollContainerRef.current) {
+        passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      const firstQ = nextPassage.questions?.[0];
+      if (firstQ) {
+        setActiveQuestionId(firstQ.id);
+        setTimeout(() => {
+          if (questionsScrollContainerRef.current) {
+            questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }, 60);
+      }
+    }
+  }, [homework.passages]);
+
+  // Check if a question is the last question in its passage section
+  const isLastInPassage = useCallback((q, idx, list) => {
+    if (filterMode !== 'all') {
+      return idx === list.length - 1;
+    }
+    const nextQ = list[idx + 1];
+    return !nextQ || nextQ.passageId !== q.passageId;
+  }, [filterMode]);
+
   // Handle Input Change for answers
   const handleInputChange = (qId, val) => {
-    if (isSubmitted) return;
+    if (isQuestionLocked(qId)) return;
     setActiveQuestionId(qId);
     setAnswers(prev => ({
       ...prev,
@@ -1172,11 +1416,15 @@ export default function ReadingHomeworkView({
 
     setAnswers({});
     setIsSubmitted(false);
+    setGradedPassages({});
+    setExpandedPassageExplanations({});
+    setExpandedIndividualExplanations({});
     setSubmissionStatus(null);
     startTimeRef.current = Date.now();
     setFilterMode('all');
     try {
       localStorage.removeItem(`${storagePrefix}${homeworkId}_draft`);
+      localStorage.removeItem(`${storagePrefix}${homeworkId}_graded_passages`);
       const currentHistory = JSON.parse(localStorage.getItem(historyKey) || '{}');
       delete currentHistory[homeworkId];
       localStorage.setItem(historyKey, JSON.stringify(currentHistory));
@@ -1247,8 +1495,6 @@ export default function ReadingHomeworkView({
       scrollToQuestion(allQuestions[currentQIndex + 1].id);
     }
   };
-
-  const activePassage = homework.passages.find(p => p.id === activePassageId) || homework.passages[0];
 
   const passageFontClass = {
     sm: 'text-sm leading-relaxed',
@@ -1461,55 +1707,90 @@ export default function ReadingHomeworkView({
           >
             
             {/* Passage Selector Tabs, Annotation Tools & Font Controls */}
-            <div className="p-3 sm:p-4 border-b border-gray-100 bg-gray-50/70 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
-              {/* Passage Tabs or Single Passage Badge */}
+            <div className="p-2.5 sm:p-3.5 border-b border-gray-100 bg-gray-50/70 flex items-center justify-between gap-2 flex-shrink-0 min-w-0">
+              {/* Passage Tabs Slider or Single Passage Badge */}
               {homework.passages?.length > 1 ? (
-                <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-gray-200/80 shadow-2xs">
-                  {homework.passages.map(p => {
-                    const isActive = activePassageId === p.id;
-                    const minQ = p.questions?.[0]?.number || 1;
-                    const maxQ = p.questions?.[p.questions.length - 1]?.number || minQ;
-                    return (
-                      <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => {
-                          setActivePassageId(p.id);
-                          setActiveNoteId(null);
-                          setSelectionPopup(null);
-                          setFilterMode(p.id);
-                          if (passageScrollContainerRef.current) {
-                            passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                          }
-                          const firstQ = p.questions?.[0];
-                          if (firstQ) {
-                            setActiveQuestionId(firstQ.id);
-                            setTimeout(() => {
-                              if (questionsScrollContainerRef.current) {
-                                questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                              }
-                            }, 60);
-                          }
-                        }}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                          isActive
-                            ? 'bg-primary text-white shadow-xs'
-                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                        }`}
-                      >
-                        <BookOpen size={13} />
-                        <span>{p.shortTitle || `Bài đọc ${p.number}`}</span>
-                        <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${
-                          isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
-                        }`}>
-                          Câu {minQ}-{maxQ}
-                        </span>
-                      </button>
-                    );
-                  })}
+                <div className="flex items-center min-w-0 flex-1 relative bg-white p-1 rounded-2xl border border-gray-200/80 shadow-2xs">
+                  {/* Left scroll arrow */}
+                  <button
+                    type="button"
+                    onClick={() => scrollPassageTabs('left')}
+                    className="p-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200/60 shadow-2xs mr-1 shrink-0 cursor-pointer transition-colors"
+                    title="Cuộn bài đọc sang trái"
+                  >
+                    <ChevronLeft size={14} />
+                  </button>
+
+                  {/* Scrollable tabs list */}
+                  <div
+                    ref={passageTabsScrollRef}
+                    className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth py-0.5 flex-1 min-w-0"
+                  >
+                    {homework.passages.map(p => {
+                      const isActive = activePassageId === p.id;
+                      const minQ = p.questions?.[0]?.number || 1;
+                      const maxQ = p.questions?.[p.questions.length - 1]?.number || minQ;
+                      const pGraded = gradedPassages[p.id];
+                      return (
+                        <button
+                          key={p.id}
+                          ref={el => (passageTabRefs.current[p.id] = el)}
+                          type="button"
+                          onClick={() => {
+                            setActivePassageId(p.id);
+                            setActiveNoteId(null);
+                            setSelectionPopup(null);
+                            setFilterMode(p.id);
+                            if (passageScrollContainerRef.current) {
+                              passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                            const firstQ = p.questions?.[0];
+                            if (firstQ) {
+                              setActiveQuestionId(firstQ.id);
+                              setTimeout(() => {
+                                if (questionsScrollContainerRef.current) {
+                                  questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
+                              }, 60);
+                            }
+                          }}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap ${
+                            isActive
+                              ? 'bg-primary text-white shadow-xs ring-2 ring-primary/20'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          }`}
+                        >
+                          <BookOpen size={13} className={isActive ? 'text-white' : 'text-primary'} />
+                          <span>{p.shortTitle || `Bài đọc ${p.number}`}</span>
+                          <span className={`text-[10px] px-1.5 py-0.2 rounded-md ${
+                            isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                          }`}>
+                            Câu {minQ}-{maxQ}
+                          </span>
+                          {pGraded && (
+                            <span className={`text-[9px] font-black px-1.5 py-0.2 rounded-full ${
+                              isActive ? 'bg-emerald-400 text-emerald-950' : 'bg-emerald-100 text-emerald-800'
+                            }`}>
+                              {pGraded.score}/{pGraded.total}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Right scroll arrow */}
+                  <button
+                    type="button"
+                    onClick={() => scrollPassageTabs('right')}
+                    className="p-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200/60 shadow-2xs ml-1 shrink-0 cursor-pointer transition-colors"
+                    title="Cuộn bài đọc sang phải"
+                  >
+                    <ChevronRight size={14} />
+                  </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-2xl border border-gray-200/80 shadow-2xs">
+                <div className="flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-2xl border border-gray-200/80 shadow-2xs shrink-0">
                   <BookOpen size={14} className="text-primary" />
                   <span className="text-xs font-bold text-gray-800">
                     {activePassage.shortTitle || activePassage.title || 'Bài đọc chính'}
@@ -1608,6 +1889,58 @@ export default function ReadingHomeworkView({
                 onMouseUp={handlePassageMouseUp}
                 containerRef={passageContainerRef}
               />
+
+              {/* Bottom of Passage Reading Area: Quick Grade / Next Action */}
+              <div className="mt-8 pt-4 border-t border-gray-200/80">
+                {isSubmitted || gradedPassages[activePassageId] ? (
+                  <div className="p-4 rounded-2xl bg-emerald-50/90 border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <CheckCircle2 size={20} className="text-emerald-600 shrink-0" />
+                      <div>
+                        <span className="font-black text-emerald-950 text-sm">
+                          Bài đọc {activePassage.number} đã chấm:{' '}
+                          {gradedPassages[activePassageId]?.score ?? (activePassage.questions?.filter(q => evaluationResults.results[q.id]?.isCorrect).length || 0)} / {activePassage.questions?.length || 0} câu đúng
+                        </span>
+                        <p className="text-[11px] text-emerald-700 mt-0.5">
+                          Xem chi tiết đáp án, dẫn chứng bài đọc & giải thích ở bảng câu hỏi bên phải.
+                        </p>
+                      </div>
+                    </div>
+                    {homework.passages?.findIndex(p => p.id === activePassageId) < (homework.passages?.length || 0) - 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleNextPassage(activePassageId)}
+                        className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer shrink-0"
+                      >
+                        <span>Sang bài đọc tiếp theo</span>
+                        <ArrowRight size={14} />
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50/80 to-indigo-50/80 border border-blue-200/90 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <Sparkles size={20} className="text-primary shrink-0" />
+                      <div>
+                        <span className="font-extrabold text-blue-950 text-sm">
+                          Đã đọc xong {activePassage.shortTitle || `Bài đọc ${activePassage.number}`}?
+                        </span>
+                        <p className="text-[11px] text-blue-700 mt-0.5">
+                          Hãy điền các câu hỏi ở bảng bên phải và bấm chấm điểm để kiểm tra kết quả ngay!
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleGradePassage(activePassageId)}
+                      className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold flex items-center justify-center gap-1.5 transition-all shadow-md shadow-primary/20 cursor-pointer shrink-0 w-full sm:w-auto"
+                    >
+                      <CheckCircle2 size={15} />
+                      <span>Chấm điểm bài đọc này ({activePassage.questions?.length || 0} câu)</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* FLOATING POPUP WHEN SELECTING TEXT */}
@@ -1714,49 +2047,85 @@ export default function ReadingHomeworkView({
                 </div>
               </div>
 
-              {/* Jump to part tabs (if multiple passages) */}
+              {/* Jump to part tabs slider (if multiple passages) */}
               {homework.passages?.length > 1 && (
-                <div className="flex items-center gap-1 text-xs">
-                  {homework.passages.map(p => {
-                    const minQ = p.questions?.[0]?.number || 1;
-                    const maxQ = p.questions?.[p.questions.length - 1]?.number || minQ;
-                    return (
+                <div className="flex items-center min-w-0 max-w-full relative">
+                  {/* Left scroll arrow */}
+                  <button
+                    type="button"
+                    onClick={() => scrollPartTabs('left')}
+                    className="p-1 rounded-lg bg-white/90 hover:bg-gray-100 text-gray-600 border border-gray-200/80 shadow-2xs mr-1 shrink-0 cursor-pointer transition-colors"
+                    title="Cuộn phần câu hỏi sang trái"
+                  >
+                    <ChevronLeft size={13} />
+                  </button>
+
+                  <div
+                    ref={partTabsScrollRef}
+                    className="flex items-center gap-1 text-xs overflow-x-auto no-scrollbar scroll-smooth py-0.5 min-w-0"
+                  >
+                    {homework.passages.map(p => {
+                      const minQ = p.questions?.[0]?.number || 1;
+                      const maxQ = p.questions?.[p.questions.length - 1]?.number || minQ;
+                      const pGraded = gradedPassages[p.id];
+                      return (
+                        <button
+                          key={p.id}
+                          ref={el => (partTabRefs.current[p.id] = el)}
+                          type="button"
+                          onClick={() => {
+                            setFilterMode(p.id);
+                            setActivePassageId(p.id);
+                            if (passageScrollContainerRef.current) {
+                              passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                            const firstQ = p.questions?.[0];
+                            if (firstQ) {
+                              setActiveQuestionId(firstQ.id);
+                              setTimeout(() => {
+                                if (questionsScrollContainerRef.current) {
+                                  questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                                }
+                              }, 60);
+                            }
+                          }}
+                          className={`px-2.5 py-1 rounded-lg font-bold border transition-all cursor-pointer shrink-0 whitespace-nowrap flex items-center gap-1 ${
+                            filterMode === p.id 
+                              ? 'bg-primary text-white border-primary shadow-2xs' 
+                              : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span>Phần {p.number} ({minQ}–{maxQ})</span>
+                          {pGraded && (
+                            <span className={`text-[9px] font-black px-1.5 py-0.2 rounded-full ${
+                              filterMode === p.id ? 'bg-emerald-400 text-emerald-950' : 'bg-emerald-100 text-emerald-800'
+                            }`}>
+                              {pGraded.score}/{pGraded.total}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                    {filterMode !== 'all' && (
                       <button
-                        key={p.id}
                         type="button"
-                        onClick={() => {
-                          setFilterMode(p.id);
-                          setActivePassageId(p.id);
-                          if (passageScrollContainerRef.current) {
-                            passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                          }
-                          const firstQ = p.questions?.[0];
-                          if (firstQ) {
-                            setActiveQuestionId(firstQ.id);
-                            setTimeout(() => {
-                              if (questionsScrollContainerRef.current) {
-                                questionsScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                              }
-                            }, 60);
-                          }
-                        }}
-                        className={`px-2.5 py-1 rounded-lg font-bold border transition-all cursor-pointer ${
-                          filterMode === p.id ? 'bg-primary text-white border-primary shadow-2xs' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                        }`}
+                        onClick={() => setFilterMode('all')}
+                        className="px-2 py-1 text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-lg text-xs font-semibold cursor-pointer shrink-0 whitespace-nowrap"
                       >
-                        Phần {p.number} ({minQ}–{maxQ})
+                        Hiện tất cả
                       </button>
-                    );
-                  })}
-                  {filterMode !== 'all' && (
-                    <button
-                      type="button"
-                      onClick={() => setFilterMode('all')}
-                      className="px-2 py-1 text-gray-400 hover:text-gray-700 text-xs font-semibold cursor-pointer"
-                    >
-                      Hiện tất cả
-                    </button>
-                  )}
+                    )}
+                  </div>
+
+                  {/* Right scroll arrow */}
+                  <button
+                    type="button"
+                    onClick={() => scrollPartTabs('right')}
+                    className="p-1 rounded-lg bg-white/90 hover:bg-gray-100 text-gray-600 border border-gray-200/80 shadow-2xs ml-1 shrink-0 cursor-pointer transition-colors"
+                    title="Cuộn phần câu hỏi sang phải"
+                  >
+                    <ChevronRight size={13} />
+                  </button>
                 </div>
               )}
 
@@ -1835,20 +2204,33 @@ export default function ReadingHomeworkView({
 
               {/* Questions List */}
               <div className="space-y-4">
-                {displayedQuestions.map((q) => {
+                {displayedQuestions.map((q, qIndex) => {
                   const userVal = answers[q.id] || '';
                   const wordCount = countWords(userVal);
                   const maxWords = q.maxWords || activePassage.maxWords || 3;
                   const wordLimitText = q.wordLimit || activePassage.wordLimit || 'NO MORE THAN THREE WORDS';
                   const isWordOverLimit = wordCount > maxWords;
                   const evalItem = evaluationResults.results[q.id];
+                  const qGraded = isQuestionGraded(q);
 
                   let cardBorderClass = 'border-gray-200 hover:border-gray-300';
-                  if (isSubmitted) {
+                  if (qGraded) {
                     cardBorderClass = evalItem?.isCorrect 
                       ? 'border-emerald-300 bg-emerald-50/30' 
                       : 'border-rose-300 bg-rose-50/30';
                   }
+
+                  const shouldShowGradeBar = isLastInPassage(q, qIndex, displayedQuestions);
+                  const passageForQ = homework.passages?.find(p => p.id === q.passageId) || activePassage;
+                  const questionsForPassage = passageForQ.questions || allQuestions.filter(item => item.passageId === q.passageId);
+                  const gradeInfoForPassage = isSubmitted 
+                    ? { 
+                        score: questionsForPassage.filter(item => evaluationResults.results[item.id]?.isCorrect).length, 
+                        total: questionsForPassage.length, 
+                        percentage: Math.round((questionsForPassage.filter(item => evaluationResults.results[item.id]?.isCorrect).length / (questionsForPassage.length || 1)) * 100) 
+                      } 
+                    : gradedPassages[passageForQ.id];
+                  const hasNext = homework.passages?.findIndex(p => p.id === passageForQ.id) < (homework.passages?.length || 0) - 1;
 
                   return (
                     <React.Fragment key={q.id}>
@@ -1930,9 +2312,9 @@ export default function ReadingHomeworkView({
                         <div className="flex items-start justify-between gap-3 mb-2.5">
                           <div className="flex items-center gap-2">
                             <span className={`w-7 h-7 rounded-xl font-black text-xs flex items-center justify-center flex-shrink-0 shadow-2xs ${
-                              isSubmitted && evalItem?.isCorrect
+                              qGraded && evalItem?.isCorrect
                                 ? 'bg-emerald-600 text-white'
-                                : isSubmitted && !evalItem?.isCorrect
+                                : qGraded && !evalItem?.isCorrect
                                 ? 'bg-rose-500 text-white'
                                 : 'bg-primary text-white'
                             }`}>
@@ -1944,7 +2326,7 @@ export default function ReadingHomeworkView({
                           </div>
 
                           {/* Submission status tag */}
-                          {isSubmitted && (
+                          {qGraded && (
                             <div>
                               {evalItem?.isCorrect ? (
                                 <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1 border border-emerald-200">
@@ -1972,7 +2354,7 @@ export default function ReadingHomeworkView({
                           const selectedLetters = parseSelectedOptions(userVal, q.options);
 
                           const handleOptionToggle = (optLetter) => {
-                            if (isSubmitted) return;
+                            if (qGraded) return;
                             const normalizedLetter = optLetter.toUpperCase();
                             const isAlreadySelected = selectedLetters.includes(normalizedLetter);
 
@@ -2001,7 +2383,7 @@ export default function ReadingHomeworkView({
 
                           // Extract correct letters for this question after submit
                           const correctLetters = new Set();
-                          if (isSubmitted) {
+                          if (qGraded) {
                             const validOptions = [
                               ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
                               q.primaryAnswer,
@@ -2045,10 +2427,10 @@ export default function ReadingHomeworkView({
                                   let optStyle = 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700';
                                   let badgeStyle = isSelected ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600';
 
-                                  if (isSelected && !isSubmitted) {
+                                  if (isSelected && !qGraded) {
                                     optStyle = 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary/30';
                                     badgeStyle = 'bg-primary text-white shadow-2xs';
-                                  } else if (isSubmitted) {
+                                  } else if (qGraded) {
                                     const isThisOptCorrect = correctLetters.has(optLetter.toUpperCase()) || 
                                       (q.acceptedAnswers || []).some(a => a.toString().trim().toLowerCase() === optText.toLowerCase());
 
@@ -2068,14 +2450,14 @@ export default function ReadingHomeworkView({
                                     <button
                                       key={optLetter}
                                       type="button"
-                                      disabled={isSubmitted}
+                                      disabled={qGraded}
                                       onClick={() => handleOptionToggle(optLetter)}
                                       className={`text-left px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium transition-all flex items-start gap-2.5 cursor-pointer ${optStyle}`}
                                     >
                                       <span className={`w-5 h-5 ${maxChoices > 1 ? 'rounded-md' : 'rounded-full'} flex items-center justify-center text-xs font-black flex-shrink-0 transition-all ${badgeStyle}`}>
-                                        {isSelected && maxChoices > 1 && !isSubmitted ? (
+                                        {isSelected && maxChoices > 1 && !qGraded ? (
                                           <Check size={12} strokeWidth={3} />
-                                        ) : isSubmitted && correctLetters.has(optLetter.toUpperCase()) ? (
+                                        ) : qGraded && correctLetters.has(optLetter.toUpperCase()) ? (
                                           <Check size={12} strokeWidth={3} />
                                         ) : (
                                           optLetter
@@ -2099,7 +2481,7 @@ export default function ReadingHomeworkView({
                             
                             <input
                               type="text"
-                              disabled={isSubmitted}
+                              disabled={qGraded}
                               value={userVal}
                               onFocus={() => setActiveQuestionId(q.id)}
                               onChange={(e) => handleInputChange(q.id, e.target.value)}
@@ -2121,7 +2503,7 @@ export default function ReadingHomeworkView({
                               }}
                               placeholder={q.placeholder || `Điền câu trả lời số ${q.number}...`}
                               className={`flex-1 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all focus:outline-none ${
-                                !isSubmitted
+                                !qGraded
                                   ? isWordOverLimit
                                     ? 'border-amber-400 focus:ring-2 focus:ring-amber-200 bg-amber-50/50'
                                     : 'border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 bg-white'
@@ -2131,7 +2513,7 @@ export default function ReadingHomeworkView({
                               }`}
                             />
 
-                            {!isSubmitted && (
+                            {!qGraded && (
                               <button
                                 type="button"
                                 onClick={async () => {
@@ -2154,7 +2536,7 @@ export default function ReadingHomeworkView({
                           </div>
 
                           {/* Word counter helper during input */}
-                          {!isSubmitted && (
+                          {!qGraded && (
                             <div className="flex items-center justify-between text-[11px] px-1 text-gray-400 font-medium">
                               <span>Tối đa: {maxWords} từ {wordLimitText.includes('NUMBER') ? 'và/hoặc 1 chữ số' : ''}</span>
                               <span className={isWordOverLimit ? 'text-rose-600 font-bold' : ''}>
@@ -2164,8 +2546,8 @@ export default function ReadingHomeworkView({
                           )}
                         </div>
 
-                        {/* POST-SUBMISSION EXPLANATION & RATIONALE */}
-                        {isSubmitted && (
+                        {/* POST-SUBMISSION / POST-GRADING EXPLANATION & RATIONALE */}
+                        {qGraded && (
                           <div className="mt-4 pt-3.5 border-t border-gray-100 space-y-2.5 animate-pop-in">
                             
                             {/* If Wrong: Show Correct Answer Comparison */}
@@ -2182,7 +2564,7 @@ export default function ReadingHomeworkView({
                                   <strong className="text-emerald-950 font-black bg-emerald-100 px-2.5 py-0.5 rounded-md border border-emerald-300">
                                     {q.primaryAnswer}
                                   </strong>
-                                  {q.acceptedAnswers.length > 1 && (
+                                  {q.acceptedAnswers && q.acceptedAnswers.length > 1 && (
                                     <span className="text-[11px] text-gray-500">
                                       (Chấp nhận: {q.acceptedAnswers.slice(0, 3).join(', ')})
                                     </span>
@@ -2191,40 +2573,70 @@ export default function ReadingHomeworkView({
                               </div>
                             )}
 
-                            {/* Evidence & Detailed Explanation Box */}
-                            <div className="p-3.5 rounded-xl bg-blue-50/70 border border-blue-200/80 text-xs text-blue-950 space-y-2">
-                              <div className="flex items-start gap-2">
-                                <Sparkles size={14} className="text-primary flex-shrink-0 mt-0.5" />
-                                <div className="space-y-1">
-                                  <p className="font-bold text-primary">
-                                    Dẫn chứng trong bài đọc (Evidence):
-                                  </p>
-                                  <blockquote className="italic text-gray-800 bg-white/80 p-2 rounded-lg border border-blue-100/80">
-                                    "{q.evidence}"
-                                  </blockquote>
-                                </div>
-                              </div>
-
-                              <div className="text-gray-700 leading-relaxed pt-1 border-t border-blue-100">
-                                <strong className="text-gray-900 font-bold">Giải thích chi tiết: </strong>
-                                <span>{q.explanation}</span>
-                              </div>
-
-                              {/* Shortcut button to jump left pane to this question's passage */}
-                              {activePassageId !== q.passageId && (
-                                <button
-                                  type="button"
-                                  onClick={() => setActivePassageId(q.passageId)}
-                                  className="text-[11px] font-bold text-primary hover:underline flex items-center gap-1 pt-1 cursor-pointer"
-                                >
-                                  <span>Mở Bài đọc {q.passageNumber} ở khung bên trái</span>
-                                  <ChevronRight size={12} />
-                                </button>
-                              )}
+                            {/* Toggle single explanation button */}
+                            <div className="flex items-center justify-between">
+                              <button
+                                type="button"
+                                onClick={() => toggleSingleExplanation(q.id)}
+                                className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                              >
+                                {isExplanationShown(q) ? <EyeOff size={13} /> : <Eye size={13} />}
+                                <span>{isExplanationShown(q) ? 'Thu gọn giải thích' : 'Xem giải thích & dẫn chứng'}</span>
+                              </button>
                             </div>
+
+                            {/* Evidence & Detailed Explanation Box */}
+                            {isExplanationShown(q) && (
+                              <div className="p-3.5 rounded-xl bg-blue-50/70 border border-blue-200/80 text-xs text-blue-950 space-y-2 animate-pop-in">
+                                <div className="flex items-start gap-2">
+                                  <Sparkles size={14} className="text-primary flex-shrink-0 mt-0.5" />
+                                  <div className="space-y-1">
+                                    <p className="font-bold text-primary">
+                                      Dẫn chứng trong bài đọc (Evidence):
+                                    </p>
+                                    <blockquote className="italic text-gray-800 bg-white/80 p-2 rounded-lg border border-blue-100/80">
+                                      "{q.evidence}"
+                                    </blockquote>
+                                  </div>
+                                </div>
+
+                                <div className="text-gray-700 leading-relaxed pt-1 border-t border-blue-100">
+                                  <strong className="text-gray-900 font-bold">Giải thích chi tiết: </strong>
+                                  <span>{q.explanation}</span>
+                                </div>
+
+                                {/* Shortcut button to jump left pane to this question's passage */}
+                                {activePassageId !== q.passageId && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setActivePassageId(q.passageId)}
+                                    className="text-[11px] font-bold text-primary hover:underline flex items-center gap-1 pt-1 cursor-pointer"
+                                  >
+                                    <span>Mở Bài đọc {q.passageNumber} ở khung bên trái</span>
+                                    <ChevronRight size={12} />
+                                  </button>
+                                )}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
+
+                      {/* Passage Grade Bar right after the last question of this passage */}
+                      {shouldShowGradeBar && filterMode !== 'wrong_only' && (
+                        <PassageGradeBar
+                          passage={passageForQ}
+                          questions={questionsForPassage}
+                          answers={answers}
+                          gradeInfo={gradeInfoForPassage}
+                          onGrade={handleGradePassage}
+                          onReset={handleResetPassage}
+                          onNextPassage={handleNextPassage}
+                          hasNextPassage={hasNext}
+                          isExpandedExplanation={expandedPassageExplanations[passageForQ.id] !== false}
+                          onToggleExplanation={handleTogglePassageExplanations}
+                        />
+                      )}
                     </React.Fragment>
                   );
                 })}
@@ -2481,107 +2893,148 @@ export default function ReadingHomeworkView({
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 text-gray-900 shadow-2xl select-none">
           <div className="max-w-[1600px] mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-3 sm:gap-6">
             
-            {/* Left: Scrollable Questions Palette by Part */}
-            <div className="flex-1 overflow-x-auto flex items-center gap-4 sm:gap-6 py-1 no-scrollbar">
-              {homework.passages?.map((part, pIdx) => {
-                const isCurrent = activePassageId === part.id;
-                const partQuestions = part.questions || [];
-                const answeredInPart = partQuestions.filter(q => !!(answers[q.id] || '').trim()).length;
-                const partLabel = part.shortLabel || part.shortTitle || `BÀI ĐỌC ${part.number || pIdx + 1}`;
+            {/* Left: Scrollable Questions Palette by Part Slider */}
+            <div className="flex-1 flex items-center min-w-0 max-w-full relative">
+              <button
+                type="button"
+                onClick={() => scrollBottomPalette('left')}
+                className="p-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200/80 shadow-2xs mr-1 z-10 shrink-0 cursor-pointer transition-colors"
+                title="Cuộn thanh câu hỏi sang trái"
+              >
+                <ChevronLeft size={14} />
+              </button>
 
-                return (
-                  <div key={part.id} className="flex items-center gap-2 shrink-0">
-                    {/* Current Active Part: Part Header + Question Numbers with Top Dashes */}
-                    {isCurrent ? (
-                      <div className="flex items-center gap-2.5 sm:gap-3 bg-gray-50/80 px-2 py-1 rounded-xl border border-gray-200/60">
-                        {/* Part Label with top segment line */}
-                        <div className="flex flex-col items-center shrink-0">
-                          <div className="w-full h-[2.5px] rounded-full mb-1 bg-primary" />
-                          <span className="text-[11px] sm:text-xs font-black tracking-wide uppercase px-1 text-primary">
-                            {partLabel}
-                          </span>
-                        </div>
+              <div 
+                ref={bottomPaletteScrollRef}
+                className="flex-1 overflow-x-auto flex items-center gap-3 sm:gap-5 py-1 no-scrollbar scroll-smooth min-w-0"
+              >
+                {homework.passages?.map((part, pIdx) => {
+                  const isCurrent = activePassageId === part.id;
+                  const partQuestions = part.questions || [];
+                  const answeredInPart = partQuestions.filter(q => !!(answers[q.id] || '').trim()).length;
+                  const partLabel = part.shortLabel || part.shortTitle || `BÀI ĐỌC ${part.number || pIdx + 1}`;
+                  const isPartGraded = isSubmitted || !!gradedPassages[part.id];
+                  const partGrade = isSubmitted
+                    ? { score: partQuestions.filter(q => evaluationResults.results[q.id]?.isCorrect).length, total: partQuestions.length }
+                    : gradedPassages[part.id];
 
-                        {/* Question numbers horizontally with individual dash above each */}
-                        <div className="flex items-center gap-1 sm:gap-1.5">
-                          {partQuestions.map((q) => {
-                            const isAns = !!(answers[q.id] || '').trim();
-                            const isActive = activeQuestionId === q.id;
-                            const evalResult = evaluationResults.results[q.id];
-                            const isCorrect = isSubmitted && evalResult?.isCorrect;
+                  return (
+                    <div key={part.id} className="flex items-center gap-2 shrink-0">
+                      {/* Current Active Part: Part Header + Question Numbers with Top Dashes */}
+                      {isCurrent ? (
+                        <div className="flex items-center gap-2 sm:gap-3 bg-gray-50/90 px-2.5 py-1 rounded-xl border border-gray-200/80">
+                          {/* Part Label with top segment line */}
+                          <div className="flex flex-col items-center shrink-0">
+                            <div className="w-full h-[2.5px] rounded-full mb-1 bg-primary" />
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] sm:text-xs font-black tracking-wide uppercase px-1 text-primary">
+                                {partLabel}
+                              </span>
+                              {isPartGraded && partGrade && (
+                                <span className="text-[9px] font-black px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                  {partGrade.score}/{partGrade.total}
+                                </span>
+                              )}
+                            </div>
+                          </div>
 
-                            return (
-                              <button
-                                key={q.id}
-                                type="button"
-                                onClick={() => scrollToQuestion(q.id)}
-                                className="group flex flex-col items-center cursor-pointer p-0.5 focus:outline-none transition-all"
-                                title={`Câu ${q.number}${isAns ? ' (Đã trả lời)' : ' (Chưa làm)'}`}
-                              >
-                                {/* Top dash indicator */}
-                                <span
-                                  className={`w-3.5 h-[2px] rounded-full mb-1 transition-all ${
-                                    isSubmitted
-                                      ? isCorrect ? 'bg-emerald-500' : 'bg-rose-500'
-                                      : isAns
-                                        ? 'bg-primary'
-                                        : 'bg-slate-300 group-hover:bg-slate-400'
-                                  }`}
-                                />
+                          {/* Question numbers horizontally with individual dash above each */}
+                          <div className="flex items-center gap-1 sm:gap-1.5">
+                            {partQuestions.map((q) => {
+                              const isAns = !!(answers[q.id] || '').trim();
+                              const isActive = activeQuestionId === q.id;
+                              const evalResult = evaluationResults.results[q.id];
+                              const isCorrect = isPartGraded && evalResult?.isCorrect;
 
-                                {/* Question number pill / outline */}
-                                <div
-                                  className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center text-xs font-bold transition-all ${
-                                    isSubmitted
-                                      ? isCorrect
-                                        ? 'bg-emerald-500 text-white font-black shadow-xs'
-                                        : 'bg-rose-500 text-white font-black shadow-xs'
-                                      : isActive
-                                        ? 'border-2 border-primary text-primary bg-primary/10 font-black scale-105 shadow-2xs'
-                                        : 'text-slate-700 hover:text-primary hover:bg-white'
-                                  }`}
+                              return (
+                                <button
+                                  key={q.id}
+                                  id={`bottom-q-btn-${q.id}`}
+                                  type="button"
+                                  onClick={() => scrollToQuestion(q.id)}
+                                  className="group flex flex-col items-center cursor-pointer p-0.5 focus:outline-none transition-all"
+                                  title={`Câu ${q.number}${isAns ? ' (Đã trả lời)' : ' (Chưa làm)'}${isPartGraded ? isCorrect ? ' - Đúng' : ' - Sai' : ''}`}
                                 >
-                                  {q.number}
-                                </div>
-                              </button>
-                            );
-                          })}
+                                  {/* Top dash indicator */}
+                                  <span
+                                    className={`w-3.5 h-[2px] rounded-full mb-1 transition-all ${
+                                      isPartGraded
+                                        ? isCorrect ? 'bg-emerald-500' : 'bg-rose-500'
+                                        : isAns
+                                          ? 'bg-primary'
+                                          : 'bg-slate-300 group-hover:bg-slate-400'
+                                    }`}
+                                  />
+
+                                  {/* Question number pill / outline */}
+                                  <div
+                                    className={`w-6 h-6 sm:w-7 sm:h-7 rounded-md flex items-center justify-center text-xs font-bold transition-all ${
+                                      isPartGraded
+                                        ? isCorrect
+                                          ? 'bg-emerald-500 text-white font-black shadow-xs'
+                                          : 'bg-rose-500 text-white font-black shadow-xs'
+                                        : isActive
+                                          ? 'border-2 border-primary text-primary bg-primary/10 font-black scale-105 shadow-2xs'
+                                          : 'text-slate-700 hover:text-primary hover:bg-white'
+                                    }`}
+                                  >
+                                    {q.number}
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      /* Inactive Part Button (e.g. BÀI ĐỌC 2   0 of 9) with full-width top line */
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setActivePassageId(part.id);
-                          setFilterMode(part.id);
-                          if (passageScrollContainerRef.current) {
-                            passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                          }
-                          const firstQ = partQuestions[0];
-                          if (firstQ) {
-                            scrollToQuestion(firstQ.id);
-                          }
-                        }}
-                        className="group flex flex-col items-start cursor-pointer transition-all hover:opacity-100 opacity-75 px-1 py-0.5"
-                        title={`Chuyển sang ${partLabel}`}
-                      >
-                        {/* Top horizontal line spanning the part */}
-                        <div className="w-full h-[2.5px] rounded-full mb-1 transition-opacity bg-slate-300 group-hover:bg-primary/50" />
-                        
-                        <div className="flex items-center gap-1.5 py-0.5">
-                          <span className="text-[11px] sm:text-xs font-black uppercase tracking-wide text-slate-800">
-                            {partLabel}
-                          </span>
-                          <span className="text-[10px] sm:text-xs font-medium text-slate-500">
-                            {answeredInPart} of {partQuestions.length}
-                          </span>
-                        </div>
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
+                      ) : (
+                        /* Inactive Part Button (e.g. BÀI ĐỌC 2 0 of 9) with full-width top line */
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActivePassageId(part.id);
+                            setFilterMode(part.id);
+                            if (passageScrollContainerRef.current) {
+                              passageScrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                            const firstQ = partQuestions[0];
+                            if (firstQ) {
+                              scrollToQuestion(firstQ.id);
+                            }
+                          }}
+                          className="group flex flex-col items-start cursor-pointer transition-all hover:opacity-100 opacity-75 px-1 py-0.5"
+                          title={`Chuyển sang ${partLabel}`}
+                        >
+                          {/* Top horizontal line spanning the part */}
+                          <div className="w-full h-[2.5px] rounded-full mb-1 transition-opacity bg-slate-300 group-hover:bg-primary/50" />
+                          
+                          <div className="flex items-center gap-1.5 py-0.5">
+                            <span className="text-[11px] sm:text-xs font-black uppercase tracking-wide text-slate-800">
+                              {partLabel}
+                            </span>
+                            {isPartGraded && partGrade ? (
+                              <span className="text-[10px] font-black px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                {partGrade.score}/{partGrade.total}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] sm:text-xs font-medium text-slate-500">
+                                {answeredInPart} of {partQuestions.length}
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => scrollBottomPalette('right')}
+                className="p-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200/80 shadow-2xs ml-1 z-10 shrink-0 cursor-pointer transition-colors"
+                title="Cuộn thanh câu hỏi sang phải"
+              >
+                <ChevronRight size={14} />
+              </button>
             </div>
 
             {/* Right Navigation Controls: Arrows & Grade/Retake */}
@@ -2652,6 +3105,121 @@ export default function ReadingHomeworkView({
         title={mode === 'practice' ? "Thông tin luyện tập (Practice)" : "Thông tin học sinh (Homework)"}
         subtitle="Vui lòng xác nhận Họ tên và Mã lớp trước khi làm bài để kết quả được lưu và gửi đến giáo viên."
       />
+    </div>
+  );
+}
+
+// =============================================================================
+// SUB-COMPONENT: PASSAGE GRADE BAR (Chấm điểm từng bài đọc & hiển thị điểm số)
+// =============================================================================
+function PassageGradeBar({
+  passage,
+  questions = [],
+  answers = {},
+  gradeInfo = null,
+  onGrade,
+  onReset,
+  onNextPassage,
+  hasNextPassage = false,
+  isExpandedExplanation = true,
+  onToggleExplanation
+}) {
+  const answeredInPart = questions.filter(q => {
+    const v = answers[q.id];
+    return v !== undefined && v !== null && v.toString().trim() !== '';
+  }).length;
+  const isGraded = !!gradeInfo;
+  const passageTitle = passage?.shortTitle || `Bài đọc ${passage?.number || ''}`;
+
+  return (
+    <div className={`mt-6 mb-4 p-4 sm:p-5 rounded-2xl border transition-all select-none ${
+      isGraded
+        ? 'bg-emerald-50/90 border-emerald-200 shadow-2xs'
+        : 'bg-gradient-to-r from-blue-50/80 to-indigo-50/80 border-blue-200/90 shadow-2xs'
+    }`}>
+      {!isGraded ? (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-left w-full sm:w-auto">
+            <div className="text-xs sm:text-sm font-bold text-gray-900 flex items-center gap-2">
+              <Sparkles size={16} className="text-primary shrink-0" />
+              <span>Tiến độ {passageTitle}: </span>
+              <span className="text-primary font-black">{answeredInPart} / {questions.length} câu đã làm</span>
+            </div>
+            <p className="text-[11px] text-gray-600 mt-1">
+              💡 Bấm chấm điểm ngay để biết kết quả, xem dẫn chứng (Evidence) & giải thích chi tiết cho bài đọc này mà không cần chờ làm hết các bài khác!
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onGrade(passage.id)}
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-xs sm:text-sm shadow-md shadow-primary/20 flex items-center justify-center gap-2 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] shrink-0"
+          >
+            <CheckCircle2 size={16} />
+            <span>Chấm điểm {passageTitle} ({questions.length} câu)</span>
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex flex-col items-center justify-center shrink-0 shadow-xs">
+                <span className="text-sm font-black leading-none">{gradeInfo.score}</span>
+                <span className="text-[10px] opacity-80 leading-none">/{gradeInfo.total}</span>
+              </div>
+              <div className="text-left">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs sm:text-sm font-black text-emerald-950">
+                    Kết quả {passageTitle}: Đúng {gradeInfo.score} / {gradeInfo.total} câu ({gradeInfo.percentage}%)
+                  </span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                    gradeInfo.percentage >= 80 
+                      ? 'bg-emerald-200 text-emerald-900' 
+                      : gradeInfo.percentage >= 60 
+                      ? 'bg-blue-100 text-blue-900' 
+                      : 'bg-rose-100 text-rose-900'
+                  }`}>
+                    {gradeInfo.percentage >= 80 ? 'Xuất sắc' : gradeInfo.percentage >= 60 ? 'Khá tốt' : 'Cần ôn thêm'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-emerald-800 mt-0.5">
+                  Đã mở đáp án chuẩn xác, dẫn chứng bài đọc & giải thích chi tiết cho các câu trong {passageTitle}.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end flex-wrap">
+              <button
+                type="button"
+                onClick={() => onToggleExplanation(passage.id)}
+                className="px-3.5 py-2 rounded-xl bg-white border border-emerald-300 text-emerald-900 font-bold text-xs hover:bg-emerald-50 flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+              >
+                {isExpandedExplanation ? <EyeOff size={14} /> : <Eye size={14} />}
+                <span>{isExpandedExplanation ? 'Thu gọn giải thích' : 'Mở giải thích'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onReset(passage.id)}
+                className="px-3.5 py-2 rounded-xl bg-white border border-gray-200 text-gray-700 font-bold text-xs hover:bg-gray-50 flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+                title={`Làm lại ${passageTitle}`}
+              >
+                <RotateCcw size={14} />
+                <span>Làm lại bài này</span>
+              </button>
+              {hasNextPassage && (
+                <button
+                  type="button"
+                  onClick={() => onNextPassage(passage.id)}
+                  className="px-4 py-2 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                >
+                  <span>Sang bài tiếp</span>
+                  <ArrowRight size={13} />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
