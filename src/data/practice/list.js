@@ -45,6 +45,26 @@ export const PRACTICE_LIST = [
     isFeatured: true
   },
 
+  // ==================== IELTS ADVANCED ====================
+  {
+    id: 'ielts-advanced-reading-supplementary',
+    category: 'ielts',
+    levelId: 'ielts-advanced',
+    levelLabel: 'IELTS Advanced',
+    session: 'Bổ trợ Reading',
+    skill: 'Reading',
+    title: 'Reading Bổ trợ: Academic Reading Practice (8 Passages - 94 Questions)',
+    description: 'Bộ bài tập bổ trợ chuyên sâu kỹ năng IELTS Reading cấp độ Advanced (Band 6.5+) gồm 8 bài đọc học thuật: Deforestation & Desertification, Swallows in Migration, The Healing Power of Music, Excessive Demands on Young People, Youth: The Future of Travel, The Meaning of Culture, Views of Intelligence Across Cultures, và Sciart.',
+    totalQuestions: 94,
+    duration: '120 - 150 phút',
+    status: 'open',
+    dueDate: 'Luyện tập bổ trợ & Nâng cao kỹ năng',
+    exercisesCount: 8,
+    audioTracksCount: 0,
+    tag: 'Advanced Band 6.5+',
+    isFeatured: true
+  },
+
   // ==================== IELTS PRE ====================
   {
     id: 'pre-ielts-reading-3',
