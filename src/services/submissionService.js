@@ -129,27 +129,9 @@ export async function submitHomeworkOrPracticeResult({
   // Log locally
   logLocalSubmission(payload);
 
-  // 1. Send to Apps Script Webhook (Separate columns: Class, Phone, Email)
-  const scriptPromise = sendToAppsScript(payload);
-
-  // 2. Backup notification via FormSubmit
-  const backupPromise = sendToFormSubmit(
-    `[Dream Edu - ${type}] ${payload.studentName} (${payload.className}) nộp bài: ${payload.testTitle}`,
-    {
-      'Phân hệ': type,
-      'Thời gian nộp': formattedTime,
-      'Họ và tên học sinh': payload.studentName,
-      'Lớp': payload.className,
-      'Tên bài làm': payload.testTitle,
-      'Điểm số': `${payload.score}/${payload.total} câu`,
-      'Tỷ lệ chính xác': `${payload.percentage}%`,
-      'Thời gian làm bài': formattedDuration,
-      'Danh sách câu sai': safeWrongAnswers
-    }
-  );
-
-  await Promise.allSettled([scriptPromise, backupPromise]);
-  return { success: true };
+  // Gửi trực tiếp đến Google Apps Script Webhook (Ghi Sheets + Gửi 1 email duy nhất từ tài khoản của bạn)
+  const result = await sendToAppsScript(payload);
+  return result;
 }
 
 /**
@@ -222,27 +204,7 @@ export async function submitTestPlatformResult({
   // Log locally
   logLocalSubmission(payload);
 
-  // 1. Send to Apps Script Webhook
-  const scriptPromise = sendToAppsScript(payload);
-
-  // 2. Backup email notice
-  const backupPromise = sendToFormSubmit(
-    `[Dream Edu - Test Platform] ${cleanName || 'Thí sinh'} - ${payload.testTitle} - ${safeBand}`,
-    {
-      'Phân hệ': 'Test Platform',
-      'Thời gian nộp': formattedTime,
-      'Họ và tên thí sinh (Optional)': cleanName || 'Thí sinh tự do',
-      'Số điện thoại (Optional)': cleanPhone || '',
-      'Email (Optional)': cleanEmail || '',
-      'Tên đề thi': payload.testTitle,
-      'Điểm số': `${payload.score}/${payload.total} câu`,
-      'Điểm quy đổi IELTS': safeBand,
-      'Tỷ lệ chính xác': `${payload.percentage}%`,
-      'Thời gian làm bài': formattedDuration,
-      'Danh sách câu sai': safeWrongAnswers
-    }
-  );
-
-  await Promise.allSettled([scriptPromise, backupPromise]);
-  return { success: true };
+  // Gửi trực tiếp đến Google Apps Script Webhook (Ghi Sheets + Gửi 1 email duy nhất từ tài khoản của bạn)
+  const result = await sendToAppsScript(payload);
+  return result;
 }

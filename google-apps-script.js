@@ -1,7 +1,7 @@
 /**
  * ==============================================================================
  * GOOGLE APPS SCRIPT - HỆ THỐNG GHI NHẬN NỘP BÀI DREAM EDUCATION
- * (Phiên bản tách riêng 3 cột: Lớp | Số điện thoại | Email)
+ * (Phiên bản chuẩn 9 cột đồng bộ với Google Sheets)
  * ==============================================================================
  * CÁCH DÙNG:
  * 1. Mở file Google Sheets quản lý điểm của bạn.
@@ -41,15 +41,13 @@ function doPost(e) {
         "Phân hệ",
         "Họ và tên",
         "Lớp",
-        "Số điện thoại",
-        "Email",
-        "Tên bài kiểm tra / Bộ từ vựng",
+        "Tên bài làm / Bộ từ vựng",
         "Điểm số",
-        "IELTS Band / Tỷ lệ",
-        "Thời gian làm",
-        "Danh sách câu sai"
+        "Tỷ lệ / IELTS Band",
+        "Thời gian làm bài",
+        "Chi tiết câu sai"
       ]);
-      const headerRange = sheet.getRange(1, 1, 1, 11);
+      const headerRange = sheet.getRange(1, 1, 1, 9);
       headerRange.setFontWeight("bold");
       headerRange.setBackground("#1e3a8a");
       headerRange.setFontColor("#ffffff");
@@ -66,14 +64,12 @@ function doPost(e) {
     const duration = data.duration || "N/A";
     const wrongAnswers = data.wrongAnswers || "Không có (Làm đúng 100%)";
 
-    // 1. Ghi một dòng vào Google Sheets với 3 cột riêng: Lớp | Số điện thoại | Email
+    // 1. Ghi một dòng vào Google Sheets chuẩn 9 cột khớp với dữ liệu thực tế
     sheet.appendRow([
       formattedTime,
       type,
       studentName,
       className,
-      phone,
-      email,
       testTitle,
       scoreText,
       bandOrRate,
@@ -141,7 +137,7 @@ function doPost(e) {
         </table>
 
         <div style="margin-top: 20px; padding: 12px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; font-size: 12px; color: #166534;">
-          ✅ Dữ liệu đã được tự động lưu vào Google Sheets quản lý điểm của bạn (các cột Lớp, SĐT, Email riêng biệt).
+          ✅ Dữ liệu đã được tự động lưu vào Google Sheets quản lý điểm của bạn theo 9 cột chuẩn.
         </div>
       </div>
     `;
