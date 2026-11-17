@@ -91,7 +91,10 @@ export const HOMEWORK_LIST = [
     exercisesCount: 2,
     audioTracksCount: 0,
     tag: 'Pre-Intermediate 4.0 - 5.0',
-    isFeatured: true
+    isFeatured: true,
+    vocabId: 'pre-ielts-reading-3',
+    vocabCount: 30,
+    vocabLabel: 'Học 30 từ vựng Reading 3'
   },
   {
     id: 'intermediate-reading-6',

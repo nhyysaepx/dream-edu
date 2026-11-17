@@ -10,6 +10,9 @@ export const PRE_IELTS_READING_3_DETAIL = {
   description: 'Trọn bộ 2 bài đọc BTVN Reading 3 gồm 20 câu hỏi trắc nghiệm: Bài 1 (The Rise of Internships and Soft Skills in Modern Education - 10 câu) và Bài 2 (Are Online Degrees Changing Higher Education? - 10 câu gồm 8 câu Single Choice & 2 câu Multi-Choice).',
   totalQuestions: 20,
   duration: '35 - 45 phút',
+  vocabId: 'pre-ielts-reading-3',
+  vocabCount: 30,
+  vocabLabel: 'Học 30 từ vựng Reading 3',
   sections: [
     {
       id: 'sec1',

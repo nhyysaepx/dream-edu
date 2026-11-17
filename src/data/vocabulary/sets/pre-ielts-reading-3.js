@@ -1,181 +1,261 @@
-// Pre-IELTS: Reading 3 (Education and the Workplace in the UK)
+// Pre-IELTS: Reading 3 (Higher Education & Student Life)
 // Vocabulary set for pre-ielts-reading-3
 
 export const PRE_IELTS_READING_3_SET = {
   id: 'pre-ielts-reading-3',
   title: 'Pre-IELTS: Reading 3',
   subtitle: 'Pre-IELTS (4.0 - 5.0) • Reading 3',
-  description: 'Trọn bộ 20 từ vựng học thuật trọng tâm bài đọc Reading 3 cấp độ Pre-IELTS về mối liên kết giữa giáo dục và nơi làm việc tại Anh (Education & The Workplace in the UK), đào tạo nghề, học việc và phương pháp blended learning.',
+  description: 'Trọn bộ 30 từ vựng học thuật trọng tâm bài đọc Reading 3 cấp độ Pre-IELTS về môi trường đại học, giáo dục quốc tế, phương pháp học tập kết hợp và phát triển kỹ năng nghề nghiệp.',
   category: 'ielts',
   ieltsLevel: 'pre-ielts',
   cefrLevel: 'B1',
   grade: 'Pre IELTS',
   skill: 'reading',
   book: 'Pre-IELTS Reading',
-  lesson: 'Unit 3: Education and the Workplace in the UK',
+  lesson: 'Unit 3: Higher Education & Student Life',
   author: 'Dream Education Team',
-  tags: ['IELTS', 'Pre IELTS', 'Reading 3', 'Workplace', 'Education', 'Apprenticeships'],
+  tags: ['IELTS', 'Pre IELTS', 'Reading 3', 'Higher Education', 'Campus Life', 'Degrees'],
   isOfficial: true,
   terms: [
     {
       id: 'pir3-1',
-      term: 'workplace',
-      ipa: '/ˈwɜːkpleɪs/',
-      type: 'n',
-      definition: 'nơi làm việc, môi trường công sở',
-      example: 'There has been a trend towards creating a closer connection between education and the workplace.'
+      term: 'Lecture',
+      ipa: '/ˈlektʃər/',
+      type: 'n, v',
+      definition: 'bài giảng, bài thuyết trình',
+      example: 'The professor delivered an engaging lecture on international educational opportunities.'
     },
     {
       id: 'pir3-2',
-      term: 'school leaver',
-      ipa: '/ˈskuːl liːvər/',
-      type: 'n',
-      definition: 'học sinh mới tốt nghiệp phổ thông',
-      example: 'Many employers felt that school leavers were not prepared well enough for the demands of real jobs.'
+      term: 'Enrol',
+      ipa: '/ɪnˈrəʊl/',
+      type: 'v',
+      definition: 'ghi danh, đăng ký học',
+      example: 'More than five thousand students enrol in our university degree programmes each autumn.'
     },
     {
       id: 'pir3-3',
-      term: 'apprenticeship',
-      ipa: '/əˈprentɪsʃɪp/',
-      type: 'n',
-      definition: 'chế độ học nghề, thời gian học nghề',
-      example: 'Apprenticeships were a common way of learning in the past and are now available at modern degree levels.'
+      term: 'Fund',
+      ipa: '/fʌnd/',
+      type: 'n, v',
+      definition: 'quỹ, số tiền tài trợ; cấp kinh phí',
+      example: 'The college secured a generous research fund to support innovative student projects.'
     },
     {
       id: 'pir3-4',
-      term: 'expert',
-      ipa: '/ˈekspɜːt/',
-      type: 'n, adj',
-      definition: 'chuyên gia, người có tay nghề cao',
-      example: 'Young people learnt practical crafts by working alongside a seasoned expert.'
+      term: 'Assignment',
+      ipa: '/əˈsaɪnmənt/',
+      type: 'n',
+      definition: 'bài tập, nhiệm vụ được giao',
+      example: 'Undergraduates are required to submit their weekly assignment via the online portal.'
     },
     {
       id: 'pir3-5',
-      term: 'trade',
-      ipa: '/treɪd/',
+      term: 'Campus',
+      ipa: '/ˈkæmpəs/',
       type: 'n',
-      definition: 'ngành nghề thủ công hoặc kỹ thuật',
-      example: 'Learning on the job was historically most common in trades such as builders or electricians.'
+      definition: 'khuôn viên trường đại học',
+      example: 'Living on campus helps new students adapt quickly to independent academic life.'
     },
     {
       id: 'pir3-6',
-      term: 'electrician',
-      ipa: '/ɪˌlekˈtrɪʃn/',
+      term: 'Faculty',
+      ipa: '/ˈfæklti/',
       type: 'n',
-      definition: 'thợ điện',
-      example: 'Becoming a certified electrician requires comprehensive practical and technical training.'
+      definition: 'khoa (trong trường đại học), toàn thể giảng viên',
+      example: 'The Faculty of Design and Architecture offers state-of-the-art multimedia studios.'
     },
     {
       id: 'pir3-7',
-      term: 'grammar school',
-      ipa: '/ˈɡræmər skuːl/',
-      type: 'n',
-      definition: 'trường ngữ pháp (trường trung học chọn lọc học thuật tại Anh)',
-      example: 'In the 1944 UK system, children who passed an exam at 11 were admitted to grammar schools.'
+      term: 'Postgraduate',
+      ipa: '/ˌpəʊstˈɡrædʒuət/',
+      type: 'n, adj',
+      definition: 'nghiên cứu sinh, học viên sau đại học',
+      example: 'Postgraduate researchers often work closely with international industry partners.'
     },
     {
       id: 'pir3-8',
-      term: 'technical school',
-      ipa: '/ˈteknɪkl skuːl/',
-      type: 'n',
-      definition: 'trường kỹ thuật, trường dạy nghề',
-      example: 'Pupils at technical schools studied work-based subjects directly relevant to industry.'
+      term: 'Undergraduate',
+      ipa: '/ˌʌndəˈɡrædʒuət/',
+      type: 'n, adj',
+      definition: 'sinh viên chưa tốt nghiệp (bậc đại học/cử nhân)',
+      example: 'Most undergraduate degree courses in the UK last for three to four years.'
     },
     {
       id: 'pir3-9',
-      term: 'work-based',
-      ipa: '/ˈwɜːk beɪst/',
-      type: 'adj',
-      definition: 'gắn liền với công việc, dựa trên thực tế công việc',
-      example: 'The programme aimed to provide quality training on a work-based educational route.'
+      term: "Bachelor's degree",
+      ipa: "/ˈbætʃələz dɪˌɡriː/",
+      type: 'n phr',
+      definition: 'bằng cử nhân',
+      example: 'After completing his Bachelor\'s degree, he decided to gain practical work experience.'
     },
     {
       id: 'pir3-10',
-      term: 'vocational qualification',
-      ipa: '/vəʊˈkeɪʃənl ˌkwɒlɪfɪˈkeɪʃn/',
+      term: "Master's degree",
+      ipa: "/ˈmɑːstəz dɪˌɡriː/",
       type: 'n phr',
-      definition: 'chứng chỉ nghề, văn bằng đào tạo nghề nghiệp',
-      example: 'National Vocational Qualifications help employers understand what workers can practically achieve.'
+      definition: 'bằng thạc sĩ',
+      example: 'She is currently pursuing an online Master\'s degree in Digital Marketing and Media.'
     },
     {
       id: 'pir3-11',
-      term: 'certificate',
-      ipa: '/səˈtɪfɪkət/',
+      term: 'Globalisation',
+      ipa: '/ˌɡləʊbəlaɪˈzeɪʃn/',
       type: 'n',
-      definition: 'chứng chỉ, văn bằng chứng nhận năng lực',
-      example: 'Young trainees take practical exams to get certificates that show their technical competence.'
+      definition: 'toàn cầu hóa',
+      example: 'Economic globalisation has encouraged universities to develop international curricula.'
     },
     {
       id: 'pir3-12',
-      term: 'practical skill',
-      ipa: '/ˈpræktɪkl skɪl/',
+      term: 'Blended learning',
+      ipa: '/ˌblendɪd ˈlɜːnɪŋ/',
       type: 'n phr',
-      definition: 'kỹ năng thực tế, kỹ năng thực hành',
-      example: 'Modern courses place strong value on practical skills alongside theoretical academic knowledge.'
+      definition: 'học tập kết hợp (trực tiếp và trực tuyến)',
+      example: 'Blended learning enables working adults to balance study deadlines with career duties.'
     },
     {
       id: 'pir3-13',
-      term: 'emphasis',
-      ipa: '/ˈemfəsɪs/',
-      type: 'n',
-      definition: 'sự nhấn mạnh, sự coi trọng đặc biệt',
-      example: 'At higher levels of education, there has been more emphasis on work-based learning.'
+      term: 'Lifelong learning',
+      ipa: '/ˌlaɪflɒŋ ˈlɜːnɪŋ/',
+      type: 'n phr',
+      definition: 'học tập suốt đời',
+      example: 'In a rapidly changing employment market, lifelong learning is vital for career growth.'
     },
     {
       id: 'pir3-14',
-      term: 'degree level',
-      ipa: '/dɪˈɡriː ˈlevl/',
-      type: 'n phr',
-      definition: 'trình độ cử nhân, bậc đại học',
-      example: 'At degree level, companies collaborate with top universities to create specialised qualifications.'
+      term: 'Retire',
+      ipa: '/rɪˈtaɪər/',
+      type: 'v',
+      definition: 'nghỉ hưu',
+      example: 'The senior professor decided to retire after dedicating thirty-five years to research.'
     },
     {
       id: 'pir3-15',
-      term: 'partnership',
-      ipa: '/ˈpɑːtnəʃɪp/',
+      term: 'Qualification',
+      ipa: '/ˌkwɒlɪfɪˈkeɪʃn/',
       type: 'n',
-      definition: 'quan hệ hợp tác, quan hệ đối tác',
-      example: 'Close partnerships between businesses and academia now exist at Masters and doctoral levels.'
+      definition: 'bằng cấp, chứng chỉ, trình độ chuyên môn',
+      example: 'Holding a recognised academic qualification significantly boosts job application success.'
     },
     {
       id: 'pir3-16',
-      term: 'doctoral',
-      ipa: '/ˈdɒktərəl/',
-      type: 'adj',
-      definition: 'thuộc bậc tiến sĩ',
-      example: 'Specialised work-based qualifications have expanded into Masters and even doctoral programmes.'
+      term: 'Disrupt',
+      ipa: '/dɪsˈrʌpt/',
+      type: 'v',
+      definition: 'làm gián đoạn, làm đảo lộn',
+      example: 'Emerging educational technologies continue to disrupt traditional lecture methods.'
     },
     {
       id: 'pir3-17',
-      term: 'blended learning',
-      ipa: '/ˌblendɪd ˈlɜːnɪŋ/',
-      type: 'n phr',
-      definition: 'học tập kết hợp (trực tuyến và trực tiếp)',
-      example: 'Blended learning allows part of the syllabus to be delivered online so workers do not miss work.'
+      term: 'Valuable',
+      ipa: '/ˈvæljuəbl/',
+      type: 'adj',
+      definition: 'có giá trị, quý báu',
+      example: 'Internships provide valuable hands-on experience alongside theoretical classroom study.'
     },
     {
       id: 'pir3-18',
-      term: 'mentor',
-      ipa: '/ˈmentɔːr/',
-      type: 'n, v',
-      definition: 'người cố vấn, hướng dẫn kèm cặp',
-      example: 'Senior employees often act as mentors and coaches to support younger trainees in the company.'
+      term: 'Enrich',
+      ipa: '/ɪnˈrɪtʃ/',
+      type: 'v',
+      definition: 'làm phong phú, làm giàu thêm',
+      example: 'Studying alongside learners from diverse countries helps enrich student perspectives.'
     },
     {
       id: 'pir3-19',
-      term: 'traditionally',
-      ipa: '/trəˈdɪʃənəli/',
-      type: 'adv',
-      definition: 'theo truyền thống, trước đây',
-      example: 'Work-based training has expanded into sectors that were traditionally not linked with education.'
+      term: 'Reliable',
+      ipa: '/rɪˈlaɪəbl/',
+      type: 'adj',
+      definition: 'đáng tin cậy',
+      example: 'Distance learners depend on a fast and reliable internet connection for live seminars.'
     },
     {
       id: 'pir3-20',
-      term: 'practical issue',
-      ipa: '/ˈpræktɪkl ˈɪʃuː/',
-      type: 'n phr',
-      definition: 'vấn đề thực tế (về giờ giấc, địa điểm, tổ chức)',
-      example: 'The challenges of work-based learning include practical issues like when and where classes are held.'
+      term: 'Westernisation',
+      ipa: '/ˌwestənaɪˈzeɪʃn/',
+      type: 'n',
+      definition: 'sự Âu hóa, phương Tây hóa',
+      example: 'Some scholars study the influence of Westernisation on modern university administration.'
+    },
+    {
+      id: 'pir3-21',
+      term: 'Approach',
+      ipa: '/əˈprəʊtʃ/',
+      type: 'n, v',
+      definition: 'phương pháp, cách tiếp cận',
+      example: 'Our institution adopts an interactive approach that fosters critical thinking and debate.'
+    },
+    {
+      id: 'pir3-22',
+      term: 'Institution',
+      ipa: '/ˌɪnstɪˈtjuːʃn/',
+      type: 'n',
+      definition: 'tổ chức, học viện, viện đào tạo',
+      example: 'Top academic institutions around the world are competing to attract overseas talent.'
+    },
+    {
+      id: 'pir3-23',
+      term: 'Strategy',
+      ipa: '/ˈstrætədʒi/',
+      type: 'n',
+      definition: 'chiến lược',
+      example: 'The university board developed a comprehensive strategy to expand global partnerships.'
+    },
+    {
+      id: 'pir3-24',
+      term: 'Advertisement',
+      ipa: '/ədˈvɜːtɪsmənt/',
+      type: 'n',
+      definition: 'quảng cáo',
+      example: 'The college published an advertisement highlighting new scholarship opportunities.'
+    },
+    {
+      id: 'pir3-25',
+      term: 'Admission',
+      ipa: '/ədˈmɪʃn/',
+      type: 'n',
+      definition: 'sự nhận vào (trường học), tiền vé vào cửa',
+      example: 'Academic admission requirements include passing language proficiency assessments.'
+    },
+    {
+      id: 'pir3-26',
+      term: 'Adequate',
+      ipa: '/ˈædɪkwət/',
+      type: 'adj',
+      definition: 'đầy đủ, thỏa đáng',
+      example: 'Applicants must demonstrate adequate financial support before visa approval.'
+    },
+    {
+      id: 'pir3-27',
+      term: 'Accommodation',
+      ipa: '/əˌkɒməˈdeɪʃn/',
+      type: 'n',
+      definition: 'chỗ ở, phòng trọ',
+      example: 'First-year overseas students are guaranteed student accommodation on campus.'
+    },
+    {
+      id: 'pir3-28',
+      term: 'Tutorial',
+      ipa: '/tjuːˈtɔːriəl/',
+      type: 'n',
+      definition: 'lớp học hướng dẫn, buổi phụ đạo',
+      example: 'Weekly tutorials allow small groups of students to discuss complex lecture topics.'
+    },
+    {
+      id: 'pir3-29',
+      term: 'Self-discipline',
+      ipa: '/ˌself ˈdɪsəplɪn/',
+      type: 'n',
+      definition: 'tinh thần tự giác, kỷ luật tự giác',
+      example: 'Succeeding in remote online courses demands high motivation and self-discipline.'
+    },
+    {
+      id: 'pir3-30',
+      term: 'Seminar',
+      ipa: '/ˈsemɪnɑːr/',
+      type: 'n',
+      definition: 'hội thảo, lớp chuyên đề thảo luận',
+      example: 'All postgraduate candidates attended a lively seminar on research methodology.'
     }
   ]
 };

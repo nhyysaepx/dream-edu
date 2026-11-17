@@ -341,6 +341,17 @@ export default function VocabStudySet() {
                   </Link>
                 )}
 
+                {vocabSet.id === 'pre-ielts-reading-3' && (
+                  <Link
+                    to={`/homework/${vocabSet.id}`}
+                    className="px-3.5 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 text-xs font-bold rounded-xl border border-amber-500/20 flex items-center gap-1.5 transition-colors"
+                    title="Mở bài tập về nhà BTVN tương ứng"
+                  >
+                    <BookOpen size={14} className="text-amber-600" />
+                    <span>Làm bài BTVN</span>
+                  </Link>
+                )}
+
                 <button
                   onClick={handleShare}
                   className="px-3.5 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold rounded-xl border border-gray-200 flex items-center gap-1.5 transition-colors cursor-pointer"

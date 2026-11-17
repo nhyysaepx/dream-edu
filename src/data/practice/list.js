@@ -63,8 +63,8 @@ export const PRACTICE_LIST = [
     audioTracksCount: 0,
     tag: 'Pre-Intermediate 4.0 - 5.0',
     vocabId: 'pre-ielts-reading-3',
-    vocabCount: 20,
-    vocabLabel: 'Học 20 từ vựng Reading 3',
+    vocabCount: 30,
+    vocabLabel: 'Học 30 từ vựng Reading 3',
     isFeatured: true
   },
   {

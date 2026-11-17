@@ -12,8 +12,8 @@ export const PRE_IELTS_READING_3_PRACTICE_DETAIL = {
   totalQuestions: 10,
   duration: '25 - 35 phút',
   vocabId: 'pre-ielts-reading-3',
-  vocabCount: 20,
-  vocabLabel: 'Học 20 từ vựng Reading 3',
+  vocabCount: 30,
+  vocabLabel: 'Học 30 từ vựng Reading 3',
   strategyTips: [
     'Read (skim) the text very quickly so you understand what it is about.',
     'Read the main part of the questions and find the key words (the words that will help you find the answer in the passage).',
