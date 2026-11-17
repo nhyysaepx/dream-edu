@@ -2,6 +2,7 @@
 // Imports each individual vocabulary set and provides DEFAULT_VOCAB_SETS
 
 import { UNIT_1_GLOBAL_SUCCESS_10_SET } from './sets/unit-1-global-success-10.js';
+import { REVISION_MIDTERM_1_ENGLISH_12_SET } from './sets/revision-midterm-1-english-12.js';
 import { REVISION_MIDTERM_1_ENGLISH_10_SET } from './sets/revision-midterm-1-english-10.js';
 import { UNIT_4_GLOBAL_SUCCESS_9_SET } from './sets/unit-4-global-success-9.js';
 import { PRE_IELTS_READING_1_SET } from './sets/pre-ielts-reading-1.js';
@@ -16,6 +17,7 @@ import { IELTS_VOL1_TEST2_READING_SET } from './sets/ielts-vol1-test2-reading.js
 
 export const DEFAULT_VOCAB_SETS = [
   // Tiếng Anh phổ thông (Lớp 6 - 12)
+  REVISION_MIDTERM_1_ENGLISH_12_SET,
   UNIT_1_GLOBAL_SUCCESS_10_SET,
   REVISION_MIDTERM_1_ENGLISH_10_SET,
   UNIT_4_GLOBAL_SUCCESS_9_SET,

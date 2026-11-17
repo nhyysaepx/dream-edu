@@ -3,6 +3,27 @@
 export const PRACTICE_LIST = [
   // ==================== TIẾNG ANH PHỔ THÔNG (THCS & THPT) ====================
   {
+    id: 'revision-midterm-1-english-12',
+    category: 'school',
+    levelId: 'grade-12',
+    levelLabel: 'Lớp 12',
+    session: 'Đề cương Ôn tập Giữa HK1',
+    skill: 'Reading',
+    title: 'Đề cương Ôn tập Giữa Học kì I - Tiếng Anh 12 (Năm học 2026 – 2027)',
+    description: 'Bộ đề cương ôn tập tổng hợp toàn diện Giữa Học kì 1 Tiếng Anh 12 (Global Success - Units 1, 2, 3) gồm 7 phần chuẩn mực: Từ đồng nghĩa (Closest), Từ trái nghĩa (Opposite), Viết lại câu (Same Meaning), Sắp xếp câu & đoạn văn (Arrangement), Đọc hiểu chuyên sâu (4 bài đọc), và 2 chuyên đề Điền từ đoạn văn (8 bài cloze test).',
+    totalQuestions: 122,
+    duration: '90 - 120 phút',
+    status: 'open',
+    dueDate: 'Luyện tập trực tiếp trên lớp & Ôn thi Giữa kì',
+    exercisesCount: 7,
+    audioTracksCount: 0,
+    tag: 'THPT - Global Success (Trọng tâm)',
+    vocabId: 'revision-midterm-1-english-12',
+    vocabCount: 40,
+    vocabLabel: 'Học 40 từ vựng Đề cương Ôn tập Giữa HK1',
+    isFeatured: true
+  },
+  {
     id: 'revision-midterm-1-english-10',
     category: 'school',
     levelId: 'grade-10',

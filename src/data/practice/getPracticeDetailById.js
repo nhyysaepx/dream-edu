@@ -1,4 +1,5 @@
 // Practice detail lookup function
+import { REVISION_MIDTERM_1_ENGLISH_12_PRACTICE_DETAIL } from './details/revision-midterm-1-english-12.js';
 import { IELTS_ADVANCED_READING_SUPPLEMENTARY_PRACTICE_DETAIL } from './details/ielts-advanced-reading-supplementary.js';
 import { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from './details/revision-midterm-1-english-10.js';
 import { PRE_IELTS_READING_3_PRACTICE_DETAIL } from './details/pre-ielts-reading-3.js';
@@ -12,6 +13,9 @@ import {
 } from '../homework/index.js';
 
 export function getPracticeDetailById(id) {
+  if (id === 'revision-midterm-1-english-12') {
+    return REVISION_MIDTERM_1_ENGLISH_12_PRACTICE_DETAIL;
+  }
   if (id === 'ielts-advanced-reading-supplementary') {
     return IELTS_ADVANCED_READING_SUPPLEMENTARY_PRACTICE_DETAIL;
   }

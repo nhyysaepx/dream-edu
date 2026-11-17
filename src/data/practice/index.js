@@ -3,6 +3,7 @@
 
 export { PRACTICE_CATEGORIES } from './categories.js';
 export { PRACTICE_LIST } from './list.js';
+export { REVISION_MIDTERM_1_ENGLISH_12_PRACTICE_DETAIL } from './details/revision-midterm-1-english-12.js';
 export { IELTS_ADVANCED_READING_SUPPLEMENTARY_PRACTICE_DETAIL } from './details/ielts-advanced-reading-supplementary.js';
 export { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from './details/revision-midterm-1-english-10.js';
 export { PRE_IELTS_READING_3_PRACTICE_DETAIL } from './details/pre-ielts-reading-3.js';
