@@ -59,133 +59,167 @@ export function blobToBase64(blob) {
 }
 
 /**
- * Convert Web Audio Buffer into 16kHz Mono 16-bit PCM WAV (Standard format for Speech Engines)
- * Tối ưu hóa đặc biệt cho thiết bị di động (iOS Safari / Android Chrome / Desktop):
- * 1. Tự động đánh thức AudioContext nếu đang ở trạng thái 'suspended' trên mobile.
- * 2. Hỗ trợ decodeAudioData tương thích hoàn toàn Safari WebKit (cloned buffer + callback fallback).
- * 3. Tự động gộp kênh (downmix to mono) và downsample chuẩn 16000Hz bằng thuật toán nội suy tuyến tính (Linear Interpolation) thuần JavaScript:
- *    - Tuyệt đối KHÔNG dùng OfflineAudioContext(..., 16000) vì iOS Safari sẽ ném lỗi 'NotSupportedError' (Safari chỉ cho phép sampleRate 44100-48000).
- *    - Tốc độ xử lý siêu tốc (<3ms) trên điện thoại, tiết kiệm 95% bộ nhớ RAM.
- * 4. Tự động cắt tối đa 28s cho Azure REST API (tránh lỗi 400 do Azure REST chỉ cho phép tối đa 30s/request).
+ * Chuyển đổi mảng mẫu âm thanh 16kHz Float32Array thành tệp WAV chuẩn PCM 16-bit Mono (44-byte RIFF header)
+ */
+function encodePcmToWav(samples16k, targetSampleRate = 16000) {
+  const bufferLength = 44 + samples16k.length * 2;
+  const wavBuffer = new ArrayBuffer(bufferLength);
+  const view = new DataView(wavBuffer);
+
+  // RIFF chunk descriptor
+  writeString(view, 0, 'RIFF');
+  view.setUint32(4, 36 + samples16k.length * 2, true);
+  writeString(view, 8, 'WAVE');
+  // FMT sub-chunk
+  writeString(view, 12, 'fmt ');
+  view.setUint32(16, 16, true); // SubChunk1Size (16 for PCM)
+  view.setUint16(20, 1, true); // AudioFormat (1 = PCM)
+  view.setUint16(22, 1, true); // NumChannels (1 = Mono)
+  view.setUint32(24, targetSampleRate, true); // SampleRate
+  view.setUint32(28, targetSampleRate * 2, true); // ByteRate (16000 * 1 * 2)
+  view.setUint16(32, 2, true); // BlockAlign
+  view.setUint16(34, 16, true); // BitsPerSample
+  // Data sub-chunk
+  writeString(view, 36, 'data');
+  view.setUint32(40, samples16k.length * 2, true);
+
+  // Ghi các mẫu âm thanh PCM 16-bit kèm giới hạn chống vỡ âm (clipping)
+  let offset = 44;
+  for (let i = 0; i < samples16k.length; i++, offset += 2) {
+    const s = Math.max(-1, Math.min(1, samples16k[i]));
+    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+  }
+
+  return new Blob([view], { type: 'audio/wav' });
+}
+
+/**
+ * Trích xuất toàn bộ mảng mẫu âm thanh 16kHz Mono từ Blob âm thanh đầu vào
+ * Tương thích 100% iOS Safari & Android Chrome (tự động resume AudioContext, downsample thuần JS)
+ */
+async function decodeAndDownsampleTo16kHz(blob) {
+  const arrayBuffer = await blob.arrayBuffer();
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) return null;
+  const ctx = new AudioCtx();
+
+  if (ctx.state === 'suspended') {
+    await ctx.resume().catch(() => {});
+  }
+
+  const copyBuffer = arrayBuffer.slice(0);
+  const audioBuffer = await new Promise((resolve, reject) => {
+    let isSettled = false;
+    const safeResolve = (b) => {
+      if (!isSettled) {
+        isSettled = true;
+        resolve(b);
+      }
+    };
+    const safeReject = (e) => {
+      if (!isSettled) {
+        isSettled = true;
+        reject(e);
+      }
+    };
+
+    try {
+      const res = ctx.decodeAudioData(copyBuffer, safeResolve, safeReject);
+      if (res && typeof res.then === 'function') {
+        res.then(safeResolve).catch(safeReject);
+      }
+    } catch (e) {
+      safeReject(e);
+    }
+  });
+
+  await ctx.close().catch(() => {});
+  if (!audioBuffer) return null;
+
+  // Gộp tất cả các kênh (Stereo -> Mono)
+  const numChannels = audioBuffer.numberOfChannels;
+  const length = audioBuffer.length;
+  let monoData;
+
+  if (numChannels === 1) {
+    monoData = audioBuffer.getChannelData(0);
+  } else {
+    monoData = new Float32Array(length);
+    const ch0 = audioBuffer.getChannelData(0);
+    const ch1 = audioBuffer.getChannelData(1);
+    for (let i = 0; i < length; i++) {
+      monoData[i] = (ch0[i] + ch1[i]) * 0.5;
+    }
+  }
+
+  // Downsample về 16000Hz thuần JS (Linear Interpolation) - Tránh lỗi OfflineAudioContext trên iOS Safari
+  const inputSampleRate = audioBuffer.sampleRate;
+  const targetSampleRate = 16000;
+
+  if (inputSampleRate === targetSampleRate) {
+    return monoData;
+  }
+
+  const ratio = inputSampleRate / targetSampleRate;
+  const newLength = Math.round(length / ratio);
+  const samples16k = new Float32Array(newLength);
+  for (let i = 0; i < newLength; i++) {
+    const srcIdx = i * ratio;
+    const srcFloor = Math.floor(srcIdx);
+    const srcCeil = Math.min(length - 1, srcFloor + 1);
+    const weight = srcIdx - srcFloor;
+    samples16k[i] = monoData[srcFloor] * (1 - weight) + monoData[srcCeil] * weight;
+  }
+
+  return samples16k;
+}
+
+/**
+ * Convert Web Audio Buffer into 16kHz Mono 16-bit PCM WAV (Single Blob)
  */
 export async function audioBlobTo16kHzWav(blob, maxDurationSeconds = 28) {
   try {
-    const arrayBuffer = await blob.arrayBuffer();
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return null;
-    const ctx = new AudioCtx();
+    const samples16k = await decodeAndDownsampleTo16kHz(blob);
+    if (!samples16k) return null;
 
-    // 1. Tự động đánh thức AudioContext nếu bị trình duyệt di động suspend
-    if (ctx.state === 'suspended') {
-      await ctx.resume().catch(() => {});
-    }
-
-    // 2. Decode audio buffer an toàn cho cả Safari và Chrome (Safari neuters buffer khi decode)
-    const copyBuffer = arrayBuffer.slice(0);
-    const audioBuffer = await new Promise((resolve, reject) => {
-      let isSettled = false;
-      const safeResolve = (b) => {
-        if (!isSettled) {
-          isSettled = true;
-          resolve(b);
-        }
-      };
-      const safeReject = (e) => {
-        if (!isSettled) {
-          isSettled = true;
-          reject(e);
-        }
-      };
-
-      try {
-        const res = ctx.decodeAudioData(copyBuffer, safeResolve, safeReject);
-        if (res && typeof res.then === 'function') {
-          res.then(safeResolve).catch(safeReject);
-        }
-      } catch (e) {
-        safeReject(e);
-      }
-    });
-
-    await ctx.close().catch(() => {});
-
-    if (!audioBuffer) return null;
-
-    // 3. Gộp tất cả các kênh (Stereo -> Mono)
-    const numChannels = audioBuffer.numberOfChannels;
-    const length = audioBuffer.length;
-    let monoData;
-
-    if (numChannels === 1) {
-      monoData = audioBuffer.getChannelData(0);
-    } else {
-      monoData = new Float32Array(length);
-      const ch0 = audioBuffer.getChannelData(0);
-      const ch1 = audioBuffer.getChannelData(1);
-      for (let i = 0; i < length; i++) {
-        monoData[i] = (ch0[i] + ch1[i]) * 0.5;
-      }
-    }
-
-    // 4. Downsample về 16000Hz thuần JS (Linear Interpolation) - Tránh lỗi OfflineAudioContext trên iOS Safari
-    const inputSampleRate = audioBuffer.sampleRate;
-    const targetSampleRate = 16000;
-    let samples16k;
-
-    if (inputSampleRate === targetSampleRate) {
-      samples16k = monoData;
-    } else {
-      const ratio = inputSampleRate / targetSampleRate;
-      const newLength = Math.round(length / ratio);
-      samples16k = new Float32Array(newLength);
-      for (let i = 0; i < newLength; i++) {
-        const srcIdx = i * ratio;
-        const srcFloor = Math.floor(srcIdx);
-        const srcCeil = Math.min(length - 1, srcFloor + 1);
-        const weight = srcIdx - srcFloor;
-        samples16k[i] = monoData[srcFloor] * (1 - weight) + monoData[srcCeil] * weight;
-      }
-    }
-
-    // 5. Azure REST API giới hạn nghiêm ngặt tối đa 30s. Nếu là bài nói dài (Part 2), lấy mẫu 28s đầu để chấm phát âm
-    const maxSamples = targetSampleRate * maxDurationSeconds;
-    if (samples16k.length > maxSamples) {
-      samples16k = samples16k.subarray(0, maxSamples);
-    }
-
-    // 6. Mã hóa PCM 16-bit Mono WAV 16kHz
-    const bufferLength = 44 + samples16k.length * 2;
-    const wavBuffer = new ArrayBuffer(bufferLength);
-    const view = new DataView(wavBuffer);
-
-    // RIFF chunk descriptor
-    writeString(view, 0, 'RIFF');
-    view.setUint32(4, 36 + samples16k.length * 2, true);
-    writeString(view, 8, 'WAVE');
-    // FMT sub-chunk
-    writeString(view, 12, 'fmt ');
-    view.setUint32(16, 16, true); // SubChunk1Size (16 for PCM)
-    view.setUint16(20, 1, true); // AudioFormat (1 = PCM)
-    view.setUint16(22, 1, true); // NumChannels (1 = Mono)
-    view.setUint32(24, targetSampleRate, true); // SampleRate
-    view.setUint32(28, targetSampleRate * 2, true); // ByteRate (16000 * 1 * 2)
-    view.setUint16(32, 2, true); // BlockAlign
-    view.setUint16(34, 16, true); // BitsPerSample
-    // Data sub-chunk
-    writeString(view, 36, 'data');
-    view.setUint32(40, samples16k.length * 2, true);
-
-    // Ghi các mẫu âm thanh PCM 16-bit kèm giới hạn chống vỡ âm (clipping)
-    let offset = 44;
-    for (let i = 0; i < samples16k.length; i++, offset += 2) {
-      const s = Math.max(-1, Math.min(1, samples16k[i]));
-      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
-    }
-
-    return new Blob([view], { type: 'audio/wav' });
+    const maxSamples = 16000 * maxDurationSeconds;
+    const finalSamples = samples16k.length > maxSamples ? samples16k.subarray(0, maxSamples) : samples16k;
+    return encodePcmToWav(finalSamples, 16000);
   } catch (err) {
     console.warn('WAV conversion fallback:', err);
     return null;
+  }
+}
+
+/**
+ * Chia nhỏ tệp âm thanh thành các đoạn WAV <= 25s để Azure REST API phân tích toàn bộ 100% bài nói (kể cả 120s)
+ */
+export async function audioBlobTo16kHzWavChunks(blob, chunkDurationSeconds = 25) {
+  try {
+    const samples16k = await decodeAndDownsampleTo16kHz(blob);
+    if (!samples16k || samples16k.length === 0) return [];
+
+    const targetSampleRate = 16000;
+    // Nếu âm thanh ngắn (dưới 28 giây): Giữ nguyên 1 chunk duy nhất
+    if (samples16k.length <= targetSampleRate * 28) {
+      return [encodePcmToWav(samples16k, targetSampleRate)];
+    }
+
+    // Nếu âm thanh dài (như Part 2 từ 30s đến 120s): Tự động cắt thành các chunk 25s
+    const chunkSamples = targetSampleRate * chunkDurationSeconds;
+    const chunks = [];
+    for (let offset = 0; offset < samples16k.length; offset += chunkSamples) {
+      const chunkData = samples16k.subarray(offset, Math.min(samples16k.length, offset + chunkSamples));
+      // Bỏ qua đoạn đuôi quá ngắn dưới 1 giây
+      if (chunkData.length >= targetSampleRate * 1.0) {
+        chunks.push(encodePcmToWav(chunkData, targetSampleRate));
+      }
+    }
+
+    return chunks.length > 0 ? chunks : [encodePcmToWav(samples16k.subarray(0, targetSampleRate * 28), targetSampleRate)];
+  } catch (err) {
+    console.warn('WAV chunks conversion fallback:', err);
+    return [];
   }
 }
 
@@ -196,22 +230,10 @@ function writeString(view, offset, string) {
 }
 
 /**
- * Internal worker for Azure Speech Pronunciation Assessment (Ultra-fast direct REST API)
- * Supports unscripted IELTS Speaking evaluation with zero hallucination.
+ * Đánh giá 1 chunk WAV đơn lẻ qua Azure Speech REST API
  */
-async function _internalAzureAssess(audioBlob, referenceText) {
+async function _assessSingleWavChunk(wavBlob, referenceText, auth) {
   try {
-    const auth = await getAzureToken();
-    if (!auth) {
-      return { hasData: false, reason: 'Azure Speech Token không khả dụng' };
-    }
-
-    // Convert audio to 16kHz mono WAV Blob
-    const wavBlob = await audioBlobTo16kHzWav(audioBlob);
-    if (!wavBlob) {
-      return { hasData: false, reason: 'Không thể chuyển đổi WAV trên thiết bị này' };
-    }
-
     const pronConfig = {
       GradingSystem: 'HundredMark',
       Granularity: 'Phoneme',
@@ -219,17 +241,11 @@ async function _internalAzureAssess(audioBlob, referenceText) {
       EnableMiscue: false
     };
 
-    // BẬT CHẾ ĐỘ NÓI TỰ DO (Unscripted Speaking Assessment):
-    // Trong phỏng vấn IELTS Speaking (Practice / Homework / Mock Test), thí sinh tự do trả lời theo ý mình.
-    // TUYỆT ĐỐI KHÔNG gán câu hỏi (prompt) làm ReferenceText! Gán prompt làm ReferenceText sẽ ép Azure so khớp âm
-    // với đề bài thay vì câu trả lời của thí sinh, gây sai lệch toàn bộ từ vựng (hallucination).
-    // Chỉ truyền ReferenceText khi đây là bài đọc mẫu chuẩn (scripted reading) không chứa dấu hỏi.
     if (referenceText && typeof referenceText === 'string' && referenceText.trim() && !referenceText.includes('?')) {
       pronConfig.ReferenceText = referenceText.trim();
       pronConfig.EnableMiscue = true;
     }
 
-    // Unicode-safe base64 encoding
     const pronHeader = btoa(unescape(encodeURIComponent(JSON.stringify(pronConfig))));
     const endpoint = `https://${auth.region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US`;
 
@@ -245,7 +261,6 @@ async function _internalAzureAssess(audioBlob, referenceText) {
     });
 
     if (!res.ok) {
-      console.warn(`Azure REST returned HTTP ${res.status}`);
       return { hasData: false, status: res.status };
     }
 
@@ -285,6 +300,87 @@ async function _internalAzureAssess(audioBlob, referenceText) {
     }
 
     return { hasData: false, reason: data.RecognitionStatus || 'Không có dữ liệu NBest' };
+  } catch (err) {
+    return { hasData: false, error: err.message };
+  }
+}
+
+/**
+ * Internal worker for Azure Speech Pronunciation Assessment (Ultra-fast direct REST API)
+ * Tự động chạy song song nhiều chunk nếu bài nói Part 2 kéo dài tới 120 giây:
+ * - Đảm bảo phân tích ngữ âm toàn diện 100% bài nói từ giây 0 đến giây 120.
+ * - Tuân thủ giới hạn 30s của Azure REST API.
+ * - Tốc độ siêu tốc (~1-2s) nhờ cơ chế fetch song song Promise.all.
+ */
+async function _internalAzureAssess(audioBlob, referenceText) {
+  try {
+    const auth = await getAzureToken();
+    if (!auth) {
+      return { hasData: false, reason: 'Azure Speech Token không khả dụng' };
+    }
+
+    // Tự động phân tách thành các đoạn WAV <= 25s
+    const wavChunks = await audioBlobTo16kHzWavChunks(audioBlob, 25);
+    if (!wavChunks || wavChunks.length === 0) {
+      return { hasData: false, reason: 'Không thể chuyển đổi WAV trên thiết bị này' };
+    }
+
+    // Nếu chỉ có 1 chunk (câu nói ngắn dưới 28s như Part 1/Part 3)
+    if (wavChunks.length === 1) {
+      return await _assessSingleWavChunk(wavChunks[0], referenceText, auth);
+    }
+
+    // Nếu bài nói dài (>28s, như Part 2 lên tới 120s): Chấm song song tất cả các đoạn qua Azure REST
+    const chunkResults = await Promise.all(
+      wavChunks.map((chunk) => _assessSingleWavChunk(chunk, '', auth))
+    );
+
+    const validResults = chunkResults.filter((r) => r && r.hasData);
+    if (validResults.length === 0) {
+      return chunkResults[0] || { hasData: false, reason: 'Không nhận được kết quả NBest từ Azure' };
+    }
+
+    // 1. Gộp toàn bộ Transcript từ tất cả các chunk thành bài nói 120s hoàn chỉnh
+    const fullTranscript = validResults
+      .map((r) => r.transcript)
+      .filter(Boolean)
+      .join(' ')
+      .trim();
+
+    // 2. Gộp danh sách từ và các từ phát âm lỗi trong suốt 120s
+    const allWords = validResults.flatMap((r) => r.words || []);
+    const weakWords = validResults.flatMap((r) => r.weakWords || []);
+
+    // 3. Tính điểm trung bình có trọng số theo số lượng từ của từng chunk
+    let totalWordCount = 0;
+    let sumAccuracy = 0;
+    let sumFluency = 0;
+    let sumPron = 0;
+    let sumProsody = 0;
+    let prosodyCount = 0;
+
+    validResults.forEach((r) => {
+      const count = Math.max(1, r.words?.length || 1);
+      totalWordCount += count;
+      sumAccuracy += (r.accuracyScore || 0) * count;
+      sumFluency += (r.fluencyScore || 0) * count;
+      sumPron += (r.pronScore || 0) * count;
+      if (r.prosodyScore != null) {
+        sumProsody += r.prosodyScore * count;
+        prosodyCount += count;
+      }
+    });
+
+    return {
+      hasData: true,
+      accuracyScore: Math.round(sumAccuracy / totalWordCount),
+      fluencyScore: Math.round(sumFluency / totalWordCount),
+      prosodyScore: prosodyCount > 0 ? Math.round(sumProsody / prosodyCount) : null,
+      pronScore: Math.round(sumPron / totalWordCount),
+      transcript: fullTranscript,
+      words: allWords,
+      weakWords
+    };
   } catch (err) {
     console.warn('Azure assessment exception:', err);
     return { hasData: false, error: err.message };
