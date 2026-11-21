@@ -14,7 +14,8 @@
  * 2. Vào Tiện ích mở rộng (Extensions) -> Apps Script.
  * 3. XÓA TOÀN BỘ CODE CŨ và DÁN TOÀN BỘ CODE DƯỚI ĐÂY VÀO.
  * 4. Bấm biểu tượng đĩa mềm 💾 (Lưu).
- * 5. Bấm Triển khai (Deploy) -> Quản lý bản triển khai (Manage deployments) -> Chỉnh sửa (Edit) -> Chọn "Phiên bản mới" (New version) -> Triển khai (Deploy).
+ * 5. [QUAN TRỌNG NHẤT]: Trên thanh công cụ, ở menu chọn hàm (cạnh nút Gỡ lỗi), CHỌN HÀM "testPermissions" -> BẤM NÚT "Chạy" (Run) -> Bấm "Xem lại quyền" (Review permissions) -> Chọn tài khoản Google -> Bấm "Nâng cao" (Advanced) -> Bấm "Đi tới... (không an toàn)" -> Bấm "Cho phép" (Allow). (Bước này cấp quyền UrlFetchApp để kết nối AI).
+ * 6. Bấm Triển khai (Deploy) -> Quản lý bản triển khai (Manage deployments) -> Chỉnh sửa (Edit) -> Chọn "Phiên bản mới" (New version) -> Triển khai (Deploy).
  * ==============================================================================
  */
 
@@ -332,10 +333,9 @@ function handleGeminiEvaluation(data) {
     const candidateModels = [
       primaryModel,
       "gemini-3.8-flash",
-      "gemini-3.5-flash-lite",
-      "gemini-3.5-flash",
       "gemini-2.5-flash",
-      "gemini-2.0-flash"
+      "gemini-2.0-flash",
+      "gemini-1.5-flash"
     ];
     // Remove duplicates
     const modelsToTry = candidateModels.filter((v, i, a) => a.indexOf(v) === i);

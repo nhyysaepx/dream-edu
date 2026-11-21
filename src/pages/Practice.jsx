@@ -354,7 +354,7 @@ export default function Practice() {
                   { id: 'all', label: 'Tất cả kỹ năng' },
                   { id: 'reading', label: 'Reading (Đọc hiểu)' },
                   { id: 'listening', label: 'Listening (Nghe hiểu)' },
-                  { id: 'speaking', label: 'Speaking (Luyện nói AI)' }
+                  ...(activeCategory === 'ielts' ? [{ id: 'speaking', label: 'Speaking (Luyện nói AI)' }] : [])
                 ].map(skill => (
                   <button
                     key={skill.id}

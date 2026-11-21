@@ -233,37 +233,48 @@ export default function SpeakingMockRoom() {
     setErrorMessage('');
 
     try {
-      // Step 1: Run Azure Pronunciation on Part 2 (longest speech) for physical acoustic metrics
-      setStatusMessage('1/3: Đang đo sóng âm và phát âm qua Azure Speech...');
-      const part2Response = allResponses.find((r) => r.part.includes('Part 2')) || allResponses[0];
-      let azureRes = { hasData: false };
-      if (part2Response && part2Response.blob) {
-        try {
-          azureRes = await assessAudioWithAzure(part2Response.blob, part2Response.question);
-        } catch (azErr) {
-          console.warn('Azure mock test check bypassed:', azErr);
-        }
-      }
-      setCombinedAzure(azureRes);
+      // Step 1: Đo sóng âm và gỡ băng song song qua Azure Speech cho tất cả câu trả lời
+      setStatusMessage('1/2: Đang đo sóng âm và phát âm qua Azure Speech...');
+      const azureMap = {};
+      await Promise.all(
+        allResponses.map(async (r, idx) => {
+          if (r.blob) {
+            try {
+              const res = await assessAudioWithAzure(r.blob, r.question);
+              if (res?.hasData) {
+                azureMap[idx] = res;
+              }
+            } catch (e) {
+              console.warn('Azure check bypassed for response', idx, e);
+            }
+          }
+        })
+      );
+
+      const part2Idx = allResponses.findIndex((r) => r.part.includes('Part 2'));
+      const combinedAzure = (part2Idx !== -1 && azureMap[part2Idx]) || azureMap[0] || { hasData: false };
+      setCombinedAzure(combinedAzure);
 
       // Step 2: Gemini Full IELTS Speaking Evaluation across all 3 parts
-      setStatusMessage('2/3: Giám khảo AI đang chấm tổng thể 4 tiêu chí IELTS Speaking...');
+      // TỐI ƯU CỰC ĐẠI: Chỉ gửi Text (transcript + số đo Azure), không gửi audio base64 nếu đã có transcript
+      setStatusMessage('2/2: Giám khảo AI đang chấm tổng thể 4 tiêu chí IELTS và phân tích từng phần, từng câu...');
       const evalPayload = {
         mode: 'mock_test',
         testTitle: test.title,
         targetLevel: 'IELTS Standard Band 6.5 - 7.5',
-        responses: allResponses.map((r) => {
+        responses: allResponses.map((r, idx) => {
+          const az = azureMap[idx];
+          const hasTranscript = Boolean(az?.transcript && az.transcript.trim());
           const isPart2 = r.part.includes('Part 2');
-          const hasAzure = isPart2 && azureRes?.transcript;
           return {
             part: r.part,
             question: r.question,
             durationSeconds: r.durationSeconds,
-            transcript: hasAzure ? azureRes.transcript : '',
-            // Tối ưu payload: Nếu Part 2 đã có transcript từ Azure thì không gửi base64 của Part 2 để giảm 80% dung lượng gửi lên AI
-            audioBase64: hasAzure ? null : r.base64,
+            transcript: hasTranscript ? az.transcript : '',
+            // Chỉ gửi audioBase64 nếu không có transcript và chỉ cho câu đầu tiên/Part 2 để tiết kiệm 95% bandwidth
+            audioBase64: hasTranscript ? null : (isPart2 ? r.base64 : null),
             audioMimeType: r.mimeType,
-            azureMetrics: isPart2 ? azureRes : null
+            azureMetrics: az || null
           };
         })
       };

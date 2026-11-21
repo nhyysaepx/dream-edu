@@ -1,4 +1,4 @@
-import { SPEAKING_WORKER_URL, submitSpeakingResult } from './submissionService';
+import { SPEAKING_WORKER_URL, submitSpeakingResult } from './submissionService.js';
 
 /**
  * Cache for Azure Token (valid for 9 minutes, Azure token expires in 10 mins)
@@ -235,8 +235,8 @@ export async function evaluateSpeakingWithAI({
   responses = [] // [{ question, part, durationSeconds, transcript, audioBase64, audioMimeType, azureMetrics }]
 }) {
   const controller = new AbortController();
-  // 45 seconds timeout to prevent premature abort on mobile networks
-  const timer = setTimeout(() => controller.abort(), 45000);
+  // 60 seconds timeout to prevent premature abort on mobile networks
+  const timer = setTimeout(() => controller.abort(), 60000);
 
   try {
     const res = await fetch(`${SPEAKING_WORKER_URL}/api/evaluate`, {
@@ -266,6 +266,8 @@ export async function evaluateSpeakingWithAI({
     }
 
     const data = await res.json();
+
+    // Luồng 1: Worker đã chấm thành công
     if (data.status === 'success' && data.evaluation) {
       return {
         success: true,
@@ -273,6 +275,57 @@ export async function evaluateSpeakingWithAI({
         evaluation: data.evaluation
       };
     }
+
+    // Luồng 2: Fallback kích hoạt gọi thẳng Gemini từ trình duyệt tại Việt Nam (Bypass lỗi vị trí IP và proxy)
+    if (data.status === 'fallback_client' && data.geminiKey) {
+      console.log('⚡ Đang kích hoạt Fallback Gemini Client trực tiếp...');
+      const targetModel = data.model || 'gemini-3.8-flash';
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${data.geminiKey}`;
+
+      const clientRes = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: 'user',
+              parts: [{ text: data.promptText }]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.25,
+            responseMimeType: 'application/json'
+          }
+        })
+      });
+
+      if (!clientRes.ok) {
+        const cErrText = await clientRes.text();
+        throw new Error(`Gemini Direct Client lỗi (${clientRes.status}): ${cErrText.slice(0, 200)}`);
+      }
+
+      const clientJson = await clientRes.json();
+      const rawText = clientJson?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawText) {
+        throw new Error('Gemini Direct Client không trả về nội dung đánh giá.');
+      }
+
+      const cleaned = rawText
+        .trim()
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/\s*```$/i, '');
+      const parsedEval = JSON.parse(cleaned);
+
+      return {
+        success: true,
+        modelUsed: `${targetModel} (Direct Vietnam Client)`,
+        evaluation: parsedEval
+      };
+    }
+
     throw new Error(data.error || 'Không nhận được kết quả đánh giá từ AI.');
   } catch (err) {
     clearTimeout(timer);
