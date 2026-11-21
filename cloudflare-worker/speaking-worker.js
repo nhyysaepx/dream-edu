@@ -196,6 +196,36 @@ QUY TẮC CHẤM ĐIỂM BẮT BUỘC:
 TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không thêm markdown \`\`\`json):
 {
   "overallBand": 6.0,
+  "partBreakdown": {
+    "part1": { "band": 6.0, "commentVi": "Nhận xét về độ trôi chảy phản xạ và từ vựng cơ bản Part 1." },
+    "part2": { "band": 6.0, "commentVi": "Nhận xét về khả năng duy trì bài nói 2 phút, sự phát triển ý và liên kết Part 2." },
+    "part3": { "band": 6.0, "commentVi": "Nhận xét về tư duy phản biện, lập luận chiều sâu và từ vựng học thuật Part 3." }
+  },
+  "questionBreakdown": [
+    {
+      "questionIndex": 0,
+      "part": "Part 1",
+      "question": "Câu hỏi học sinh đã trả lời",
+      "cleanedTranscript": "Bản gỡ băng chính xác của riêng câu hỏi này",
+      "estimatedBand": 6.0,
+      "feedbackVi": "Nhận xét ngắn gọn 1-2 câu về câu trả lời này.",
+      "grammarErrors": [
+        {
+          "original": "câu/cụm học sinh nói sai",
+          "corrected": "câu/cụm sửa lại chuẩn xác",
+          "explanationVi": "giải thích lỗi ngắn gọn bằng tiếng Việt"
+        }
+      ],
+      "mispronouncedWords": [
+        {
+          "word": "từ phát âm chưa chuẩn",
+          "ipa": "/phiên âm IPA chuẩn/",
+          "issueVi": "mô tả ngắn lỗi và cách sửa khẩu hình"
+        }
+      ],
+      "upgradedAnswer": "Phiên bản nâng cấp Band 7.5-8.0 cho riêng câu hỏi này, giữ đúng ý của học sinh"
+    }
+  ],
   "transcripts": [
     {
       "questionIndex": 0,

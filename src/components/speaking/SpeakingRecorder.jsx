@@ -6,15 +6,27 @@ export default function SpeakingRecorder({
   recommendedDuration = 30,
   onRecordingComplete,
   disabled = false,
-  questionPrompt = ''
+  questionPrompt = '',
+  initialData = null
 }) {
   const [isRecording, setIsRecording] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [audioBlob, setAudioBlob] = useState(null);
-  const [audioUrl, setAudioUrl] = useState(null);
+  const [duration, setDuration] = useState(initialData?.durationSeconds || 0);
+  const [audioBlob, setAudioBlob] = useState(initialData?.blob || null);
+  const [audioUrl, setAudioUrl] = useState(initialData?.url || null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Sync state if question or initialData changes
+  useEffect(() => {
+    if (!isRecording) {
+      setAudioBlob(initialData?.blob || null);
+      setAudioUrl(initialData?.url || null);
+      setDuration(initialData?.durationSeconds || 0);
+      setIsPlaying(false);
+      setErrorMsg('');
+    }
+  }, [initialData, questionPrompt]);
 
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);

@@ -168,6 +168,16 @@ export default function TestDetail() {
               Chú ý: để được quy đổi sang scaled score (ví dụ trên thang điểm 990 cho TOEIC hoặc 9.0 cho IELTS), vui lòng chọn chế độ làm FULL TEST.
             </p>
 
+            {/* Speaking Forecast Random Generator Notice */}
+            {exam.skill === 'Speaking' && (
+              <div className="p-4 bg-purple-50/90 border border-purple-200 rounded-2xl flex items-start gap-3 text-purple-950 shadow-2xs">
+                <Sparkles size={20} className="text-purple-600 shrink-0 mt-0.5" />
+                <div className="text-xs leading-relaxed">
+                  <span className="font-bold">🎲 Ngân hàng đề Speaking Forecast 2026:</span> Mỗi lần bạn vào thi, hệ thống sẽ tự động bốc ngẫu nhiên 1 bộ đề gồm 3 phần thi hoàn chỉnh từ ngân hàng <strong>45 chủ đề Part 1</strong> và <strong>70 bộ Cue Card Part 2/3</strong>. Toàn bộ câu trả lời sẽ được ghi âm và giám khảo AI & Azure Speech chấm điểm toàn diện sau khi hoàn thành!
+                </div>
+              </div>
+            )}
+
             {/* Mode Tabs: Luyện tập | Làm full test | Thảo luận */}
             <div className="border-b border-gray-200 flex gap-8">
               <button

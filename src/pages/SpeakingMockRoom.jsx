@@ -19,6 +19,7 @@ import {
   Volume2
 } from 'lucide-react';
 import { getSpeakingMockTestById } from '../data/speakingData';
+import { generateRandomSpeakingMockTest } from '../data/speakingForecastBank';
 import { getStoredStudent, saveStoredStudent } from '../utils/studentStorage';
 import SpeakingRecorder from '../components/speaking/SpeakingRecorder';
 import SpeakingEvaluationResult from '../components/speaking/SpeakingEvaluationResult';
@@ -32,7 +33,25 @@ export default function SpeakingMockRoom() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const test = getSpeakingMockTestById(id);
+  // Generate random test from Speaking Forecast bank by default, or find specific mock test
+  const [test, setTest] = useState(() => {
+    if (!id || id === 'random' || id === 'vol1-speak-1') {
+      return generateRandomSpeakingMockTest();
+    }
+    const found = getSpeakingMockTestById(id);
+    return found || generateRandomSpeakingMockTest();
+  });
+
+  const handleRegenerateRandomTest = () => {
+    const newTest = generateRandomSpeakingMockTest();
+    setTest(newTest);
+    setRecordedResponses([]);
+    setCurrentRecording(null);
+    setP1Index(0);
+    setP3Index(0);
+    setPrepNotes('');
+    setErrorMessage('');
+  };
 
   // Student info from localStorage
   const [studentInfo, setStudentInfo] = useState(() => getStoredStudent());
@@ -108,6 +127,7 @@ export default function SpeakingMockRoom() {
         question: currentP1Q.prompt,
         durationSeconds: currentRecording.durationSeconds,
         blob: currentRecording.blob,
+        url: currentRecording.url,
         base64: currentRecording.base64,
         mimeType: currentRecording.mimeType
       }
@@ -161,6 +181,7 @@ export default function SpeakingMockRoom() {
         question: cueCard.prompt,
         durationSeconds: currentRecording.durationSeconds,
         blob: currentRecording.blob,
+        url: currentRecording.url,
         base64: currentRecording.base64,
         mimeType: currentRecording.mimeType
       }
@@ -187,6 +208,7 @@ export default function SpeakingMockRoom() {
         question: currentP3Q.prompt,
         durationSeconds: currentRecording.durationSeconds,
         blob: currentRecording.blob,
+        url: currentRecording.url,
         base64: currentRecording.base64,
         mimeType: currentRecording.mimeType
       }
@@ -320,6 +342,34 @@ export default function SpeakingMockRoom() {
               {test.description}
             </p>
 
+            {/* Speaking Forecast Random Generator Banner */}
+            <div className="my-6 p-4 bg-purple-50/80 border border-purple-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 font-bold text-base shadow-xs">
+                  🎲
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-black text-purple-950">Bộ đề ngẫu nhiên từ Speaking Forecast 2026</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-200/70 text-purple-900 border border-purple-300/60">
+                      45 P1 Topics + 70 P2/3 Sets
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-purple-800/90 mt-0.5">
+                    Hệ thống tự động bốc ngẫu nhiên kết hợp 1 chủ đề Part 1 + 1 Cue Card Part 2 và 3 câu hỏi thảo luận Part 3.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleRegenerateRandomTest}
+                className="w-full sm:w-auto px-4 py-2 bg-white hover:bg-purple-100 text-purple-800 border border-purple-300 font-extrabold text-xs rounded-xl transition-all shrink-0 cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs active:scale-95"
+              >
+                <Sparkles size={13} className="text-purple-600" />
+                <span>Đổi đề thi khác</span>
+              </button>
+            </div>
+
             {/* Test Structure Box */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-6">
               <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200/80">
@@ -429,7 +479,7 @@ export default function SpeakingMockRoom() {
                 <span className="text-[11px] font-black uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-lg">
                   {test.parts[0].title}
                 </span>
-                <p className="text-xs text-gray-500 mt-1">Chủ đề: {test.parts[0].topic}</p>
+                <p className="text-xs text-gray-500 mt-1">Chủ đề: {test.parts[0].topic || test.parts[0].name || test.parts[0].title}</p>
               </div>
               <span className="text-xs font-extrabold text-gray-600 bg-gray-100 px-3 py-1 rounded-xl">
                 Câu {p1Index + 1} / {test.parts[0].questions.length}
@@ -609,7 +659,7 @@ export default function SpeakingMockRoom() {
                 <span className="text-[11px] font-black uppercase tracking-wider text-purple-800 bg-purple-100 px-2.5 py-1 rounded-lg">
                   {test.parts[2].title}
                 </span>
-                <p className="text-xs text-gray-500 mt-1">Chủ đề: {test.parts[2].topic}</p>
+                <p className="text-xs text-gray-500 mt-1">Chủ đề: {test.parts[2].topic || test.parts[2].name || test.parts[2].title}</p>
               </div>
               <span className="text-xs font-extrabold text-gray-600 bg-gray-100 px-3 py-1 rounded-xl">
                 Câu {p3Index + 1} / {test.parts[2].questions.length}
@@ -689,12 +739,13 @@ export default function SpeakingMockRoom() {
             <SpeakingEvaluationResult
               evaluation={evaluation}
               azureMetrics={combinedAzure}
+              responses={recordedResponses}
               studentInfo={studentInfo}
               sessionName={test.session}
               testTitle={test.title}
               onRetry={() => {
+                handleRegenerateRandomTest();
                 setTestStage('intro');
-                setRecordedResponses([]);
                 setEvaluation(null);
               }}
             />

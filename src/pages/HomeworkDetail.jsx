@@ -22,6 +22,7 @@ import ListeningHomeworkView from '../components/homework/ListeningHomeworkView'
 import SchoolPracticeView from '../components/homework/SchoolPracticeView';
 import StudentRequiredModal from '../components/StudentRequiredModal';
 import StudentBadge from '../components/StudentBadge';
+import SpeakingPracticeRoom from './SpeakingPracticeRoom';
 import { getStoredStudent } from '../utils/studentStorage';
 import { submitHomeworkOrPracticeResult } from '../services/submissionService';
 import { PRE_IELTS_LISTENING_1_DETAIL, getHomeworkDetailById } from '../data/homeworkData';
@@ -30,6 +31,11 @@ export default function HomeworkDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const homework = getHomeworkDetailById(id) || PRE_IELTS_LISTENING_1_DETAIL;
+
+  // If this is a Speaking homework, render the Speaking Practice Room
+  if (homework?.skill === 'Speaking' || homework?.isSpeaking) {
+    return <SpeakingPracticeRoom customTopicId={homework.speakingTopicId || homework.id} />;
+  }
 
   // School English exercises (Lớp 6-12 / Đề cương): Render the vertical layout
   if (

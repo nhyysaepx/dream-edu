@@ -11,9 +11,11 @@ import {
   RefreshCw, 
   GraduationCap, 
   ChevronRight,
+  ChevronLeft,
   Send,
   Loader2,
-  Mic
+  Mic,
+  Award
 } from 'lucide-react';
 import { getSpeakingTopicById } from '../data/speakingData';
 import { getStoredStudent, saveStoredStudent } from '../utils/studentStorage';
@@ -38,26 +40,21 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
   const [studentInfo, setStudentInfo] = useState(() => getStoredStudent());
   const [isEditingStudent, setIsEditingStudent] = useState(false);
 
-  // Audio recording state
-  const [recordedData, setRecordedData] = useState(null); // { blob, url, base64, durationSeconds, mimeType }
+  // Audio recording state for each question: { [questionIndex]: { blob, url, base64, durationSeconds, mimeType } }
+  const [recordingsByQuestion, setRecordingsByQuestion] = useState({});
 
-  // Analysis & Result state
+  // Analysis & Result state - Evaluation is ONLY shown when all/submitted questions are evaluated together
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisStep, setAnalysisStep] = useState(''); // text description of current pipeline step
+  const [analysisStep, setAnalysisStep] = useState('');
   const [evaluation, setEvaluation] = useState(null);
   const [azureMetrics, setAzureMetrics] = useState(null);
+  const [submittedResponses, setSubmittedResponses] = useState([]);
   const [analysisError, setAnalysisError] = useState('');
 
-  // History of evaluated answers for this session
-  const [sessionResults, setSessionResults] = useState({});
-
-  useEffect(() => {
-    // Reset state when switching questions
-    setRecordedData(null);
-    setEvaluation(sessionResults[currentQuestion.id]?.evaluation || null);
-    setAzureMetrics(sessionResults[currentQuestion.id]?.azureMetrics || null);
-    setAnalysisError('');
-  }, [currentQuestionIndex, currentQuestion.id]);
+  const recordedCount = Object.keys(recordingsByQuestion).length;
+  const totalQuestions = topic.questions.length;
+  const isAllRecorded = recordedCount === totalQuestions;
+  const currentRecording = recordingsByQuestion[currentQuestionIndex] || null;
 
   const handleSaveStudent = (e) => {
     e.preventDefault();
@@ -66,13 +63,17 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
   };
 
   const handleRecordingComplete = (data) => {
-    setRecordedData(data);
+    setRecordingsByQuestion((prev) => ({
+      ...prev,
+      [currentQuestionIndex]: data
+    }));
     setAnalysisError('');
   };
 
-  const handleStartAnalysis = async () => {
-    if (!recordedData || !recordedData.blob) {
-      setAnalysisError('Vui lòng ghi âm câu trả lời trước khi chấm điểm.');
+  // Submit all recordings together to AI & Azure for complete evaluation
+  const handleSubmitAll = async () => {
+    if (recordedCount === 0) {
+      setAnalysisError('Vui lòng ghi âm ít nhất một câu hỏi trước khi nộp bài.');
       return;
     }
 
@@ -86,67 +87,75 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
     setAnalysisError('');
 
     try {
-      // Step 1: Azure Speech Physical Assessment (IPA, Prosody, Fluency, Accuracy)
-      setAnalysisStep('1/3: Đang đo sóng âm & phân tích phát âm qua Azure Speech...');
-      let azureRes = null;
-      try {
-        azureRes = await assessAudioWithAzure(recordedData.blob, currentQuestion.prompt);
-      } catch (azErr) {
-        console.warn('Azure check bypassed:', azErr);
-        azureRes = { hasData: false };
+      // Step 1: Azure Speech physical acoustic check on the longest or first recording
+      setAnalysisStep('1/3: Đang đo sóng âm và phát âm qua Azure Speech...');
+      const responsesList = topic.questions
+        .map((q, idx) => {
+          const rec = recordingsByQuestion[idx];
+          if (!rec) return null;
+          return {
+            part: topic.part || 'Part 1',
+            question: q.prompt,
+            durationSeconds: rec.durationSeconds,
+            blob: rec.blob,
+            url: rec.url,
+            base64: rec.base64,
+            mimeType: rec.mimeType
+          };
+        })
+        .filter(Boolean);
+
+      let azureRes = { hasData: false };
+      // Check first audio response with Azure Speech
+      if (responsesList[0] && responsesList[0].blob) {
+        try {
+          azureRes = await assessAudioWithAzure(responsesList[0].blob, responsesList[0].question);
+        } catch (azErr) {
+          console.warn('Azure check bypassed:', azErr);
+        }
       }
       setAzureMetrics(azureRes);
 
-      // Step 2: Call Gemini via Cloudflare Worker for 4 IELTS Criteria
-      setAnalysisStep('2/3: Đang chấm điểm 4 tiêu chí IELTS & tạo bài mẫu nâng cấp...');
-      const hasTranscript = Boolean(azureRes?.transcript && azureRes.transcript.trim());
-      const evalRes = await evaluateSpeakingWithAI({
+      // Step 2: Call Gemini via Cloudflare Worker for comprehensive evaluation across all questions
+      setAnalysisStep('2/3: Giám khảo AI đang chấm tổng thể 4 tiêu chí IELTS và phân tích chi tiết từng câu...');
+      const evalPayload = {
         mode: 'practice',
-        testTitle: `${topic.title} - ${currentQuestion.prompt.slice(0, 40)}...`,
+        testTitle: topic.title,
         targetLevel: topic.targetBand || 'IELTS 6.5',
-        responses: [
-          {
-            part: topic.part || 'Part 1',
-            question: currentQuestion.prompt,
-            durationSeconds: recordedData.durationSeconds || Math.max(1, Math.round((recordedData.blob?.size || 4000) / 4000)),
-            transcript: azureRes?.transcript || '',
-            // Tối ưu tốc độ: Nếu Azure đã gỡ băng thành công, chỉ gửi transcript (2KB) thay vì file audio (3MB), giúp AI phản hồi nhanh gấp 3 lần!
-            audioBase64: hasTranscript ? null : recordedData.base64,
-            audioMimeType: recordedData.mimeType,
-            azureMetrics: azureRes
-          }
-        ]
-      });
+        responses: responsesList.map((r, idx) => {
+          const hasAzure = idx === 0 && azureRes?.transcript;
+          return {
+            part: r.part,
+            question: r.question,
+            durationSeconds: r.durationSeconds,
+            transcript: hasAzure ? azureRes.transcript : '',
+            audioBase64: hasAzure ? null : r.base64,
+            audioMimeType: r.mimeType,
+            azureMetrics: idx === 0 ? azureRes : null
+          };
+        })
+      };
 
+      const evalRes = await evaluateSpeakingWithAI(evalPayload);
       if (!evalRes.success) {
         throw new Error(evalRes.error || 'Không thể kết nối dịch vụ chấm AI.');
       }
 
       const finalEval = evalRes.evaluation;
       setEvaluation(finalEval);
-
-      // Save into session results immediately so student sees feedback with ZERO extra delay
-      setSessionResults((prev) => ({
-        ...prev,
-        [currentQuestion.id]: {
-          evaluation: finalEval,
-          azureMetrics: azureRes
-        }
-      }));
-
+      setSubmittedResponses(responsesList);
       setIsAnalyzing(false);
       setAnalysisStep('Hoàn thành!');
 
       // Step 3: Run Google Drive & Google Sheets submission asynchronously in the background
-      // This saves 5-8 seconds of wait time for the student!
       submitSpeakingEvaluationToSystem({
         studentInfo,
         sessionName: topic.session || topic.title,
-        testTitle: `${topic.title} (Câu ${currentQuestionIndex + 1})`,
+        testTitle: `${topic.title} (Toàn bộ ${responsesList.length} câu)`,
         evaluation: finalEval,
         azureMetrics: azureRes,
-        audioBase64: recordedData.base64,
-        audioMimeType: recordedData.mimeType,
+        audioBase64: responsesList[0]?.base64 || null,
+        audioMimeType: responsesList[0]?.mimeType || 'audio/webm',
         mode: 'practice',
         transcript: azureRes?.transcript || ''
       }).catch((submitErr) => {
@@ -169,6 +178,14 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
     }
+  };
+
+  const handleRetryPractice = () => {
+    setEvaluation(null);
+    setRecordingsByQuestion({});
+    setSubmittedResponses([]);
+    setCurrentQuestionIndex(0);
+    setAnalysisError('');
   };
 
   return (
@@ -204,7 +221,7 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
           <div className="mb-6 p-4 bg-amber-50/90 border border-amber-200 rounded-2xl flex items-start gap-3 text-amber-900 shadow-2xs">
             <Sparkles size={18} className="text-amber-600 shrink-0 mt-0.5" />
             <div className="text-xs leading-relaxed">
-              <span className="font-bold">💡 Bài luyện tập mẫu ví dụ:</span> Thầy/cô sẽ cập nhật thêm các bộ câu hỏi chính thức sau. Bạn hoàn toàn có thể thu âm trả lời ngay để trải nghiệm phân tích phát âm Azure Speech & AI chấm điểm 4 tiêu chí IELTS.
+              <span className="font-bold">💡 Bài luyện tập mẫu ví dụ:</span> Thầy/cô sẽ cập nhật thêm các bộ câu hỏi chính thức sau. Bạn hãy ghi âm trả lời tất cả các câu hỏi rồi bấm <strong>Nộp toàn bộ bài</strong> để nhận bản đánh giá Overall kèm phân tích từng câu và từng phần!
             </div>
           </div>
         )}
@@ -228,7 +245,7 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
                 )}
               </div>
               <p className="text-[11px] text-gray-400 mt-0.5">
-                File ghi âm sẽ tự động lưu vào Google Drive thư mục: <code>{studentInfo.className || 'Thi_sinh_tu_do'} / {topic.session}</code>
+                File ghi âm và kết quả chấm IELTS sẽ tự động lưu vào Google Drive thư mục: <code>{studentInfo.className || 'Thi_sinh_tu_do'} / {topic.session}</code>
               </p>
             </div>
           </div>
@@ -287,168 +304,227 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
           </form>
         )}
 
-        {/* Question Stepper Tabs */}
-        <div className="flex items-center gap-2 mb-4 overflow-x-auto no-scrollbar">
-          {topic.questions.map((q, idx) => {
-            const isAnswered = !!sessionResults[q.id];
-            const isCurrent = idx === currentQuestionIndex;
+        {/* VIEW 1: RECORDING FLOW (When not evaluated yet) */}
+        {!evaluation && !isAnalyzing && (
+          <div>
+            {/* Question Stepper Tabs */}
+            <div className="flex items-center gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
+              {topic.questions.map((q, idx) => {
+                const isRecorded = Boolean(recordingsByQuestion[idx]);
+                const isCurrent = idx === currentQuestionIndex;
 
-            return (
-              <button
-                key={q.id}
-                onClick={() => setCurrentQuestionIndex(idx)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-                  isCurrent
-                    ? 'bg-primary text-white shadow-xs'
-                    : isAnswered
-                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                }`}
-              >
-                {isAnswered && <CheckCircle2 size={13} className="text-emerald-600" />}
-                <span>Câu {idx + 1}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Main Question Card */}
-        <div className="bg-white rounded-3xl border border-gray-200/90 p-6 sm:p-8 shadow-xs mb-6">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-[11px] font-black uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-lg">
-              Câu hỏi {currentQuestionIndex + 1} / {topic.questions.length} ({topic.part})
-            </span>
-            <span className="text-xs text-gray-400 font-medium flex items-center gap-1">
-              <Clock size={13} />
-              <span>Gợi ý nói ~{currentQuestion.recommendedDuration || 30} giây</span>
-            </span>
-          </div>
-
-          <h1 className="text-xl sm:text-2xl font-black text-gray-900 leading-snug mb-3">
-            "{currentQuestion.prompt}"
-          </h1>
-
-          {/* Hint & Keywords */}
-          {currentQuestion.hintVi && (
-            <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 mb-4 flex items-start gap-2.5">
-              <span className="text-base">💡</span>
-              <div>
-                <strong>Gợi ý trả lời:</strong> {currentQuestion.hintVi}
-              </div>
+                return (
+                  <button
+                    key={q.id || idx}
+                    onClick={() => setCurrentQuestionIndex(idx)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                      isCurrent
+                        ? 'bg-primary text-white shadow-xs'
+                        : isRecorded
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-300'
+                        : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    {isRecorded ? (
+                      <CheckCircle2 size={13} className="text-emerald-600 shrink-0" />
+                    ) : (
+                      <span className="w-2 h-2 rounded-full bg-gray-300" />
+                    )}
+                    <span>Câu {idx + 1}</span>
+                    {isRecorded && (
+                      <span className="text-[10px] opacity-75">({recordingsByQuestion[idx].durationSeconds}s)</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
-          )}
 
-          {currentQuestion.vocabKeywords && currentQuestion.vocabKeywords.length > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap text-xs text-gray-600 mb-6">
-              <span className="font-bold text-gray-500">Từ vựng ghi điểm:</span>
-              {currentQuestion.vocabKeywords.map((w, idx) => (
-                <span
-                  key={idx}
-                  className="px-2 py-0.5 rounded-md bg-blue-50 text-primary font-semibold border border-blue-150 text-[11px]"
-                >
-                  +{w}
+            {/* Main Question Card */}
+            <div className="bg-white rounded-3xl border border-gray-200/90 p-6 sm:p-8 shadow-xs mb-6">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-[11px] font-black uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-lg">
+                  Câu hỏi {currentQuestionIndex + 1} / {totalQuestions} ({topic.part})
                 </span>
-              ))}
-            </div>
-          )}
+                <span className="text-xs text-gray-400 font-medium flex items-center gap-1">
+                  <Clock size={13} />
+                  <span>Gợi ý nói ~{currentQuestion.recommendedDuration || 30} giây</span>
+                </span>
+              </div>
 
-          {/* Recorder */}
-          <SpeakingRecorder
-            recommendedDuration={currentQuestion.recommendedDuration || 30}
-            onRecordingComplete={handleRecordingComplete}
-            disabled={isAnalyzing}
-            questionPrompt={currentQuestion.prompt}
-          />
+              <h1 className="text-xl sm:text-2xl font-black text-gray-900 leading-snug mb-3">
+                "{currentQuestion.prompt}"
+              </h1>
 
-          {/* Analysis Action Button */}
-          {recordedData && !evaluation && (
-            <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 pt-5 border-t border-gray-150">
-              <span className="text-xs text-gray-500">
-                Đã ghi âm: <strong>{recordedData.durationSeconds} giây</strong>. Bấm để gửi AI và Azure phân tích.
-              </span>
+              {/* Hint & Keywords */}
+              {currentQuestion.hintVi && (
+                <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900 mb-4 flex items-start gap-2.5">
+                  <span className="text-base">💡</span>
+                  <div>
+                    <strong>Gợi ý trả lời:</strong> {currentQuestion.hintVi}
+                  </div>
+                </div>
+              )}
 
-              <button
-                onClick={handleStartAnalysis}
+              {currentQuestion.vocabKeywords && currentQuestion.vocabKeywords.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap text-xs text-gray-600 mb-6">
+                  <span className="font-bold text-gray-500">Từ vựng ghi điểm:</span>
+                  {currentQuestion.vocabKeywords.map((w, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-0.5 rounded-md bg-blue-50 text-primary font-semibold border border-blue-150 text-[11px]"
+                    >
+                      +{w}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Recorder with initialData support */}
+              <SpeakingRecorder
+                recommendedDuration={currentQuestion.recommendedDuration || 30}
+                onRecordingComplete={handleRecordingComplete}
                 disabled={isAnalyzing}
-                className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-primary to-[#1e3061] hover:opacity-95 disabled:opacity-50 text-white rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95"
-              >
-                {isAnalyzing ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    <span>Đang phân tích...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles size={16} className="text-amber-300" />
-                    <span>Chấm điểm phát âm & IELTS ngay</span>
-                  </>
-                )}
-              </button>
-            </div>
-          )}
+                questionPrompt={currentQuestion.prompt}
+                initialData={currentRecording}
+              />
 
-          {/* Progress / Error message */}
-          {isAnalyzing && (
-            <div className="mt-4 p-4 rounded-2xl bg-blue-50 border border-blue-200 flex items-center gap-3 text-xs text-primary animate-pulse">
-              <Loader2 size={18} className="animate-spin shrink-0" />
-              <div>
-                <p className="font-bold">{analysisStep}</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">
-                  Đang phân tích phát âm IPA, ngữ pháp và 4 tiêu chí IELTS. Quá trình mất khoảng 3-5 giây.
-                </p>
+              {/* In-Card Navigation Controls */}
+              <div className="mt-5 flex items-center justify-between gap-3 pt-4 border-t border-gray-150">
+                <button
+                  onClick={handlePrevQuestion}
+                  disabled={currentQuestionIndex === 0}
+                  className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 disabled:opacity-40 hover:bg-gray-100 transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <ChevronLeft size={14} />
+                  <span>Câu trước</span>
+                </button>
+
+                <div className="text-xs font-bold text-gray-500">
+                  {currentRecording ? (
+                    <span className="text-emerald-700 font-bold flex items-center gap-1">
+                      <CheckCircle2 size={13} />
+                      Đã ghi âm câu này
+                    </span>
+                  ) : (
+                    <span className="text-amber-600">Chưa ghi âm câu này</span>
+                  )}
+                </div>
+
+                {currentQuestionIndex < totalQuestions - 1 ? (
+                  <button
+                    onClick={handleNextQuestion}
+                    className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-extrabold hover:bg-primary-container transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <span>Câu tiếp theo</span>
+                    <ChevronRight size={14} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSubmitAll}
+                    disabled={recordedCount === 0}
+                    className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-xl text-xs font-black hover:opacity-95 disabled:opacity-40 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <span>Nộp toàn bộ bài ➔</span>
+                  </button>
+                )}
               </div>
             </div>
-          )}
 
-          {analysisError && (
-            <div className="mt-4 p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-center gap-2">
-              <AlertCircle size={16} className="shrink-0" />
-              <span>{analysisError}</span>
+            {/* Error message */}
+            {analysisError && (
+              <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-center gap-2">
+                <AlertCircle size={16} className="shrink-0" />
+                <span>{analysisError}</span>
+              </div>
+            )}
+
+            {/* Global Sticky / Bottom Submission Bar */}
+            <div className="bg-white rounded-3xl border border-gray-200/90 p-5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-xs ${
+                  isAllRecorded ? 'bg-emerald-100 text-emerald-700' : 'bg-primary/10 text-primary'
+                }`}>
+                  {isAllRecorded ? <CheckCircle2 size={20} /> : <Clock size={20} />}
+                </div>
+                <div>
+                  <div className="text-xs font-black text-gray-900">
+                    Tiến độ hoàn thành: {recordedCount} / {totalQuestions} câu hỏi
+                  </div>
+                  <p className="text-[11px] text-gray-500 mt-0.5">
+                    {isAllRecorded
+                      ? 'Bạn đã ghi âm đầy đủ toàn bộ câu hỏi. Hãy bấm Nộp bài để nhận bảng điểm Overall & chi tiết!'
+                      : `Hãy ghi âm nốt ${totalQuestions - recordedCount} câu còn lại, hoặc bấm Nộp bài ngay khi sẵn sàng.`}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleSubmitAll}
+                disabled={recordedCount === 0}
+                className="w-full sm:w-auto px-6 py-3.5 bg-gradient-to-r from-primary via-[#243c77] to-[#1e3061] hover:opacity-95 disabled:opacity-40 text-white rounded-2xl font-black text-xs flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95"
+              >
+                <Sparkles size={16} className="text-amber-300" />
+                <span>NỘP TOÀN BỘ BÀI VÀ NHẬN KẾT QUẢ IELTS AI ({recordedCount}/{totalQuestions} CÂU)</span>
+              </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Evaluation Result Display */}
+        {/* VIEW 2: SUBMITTING & EVALUATING LOADER */}
+        {isAnalyzing && (
+          <div className="bg-white rounded-3xl border border-gray-200 p-10 sm:p-14 text-center shadow-xs animate-pop-in space-y-4">
+            <div className="w-16 h-16 rounded-3xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-2 animate-bounce">
+              <Sparkles size={32} className="text-amber-500" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-gray-900">
+              Hệ Thống Đang Đánh Giá Toàn Bộ Bài Nói IELTS...
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-600 max-w-md mx-auto leading-relaxed">
+              {analysisStep || 'Đang phối hợp Azure Speech đo phát âm và Google Gemini chấm 4 tiêu chí IELTS.'}
+            </p>
+            <div className="flex justify-center pt-2">
+              <Loader2 size={24} className="text-primary animate-spin" />
+            </div>
+          </div>
+        )}
+
+        {/* VIEW 3: COMPREHENSIVE EVALUATION RESULT REPORT */}
         {evaluation && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-pop-in">
             <SpeakingEvaluationResult
               evaluation={evaluation}
               azureMetrics={azureMetrics}
+              responses={submittedResponses}
               studentInfo={studentInfo}
               sessionName={topic.session}
-              testTitle={`${topic.title} - Câu ${currentQuestionIndex + 1}`}
-              onRetry={() => {
-                setEvaluation(null);
-                setRecordedData(null);
-              }}
+              testTitle={topic.title}
+              onRetry={handleRetryPractice}
             />
 
-            {/* Pagination Controls */}
-            <div className="flex items-center justify-between gap-3 pt-4">
+            {/* Action buttons after evaluation */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               <button
-                onClick={handlePrevQuestion}
-                disabled={currentQuestionIndex === 0}
-                className="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 disabled:opacity-40 hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={handleRetryPractice}
+                className="px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer flex items-center gap-1.5"
               >
-                Câu trước
+                <RefreshCw size={14} />
+                <span>Luyện tập lại bài này</span>
               </button>
 
-              {currentQuestionIndex < topic.questions.length - 1 ? (
-                <button
-                  onClick={handleNextQuestion}
-                  className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-extrabold hover:bg-primary-container transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/practice"
+                  className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition-all"
                 >
-                  <span>Chuyển sang Câu {currentQuestionIndex + 2}</span>
-                  <ChevronRight size={14} />
-                </button>
-              ) : (
+                  Về Phòng Practice
+                </Link>
                 <Link
                   to="/speaking"
-                  className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-extrabold hover:bg-emerald-700 transition-all cursor-pointer shadow-2xs"
+                  className="px-5 py-2.5 bg-primary text-white font-bold text-xs rounded-xl hover:bg-primary-container transition-all shadow-xs"
                 >
-                  Hoàn thành buổi học 🎉
+                  Khám phá Speaking Hub 🎉
                 </Link>
-              )}
+              </div>
             </div>
           </div>
         )}

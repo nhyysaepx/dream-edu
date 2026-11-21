@@ -19,8 +19,14 @@ import { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listenin
 import { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from '../practice/details/unit-4-global-success-9.js';
 import { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from '../practice/details/revision-midterm-1-english-10.js';
 import { PRE_IELTS_READING_3_DETAIL } from './details/pre-ielts-reading-3.js';
+import { HOMEWORK_LIST } from './list.js';
 
 export function getHomeworkDetailById(id) {
+  // Check if it is a speaking homework
+  const speakingHw = HOMEWORK_LIST.find((h) => h.id === id && (h.skill === 'Speaking' || h.isSpeaking));
+  if (speakingHw) {
+    return speakingHw;
+  }
   if (id === 'revision-midterm-1-english-10') {
     return REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL;
   }

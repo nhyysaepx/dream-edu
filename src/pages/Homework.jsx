@@ -10,7 +10,8 @@ import {
   PlayCircle,
   Sparkles,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  Mic
 } from 'lucide-react';
 import { HOMEWORK_LEVELS, HOMEWORK_LIST } from '../data/homeworkData';
 
@@ -67,6 +68,8 @@ export default function Homework() {
         return <Headphones size={16} className="text-blue-600" />;
       case 'reading':
         return <BookOpen size={16} className="text-emerald-600" />;
+      case 'speaking':
+        return <Mic size={16} className="text-purple-600" />;
       default:
         return <FileText size={16} className="text-amber-600" />;
     }
@@ -78,6 +81,8 @@ export default function Homework() {
         return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'reading':
         return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'speaking':
+        return 'bg-purple-50 text-purple-700 border-purple-200';
       default:
         return 'bg-amber-50 text-amber-700 border-amber-200';
     }
@@ -182,6 +187,7 @@ export default function Homework() {
                   { id: 'all', label: 'Tất cả kỹ năng' },
                   { id: 'listening', label: 'Listening' },
                   { id: 'reading', label: 'Reading' },
+                  { id: 'speaking', label: 'Speaking (Luyện nói AI)' },
                   { id: 'writing', label: 'Writing' }
                 ].map(skill => (
                   <button
@@ -304,11 +310,24 @@ export default function Homework() {
                         </button>
                       ) : (
                         <Link
-                          to={`/homework/${item.id}`}
-                          className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#2c4482] to-[#1e3061] hover:from-[#233769] hover:to-[#17254c] text-white font-semibold text-xs text-center shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 group-hover:gap-3 cursor-pointer"
+                          to={item.skill?.toLowerCase() === 'speaking' || item.isSpeaking ? `/speaking/practice/${item.speakingTopicId || item.id}` : `/homework/${item.id}`}
+                          className={`w-full py-2.5 px-4 rounded-xl font-semibold text-xs text-center shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                            item.skill?.toLowerCase() === 'speaking' || item.isSpeaking
+                              ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-primary hover:opacity-95 text-white'
+                              : 'bg-gradient-to-r from-[#2c4482] to-[#1e3061] hover:from-[#233769] hover:to-[#17254c] text-white'
+                          }`}
                         >
-                          <span>{isCompleted ? 'Làm lại bài tập' : 'Làm bài tập ngay'}</span>
-                          <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                          {item.skill?.toLowerCase() === 'speaking' || item.isSpeaking ? (
+                            <>
+                              <Mic size={14} className="text-purple-200" />
+                              <span>{isCompleted ? 'Luyện nói lại với AI' : 'Luyện nói bài tập về nhà'}</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>{isCompleted ? 'Làm lại bài tập' : 'Làm bài tập ngay'}</span>
+                              <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+                            </>
+                          )}
                         </Link>
                       )}
                     </div>
