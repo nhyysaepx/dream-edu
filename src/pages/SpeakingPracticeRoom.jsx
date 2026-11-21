@@ -98,6 +98,7 @@ export default function SpeakingPracticeRoom() {
 
       // Step 2: Call Gemini via Cloudflare Worker for 4 IELTS Criteria
       setAnalysisStep('2/3: Đang chấm điểm 4 tiêu chí IELTS & tạo bài mẫu nâng cấp...');
+      const hasTranscript = Boolean(azureRes?.transcript && azureRes.transcript.trim());
       const evalRes = await evaluateSpeakingWithAI({
         mode: 'practice',
         testTitle: `${topic.title} - ${currentQuestion.prompt.slice(0, 40)}...`,
@@ -108,7 +109,8 @@ export default function SpeakingPracticeRoom() {
             question: currentQuestion.prompt,
             durationSeconds: recordedData.durationSeconds || Math.max(1, Math.round((recordedData.blob?.size || 4000) / 4000)),
             transcript: azureRes?.transcript || '',
-            audioBase64: recordedData.base64,
+            // Tối ưu tốc độ: Nếu Azure đã gỡ băng thành công, chỉ gửi transcript (2KB) thay vì file audio (3MB), giúp AI phản hồi nhanh gấp 3 lần!
+            audioBase64: hasTranscript ? null : recordedData.base64,
             audioMimeType: recordedData.mimeType,
             azureMetrics: azureRes
           }

@@ -267,7 +267,45 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
 }
 
 /**
- * Gọi Gemini API với cơ chế tự động fallback model & retry khi gặp 429/503
+ * Gọi Gemini thông qua Google Apps Script Web App (chạy tại Google US Datacenter)
+ * Giúp giải quyết triệt để lỗi 'User location is not supported' do edge Hong Kong của Cloudflare
+ */
+async function callGeminiViaAppsScript(env, contents, generationConfig, model) {
+  const appsScriptUrl = (env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbyoijNihq4swDe0JC7zvXzSpCXSjq4_P5vcw8XM92TMRXaAOCv-ItpEfxhXKVkZpSyE6g/exec').trim();
+  const apiKey = env.GEMINI_API_KEY;
+
+  const res = await fetch(appsScriptUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify({
+      action: 'callGemini',
+      apiKey,
+      model: model || 'gemini-3.8-flash',
+      contents,
+      generationConfig
+    })
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Google Apps Script trả về HTTP ${res.status}: ${errText.slice(0, 200)}`);
+  }
+
+  const json = await res.json();
+  if (json.status === 'success' && json.text) {
+    return {
+      text: json.text,
+      modelUsed: `${json.modelUsed || 'gemini-3.8-flash'} (via Google US proxy)`
+    };
+  }
+
+  throw new Error(json.error || 'Google Apps Script không trả về nội dung AI hợp lệ.');
+}
+
+/**
+ * Gọi Gemini API với cơ chế tự động fallback model, chống lỗi location Cloudflare Hong Kong
  */
 async function callGemini(env, parts, requestedModel) {
   const apiKey = env.GEMINI_API_KEY;
@@ -275,19 +313,14 @@ async function callGemini(env, parts, requestedModel) {
     throw new Error('GEMINI_API_KEY chưa được cấu hình trên Cloudflare Worker.');
   }
 
-  const userModel = (requestedModel || env.GEMINI_MODEL || '').trim();
+  const userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-3.8-flash').trim();
   const candidateModels = [
     userModel,
     'gemini-3.8-flash',
     'gemini-3.5-flash-lite',
-    'gemini-3.5-flash',
-    'gemini-3.0-flash',
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-1.5-flash'
+    'gemini-3.5-flash'
   ].filter(Boolean);
 
-  // Loại bỏ model trùng lặp
   const modelsToTry = [...new Set(candidateModels)];
 
   const requestBody = {
@@ -304,43 +337,72 @@ async function callGemini(env, parts, requestedModel) {
   };
 
   const allAttempts = [];
+  let isLocationBlocked = false;
 
+  // 1. Thử gọi trực tiếp Google Gemini API
   for (const model of modelsToTry) {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
     for (let attempt = 0; attempt < 2; attempt++) {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey
-        },
-        body: JSON.stringify(requestBody)
-      });
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
+          body: JSON.stringify(requestBody)
+        });
 
-      if (res.ok) {
-        const data = await res.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!text) {
-          throw new Error('Gemini trả về phản hồi rỗng.');
+        if (res.ok) {
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            return { text, modelUsed: model };
+          }
         }
-        return { text, modelUsed: model };
-      }
 
-      const errText = await res.text();
-      const summary = `Model ${model} (${res.status}): ${errText.slice(0, 300)}`;
-      allAttempts.push(summary);
+        const errText = await res.text();
+        const summary = `Model ${model} (${res.status}): ${errText.slice(0, 250)}`;
+        allAttempts.push(summary);
 
-      // Nếu rate-limit tạm thời (429) hoặc server bận (503), đợi 1.2 giây rồi thử lại
-      if ((res.status === 429 || res.status === 503) && attempt === 0) {
-        await new Promise((r) => setTimeout(r, 1200));
-        continue;
+        // Nếu Google trả về lỗi 'User location is not supported', dừng ngay để không mất thời gian thử các model khác!
+        if (errText.includes('User location is not supported') || (res.status === 400 && errText.includes('FAILED_PRECONDITION'))) {
+          isLocationBlocked = true;
+          break;
+        }
+
+        // Nếu rate-limit (429) hoặc server bận (503), đợi 1.2s
+        if ((res.status === 429 || res.status === 503) && attempt === 0) {
+          await new Promise((r) => setTimeout(r, 1200));
+          continue;
+        }
+        break;
+      } catch (fErr) {
+        allAttempts.push(`Fetch error ${model}: ${fErr.message}`);
+        break;
       }
+    }
+
+    if (isLocationBlocked) {
       break;
     }
   }
 
-  throw new Error(`Tất cả model Gemini đều không phản hồi:\n${allAttempts.join('\n')}`);
+  // 2. Tự động chuyển qua Google Apps Script proxy (chạy trong US Datacenter của Google)
+  try {
+    const proxyResult = await callGeminiViaAppsScript(
+      env,
+      requestBody.contents,
+      requestBody.generationConfig,
+      userModel
+    );
+    return proxyResult;
+  } catch (proxyErr) {
+    allAttempts.push(`Fallback Google US Proxy thất bại: ${proxyErr.message}`);
+  }
+
+  throw new Error(`Tất cả kênh gọi Gemini đều không phản hồi:\n${allAttempts.join('\n')}`);
 }
 
 async function handleEvaluate(request, env, corsHeaders) {

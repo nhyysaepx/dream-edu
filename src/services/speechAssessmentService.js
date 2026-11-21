@@ -235,7 +235,8 @@ export async function evaluateSpeakingWithAI({
   responses = [] // [{ question, part, durationSeconds, transcript, audioBase64, audioMimeType, azureMetrics }]
 }) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
+  // 45 seconds timeout to prevent premature abort on mobile networks
+  const timer = setTimeout(() => controller.abort(), 45000);
 
   try {
     const res = await fetch(`${SPEAKING_WORKER_URL}/api/evaluate`, {
@@ -274,10 +275,14 @@ export async function evaluateSpeakingWithAI({
     }
     throw new Error(data.error || 'Không nhận được kết quả đánh giá từ AI.');
   } catch (err) {
+    clearTimeout(timer);
     console.error('evaluateSpeakingWithAI error:', err);
+    const isAbort = err.name === 'AbortError' || err.message?.includes('aborted');
     return {
       success: false,
-      error: err.message
+      error: isAbort
+        ? 'Quá trình phân tích mất nhiều thời gian hơn dự kiến do kết nối mạng. Vui lòng kiểm tra mạng và bấm Chấm điểm lại.'
+        : err.message
     };
   }
 }

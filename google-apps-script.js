@@ -313,14 +313,100 @@ function handleSpeakingSubmission(ss, data, formattedTime) {
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
+/**
+ * Gọi Google Gemini API trực tiếp từ Google US Datacenter (Tránh hoàn toàn lỗi 'User location is not supported' do edge Hong Kong của Cloudflare)
+ */
+function handleGeminiEvaluation(data) {
+  try {
+    const apiKey = data.apiKey || PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
+    if (!apiKey) {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "error",
+        error: "Thiếu GEMINI_API_KEY để gọi AI."
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const primaryModel = data.model || "gemini-3.8-flash";
+    const candidateModels = [
+      primaryModel,
+      "gemini-3.8-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-3.5-flash",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash"
+    ];
+    // Remove duplicates
+    const modelsToTry = candidateModels.filter((v, i, a) => a.indexOf(v) === i);
+
+    const promptText = data.prompt || "";
+    const payload = {
+      contents: data.contents || [
+        {
+          role: "user",
+          parts: [{ text: promptText }]
+        }
+      ],
+      generationConfig: data.generationConfig || {
+        temperature: 0.25,
+        responseMimeType: "application/json"
+      }
+    };
+
+    let lastError = "";
+    for (let i = 0; i < modelsToTry.length; i++) {
+      const model = modelsToTry[i];
+      const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + apiKey;
+
+      const res = UrlFetchApp.fetch(endpoint, {
+        method: "post",
+        contentType: "application/json",
+        payload: JSON.stringify(payload),
+        muteHttpExceptions: true
+      });
+
+      const resCode = res.getResponseCode();
+      const resText = res.getContentText();
+
+      if (resCode === 200) {
+        const json = JSON.parse(resText);
+        const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
+        return ContentService.createTextOutput(JSON.stringify({
+          status: "success",
+          text: text,
+          modelUsed: model
+        })).setMimeType(ContentService.MimeType.JSON);
+      } else {
+        lastError = "Model " + model + " (" + resCode + "): " + resText.slice(0, 200);
+      }
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      error: lastError || "Không thể gọi Gemini API."
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      error: err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 function doPost(e) {
   try {
+    const data = JSON.parse(e.postData.contents);
+
+    // 0. Nếu là yêu cầu gọi AI Gemini (chạy từ máy chủ Google US, bypass hoàn toàn lỗi vị trí của Cloudflare Hong Kong)
+    if (data.action === 'evaluateGemini' || data.action === 'callGemini') {
+      return handleGeminiEvaluation(data);
+    }
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     if (!ss) {
       throw new Error("Không tìm thấy bảng tính Google Sheets");
     }
 
-    const data = JSON.parse(e.postData.contents);
     const now = new Date();
     const formattedTime = Utilities.formatDate(now, "GMT+7", "HH:mm dd/MM/yyyy");
 

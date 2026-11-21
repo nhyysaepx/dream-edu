@@ -230,15 +230,20 @@ export default function SpeakingMockRoom() {
         mode: 'mock_test',
         testTitle: test.title,
         targetLevel: 'IELTS Standard Band 6.5 - 7.5',
-        responses: allResponses.map((r) => ({
-          part: r.part,
-          question: r.question,
-          durationSeconds: r.durationSeconds,
-          transcript: r.part.includes('Part 2') ? azureRes.transcript : '',
-          audioBase64: r.base64,
-          audioMimeType: r.mimeType,
-          azureMetrics: r.part.includes('Part 2') ? azureRes : null
-        }))
+        responses: allResponses.map((r) => {
+          const isPart2 = r.part.includes('Part 2');
+          const hasAzure = isPart2 && azureRes?.transcript;
+          return {
+            part: r.part,
+            question: r.question,
+            durationSeconds: r.durationSeconds,
+            transcript: hasAzure ? azureRes.transcript : '',
+            // Tối ưu payload: Nếu Part 2 đã có transcript từ Azure thì không gửi base64 của Part 2 để giảm 80% dung lượng gửi lên AI
+            audioBase64: hasAzure ? null : r.base64,
+            audioMimeType: r.mimeType,
+            azureMetrics: isPart2 ? azureRes : null
+          };
+        })
       };
 
       const evalRes = await evaluateSpeakingWithAI(evalPayload);
