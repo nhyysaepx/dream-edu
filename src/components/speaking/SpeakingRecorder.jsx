@@ -19,6 +19,7 @@ export default function SpeakingRecorder({
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerIntervalRef = useRef(null);
+  const startTimeRef = useRef(0);
   const audioPlayerRef = useRef(null);
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
@@ -129,6 +130,10 @@ export default function SpeakingRecorder({
         setAudioBlob(blob);
         setAudioUrl(url);
 
+        // Compute actual recorded duration accurately from timestamp
+        const finalSecs = Math.max(1, Math.round((Date.now() - (startTimeRef.current || Date.now())) / 1000));
+        setDuration(finalSecs);
+
         const base64 = await blobToBase64(blob);
 
         if (onRecordingComplete) {
@@ -137,7 +142,7 @@ export default function SpeakingRecorder({
             url,
             base64,
             mimeType: actualType,
-            durationSeconds: duration
+            durationSeconds: finalSecs
           });
         }
       };
@@ -146,8 +151,9 @@ export default function SpeakingRecorder({
       setIsRecording(true);
 
       const startTime = Date.now();
+      startTimeRef.current = startTime;
       timerIntervalRef.current = setInterval(() => {
-        setDuration(Math.round((Date.now() - startTime) / 1000));
+        setDuration(Math.max(1, Math.round((Date.now() - startTime) / 1000)));
       }, 500);
     } catch (err) {
       console.error('Mic access error:', err);

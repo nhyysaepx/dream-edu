@@ -247,10 +247,11 @@ export default function SpeakingMockRoom() {
       }
       const finalEval = evalRes.evaluation;
       setEvaluation(finalEval);
+      setTestStage('result');
+      setIsEvaluating(false);
 
-      // Step 3: Save Part 2 recording to Google Drive & Google Sheets (tab Speaking) & Email teacher
-      setStatusMessage('3/3: Đang lưu file ghi âm lên Google Drive và gửi báo cáo giáo viên...');
-      await submitSpeakingEvaluationToSystem({
+      // Save Part 2 recording to Google Drive & Google Sheets (tab Speaking) in background
+      submitSpeakingEvaluationToSystem({
         studentInfo,
         sessionName: test.session || 'IELTS Speaking Mock Room',
         testTitle: test.title,
@@ -260,10 +261,9 @@ export default function SpeakingMockRoom() {
         audioMimeType: part2Response ? part2Response.mimeType : 'audio/webm',
         mode: 'mock_test',
         transcript: azureRes?.transcript || ''
+      }).catch((submitErr) => {
+        console.warn('Background mock test submission note:', submitErr);
       });
-
-      setStatusMessage('Hoàn thành!');
-      setTestStage('result');
     } catch (err) {
       console.error('Mock test evaluation error:', err);
       setErrorMessage(err.message || 'Đã có lỗi khi phân tích kết quả bài thi. Vui lòng thử lại.');

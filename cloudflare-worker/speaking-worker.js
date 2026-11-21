@@ -269,20 +269,22 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
 /**
  * Gọi Gemini API với cơ chế tự động fallback model & retry khi gặp 429/503
  */
-async function callGemini(env, parts) {
+async function callGemini(env, parts, requestedModel) {
   const apiKey = env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY chưa được cấu hình trên Cloudflare Worker.');
   }
 
-  const userModel = (env.GEMINI_MODEL || '').trim();
+  const userModel = (requestedModel || env.GEMINI_MODEL || '').trim();
   const candidateModels = [
     userModel,
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-3.5-flash',
+    'gemini-3.0-flash',
     'gemini-2.5-flash',
-    'gemini-1.5-flash-8b',
-    'gemini-1.5-pro'
+    'gemini-2.0-flash',
+    'gemini-1.5-flash'
   ].filter(Boolean);
 
   // Loại bỏ model trùng lặp
@@ -369,7 +371,7 @@ async function handleEvaluate(request, env, corsHeaders) {
   }
 
   try {
-    const { text, modelUsed } = await callGemini(env, parts);
+    const { text, modelUsed } = await callGemini(env, parts, payload.model);
 
     // Làm sạch nếu model lỡ bọc ```json
     const cleaned = text
@@ -464,10 +466,7 @@ export default {
         }
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
         const data = await res.json();
-        const models = (data.models || [])
-          .filter((m) => m.supportedGenerationMethods?.includes('generateContent'))
-          .map((m) => m.name.replace('models/', ''));
-        return jsonResponse({ ok: true, models }, 200, corsHeaders);
+        return jsonResponse(data, 200, corsHeaders);
       } catch (err) {
         return jsonResponse({ error: err.message }, 500, corsHeaders);
       }

@@ -106,7 +106,7 @@ export default function SpeakingPracticeRoom() {
           {
             part: topic.part || 'Part 1',
             question: currentQuestion.prompt,
-            durationSeconds: recordedData.durationSeconds || 0,
+            durationSeconds: recordedData.durationSeconds || Math.max(1, Math.round((recordedData.blob?.size || 4000) / 4000)),
             transcript: azureRes?.transcript || '',
             audioBase64: recordedData.base64,
             audioMimeType: recordedData.mimeType,
@@ -122,9 +122,21 @@ export default function SpeakingPracticeRoom() {
       const finalEval = evalRes.evaluation;
       setEvaluation(finalEval);
 
-      // Step 3: Automatically submit to Google Apps Script (Drive + Sheets + Teacher Email)
-      setAnalysisStep('3/3: Đang lưu file ghi âm lên Google Drive và gửi báo cáo giáo viên...');
-      await submitSpeakingEvaluationToSystem({
+      // Save into session results immediately so student sees feedback with ZERO extra delay
+      setSessionResults((prev) => ({
+        ...prev,
+        [currentQuestion.id]: {
+          evaluation: finalEval,
+          azureMetrics: azureRes
+        }
+      }));
+
+      setIsAnalyzing(false);
+      setAnalysisStep('Hoàn thành!');
+
+      // Step 3: Run Google Drive & Google Sheets submission asynchronously in the background
+      // This saves 5-8 seconds of wait time for the student!
+      submitSpeakingEvaluationToSystem({
         studentInfo,
         sessionName: topic.session || topic.title,
         testTitle: `${topic.title} (Câu ${currentQuestionIndex + 1})`,
@@ -134,22 +146,12 @@ export default function SpeakingPracticeRoom() {
         audioMimeType: recordedData.mimeType,
         mode: 'practice',
         transcript: azureRes?.transcript || ''
+      }).catch((submitErr) => {
+        console.warn('Background submission note:', submitErr);
       });
-
-      // Save into session results
-      setSessionResults((prev) => ({
-        ...prev,
-        [currentQuestion.id]: {
-          evaluation: finalEval,
-          azureMetrics: azureRes
-        }
-      }));
-
-      setAnalysisStep('Hoàn thành!');
     } catch (err) {
       console.error('Analysis error:', err);
       setAnalysisError(err.message || 'Đã xảy ra lỗi trong quá trình phân tích. Vui lòng thử lại.');
-    } finally {
       setIsAnalyzing(false);
     }
   };
@@ -351,7 +353,7 @@ export default function SpeakingPracticeRoom() {
                 {isAnalyzing ? (
                   <>
                     <Loader2 size={16} className="animate-spin" />
-                    <span>{analysisStep || 'Đang chấm điểm...'}</span>
+                    <span>Đang phân tích...</span>
                   </>
                 ) : (
                   <>
@@ -370,7 +372,7 @@ export default function SpeakingPracticeRoom() {
               <div>
                 <p className="font-bold">{analysisStep}</p>
                 <p className="text-[11px] text-gray-500 mt-0.5">
-                  Đang phối hợp Azure Speech (đo phát âm) và Google Gemini (chấm 4 tiêu chí IELTS). Quá trình mất khoảng 5-8 giây.
+                  Đang phân tích phát âm IPA, ngữ pháp và 4 tiêu chí IELTS. Quá trình mất khoảng 3-5 giây.
                 </p>
               </div>
             </div>

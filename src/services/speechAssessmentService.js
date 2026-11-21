@@ -1,4 +1,3 @@
-import * as SpeechSDK from 'microsoft-cognitiveservices-speech-sdk';
 import { SPEAKING_WORKER_URL, submitSpeakingResult } from './submissionService';
 
 /**
@@ -63,54 +62,59 @@ export function blobToBase64(blob) {
  * Convert Web Audio Buffer into 16kHz Mono 16-bit PCM WAV (Standard format for Speech Engines)
  */
 export async function audioBlobTo16kHzWav(blob) {
-  const arrayBuffer = await blob.arrayBuffer();
-  const AudioCtx = window.AudioContext || window.webkitAudioContext;
-  if (!AudioCtx) throw new Error('AudioContext not supported in this browser.');
-  const ctx = new AudioCtx();
-  const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+  try {
+    const arrayBuffer = await blob.arrayBuffer();
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return null;
+    const ctx = new AudioCtx();
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
 
-  // Resample to 16000Hz mono
-  const targetSampleRate = 16000;
-  const numChannels = 1;
-  const offlineCtx = new OfflineAudioContext(numChannels, Math.ceil(audioBuffer.duration * targetSampleRate), targetSampleRate);
-  const source = offlineCtx.createBufferSource();
-  source.buffer = audioBuffer;
-  source.connect(offlineCtx.destination);
-  source.start(0);
-  const renderedBuffer = await offlineCtx.startRendering();
-  await ctx.close();
+    // Resample to 16000Hz mono
+    const targetSampleRate = 16000;
+    const numChannels = 1;
+    const offlineCtx = new OfflineAudioContext(numChannels, Math.ceil(audioBuffer.duration * targetSampleRate), targetSampleRate);
+    const source = offlineCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(offlineCtx.destination);
+    source.start(0);
+    const renderedBuffer = await offlineCtx.startRendering();
+    await ctx.close();
 
-  // Encode PCM 16-bit mono WAV
-  const channelData = renderedBuffer.getChannelData(0);
-  const bufferLength = 44 + channelData.length * 2;
-  const wavBuffer = new ArrayBuffer(bufferLength);
-  const view = new DataView(wavBuffer);
+    // Encode PCM 16-bit mono WAV
+    const channelData = renderedBuffer.getChannelData(0);
+    const bufferLength = 44 + channelData.length * 2;
+    const wavBuffer = new ArrayBuffer(bufferLength);
+    const view = new DataView(wavBuffer);
 
-  // RIFF chunk descriptor
-  writeString(view, 0, 'RIFF');
-  view.setUint32(4, 36 + channelData.length * 2, true);
-  writeString(view, 8, 'WAVE');
-  // FMT sub-chunk
-  writeString(view, 12, 'fmt ');
-  view.setUint32(16, 16, true); // SubChunk1Size (16 for PCM)
-  view.setUint16(20, 1, true); // AudioFormat (1 = PCM)
-  view.setUint16(22, 1, true); // NumChannels (1 = Mono)
-  view.setUint32(24, targetSampleRate, true); // SampleRate
-  view.setUint32(28, targetSampleRate * 2, true); // ByteRate
-  view.setUint16(32, 2, true); // BlockAlign
-  view.setUint16(34, 16, true); // BitsPerSample
-  // Data sub-chunk
-  writeString(view, 36, 'data');
-  view.setUint32(40, channelData.length * 2, true);
+    // RIFF chunk descriptor
+    writeString(view, 0, 'RIFF');
+    view.setUint32(4, 36 + channelData.length * 2, true);
+    writeString(view, 8, 'WAVE');
+    // FMT sub-chunk
+    writeString(view, 12, 'fmt ');
+    view.setUint32(16, 16, true); // SubChunk1Size (16 for PCM)
+    view.setUint16(20, 1, true); // AudioFormat (1 = PCM)
+    view.setUint16(22, 1, true); // NumChannels (1 = Mono)
+    view.setUint32(24, targetSampleRate, true); // SampleRate
+    view.setUint32(28, targetSampleRate * 2, true); // ByteRate
+    view.setUint16(32, 2, true); // BlockAlign
+    view.setUint16(34, 16, true); // BitsPerSample
+    // Data sub-chunk
+    writeString(view, 36, 'data');
+    view.setUint32(40, channelData.length * 2, true);
 
-  // Write PCM samples
-  let offset = 44;
-  for (let i = 0; i < channelData.length; i++, offset += 2) {
-    const s = Math.max(-1, Math.min(1, channelData[i]));
-    view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    // Write PCM samples
+    let offset = 44;
+    for (let i = 0; i < channelData.length; i++, offset += 2) {
+      const s = Math.max(-1, Math.min(1, channelData[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+    }
+
+    return new Blob([view], { type: 'audio/wav' });
+  } catch (err) {
+    console.warn('WAV conversion fallback:', err);
+    return null;
   }
-
-  return new Blob([view], { type: 'audio/wav' });
 }
 
 function writeString(view, offset, string) {
@@ -120,153 +124,105 @@ function writeString(view, offset, string) {
 }
 
 /**
- * Perform Azure Pronunciation Assessment on a recorded audio Blob
- * Returns: { hasData, accuracyScore, fluencyScore, prosodyScore, pronScore, transcript, words, weakWords }
+ * Internal worker for Azure Speech Pronunciation Assessment (Ultra-fast direct REST API)
  */
-export async function assessAudioWithAzure(audioBlob, referenceText = '') {
+async function _internalAzureAssess(audioBlob, referenceText) {
   try {
     const auth = await getAzureToken();
     if (!auth) {
       return { hasData: false, reason: 'Azure Speech Token không khả dụng' };
     }
 
-    // Convert audio to 16kHz mono WAV for Azure Speech SDK PushStream
+    // Convert audio to 16kHz mono WAV Blob
     const wavBlob = await audioBlobTo16kHzWav(audioBlob);
-    const wavArrayBuffer = await wavBlob.arrayBuffer();
-
-    const speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(auth.token, auth.region);
-    speechConfig.speechRecognitionLanguage = 'en-US';
-
-    const format = SpeechSDK.AudioStreamFormat.getWaveFormatPCM(16000, 16, 1);
-    const pushStream = SpeechSDK.AudioInputStream.createPushStream(format);
-    pushStream.write(wavArrayBuffer);
-    pushStream.close();
-
-    const audioConfig = SpeechSDK.AudioConfig.fromStreamInput(pushStream);
-    const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
-
-    const pronConfig = new SpeechSDK.PronunciationAssessmentConfig(
-      referenceText || '',
-      SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
-      SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
-      true
-    );
-
-    pronConfig.phonemeAlphabet = 'IPA';
-    if (typeof pronConfig.enableProsodyAssessment === 'function') {
-      try {
-        pronConfig.enableProsodyAssessment();
-      } catch (e) {
-        // Prosody is en-US specific, fallback gracefully if not supported
-      }
+    if (!wavBlob) {
+      return { hasData: false, reason: 'Không thể chuyển đổi WAV trên thiết bị này' };
     }
 
-    pronConfig.applyTo(recognizer);
+    const pronConfig = {
+      GradingSystem: 'HundredMark',
+      Granularity: 'Phoneme',
+      Dimension: 'Comprehensive',
+      EnableMiscue: true
+    };
+    if (referenceText && referenceText.trim()) {
+      pronConfig.ReferenceText = referenceText.trim();
+    }
 
-    // Continuous assessment
-    return new Promise((resolve) => {
-      const allWords = [];
-      const transcriptParts = [];
-      let totalAccuracy = 0;
-      let totalFluency = 0;
-      let totalProsody = 0;
-      let totalPron = 0;
-      let chunkCount = 0;
+    // Unicode-safe base64 encoding
+    const pronHeader = btoa(unescape(encodeURIComponent(JSON.stringify(pronConfig))));
+    const endpoint = `https://${auth.region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US`;
 
-      recognizer.recognized = (s, e) => {
-        if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech && e.result.text) {
-          transcriptParts.push(e.result.text);
-          const pronResult = SpeechSDK.PronunciationAssessmentResult.FromResult(e.result);
-          if (pronResult) {
-            totalAccuracy += pronResult.accuracyScore || 0;
-            totalFluency += pronResult.fluencyScore || 0;
-            if (pronResult.prosodyScore != null && pronResult.prosodyScore > 0) {
-              totalProsody += pronResult.prosodyScore;
-            }
-            totalPron += pronResult.pronunciationScore || 0;
-            chunkCount++;
-          }
-
-          // Parse detailed JSON for word & phoneme breakdown
-          try {
-            const rawJson = e.result.properties.getProperty(SpeechSDK.PropertyId.SpeechServiceResponse_JsonResult);
-            if (rawJson) {
-              const parsed = JSON.parse(rawJson);
-              const nbest = parsed.NBest?.[0];
-              if (nbest && Array.isArray(nbest.Words)) {
-                for (const w of nbest.Words) {
-                  const pronAssessment = w.PronunciationAssessment || {};
-                  const phonemes = (w.Phonemes || []).map((p) => ({
-                    phoneme: p.Phoneme || '',
-                    accuracyScore: p.PronunciationAssessment?.AccuracyScore || 0
-                  }));
-                  allWords.push({
-                    word: w.Word || '',
-                    accuracyScore: pronAssessment.AccuracyScore != null ? pronAssessment.AccuracyScore : 100,
-                    errorType: pronAssessment.ErrorType || 'None',
-                    phonemes
-                  });
-                }
-              }
-            }
-          } catch (jsonErr) {
-            console.warn('Error parsing Azure detailed json:', jsonErr);
-          }
-        }
-      };
-
-      recognizer.canceled = (s, e) => {
-        recognizer.stopContinuousRecognitionAsync(() => {
-          recognizer.close();
-        });
-      };
-
-      recognizer.sessionStopped = () => {
-        recognizer.stopContinuousRecognitionAsync(() => {
-          recognizer.close();
-          const count = Math.max(1, chunkCount);
-          const accuracyScore = Math.round(totalAccuracy / count);
-          const fluencyScore = Math.round(totalFluency / count);
-          const prosodyScore = totalProsody > 0 ? Math.round(totalProsody / count) : null;
-          const pronScore = Math.round(totalPron / count);
-
-          // Find weak words (< 75 accuracy)
-          const weakWords = allWords
-            .filter((w) => w.accuracyScore < 75 && w.word && !/^[,.\?!]+$/.test(w.word))
-            .map((w) => ({
-              word: w.word,
-              accuracyScore: w.accuracyScore,
-              ipa: w.phonemes.map((p) => p.phoneme).join('')
-            }));
-
-          resolve({
-            hasData: chunkCount > 0,
-            accuracyScore,
-            fluencyScore,
-            prosodyScore,
-            pronScore,
-            transcript: transcriptParts.join(' ').trim(),
-            words: allWords,
-            weakWords
-          });
-        });
-      };
-
-      recognizer.startContinuousRecognitionAsync(
-        () => {
-          // Feed finished
-        },
-        (err) => {
-          console.warn('Azure recognizer error:', err);
-          recognizer.close();
-          resolve({ hasData: false, error: err.toString() });
-        }
-      );
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${auth.token}`,
+        'Content-Type': 'audio/wav; codecs=audio/pcm; samplerate=16000',
+        'Pronunciation-Assessment': pronHeader,
+        'Accept': 'application/json'
+      },
+      body: wavBlob
     });
+
+    if (!res.ok) {
+      console.warn(`Azure REST returned HTTP ${res.status}`);
+      return { hasData: false, status: res.status };
+    }
+
+    const data = await res.json();
+    const nbest = data.NBest?.[0];
+
+    if (nbest) {
+      const allWords = (nbest.Words || []).map((w) => ({
+        word: w.Word || '',
+        accuracyScore: w.AccuracyScore != null ? w.AccuracyScore : 100,
+        phonemes: (w.Phonemes || []).map((p) => ({
+          phoneme: p.Phoneme || '',
+          accuracyScore: p.AccuracyScore || 0
+        }))
+      }));
+
+      const weakWords = allWords
+        .filter((w) => w.accuracyScore < 75 && w.word && !/^[,.\?!]+$/.test(w.word))
+        .map((w) => ({
+          word: w.word,
+          accuracyScore: w.accuracyScore,
+          ipa: (w.phonemes || []).map((p) => p.phoneme).join('')
+        }));
+
+      return {
+        hasData: true,
+        accuracyScore: Math.round(nbest.AccuracyScore || 0),
+        fluencyScore: Math.round(nbest.FluencyScore || 0),
+        prosodyScore: nbest.ProsodyScore != null && nbest.ProsodyScore > 0 ? Math.round(nbest.ProsodyScore) : null,
+        pronScore: Math.round(nbest.PronScore || 0),
+        transcript: data.DisplayText || nbest.Display || '',
+        words: allWords,
+        weakWords
+      };
+    }
+
+    return { hasData: false, reason: 'Không có dữ liệu NBest' };
   } catch (err) {
     console.warn('Azure assessment exception:', err);
     return { hasData: false, error: err.message };
   }
+}
+
+/**
+ * Perform Azure Pronunciation Assessment with guaranteed 3.2-second timeout protection
+ */
+export async function assessAudioWithAzure(audioBlob, referenceText = '') {
+  const timeoutPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ hasData: false, reason: 'Azure assessment timeout (>3.2s)' });
+    }, 3200);
+  });
+
+  return Promise.race([
+    _internalAzureAssess(audioBlob, referenceText),
+    timeoutPromise
+  ]);
 }
 
 /**
@@ -278,19 +234,25 @@ export async function evaluateSpeakingWithAI({
   targetLevel = 'IELTS',
   responses = [] // [{ question, part, durationSeconds, transcript, audioBase64, audioMimeType, azureMetrics }]
 }) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+
   try {
     const res = await fetch(`${SPEAKING_WORKER_URL}/api/evaluate`, {
       method: 'POST',
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        model: 'gemini-3.8-flash',
         mode,
         testTitle,
         targetLevel,
         responses
       })
     });
+    clearTimeout(timer);
 
     if (!res.ok) {
       const errText = await res.text();

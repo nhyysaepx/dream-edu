@@ -24,6 +24,12 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
+// Chạy hàm này một lần trong Apps Script editor để cấp quyền truy cập Google Drive nếu Google yêu cầu
+function testDrivePermission() {
+  const folders = DriveApp.getFoldersByName("DreamEdu_Speaking_Recordings");
+  Logger.log("✅ Quyền Google Drive đã sẵn sàng hoạt động!");
+}
+
 /**
  * Xóa dấu tiếng Việt và ký tự đặc biệt để tạo tên thư mục/file an toàn trên Drive
  */
