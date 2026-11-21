@@ -11,8 +11,14 @@ import {
   PRE_IELTS_LISTENING_2_DETAIL,
   INTERMEDIATE_LISTENING_6_DETAIL 
 } from '../homework/index.js';
+import { PRACTICE_LIST } from './list.js';
 
 export function getPracticeDetailById(id) {
+  // Check if it's a speaking practice item from PRACTICE_LIST
+  const speakingItem = PRACTICE_LIST.find((p) => p.id === id && (p.skill === 'Speaking' || p.isSpeaking));
+  if (speakingItem) {
+    return speakingItem;
+  }
   if (id === 'revision-midterm-1-english-12') {
     return REVISION_MIDTERM_1_ENGLISH_12_PRACTICE_DETAIL;
   }

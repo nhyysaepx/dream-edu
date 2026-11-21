@@ -3,11 +3,17 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, BookOpen, AlertCircle } from 'lucide-react';
 import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
 import SchoolPracticeView from '../components/homework/SchoolPracticeView';
+import SpeakingPracticeRoom from './SpeakingPracticeRoom';
 import { getPracticeDetailById, PRE_IELTS_READING_2_PRACTICE_DETAIL } from '../data/practiceData';
 
 export default function PracticeDetail() {
   const { id } = useParams();
   const practice = getPracticeDetailById(id) || PRE_IELTS_READING_2_PRACTICE_DETAIL;
+
+  // Speaking exercises: Render the full-fledged Speaking Practice Room
+  if (practice?.skill === 'Speaking' || practice?.isSpeaking) {
+    return <SpeakingPracticeRoom customTopicId={practice.speakingTopicId || practice.id} />;
+  }
 
   // School English exercises (Lớp 6-12 / Đề cương / SGK Global Success):
   // Render the vertical worksheet layout with all reading passages visible

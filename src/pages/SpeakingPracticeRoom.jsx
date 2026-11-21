@@ -25,11 +25,12 @@ import {
   submitSpeakingEvaluationToSystem 
 } from '../services/speechAssessmentService';
 
-export default function SpeakingPracticeRoom() {
+export default function SpeakingPracticeRoom({ customTopicId }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const topic = getSpeakingTopicById(id);
+  const targetId = customTopicId || id;
+  const topic = getSpeakingTopicById(targetId);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const currentQuestion = topic.questions[currentQuestionIndex] || topic.questions[0];
 
@@ -176,18 +177,37 @@ export default function SpeakingPracticeRoom() {
         
         {/* Breadcrumb & Navigation */}
         <div className="flex items-center justify-between gap-3 mb-6">
-          <Link
-            to="/speaking"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-primary transition-colors"
-          >
-            <ArrowLeft size={14} />
-            <span>Quay lại Thư viện Speaking</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/practice"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-primary transition-colors"
+            >
+              <ArrowLeft size={14} />
+              <span>Phòng Practice</span>
+            </Link>
+            <span className="text-gray-300">/</span>
+            <Link
+              to="/speaking"
+              className="text-xs font-semibold text-gray-400 hover:text-primary transition-colors"
+            >
+              Speaking Hub
+            </Link>
+          </div>
 
           <span className="text-xs font-extrabold text-primary bg-primary/10 px-3 py-1 rounded-full">
             {topic.session}
           </span>
         </div>
+
+        {/* Notice for example placeholder topics */}
+        {topic.isExample && (
+          <div className="mb-6 p-4 bg-amber-50/90 border border-amber-200 rounded-2xl flex items-start gap-3 text-amber-900 shadow-2xs">
+            <Sparkles size={18} className="text-amber-600 shrink-0 mt-0.5" />
+            <div className="text-xs leading-relaxed">
+              <span className="font-bold">💡 Bài luyện tập mẫu ví dụ:</span> Thầy/cô sẽ cập nhật thêm các bộ câu hỏi chính thức sau. Bạn hoàn toàn có thể thu âm trả lời ngay để trải nghiệm phân tích phát âm Azure Speech & AI chấm điểm 4 tiêu chí IELTS.
+            </div>
+          </div>
+        )}
 
         {/* Student Identification Bar */}
         <div className="bg-white rounded-2xl border border-gray-200/90 p-4 mb-6 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">

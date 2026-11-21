@@ -17,7 +17,8 @@ import {
   Award,
   Layers,
   ChevronRight,
-  Compass
+  Compass,
+  Mic
 } from 'lucide-react';
 import { PRACTICE_CATEGORIES, PRACTICE_LIST } from '../data/practiceData';
 
@@ -117,6 +118,8 @@ export default function Practice() {
         return <Headphones size={15} className="text-blue-600" />;
       case 'reading':
         return <BookOpen size={15} className="text-emerald-600" />;
+      case 'speaking':
+        return <Mic size={15} className="text-purple-600" />;
       default:
         return <FileText size={15} className="text-amber-600" />;
     }
@@ -128,6 +131,8 @@ export default function Practice() {
         return 'bg-blue-50 text-blue-700 border-blue-200';
       case 'reading':
         return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+      case 'speaking':
+        return 'bg-purple-50 text-purple-700 border-purple-200';
       default:
         return 'bg-amber-50 text-amber-700 border-amber-200';
     }
@@ -348,7 +353,8 @@ export default function Practice() {
                 {[
                   { id: 'all', label: 'Tất cả kỹ năng' },
                   { id: 'reading', label: 'Reading (Đọc hiểu)' },
-                  { id: 'listening', label: 'Listening (Nghe hiểu)' }
+                  { id: 'listening', label: 'Listening (Nghe hiểu)' },
+                  { id: 'speaking', label: 'Speaking (Luyện nói AI)' }
                 ].map(skill => (
                   <button
                     key={skill.id}
@@ -461,15 +467,26 @@ export default function Practice() {
                       )}
 
                       <Link
-                        to={`/practice/${item.id}`}
+                        to={item.skill?.toLowerCase() === 'speaking' || item.isSpeaking ? `/speaking/practice/${item.speakingTopicId || item.id}` : `/practice/${item.id}`}
                         className={`w-full py-3 px-4 rounded-xl text-white font-extrabold text-xs text-center shadow-xs hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                          item.isFeatured
+                          item.skill?.toLowerCase() === 'speaking' || item.isSpeaking
+                            ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-primary hover:opacity-95 shadow-purple-200'
+                            : item.isFeatured
                             ? 'bg-gradient-to-r from-primary to-[#1e3061] hover:opacity-95'
                             : 'bg-primary hover:bg-primary-container'
                         }`}
                       >
-                        <span>{isCompleted ? 'Làm lại bài luyện tập' : 'Làm bài luyện tập ngay'}</span>
-                        <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                        {item.skill?.toLowerCase() === 'speaking' || item.isSpeaking ? (
+                          <>
+                            <Mic size={14} className="text-purple-200 animate-pulse" />
+                            <span>{isCompleted ? 'Luyện nói lại với AI' : 'Luyện nói AI ngay'}</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>{isCompleted ? 'Làm lại bài luyện tập' : 'Làm bài luyện tập ngay'}</span>
+                            <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                          </>
+                        )}
                       </Link>
                     </div>
                   </div>

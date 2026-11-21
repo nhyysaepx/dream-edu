@@ -318,6 +318,13 @@ export default function TestRoom() {
     return EXAM_COLLECTIONS.find(e => e.id === id) || EXAM_COLLECTIONS[0];
   }, [id]);
 
+  // If Speaking exam, seamlessly redirect to Speaking Mock Room
+  useEffect(() => {
+    if (exam?.skill === 'Speaking') {
+      navigate(`/speaking/mock/${exam.speakingMockId || 'ielts-mock-speaking-01'}`, { replace: true });
+    }
+  }, [exam, navigate]);
+
   const isListening = exam.skill === 'Listening';
   const isReading = exam.skill === 'Reading';
 

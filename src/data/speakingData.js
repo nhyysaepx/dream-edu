@@ -134,6 +134,472 @@ export const SPEAKING_TOPICS = [
         vocabKeywords: ['off-the-beaten-track', 'breathtaking landscapes', 'unwind after hectic weeks', 'rich heritage']
       }
     ]
+  },
+
+  // ===========================================================================
+  // CÁC BÀI LUYỆN TẬP MẪU THEO TỪNG LEVEL TRONG PHÒNG PRACTICE (IN-CLASS)
+  // (Mỗi level có 1 bài mẫu ví dụ - Thầy/cô sẽ cập nhật câu hỏi chính thức sau)
+  // ===========================================================================
+
+  // --- 1. LỘ TRÌNH IELTS (4 LEVELS) ---
+  {
+    id: 'speaking-practice-ielts-beginner',
+    title: 'Speaking Practice: Self-Introduction & Daily Hobbies',
+    session: 'IELTS Beginner - Buổi 01 (Bài mẫu ví dụ)',
+    levelId: 'ielts-beginner',
+    category: 'ielts',
+    duration: '10 - 15 phút',
+    part: 'Part 1',
+    description: 'Rèn luyện phản xạ phát âm cơ bản: Giới thiệu bản thân, chia sẻ sở thích và thói quen hàng ngày. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'Band 3.5 - 4.5',
+    isExample: true,
+    questions: [
+      {
+        id: 'beg-q1',
+        prompt: 'Can you tell me a little bit about yourself, your family and what you do?',
+        hintVi: 'Giới thiệu họ tên, độ tuổi, đang đi học hay đi làm, thành phố đang sống và gia đình có mấy người.',
+        recommendedDuration: 25,
+        vocabKeywords: ['student', 'nuclear family', 'coastal city', 'friendly atmosphere']
+      },
+      {
+        id: 'beg-q2',
+        prompt: 'What hobbies or sports do you enjoy doing in your free time?',
+        hintVi: 'Kể tên 1-2 sở thích (nghe nhạc, chơi cầu lông, đọc sách) và lý do bạn thích làm việc đó.',
+        recommendedDuration: 30,
+        vocabKeywords: ['leisure activity', 'listen to acoustic music', 'unwind', 'stay energetic']
+      },
+      {
+        id: 'beg-q3',
+        prompt: 'Do you prefer spending your weekends at home or going out with friends?',
+        hintVi: 'Nêu lựa chọn của bạn (ở nhà thư giãn hay ra ngoài quán cà phê/dạo phố) và cảm xúc mang lại.',
+        recommendedDuration: 30,
+        vocabKeywords: ['hang out', 'cozy atmosphere', 'recharge batteries', 'meaningful moments']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-pre-ielts',
+    title: 'Speaking Practice: Hometown, Living Space & Friends',
+    session: 'Pre-IELTS - Buổi 01 (Bài mẫu ví dụ)',
+    levelId: 'pre-ielts',
+    category: 'ielts',
+    duration: '10 - 15 phút',
+    part: 'Part 1',
+    description: 'Rèn luyện phản xạ Part 1 chuẩn format: Miêu tả quê hương, không gian sống và những người bạn thân. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'Band 4.5 - 5.5',
+    isExample: true,
+    questions: [
+      {
+        id: 'pre-q1',
+        prompt: 'Where is your hometown, and what do you like most about living there?',
+        hintVi: 'Nêu vị trí địa lý (coastal city, peaceful suburb) và điểm bạn ấn tượng nhất (ẩm thực, sự thân thiện của người dân).',
+        recommendedDuration: 30,
+        vocabKeywords: ['coastal city', 'tranquil atmosphere', 'hospitable residents', 'local delicacies']
+      },
+      {
+        id: 'pre-q2',
+        prompt: 'What is your favourite room in your home, and why do you like spending time there?',
+        hintVi: 'Mô tả phòng riêng (bedroom, balcony, living room) với ánh sáng, sự riêng tư và cảm giác thoải mái.',
+        recommendedDuration: 30,
+        vocabKeywords: ['private sanctuary', 'natural sunlight', 'cozy interior', 'peace of mind']
+      },
+      {
+        id: 'pre-q3',
+        prompt: 'How often do you see your close friends, and what do you usually do together?',
+        hintVi: 'Nêu tần suất gặp mặt (cuối tuần, sau giờ học) và các hoạt động chung (uống cà phê, xem phim, ôn bài).',
+        recommendedDuration: 35,
+        vocabKeywords: ['catch up with', 'confide in', 'grab a coffee', 'cherished memories']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-ielts-foundation',
+    title: 'Speaking Practice: Education, Career Path & Ambitions',
+    session: 'IELTS Intermediate - Buổi 01 (Bài mẫu ví dụ)',
+    levelId: 'ielts-foundation',
+    category: 'ielts',
+    duration: '12 - 15 phút',
+    part: 'Part 1',
+    description: 'Mở rộng vốn từ vựng và cấu trúc câu phức về chuyên ngành học, định hướng nghề nghiệp và kế hoạch tương lai. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'Band 5.5 - 6.5',
+    isExample: true,
+    questions: [
+      {
+        id: 'fnd-q1',
+        prompt: 'Do you work or are you a student? What do you find most fulfilling about it?',
+        hintVi: 'Nêu rõ ngành nghề hoặc chuyên ngành, điểm thú vị hoặc giá trị học hỏi bạn nhận được mỗi ngày.',
+        recommendedDuration: 30,
+        vocabKeywords: ['major in', 'fulfilling experience', 'gain hands-on knowledge', 'fast-paced environment']
+      },
+      {
+        id: 'fnd-q2',
+        prompt: 'Why did you choose that particular field of study or career direction?',
+        hintVi: 'Giải thích động lực cá nhân (đam mê từ nhỏ, cơ hội thăng tiến, lời khuyên từ người có kinh nghiệm).',
+        recommendedDuration: 35,
+        vocabKeywords: ['lucrative prospects', 'follow my true calling', 'steep learning curve', 'professional development']
+      },
+      {
+        id: 'fnd-q3',
+        prompt: 'Where do you see yourself professionally in the next three to five years?',
+        hintVi: 'Dùng các thì tương lai và collocations mục tiêu (aspire to, climb the career ladder, broaden expertise).',
+        recommendedDuration: 40,
+        vocabKeywords: ['aspire to', 'climb the corporate ladder', 'expand horizons', 'specialized expertise']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-ielts-advanced',
+    title: 'Speaking Practice: Technology, AI & Modern Challenges',
+    session: 'IELTS Advanced - Buổi 01 (Bài mẫu ví dụ)',
+    levelId: 'ielts-advanced',
+    category: 'ielts',
+    duration: '15 - 20 phút',
+    part: 'Part 1 & 3',
+    description: 'Luyện tập tư duy phản biện, lập luận học thuật và sử dụng collocations cao cấp về công nghệ và xã hội. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'Band 6.5 - 8.0',
+    isExample: true,
+    questions: [
+      {
+        id: 'adv-q1',
+        prompt: 'What piece of digital technology has become indispensable in your daily routine, and why?',
+        hintVi: 'Nêu thiết bị/phần mềm thiết yếu và cách nó tối ưu hóa hiệu suất làm việc hoặc học tập của bạn.',
+        recommendedDuration: 35,
+        vocabKeywords: ['indispensable asset', 'streamline workflows', 'seamless connectivity', 'multitask efficiently']
+      },
+      {
+        id: 'adv-q2',
+        prompt: 'How is Artificial Intelligence reshaping the modern workforce and higher education?',
+        hintVi: 'Lập luận cân bằng: tăng cường năng suất và cá nhân hóa việc học vs nguy cơ mất việc và giảm tư duy phản biện.',
+        recommendedDuration: 45,
+        vocabKeywords: ['paradigm shift', 'augment human capabilities', 'automated workflows', 'intellectual complacency']
+      },
+      {
+        id: 'adv-q3',
+        prompt: 'Do you believe rapid digital advancement brings people closer together or causes social isolation?',
+        hintVi: 'Phân tích đa chiều: kết nối xuyên biên giới nhưng làm xói mòn các mối quan hệ giao tiếp mặt-đối-mặt sâu sắc.',
+        recommendedDuration: 50,
+        vocabKeywords: ['double-edged sword', 'virtual interaction', 'diminish interpersonal rapport', 'social estrangement']
+      }
+    ]
+  },
+
+  // --- 2. TIẾNG ANH PHỔ THÔNG (7 KHỐI LỚP 6 ĐẾN 12) ---
+  {
+    id: 'speaking-practice-grade-6',
+    title: 'Tiếng Anh 6 Speaking: My New School & Friends',
+    session: 'Lớp 6 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-6',
+    category: 'school',
+    duration: '8 - 12 phút',
+    part: 'Unit 1-3 Review',
+    description: 'Luyện nói tự tin về ngôi trường mới, thầy cô, bạn bè và các hoạt động yêu thích ở trường THCS. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'A1 - A2 / THCS',
+    isExample: true,
+    questions: [
+      {
+        id: 'g6-q1',
+        prompt: 'Can you introduce yourself and tell me about your new school?',
+        hintVi: 'Nêu tên, tuổi, tên trường THCS, các phòng chức năng ở trường (computer room, library, playground).',
+        recommendedDuration: 25,
+        vocabKeywords: ['secondary school', 'spacious playground', 'friendly classmates', 'well-equipped library']
+      },
+      {
+        id: 'g6-q2',
+        prompt: 'What is your favourite subject at school, and why do you like it?',
+        hintVi: 'Nêu môn học yêu thích (English, Science, Maths) và lý do (thú vị, thầy cô vui tính, học được điều mới).',
+        recommendedDuration: 25,
+        vocabKeywords: ['favourite subject', 'fascinating', 'patient teacher', 'explore new things']
+      },
+      {
+        id: 'g6-q3',
+        prompt: 'Who is your best friend at school? What do you usually do together during break time?',
+        hintVi: 'Giới thiệu bạn thân (ngoại hình, tính cách) và trò chơi cùng chơi trong giờ ra chơi.',
+        recommendedDuration: 30,
+        vocabKeywords: ['best friend', 'kind-hearted', 'play badminton', 'share snacks']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-grade-7',
+    title: 'Tiếng Anh 7 Speaking: Healthy Living & Community Activities',
+    session: 'Lớp 7 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-7',
+    category: 'school',
+    duration: '8 - 12 phút',
+    part: 'Unit 1-3 Review',
+    description: 'Luyện nói về thói quen ăn uống lành mạnh, giữ gìn sức khỏe và tham gia hoạt động vì cộng đồng. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'A2 / THCS',
+    isExample: true,
+    questions: [
+      {
+        id: 'g7-q1',
+        prompt: 'What healthy habits do you practice every day to stay fit and energized?',
+        hintVi: 'Nêu các thói quen tốt (uống nhiều nước, ăn rau củ, đi ngủ sớm, tập thể dục buổi sáng).',
+        recommendedDuration: 25,
+        vocabKeywords: ['healthy diet', 'stay hydrated', 'morning exercise', 'avoid junk food']
+      },
+      {
+        id: 'g7-q2',
+        prompt: 'Have you ever taken part in community service or volunteer work? What did you do?',
+        hintVi: 'Kể về hoạt động tình nguyện (dọn rác công viên, quyên góp sách cũ, trồng cây xanh quanh trường).',
+        recommendedDuration: 30,
+        vocabKeywords: ['community service', 'donate old books', 'plant green trees', 'help the needy']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-grade-8',
+    title: 'Tiếng Anh 8 Speaking: Life in the Countryside & Teen Leisure',
+    session: 'Lớp 8 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-8',
+    category: 'school',
+    duration: '10 - 12 phút',
+    part: 'Unit 1-3 Review',
+    description: 'So sánh cuộc sống nông thôn với thành thị và thói quen giải trí lành mạnh của học sinh thời nay. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'A2 - B1 / THCS',
+    isExample: true,
+    questions: [
+      {
+        id: 'g8-q1',
+        prompt: 'Do you prefer living in a quiet countryside or a bustling modern city? Why?',
+        hintVi: 'So sánh không khí trong lành, sự yên bình của làng quê vs tiện ích hiện đại của thành phố.',
+        recommendedDuration: 30,
+        vocabKeywords: ['peaceful countryside', 'fresh air', 'bustling city life', 'modern conveniences']
+      },
+      {
+        id: 'g8-q2',
+        prompt: 'What leisure activities do teenagers in your area usually enjoy after school?',
+        hintVi: 'Kể các hoạt động (chơi thể thao, lướt mạng xã hội, tham gia câu lạc bộ nghệ thuật).',
+        recommendedDuration: 30,
+        vocabKeywords: ['outdoor sports', 'social media', 'creative club', 'hang out together']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-grade-9',
+    title: 'Tiếng Anh 9 Speaking: Remembering the Past & Local Heritage',
+    session: 'Lớp 9 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-9',
+    category: 'school',
+    duration: '10 - 15 phút',
+    part: 'Unit 4 Review',
+    description: 'Bàn luận về bảo tồn văn hóa truyền thống, làng nghề di sản và những thay đổi của quê hương qua thời gian. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'B1 / THCS',
+    isExample: true,
+    questions: [
+      {
+        id: 'g9-q1',
+        prompt: 'Why is it essential for young generations to preserve traditional crafts and historical monuments?',
+        hintVi: 'Nêu ý nghĩa của việc gìn giữ cội nguồn dân tộc, giá trị văn hóa và thu hút du lịch.',
+        recommendedDuration: 35,
+        vocabKeywords: ['cultural heritage', 'traditional crafts', 'national identity', 'historical values']
+      },
+      {
+        id: 'g9-q2',
+        prompt: 'How has lifestyle in your town or city transformed compared to your grandparents’ generation?',
+        hintVi: 'So sánh phương tiện di chuyển, nhà cửa, công nghệ và cách liên lạc ngày xưa và ngày nay.',
+        recommendedDuration: 35,
+        vocabKeywords: ['dramatic transformation', 'technological boom', 'high-rise buildings', 'convenient lifestyle']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-grade-10',
+    title: 'Tiếng Anh 10 Speaking: Family Life & Eco-Friendly Living',
+    session: 'Lớp 10 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-10',
+    category: 'school',
+    duration: '10 - 15 phút',
+    part: 'Unit 1-3 Review',
+    description: 'Chia sẻ về văn hóa gia đình, phân chia việc nhà và các hành động thiết thực của học sinh để bảo vệ môi trường. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'B1 / THPT',
+    isExample: true,
+    questions: [
+      {
+        id: 'g10-q1',
+        prompt: 'How do family members in your household share domestic chores fairly?',
+        hintVi: 'Kể về cách phân công việc nhà (nấu cơm, rửa bát, lau dọn) và ý nghĩa gắn kết gia đình.',
+        recommendedDuration: 30,
+        vocabKeywords: ['household chores', 'share the burden', 'family bond', 'mutual respect']
+      },
+      {
+        id: 'g10-q2',
+        prompt: 'What practical green habits can high school students adopt to protect the environment?',
+        hintVi: 'Đề xuất giải pháp (mang bình nước cá nhân, tắt thiết bị điện khi ra khỏi lớp, phân loại rác).',
+        recommendedDuration: 35,
+        vocabKeywords: ['eco-friendly lifestyle', 'reduce single-use plastic', 'energy conservation', 'raise awareness']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-grade-11',
+    title: 'Tiếng Anh 11 Speaking: Generation Gap & Smart Cities',
+    session: 'Lớp 11 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-11',
+    category: 'school',
+    duration: '12 - 15 phút',
+    part: 'Unit 1-3 Review',
+    description: 'Thảo luận về khoảng cách thế hệ trong gia đình và tầm nhìn về những thành phố thông minh, bền vững trong tương lai. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'B1+ / THPT',
+    isExample: true,
+    questions: [
+      {
+        id: 'g11-q1',
+        prompt: 'What are the most common differences in viewpoints between teenagers and their parents today?',
+        hintVi: 'Nêu sự khác biệt về định hướng nghề nghiệp, cách dùng mạng xã hội, phong cách sống và cách đối thoại hòa giải.',
+        recommendedDuration: 35,
+        vocabKeywords: ['generation gap', 'conflicting perspectives', 'career choices', 'open dialogue']
+      },
+      {
+        id: 'g11-q2',
+        prompt: 'What distinctive features will make future cities more livable, green and sustainable?',
+        hintVi: 'Nêu hạ tầng thông minh (xe điện, năng lượng mặt trời, công viên xanh, quản lý rác thải AI).',
+        recommendedDuration: 40,
+        vocabKeywords: ['smart cities', 'renewable energy', 'eco-friendly transit', 'sustainable infrastructure']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-grade-12',
+    title: 'Tiếng Anh 12 Speaking: Life Stories & Future Career Readiness',
+    session: 'Lớp 12 - Global Success (Bài mẫu ví dụ)',
+    levelId: 'grade-12',
+    category: 'school',
+    duration: '12 - 15 phút',
+    part: 'Unit 1-3 Review',
+    description: 'Luyện nói về câu chuyện cuộc đời của những tấm gương truyền cảm hứng và hành trang kỹ năng cho kỳ thi tốt nghiệp THPT & đại học. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'B2 / THPT',
+    isExample: true,
+    questions: [
+      {
+        id: 'g12-q1',
+        prompt: 'Which famous historical or modern personality has inspired you the most in your life journey?',
+        hintVi: 'Kể về một nhân vật kiệt xuất (nhà khoa học, lãnh tụ, doanh nhân), phẩm chất kiên cường và bài học bạn rút ra.',
+        recommendedDuration: 40,
+        vocabKeywords: ['inspirational figure', 'unwavering determination', 'overcome adversity', 'leave a lasting legacy']
+      },
+      {
+        id: 'g12-q2',
+        prompt: 'What essential soft skills do you think high school graduates need most to thrive at university and in the workforce?',
+        hintVi: 'Phân tích các kỹ năng quan trọng (giao tiếp, làm việc nhóm, quản lý thời gian, tư duy thích ứng).',
+        recommendedDuration: 40,
+        vocabKeywords: ['adaptability', 'critical thinking', 'time management', 'teamwork collaboration']
+      }
+    ]
+  },
+
+  // --- 3. KHUNG CHUẨN CHÂU ÂU CEFR (4 LEVELS: A2, B1, B2, C1) ---
+  {
+    id: 'speaking-practice-cefr-a2',
+    title: 'CEFR A2 Speaking: Daily Routines & Shopping Habits',
+    session: 'Level A2 - Pre-Intermediate (Bài mẫu ví dụ)',
+    levelId: 'a2',
+    category: 'cefr',
+    duration: '8 - 12 phút',
+    part: 'Part 1',
+    description: 'Thực hành hội thoại thường nhật: Thói quen sinh hoạt và sở thích mua sắm. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'CEFR A2',
+    isExample: true,
+    questions: [
+      {
+        id: 'a2-q1',
+        prompt: 'Can you describe what you usually do on a typical weekday from morning to night?',
+        hintVi: 'Nêu thời gian biểu trong ngày (thức dậy, ăn sáng, đi làm/đi học, nghỉ ngơi buổi tối).',
+        recommendedDuration: 25,
+        vocabKeywords: ['daily routine', 'commute', 'prepare breakfast', 'relax in the evening']
+      },
+      {
+        id: 'a2-q2',
+        prompt: 'Do you prefer shopping for clothes online or visiting physical stores? Why?',
+        hintVi: 'So sánh sự tiện lợi khi mua online vs việc được thử đồ trực tiếp tại cửa hàng.',
+        recommendedDuration: 30,
+        vocabKeywords: ['online shopping', 'try on clothes', 'convenient delivery', 'bargain price']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-cefr-b1',
+    title: 'CEFR B1 Speaking: Memorable Journeys & Cultural Exchange',
+    session: 'Level B1 - Intermediate (Bài mẫu ví dụ)',
+    levelId: 'b1',
+    category: 'cefr',
+    duration: '10 - 15 phút',
+    part: 'Part 1',
+    description: 'Chia sẻ trải nghiệm du lịch đáng nhớ và sự hòa nhập vào nền văn hóa mới. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'CEFR B1',
+    isExample: true,
+    questions: [
+      {
+        id: 'b1-q1',
+        prompt: 'Describe a memorable journey you took with your family or friends.',
+        hintVi: 'Kể về địa điểm, phương tiện, hoạt động nổi bật và lý do chuyến đi đọng lại nhiều kỷ niệm đẹp.',
+        recommendedDuration: 35,
+        vocabKeywords: ['breathtaking destination', 'unforgettable memories', 'local cuisine', 'hospitality']
+      },
+      {
+        id: 'b1-q2',
+        prompt: 'What are the main benefits of traveling and learning about other foreign cultures?',
+        hintVi: 'Mở rộng thế giới quan, rèn luyện sự cởi mở và nâng cao khả năng giao tiếp.',
+        recommendedDuration: 35,
+        vocabKeywords: ['broaden perspectives', 'cultural exchange', 'step out of comfort zone', 'lifelong friendships']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-cefr-b2',
+    title: 'CEFR B2 Speaking: Mass Media & Environmental Sustainability',
+    session: 'Level B2 - Upper-Intermediate (Bài mẫu ví dụ)',
+    levelId: 'b2',
+    category: 'cefr',
+    duration: '12 - 15 phút',
+    part: 'Part 1 & 3',
+    description: 'Thảo luận về tầm ảnh hưởng của truyền thông đại chúng và phát triển kinh tế bền vững gắn liền với bảo vệ môi trường. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'CEFR B2',
+    isExample: true,
+    questions: [
+      {
+        id: 'b2-q1',
+        prompt: 'To what extent does social media shape modern youth behavior and public opinions?',
+        hintVi: 'Phân tích cả tác động tích cực (lan tỏa thông điệp xã hội) và tiêu cực (tin giả, áp lực hình tượng ảo).',
+        recommendedDuration: 40,
+        vocabKeywords: ['mass media influence', 'shape public opinion', 'misinformation', 'peer pressure']
+      },
+      {
+        id: 'b2-q2',
+        prompt: 'How can governments and corporations collaborate to promote environmental sustainability?',
+        hintVi: 'Nêu các chính sách khuyến khích năng lượng tái tạo, giảm khí thải carbon và áp thuế môi trường.',
+        recommendedDuration: 45,
+        vocabKeywords: ['environmental sustainability', 'carbon footprint', 'renewable energy', 'stringent regulations']
+      }
+    ]
+  },
+  {
+    id: 'speaking-practice-cefr-c1',
+    title: 'CEFR C1 Speaking: Globalization, Technology & Human Values',
+    session: 'Level C1 - Advanced (Bài mẫu ví dụ)',
+    levelId: 'c1',
+    category: 'cefr',
+    duration: '15 - 20 phút',
+    part: 'Part 1 & 3',
+    description: 'Lập luận chuyên sâu về tác động của toàn cầu hóa đối với bản sắc văn hóa và vai trò không thể thay thế của con người trong kỷ nguyên máy móc. (Nội dung câu hỏi mẫu - Giáo viên sẽ cập nhật thêm câu hỏi sau).',
+    targetBand: 'CEFR C1',
+    isExample: true,
+    questions: [
+      {
+        id: 'c1-q1',
+        prompt: 'Does economic globalization inevitably lead to the homogenization of local cultural identities?',
+        hintVi: 'Phân tích sự giao thoa văn hóa toàn cầu: làm giàu ngôn ngữ và phong cách sống vs nguy cơ mai một bản sắc dân tộc độc bản.',
+        recommendedDuration: 45,
+        vocabKeywords: ['cultural homogenization', 'global interconnectedness', 'preserve heritage', 'cultural assimilation']
+      },
+      {
+        id: 'c1-q2',
+        prompt: 'In an era dominated by automation and generative intelligence, which human virtues remain fundamentally irreplaceable?',
+        hintVi: 'Nêu các phẩm chất đặc trưng của con người (sự thấu cảm, đạo đức, sáng tạo nghệ thuật đích thực và khả năng cảm thụ cảm xúc).',
+        recommendedDuration: 50,
+        vocabKeywords: ['irreplaceable virtues', 'genuine empathy', 'ethical judgment', 'creative consciousness']
+      }
+    ]
   }
 ];
 

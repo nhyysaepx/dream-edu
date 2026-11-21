@@ -9,7 +9,8 @@ import {
   Volume2,
   Headphones,
   BookOpen,
-  CheckCircle2
+  CheckCircle2,
+  Mic
 } from 'lucide-react';
 import { EXAM_COLLECTIONS } from '../data/examData';
 
@@ -35,6 +36,7 @@ export default function TestDetail() {
   const TIME_OPTIONS = Array.from({ length: 20 }, (_, i) => (i + 1) * 5); // [5, 10, 15, ..., 100]
   const [timeLimit, setTimeLimit] = useState(() => {
     // Default smart suggestion
+    if (exam.skill === 'Speaking') return '15';
     return exam.skill === 'Reading' ? '60' : '40';
   });
 
@@ -48,7 +50,9 @@ export default function TestDetail() {
   // Auto-adjust default recommended time based on selected parts
   const handleSelectSinglePart = (partId) => {
     setSelectedParts([partId]);
-    if (exam.skill === 'Reading') {
+    if (exam.skill === 'Speaking') {
+      setTimeLimit('5');
+    } else if (exam.skill === 'Reading') {
       setTimeLimit('20'); // 20 mins for 1 passage
     } else {
       setTimeLimit('10'); // 10 mins for 1 listening part
@@ -56,18 +60,26 @@ export default function TestDetail() {
   };
 
   const handleSelectAllParts = () => {
-    const allIds = exam.parts ? exam.parts.map(p => p.id) : [1, 2, 3, 4];
+    const allIds = exam.parts ? exam.parts.map(p => p.id) : [1, 2, 3];
     setSelectedParts(allIds);
-    setTimeLimit(exam.skill === 'Reading' ? '60' : '40');
+    setTimeLimit(exam.skill === 'Speaking' ? '15' : exam.skill === 'Reading' ? '60' : '40');
   };
 
   const handleStartPractice = () => {
+    if (exam.skill === 'Speaking') {
+      navigate(`/speaking/mock/${exam.speakingMockId || 'ielts-mock-speaking-01'}`);
+      return;
+    }
     const partsParam = selectedParts.join(',');
     const timeParam = timeLimit ? `&time=${timeLimit}` : '';
     navigate(`/tests/${exam.id}/exam?mode=practice&parts=${partsParam}${timeParam}`);
   };
 
   const handleStartFullTest = () => {
+    if (exam.skill === 'Speaking') {
+      navigate(`/speaking/mock/${exam.speakingMockId || 'ielts-mock-speaking-01'}`);
+      return;
+    }
     const allParts = exam.parts ? exam.parts.map(p => p.id).join(',') : '1,2,3,4';
     navigate(`/tests/${exam.id}/exam?mode=fulltest&parts=${allParts}&time=${exam.duration}`);
   };
@@ -86,8 +98,16 @@ export default function TestDetail() {
 
         {/* Badges */}
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#2c4482] text-xs font-semibold px-2.5 py-1 rounded">
-            {exam.skill === 'Listening' ? <Headphones size={13} /> : <BookOpen size={13} />}
+          <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded ${
+            exam.skill === 'Speaking' ? 'bg-purple-50 text-purple-700 border border-purple-200' : 'bg-blue-50 text-[#2c4482]'
+          }`}>
+            {exam.skill === 'Listening' ? (
+              <Headphones size={13} />
+            ) : exam.skill === 'Speaking' ? (
+              <Mic size={13} className="text-purple-600" />
+            ) : (
+              <BookOpen size={13} />
+            )}
             {exam.skill}
           </span>
           {exam.tags?.map((tag, idx) => (
@@ -473,18 +493,49 @@ export default function TestDetail() {
               </div>
             )}
 
-            {/* Answer Keys */}
-            <div>
-              <h4 className="font-semibold text-gray-800 text-sm mb-3">Đáp án tham khảo (Answer Key):</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                {exam.parts?.flatMap(p => p.questions || []).slice(0, 40).map(q => (
-                  <div key={q.id} className="bg-gray-50 border border-gray-200 rounded p-2 text-xs">
-                    <span className="font-bold text-gray-500">Câu {q.id}:</span>{' '}
-                    <span className="font-semibold text-[#185bc3]">{q.answer}</span>
+            {/* Answer Keys / Speaking Model Answers */}
+            {exam.skill === 'Speaking' ? (
+              <div className="space-y-4">
+                <h4 className="font-semibold text-gray-800 text-sm">Bài mẫu Band 8.0+ tham khảo cho 3 phần thi:</h4>
+                {exam.parts?.map((p) => (
+                  <div key={p.id} className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3">
+                    <h5 className="font-extrabold text-xs uppercase text-primary tracking-wide">
+                      {p.title}: {p.name}
+                    </h5>
+                    {p.cueCard && (
+                      <div className="p-3 bg-white rounded-lg border border-gray-200 text-xs">
+                        <p className="font-bold text-gray-900 mb-1">Đề bài Cue Card (Part 2):</p>
+                        <p className="italic text-gray-700 mb-2">{p.cueCard.prompt}</p>
+                        <p className="font-bold text-emerald-800 mb-1">Bài mẫu Band 8.0+:</p>
+                        <p className="text-gray-800 leading-relaxed">{p.cueCard.sampleAnswerBand8}</p>
+                      </div>
+                    )}
+                    {p.questions?.map((q, qIdx) => (
+                      <div key={q.id || qIdx} className="p-3 bg-white rounded-lg border border-gray-200 text-xs space-y-1">
+                        <p className="font-bold text-gray-900">Câu hỏi: "{q.prompt}"</p>
+                        {q.sampleAnswerBand8 && (
+                          <p className="text-emerald-900 leading-relaxed bg-emerald-50/70 p-2 rounded-md border border-emerald-150">
+                            <strong>Gợi ý trả lời Band 8.0+:</strong> {q.sampleAnswerBand8}
+                          </p>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
-            </div>
+            ) : (
+              <div>
+                <h4 className="font-semibold text-gray-800 text-sm mb-3">Đáp án tham khảo (Answer Key):</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                  {exam.parts?.flatMap(p => p.questions || []).slice(0, 40).map(q => (
+                    <div key={q.id} className="bg-gray-50 border border-gray-200 rounded p-2 text-xs">
+                      <span className="font-bold text-gray-500">Câu {q.id}:</span>{' '}
+                      <span className="font-semibold text-[#185bc3]">{q.answer}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

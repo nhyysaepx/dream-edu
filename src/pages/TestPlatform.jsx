@@ -7,7 +7,8 @@ import {
   MessageSquare, 
   AlertCircle,
   Headphones,
-  BookOpen
+  BookOpen,
+  Mic
 } from 'lucide-react';
 import { EXAM_COLLECTIONS, FILTER_CATEGORIES } from '../data/examData';
 
@@ -110,8 +111,16 @@ export default function TestPlatform() {
               className="bg-white rounded-xl border border-gray-200 p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center gap-1.5 mb-2 text-xs font-semibold text-[#2c4482]">
-                  {exam.skill === 'Listening' ? <Headphones size={14} /> : <BookOpen size={14} />}
+                <div className={`flex items-center gap-1.5 mb-2 text-xs font-semibold ${
+                  exam.skill === 'Speaking' ? 'text-purple-700' : 'text-[#2c4482]'
+                }`}>
+                  {exam.skill === 'Listening' ? (
+                    <Headphones size={14} />
+                  ) : exam.skill === 'Speaking' ? (
+                    <Mic size={14} className="text-purple-600" />
+                  ) : (
+                    <BookOpen size={14} />
+                  )}
                   <span>{exam.skill.toUpperCase()} TEST</span>
                 </div>
 
