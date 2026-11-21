@@ -271,7 +271,7 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
  * Giúp giải quyết triệt để lỗi 'User location is not supported' do edge Hong Kong của Cloudflare
  */
 async function callGeminiViaAppsScript(env, contents, generationConfig, model) {
-  const appsScriptUrl = (env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbyoijNihq4swDe0JC7zvXzSpCXSjq4_P5vcw8XM92TMRXaAOCv-ItpEfxhXKVkZpSyE6g/exec').trim();
+  const appsScriptUrl = (env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbyklW07HibT6f4nXRIcZV7aYLacXEFH7Je-hdWAtolvVPx5hEnkXYdy57wRhUnusv1vrA/exec').trim();
   const apiKey = env.GEMINI_API_KEY;
 
   const res = await fetch(appsScriptUrl, {

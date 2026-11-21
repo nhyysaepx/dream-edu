@@ -1,5 +1,5 @@
 // Google Apps Script Web App URL provided by user
-export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyoijNihq4swDe0JC7zvXzSpCXSjq4_P5vcw8XM92TMRXaAOCv-ItpEfxhXKVkZpSyE6g/exec";
+export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyklW07HibT6f4nXRIcZV7aYLacXEFH7Je-hdWAtolvVPx5hEnkXYdy57wRhUnusv1vrA/exec";
 
 // Cloudflare Worker URL for AI Speaking Evaluator & Azure Speech Token
 export const SPEAKING_WORKER_URL = "https://dream-edu-speaking.ngtquynh2001.workers.dev";

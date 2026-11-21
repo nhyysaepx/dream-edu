@@ -24,10 +24,12 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
-// Chạy hàm này một lần trong Apps Script editor để cấp quyền truy cập Google Drive nếu Google yêu cầu
-function testDrivePermission() {
-  const folders = DriveApp.getFoldersByName("DreamEdu_Speaking_Recordings");
-  Logger.log("✅ Quyền Google Drive đã sẵn sàng hoạt động!");
+// Chạy hàm này một lần trong Apps Script editor (bấm nút 'Chạy' / 'Run') để cấp toàn bộ quyền (Drive & UrlFetchApp)
+function testPermissions() {
+  DriveApp.getRootFolder();
+  UrlFetchApp.fetch("https://www.google.com");
+  SpreadsheetApp.getActiveSpreadsheet();
+  Logger.log("✅ Quyền Google Drive & Kết nối ngoài (UrlFetchApp) đã sẵn sàng hoạt động!");
 }
 
 /**
