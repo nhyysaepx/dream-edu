@@ -200,7 +200,7 @@ QUY TẮC CHẤM ĐIỂM BẮT BUỘC:
    - Azure PronScore 55 - 69 -> Pronunciation ~ 4.5 - 5.5
    - Azure PronScore < 55 -> Pronunciation <= 4.5
 2. Nếu học sinh nói quá ngắn (ví dụ Part 1 dưới 10 từ, hoặc Part 2 dưới 45 giây / dưới 60 từ), hoặc lạc đề, phải trừ điểm rõ rệt ở Fluency & Coherence và nhắc trong answerQuality.
-3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng (transcript) trung thực kể cả lỗi ngữ pháp, từ ngập ngừng (um, uh, like...) rồi mới chấm. Nếu câu hỏi không có transcript lẫn audio, thí sinh được tính là không đưa ra câu trả lời cho câu này (tuyệt đối KHÔNG tự bịa nội dung câu trả lời).
+3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng (transcript) trung thực kể cả lỗi ngữ pháp, từ ngập ngừng (um, uh, like...) rồi mới chấm. Lưu ý: Thí sinh có thể thu âm qua điện thoại di động (có thể có tạp âm môi trường hoặc âm lượng biến thiên nhẹ), hãy tập trung đánh giá ngữ âm, ngữ pháp và độ lưu loát thực chất của thí sinh. Nếu câu hỏi không có transcript lẫn audio, thí sinh được tính là không đưa ra câu trả lời cho câu này (tuyệt đối KHÔNG tự bịa nội dung câu trả lời).
 4. Tất cả giải thích, nhận xét cho học sinh và giáo viên viết bằng **tiếng Việt** tự nhiên, rõ ràng, khích lệ nhưng thẳng thắn. Các ví dụ tiếng Anh, lỗi sai và bài mẫu nâng cấp viết bằng **tiếng Anh**.
 5. Điểm từng tiêu chí và điểm tổng (overallBand) phải là bội số của 0.5 (từ 1.0 đến 9.0). overallBand = trung bình cộng 4 tiêu chí làm tròn đến 0.5 gần nhất.
 
@@ -461,9 +461,12 @@ async function handleEvaluate(request, env, corsHeaders) {
   const promptText = buildIeltsPrompt(payload);
   const parts = [{ text: promptText }];
 
-  // Đính kèm audio (nếu gửi lên để Gemini nghe trực tiếp — tối đa ~8MB để đảm bảo tốc độ)
-  for (const item of payload.responses) {
-    if (item.audioBase64 && item.audioBase64.length < 11_000_000) {
+  // Đính kèm audio (nếu câu nào thiếu transcript) - Gắn kèm nhãn câu cụ thể để Gemini phân biệt chính xác
+  payload.responses.forEach((item, idx) => {
+    if (item.audioBase64 && item.audioBase64.length < 11_000_000 && !item.transcript) {
+      parts.push({
+        text: `\n[TỆP ÂM THANH TRẢ LỜI CỦA THÍ SINH CHO CÂU ${idx + 1} (${item.part || 'Speaking'}): "${item.question || ''}"]:`
+      });
       parts.push({
         inlineData: {
           mimeType: item.audioMimeType || 'audio/webm',
@@ -471,7 +474,7 @@ async function handleEvaluate(request, env, corsHeaders) {
         }
       });
     }
-  }
+  });
 
   try {
     const { text, modelUsed } = await callGemini(env, parts, payload.model);

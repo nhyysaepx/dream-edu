@@ -129,7 +129,8 @@ export default function SpeakingMockRoom() {
       blob: currentRecording.blob,
       url: currentRecording.url,
       base64: currentRecording.base64,
-      mimeType: currentRecording.mimeType
+      mimeType: currentRecording.mimeType,
+      liveTranscript: currentRecording.liveTranscript || ''
     };
 
     setRecordedResponses((prev) => [...prev, recData]);
@@ -194,7 +195,8 @@ export default function SpeakingMockRoom() {
       blob: currentRecording.blob,
       url: currentRecording.url,
       base64: currentRecording.base64,
-      mimeType: currentRecording.mimeType
+      mimeType: currentRecording.mimeType,
+      liveTranscript: currentRecording.liveTranscript || ''
     };
 
     setRecordedResponses((prev) => [...prev, recData]);
@@ -232,7 +234,8 @@ export default function SpeakingMockRoom() {
       blob: currentRecording.blob,
       url: currentRecording.url,
       base64: currentRecording.base64,
-      mimeType: currentRecording.mimeType
+      mimeType: currentRecording.mimeType,
+      liveTranscript: currentRecording.liveTranscript || ''
     };
 
     const newResponses = [...recordedResponses, recData];
@@ -299,13 +302,15 @@ export default function SpeakingMockRoom() {
         targetLevel: 'IELTS Standard Band 6.5 - 7.5',
         responses: allResponses.map((r, idx) => {
           const az = azureMap[idx];
-          const hasTranscript = Boolean(az?.transcript && az.transcript.trim());
+          const resolvedTranscript = (az?.transcript && az.transcript.trim()) || (r.liveTranscript && r.liveTranscript.trim()) || '';
+          const hasTranscript = Boolean(resolvedTranscript);
           return {
             part: r.part,
             question: r.question,
             durationSeconds: r.durationSeconds,
-            transcript: hasTranscript ? az.transcript : '',
-            audioBase64: hasTranscript ? null : r.base64,
+            transcript: resolvedTranscript,
+            // Nếu đã có transcript (từ Azure hoặc Live Speech), không gửi audioBase64 -> Siêu nhẹ, tránh timeout trên điện thoại
+            audioBase64: hasTranscript ? null : (r.base64 && r.base64.length < 8_000_000 ? r.base64 : null),
             audioMimeType: r.mimeType,
             azureMetrics: az || null
           };
@@ -331,7 +336,7 @@ export default function SpeakingMockRoom() {
         audioBase64: part2Response ? part2Response.base64 : null,
         audioMimeType: part2Response ? part2Response.mimeType : 'audio/webm',
         mode: 'mock_test',
-        transcript: combinedAzure?.transcript || ''
+        transcript: combinedAzure?.transcript || part2Response?.liveTranscript || ''
       }).catch((submitErr) => {
         console.warn('Background mock test submission note:', submitErr);
       });
