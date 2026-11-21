@@ -25,6 +25,9 @@ import Practice from './pages/Practice';
 import PracticeDetail from './pages/PracticeDetail';
 import VocabHub from './pages/VocabHub';
 import VocabStudySet from './pages/VocabStudySet';
+import SpeakingHub from './pages/SpeakingHub';
+import SpeakingPracticeRoom from './pages/SpeakingPracticeRoom';
+import SpeakingMockRoom from './pages/SpeakingMockRoom';
 
 // Helper component to reset scroll position to top on page change
 function ScrollToTop() {
@@ -58,7 +61,7 @@ function MainLayout() {
           <Route path="/de-beginner/review" element={<DEBeginnerReview />} />
           <Route path="/de-beginner/language-builder" element={<DEBeginnerLBReview />} />
           <Route path="/de-beginner/reading-review" element={<DEBeginnerReadingReview />} />
-          {/* Protected Learning Areas: Practice, Homework, Test Platform */}
+          {/* Protected Learning Areas: Practice, Homework, Test Platform, Speaking */}
           <Route element={<PasswordGate />}>
             <Route path="/test-platform" element={<TestPlatform />} />
             <Route path="/tests/:id" element={<TestDetail />} />
@@ -67,6 +70,9 @@ function MainLayout() {
             <Route path="/homework/:id" element={<HomeworkDetail />} />
             <Route path="/practice" element={<Practice />} />
             <Route path="/practice/:id" element={<PracticeDetail />} />
+            <Route path="/speaking" element={<SpeakingHub />} />
+            <Route path="/speaking/practice/:id" element={<SpeakingPracticeRoom />} />
+            <Route path="/speaking/mock/:id" element={<SpeakingMockRoom />} />
           </Route>
           <Route path="/vocab" element={<VocabHub />} />
           <Route path="/vocab/:setId" element={<VocabStudySet />} />

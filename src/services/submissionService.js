@@ -1,5 +1,8 @@
 // Google Apps Script Web App URL provided by user
-export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIeljAGljE4NHnElIlSDGwqUvkgkUELfhJr5vVNMM7sywURtWSdH8TUj4wW_HmhK4y1w/exec";
+export const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyoijNihq4swDe0JC7zvXzSpCXSjq4_P5vcw8XM92TMRXaAOCv-ItpEfxhXKVkZpSyE6g/exec";
+
+// Cloudflare Worker URL for AI Speaking Evaluator & Azure Speech Token
+export const SPEAKING_WORKER_URL = "https://dream-edu-speaking.ngtquynh2001.workers.dev";
 
 // Backup email recipient (FormSubmit service)
 export const BACKUP_EMAIL_ENDPOINT = "https://formsubmit.co/ajax/ngtquynh2001@gmail.com";
@@ -205,6 +208,57 @@ export async function submitTestPlatformResult({
   logLocalSubmission(payload);
 
   // Gửi trực tiếp đến Google Apps Script Webhook (Ghi Sheets + Gửi 1 email duy nhất từ tài khoản của bạn)
+  const result = await sendToAppsScript(payload);
+  return result;
+}
+
+/**
+ * Submit IELTS Speaking evaluation result (Practice or Mock Test)
+ * Automatically saves recording to Google Drive (Lớp / Buổi học / File) & logs to Google Sheets (tab Speaking)
+ */
+export async function submitSpeakingResult({
+  studentName = '',
+  className = '',
+  sessionName = '',
+  testTitle = '',
+  overallBand = 0,
+  criteria = {},
+  azureMetrics = null,
+  teacherSummary = '',
+  keyErrors = '',
+  transcript = '',
+  audioBase64 = null,
+  audioMimeType = 'audio/webm',
+  type = 'Speaking Practice'
+}) {
+  const formattedTime = getFormattedCurrentTime();
+
+  const payload = {
+    isSpeaking: true,
+    type,
+    studentName: (studentName || '').trim() || 'Học sinh chưa đặt tên',
+    className: (className || '').trim(),
+    sessionName: sessionName || testTitle || 'Speaking Practice',
+    testTitle: testTitle || sessionName || 'Speaking Practice',
+    overallBand: overallBand || 0,
+    criteria: criteria || {},
+    azureMetrics: azureMetrics || {},
+    teacherSummary: teacherSummary || '',
+    keyErrors: keyErrors || '',
+    transcript: transcript || '',
+    audioBase64: audioBase64 || null,
+    audioMimeType: audioMimeType || 'audio/webm',
+    submittedAt: formattedTime
+  };
+
+  // Log locally for student history
+  logLocalSubmission({
+    ...payload,
+    // Do not store base64 locally to avoid localStorage quota overflow
+    audioBase64: audioBase64 ? '(audio stored in Google Drive)' : null
+  });
+
+  // Gửi đến Google Apps Script Webhook
   const result = await sendToAppsScript(payload);
   return result;
 }

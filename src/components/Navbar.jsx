@@ -23,6 +23,7 @@ export default function Navbar() {
         { path: '/vocab', label: 'Học từ vựng' },
         { path: '/practice', label: 'Practice (Luyện trên lớp)', isProtected: true },
         { path: '/pronunciation/', label: 'Pronunciation', isExternal: true },
+        { path: '/speaking', label: 'Luyện nói IELTS (AI Speaking)', isProtected: true },
         { path: '/test-platform', label: 'Test Platform', isProtected: true },
         { path: '/homework', label: 'Homework', isProtected: true }
       ] 
