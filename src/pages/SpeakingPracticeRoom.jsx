@@ -71,10 +71,10 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
     }));
     setAnalysisError('');
 
-    // Chạy ngầm phân tích Azure Speech ngay khi học sinh vừa nói xong câu này
-    // Giúp trích xuất transcript siêu tốc, tiết kiệm 100% thời gian chờ đợi khi nộp bài
+    // Chạy ngầm phân tích Azure Speech ngay khi học sinh vừa nói xong câu này (chế độ unscripted speaking)
+    // Giúp trích xuất transcript trung thực siêu tốc, tiết kiệm 100% thời gian chờ đợi khi nộp bài
     if (data?.blob) {
-      assessAudioWithAzure(data.blob, currentQuestion.prompt)
+      assessAudioWithAzure(data.blob)
         .then((azRes) => {
           if (azRes && azRes.hasData) {
             setAzureMetricsByQuestion((prev) => ({
@@ -127,9 +127,9 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
       const updatedAzureMetrics = { ...azureMetricsByQuestion };
       await Promise.all(
         responsesList.map(async (r, idx) => {
-          if (!updatedAzureMetrics[idx] && r.blob) {
+          if (!updatedAzureMetrics[idx]?.hasData && r.blob) {
             try {
-              const res = await assessAudioWithAzure(r.blob, r.question);
+              const res = await assessAudioWithAzure(r.blob);
               if (res?.hasData) {
                 updatedAzureMetrics[idx] = res;
               }
@@ -142,8 +142,7 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
       setAzureMetrics(combinedAzure);
 
       // Step 2: Call Gemini via Cloudflare Worker
-      // TỐI ƯU CỰC ĐẠI: Chỉ gửi Text (transcript + số đo Azure), KHÔNG GỬI HÀNG CHỤC MB FILE AUDIO BASE64
-      // Giúp giảm dung lượng từ 10MB xuống còn 3KB, AI phản hồi chỉ trong 2-3 giây không bao giờ bị nghẽn mạng!
+      // TỐI ƯU CỰC ĐẠI: Chỉ gửi Text (transcript + số đo Azure) khi đã có transcript; nếu câu nào chưa có transcript thì mới gửi audioBase64
       setAnalysisStep('2/2: Giám khảo AI đang chấm tổng thể 4 tiêu chí IELTS và phân tích chi tiết từng câu...');
       const evalPayload = {
         mode: 'practice',
@@ -157,8 +156,7 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
             question: r.question,
             durationSeconds: r.durationSeconds,
             transcript: hasTranscript ? az.transcript : '',
-            // Chỉ gửi audioBase64 nếu THỰC SỰ không thể gỡ băng qua Azure và chỉ gửi ở câu đầu tiên để tránh quá tải
-            audioBase64: hasTranscript ? null : (idx === 0 ? r.base64 : null),
+            audioBase64: hasTranscript ? null : r.base64,
             audioMimeType: r.mimeType,
             azureMetrics: az || null
           };

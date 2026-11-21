@@ -37,19 +37,17 @@ export default function SpeakingRecorder({
   const analyserRef = useRef(null);
   const animFrameRef = useRef(null);
 
-  // Clean up on unmount
+  // Clean up on unmount: dừng timer và giải phóng AudioContext
+  // KHÔNG gọi URL.revokeObjectURL(audioUrl) ở đây để tránh làm hỏng URL ghi âm đang được component cha và bảng kết quả sử dụng
   useEffect(() => {
     return () => {
       clearInterval(timerIntervalRef.current);
       cancelAnimationFrame(animFrameRef.current);
-      if (audioUrl) {
-        URL.revokeObjectURL(audioUrl);
-      }
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close().catch(() => {});
       }
     };
-  }, [audioUrl]);
+  }, []);
 
   const startVisualizer = (stream) => {
     try {

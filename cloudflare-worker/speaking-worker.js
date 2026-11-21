@@ -158,11 +158,22 @@ function buildIeltsPrompt(payload) {
           .join('\n');
       }
 
+      const hasTranscript = Boolean(item.transcript && item.transcript.trim());
+      const hasAudio = Boolean(item.audioBase64);
+      let transcriptText = '';
+      if (hasTranscript) {
+        transcriptText = `"${item.transcript.trim()}"`;
+      } else if (hasAudio) {
+        transcriptText = '(Chưa có transcript - hãy nghe trực tiếp file audio đính kèm để gỡ băng chính xác và chấm điểm)';
+      } else {
+        transcriptText = '(Thí sinh không nói hoặc audio không ghi nhận được âm thanh - ghi nhận không trả lời câu này, TUYỆT ĐỐI KHÔNG tự bịa đặt câu trả lời)';
+      }
+
       return `
 ### Câu ${idx + 1} (${item.part || 'Speaking'})
 - Câu hỏi / Đề bài: ${item.question || '(Không có đề)'}
 - Thời lượng nói: ${item.durationSeconds || 0} giây
-- Transcript học sinh nói: ${item.transcript ? `"${item.transcript}"` : '(Chưa có transcript - hãy nghe trực tiếp file audio đính kèm để gỡ băng chính xác)'}
+- Transcript học sinh nói: ${transcriptText}
 - Chỉ số đo vật lý từ Azure Speech Pronunciation Assessment:
 ${azureSummary}
 `.trim();
@@ -189,7 +200,7 @@ QUY TẮC CHẤM ĐIỂM BẮT BUỘC:
    - Azure PronScore 55 - 69 -> Pronunciation ~ 4.5 - 5.5
    - Azure PronScore < 55 -> Pronunciation <= 4.5
 2. Nếu học sinh nói quá ngắn (ví dụ Part 1 dưới 10 từ, hoặc Part 2 dưới 45 giây / dưới 60 từ), hoặc lạc đề, phải trừ điểm rõ rệt ở Fluency & Coherence và nhắc trong answerQuality.
-3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng (transcript) trung thực kể cả lỗi ngữ pháp, từ ngập ngừng (um, uh, like...) rồi mới chấm.
+3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng (transcript) trung thực kể cả lỗi ngữ pháp, từ ngập ngừng (um, uh, like...) rồi mới chấm. Nếu câu hỏi không có transcript lẫn audio, thí sinh được tính là không đưa ra câu trả lời cho câu này (tuyệt đối KHÔNG tự bịa nội dung câu trả lời).
 4. Tất cả giải thích, nhận xét cho học sinh và giáo viên viết bằng **tiếng Việt** tự nhiên, rõ ràng, khích lệ nhưng thẳng thắn. Các ví dụ tiếng Anh, lỗi sai và bài mẫu nâng cấp viết bằng **tiếng Anh**.
 5. Điểm từng tiêu chí và điểm tổng (overallBand) phải là bội số của 0.5 (từ 1.0 đến 9.0). overallBand = trung bình cộng 4 tiêu chí làm tròn đến 0.5 gần nhất.
 
@@ -312,7 +323,7 @@ async function callGeminiViaAppsScript(env, contents, generationConfig, model) {
     body: JSON.stringify({
       action: 'callGemini',
       apiKey,
-      model: model || 'gemini-3.8-flash',
+      model: model || 'gemini-2.0-flash',
       contents,
       generationConfig
     })
@@ -327,7 +338,7 @@ async function callGeminiViaAppsScript(env, contents, generationConfig, model) {
   if (json.status === 'success' && json.text) {
     return {
       text: json.text,
-      modelUsed: `${json.modelUsed || 'gemini-3.8-flash'} (via Google US proxy)`
+      modelUsed: `${json.modelUsed || 'gemini-2.0-flash'} (via Google US proxy)`
     };
   }
 
@@ -343,13 +354,12 @@ async function callGemini(env, parts, requestedModel) {
     throw new Error('GEMINI_API_KEY chưa được cấu hình trên Cloudflare Worker.');
   }
 
-  const userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-3.8-flash').trim();
+  const userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-2.0-flash').trim();
   const candidateModels = [
     userModel,
-    'gemini-3.8-flash',
-    'gemini-2.5-flash',
     'gemini-2.0-flash',
-    'gemini-1.5-flash'
+    'gemini-1.5-flash',
+    'gemini-2.5-flash'
   ].filter(Boolean);
 
   const modelsToTry = [...new Set(candidateModels)];
@@ -504,23 +514,6 @@ async function handleEvaluate(request, env, corsHeaders) {
       corsHeaders
     );
   } catch (err) {
-    // Nếu cả Cloudflare Worker direct lẫn Google Apps Script proxy đều không khả dụng (do chặn IP Hong Kong hoặc Google Apps Script chưa được cấp quyền),
-    // Worker kích hoạt Fallback Client: Cho phép trình duyệt tại Việt Nam của học sinh gọi trực tiếp Gemini API.
-    // Kết nối từ IP Việt Nam không bị chặn vị trí và phản hồi siêu tốc trong 1-2 giây!
-    if (env.GEMINI_API_KEY) {
-      return jsonResponse(
-        {
-          status: 'fallback_client',
-          reason: err.message,
-          geminiKey: env.GEMINI_API_KEY,
-          promptText,
-          model: 'gemini-3.8-flash'
-        },
-        200,
-        corsHeaders
-      );
-    }
-
     return jsonResponse(
       {
         status: 'error',
@@ -552,7 +545,7 @@ export default {
           service: 'Dream Education AI Speaking Worker',
           config: {
             geminiConfigured: Boolean(env.GEMINI_API_KEY),
-            geminiModel: env.GEMINI_MODEL || 'gemini-2.5-flash',
+            geminiModel: env.GEMINI_MODEL || 'gemini-2.0-flash',
             azureConfigured: Boolean(env.AZURE_SPEECH_KEY),
             azureRegion: env.AZURE_SPEECH_REGION || 'southeastasia'
           }
@@ -565,21 +558,6 @@ export default {
     // 2. Cấp token Azure Speech (10 phút)
     if (request.method === 'GET' && path === '/api/azure-token') {
       return handleAzureToken(env, corsHeaders);
-    }
-
-    // 2.1 Danh sách model Gemini được phép dùng của API Key
-    if (request.method === 'GET' && path === '/api/models') {
-      try {
-        const apiKey = env.GEMINI_API_KEY;
-        if (!apiKey) {
-          return jsonResponse({ error: 'GEMINI_API_KEY chưa cấu hình' }, 400, corsHeaders);
-        }
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-        const data = await res.json();
-        return jsonResponse(data, 200, corsHeaders);
-      } catch (err) {
-        return jsonResponse({ error: err.message }, 500, corsHeaders);
-      }
     }
 
     // 3. Chấm điểm IELTS Speaking bằng Gemini

@@ -121,7 +121,7 @@ function saveSpeakingRecordingToDrive(data, formattedTime) {
  * Xử lý ghi nhận nộp bài Speaking vào sheet riêng "Speaking"
  */
 function handleSpeakingSubmission(ss, data, formattedTime) {
-  const teacherEmail = "ngtquynh2001@gmail.com";
+  const teacherEmail = PropertiesService.getScriptProperties().getProperty('TEACHER_EMAIL') || "ngtquynh2001@gmail.com";
 
   // 1. Lưu file ghi âm lên Drive
   const driveResult = saveSpeakingRecordingToDrive(data, formattedTime);
@@ -329,13 +329,12 @@ function handleGeminiEvaluation(data) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    const primaryModel = data.model || "gemini-3.8-flash";
+    const primaryModel = data.model || "gemini-2.0-flash";
     const candidateModels = [
       primaryModel,
-      "gemini-3.8-flash",
-      "gemini-2.5-flash",
       "gemini-2.0-flash",
-      "gemini-1.5-flash"
+      "gemini-1.5-flash",
+      "gemini-2.5-flash"
     ];
     // Remove duplicates
     const modelsToTry = candidateModels.filter((v, i, a) => a.indexOf(v) === i);
@@ -465,7 +464,7 @@ function doPost(e) {
       wrongAnswers
     ]);
 
-    const teacherEmail = "ngtquynh2001@gmail.com";
+    const teacherEmail = PropertiesService.getScriptProperties().getProperty('TEACHER_EMAIL') || "ngtquynh2001@gmail.com";
     const subject = `[Dream Edu - ${type}] ${studentName}${className ? ' (' + className + ')' : ''} - ${testTitle} (${scoreText})`;
 
     const htmlBody = `

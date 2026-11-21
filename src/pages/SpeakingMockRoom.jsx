@@ -75,6 +75,7 @@ export default function SpeakingMockRoom() {
   // responses: Array of { part: 'Part 1' | 'Part 2' | 'Part 3', question: string, durationSeconds, blob, base64, mimeType, azureMetrics }
   const [recordedResponses, setRecordedResponses] = useState([]);
   const [currentRecording, setCurrentRecording] = useState(null);
+  const [azureMetricsMap, setAzureMetricsMap] = useState({});
 
   // Evaluation & submission state
   const [isEvaluating, setIsEvaluating] = useState(false);
@@ -120,18 +121,29 @@ export default function SpeakingMockRoom() {
     }
 
     const currentP1Q = test.parts[0].questions[p1Index];
-    setRecordedResponses((prev) => [
-      ...prev,
-      {
-        part: 'Part 1',
-        question: currentP1Q.prompt,
-        durationSeconds: currentRecording.durationSeconds,
-        blob: currentRecording.blob,
-        url: currentRecording.url,
-        base64: currentRecording.base64,
-        mimeType: currentRecording.mimeType
-      }
-    ]);
+    const answerIdx = recordedResponses.length;
+    const recData = {
+      part: 'Part 1',
+      question: currentP1Q.prompt,
+      durationSeconds: currentRecording.durationSeconds,
+      blob: currentRecording.blob,
+      url: currentRecording.url,
+      base64: currentRecording.base64,
+      mimeType: currentRecording.mimeType
+    };
+
+    setRecordedResponses((prev) => [...prev, recData]);
+
+    // Kích hoạt ngay đo sóng âm Azure ngầm cho câu này
+    if (currentRecording.blob) {
+      assessAudioWithAzure(currentRecording.blob)
+        .then((res) => {
+          if (res?.hasData) {
+            setAzureMetricsMap((prev) => ({ ...prev, [answerIdx]: res }));
+          }
+        })
+        .catch(() => {});
+    }
 
     setCurrentRecording(null);
     setErrorMessage('');
@@ -174,18 +186,29 @@ export default function SpeakingMockRoom() {
     }
 
     const cueCard = test.parts[1].cueCard;
-    setRecordedResponses((prev) => [
-      ...prev,
-      {
-        part: 'Part 2 (Cue Card)',
-        question: cueCard.prompt,
-        durationSeconds: currentRecording.durationSeconds,
-        blob: currentRecording.blob,
-        url: currentRecording.url,
-        base64: currentRecording.base64,
-        mimeType: currentRecording.mimeType
-      }
-    ]);
+    const answerIdx = recordedResponses.length;
+    const recData = {
+      part: 'Part 2 (Cue Card)',
+      question: cueCard.prompt,
+      durationSeconds: currentRecording.durationSeconds,
+      blob: currentRecording.blob,
+      url: currentRecording.url,
+      base64: currentRecording.base64,
+      mimeType: currentRecording.mimeType
+    };
+
+    setRecordedResponses((prev) => [...prev, recData]);
+
+    // Kích hoạt ngay đo sóng âm Azure ngầm cho Part 2 trong lúc thí sinh chuẩn bị và làm Part 3
+    if (currentRecording.blob) {
+      assessAudioWithAzure(currentRecording.blob)
+        .then((res) => {
+          if (res?.hasData) {
+            setAzureMetricsMap((prev) => ({ ...prev, [answerIdx]: res }));
+          }
+        })
+        .catch(() => {});
+    }
 
     setCurrentRecording(null);
     setErrorMessage('');
@@ -201,19 +224,30 @@ export default function SpeakingMockRoom() {
     }
 
     const currentP3Q = test.parts[2].questions[p3Index];
-    const newResponses = [
-      ...recordedResponses,
-      {
-        part: 'Part 3',
-        question: currentP3Q.prompt,
-        durationSeconds: currentRecording.durationSeconds,
-        blob: currentRecording.blob,
-        url: currentRecording.url,
-        base64: currentRecording.base64,
-        mimeType: currentRecording.mimeType
-      }
-    ];
+    const answerIdx = recordedResponses.length;
+    const recData = {
+      part: 'Part 3',
+      question: currentP3Q.prompt,
+      durationSeconds: currentRecording.durationSeconds,
+      blob: currentRecording.blob,
+      url: currentRecording.url,
+      base64: currentRecording.base64,
+      mimeType: currentRecording.mimeType
+    };
+
+    const newResponses = [...recordedResponses, recData];
     setRecordedResponses(newResponses);
+
+    // Kích hoạt ngay đo sóng âm Azure ngầm cho câu Part 3 này
+    if (currentRecording.blob) {
+      assessAudioWithAzure(currentRecording.blob)
+        .then((res) => {
+          if (res?.hasData) {
+            setAzureMetricsMap((prev) => ({ ...prev, [answerIdx]: res }));
+          }
+        })
+        .catch(() => {});
+    }
 
     setCurrentRecording(null);
     setErrorMessage('');
@@ -233,30 +267,31 @@ export default function SpeakingMockRoom() {
     setErrorMessage('');
 
     try {
-      // Step 1: Đo sóng âm và gỡ băng song song qua Azure Speech cho tất cả câu trả lời
-      setStatusMessage('1/2: Đang đo sóng âm và phát âm qua Azure Speech...');
-      const azureMap = {};
+      // Step 1: Đo sóng âm và gỡ băng song song qua Azure Speech cho tất cả câu trả lời (kết hợp các câu đã chạy ngầm)
+      setStatusMessage('1/2: Đang hoàn tất đo sóng âm và phát âm qua Azure Speech...');
+      const azureMap = { ...azureMetricsMap };
       await Promise.all(
         allResponses.map(async (r, idx) => {
-          if (r.blob) {
+          if (!azureMap[idx]?.hasData && r.blob) {
             try {
-              const res = await assessAudioWithAzure(r.blob, r.question);
+              const res = await assessAudioWithAzure(r.blob);
               if (res?.hasData) {
                 azureMap[idx] = res;
               }
             } catch (e) {
-              console.warn('Azure check bypassed for response', idx, e);
+              console.warn('Azure check note for response', idx, e);
             }
           }
         })
       );
+      setAzureMetricsMap(azureMap);
 
-      const part2Idx = allResponses.findIndex((r) => r.part.includes('Part 2'));
+      const part2Idx = allResponses.findIndex((r) => r.part && r.part.includes('Part 2'));
       const combinedAzure = (part2Idx !== -1 && azureMap[part2Idx]) || azureMap[0] || { hasData: false };
       setCombinedAzure(combinedAzure);
+      const part2Response = (part2Idx !== -1 ? allResponses[part2Idx] : null) || allResponses[0];
 
       // Step 2: Gemini Full IELTS Speaking Evaluation across all 3 parts
-      // TỐI ƯU CỰC ĐẠI: Chỉ gửi Text (transcript + số đo Azure), không gửi audio base64 nếu đã có transcript
       setStatusMessage('2/2: Giám khảo AI đang chấm tổng thể 4 tiêu chí IELTS và phân tích từng phần, từng câu...');
       const evalPayload = {
         mode: 'mock_test',
@@ -265,14 +300,12 @@ export default function SpeakingMockRoom() {
         responses: allResponses.map((r, idx) => {
           const az = azureMap[idx];
           const hasTranscript = Boolean(az?.transcript && az.transcript.trim());
-          const isPart2 = r.part.includes('Part 2');
           return {
             part: r.part,
             question: r.question,
             durationSeconds: r.durationSeconds,
             transcript: hasTranscript ? az.transcript : '',
-            // Chỉ gửi audioBase64 nếu không có transcript và chỉ cho câu đầu tiên/Part 2 để tiết kiệm 95% bandwidth
-            audioBase64: hasTranscript ? null : (isPart2 ? r.base64 : null),
+            audioBase64: hasTranscript ? null : r.base64,
             audioMimeType: r.mimeType,
             azureMetrics: az || null
           };
@@ -294,11 +327,11 @@ export default function SpeakingMockRoom() {
         sessionName: test.session || 'IELTS Speaking Mock Room',
         testTitle: test.title,
         evaluation: finalEval,
-        azureMetrics: azureRes,
+        azureMetrics: combinedAzure,
         audioBase64: part2Response ? part2Response.base64 : null,
         audioMimeType: part2Response ? part2Response.mimeType : 'audio/webm',
         mode: 'mock_test',
-        transcript: azureRes?.transcript || ''
+        transcript: combinedAzure?.transcript || ''
       }).catch((submitErr) => {
         console.warn('Background mock test submission note:', submitErr);
       });

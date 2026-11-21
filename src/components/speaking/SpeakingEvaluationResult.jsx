@@ -16,6 +16,53 @@ import {
   HelpCircle
 } from 'lucide-react';
 
+function QuestionAudioPlayer({ resp }) {
+  const [src, setSrc] = useState(() => {
+    if (resp?.url) return resp.url;
+    if (resp?.blob) {
+      try { return URL.createObjectURL(resp.blob); } catch (e) {}
+    }
+    if (resp?.base64) {
+      return `data:${resp.mimeType || 'audio/webm'};base64,${resp.base64}`;
+    }
+    return null;
+  });
+
+  const handleAudioError = () => {
+    // Nếu blob URL bị revoked hoặc lỗi mạng, tự động fallback sang Data URL từ Base64 hoặc cấp lại blob URL mới
+    if (resp?.base64 && !src?.startsWith('data:')) {
+      setSrc(`data:${resp.mimeType || 'audio/webm'};base64,${resp.base64}`);
+    } else if (resp?.blob) {
+      try {
+        setSrc(URL.createObjectURL(resp.blob));
+      } catch (e) {}
+    }
+  };
+
+  const hasAudio = Boolean(src || resp?.url || resp?.blob || resp?.base64);
+  if (!hasAudio) return null;
+
+  return (
+    <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex items-center gap-2">
+        <Volume2 size={16} className="text-primary shrink-0" />
+        <span className="text-xs font-bold text-gray-700">
+          Bản ghi âm giọng nói của bạn:
+        </span>
+      </div>
+      <audio
+        controls
+        src={src || resp?.url}
+        onError={handleAudioError}
+        preload="metadata"
+        className="w-full sm:w-72 h-8"
+      >
+        Trình duyệt không hỗ trợ audio element.
+      </audio>
+    </div>
+  );
+}
+
 export default function SpeakingEvaluationResult({
   evaluation,
   azureMetrics = null,
@@ -349,20 +396,8 @@ export default function SpeakingEvaluationResult({
                       </h4>
                     </div>
 
-                    {/* Audio Player for this specific question */}
-                    {resp.url && (
-                      <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="flex items-center gap-2">
-                          <Volume2 size={16} className="text-primary shrink-0" />
-                          <span className="text-xs font-bold text-gray-700">
-                            Bản ghi âm giọng nói của bạn:
-                          </span>
-                        </div>
-                        <audio controls src={resp.url} className="w-full sm:w-72 h-8">
-                          Trình duyệt không hỗ trợ audio element.
-                        </audio>
-                      </div>
-                    )}
+                    {/* Audio Player for this specific question (resilient with blob and base64 fallbacks) */}
+                    <QuestionAudioPlayer resp={resp} />
 
                     {/* Cleaned Transcript */}
                     {transcript && (

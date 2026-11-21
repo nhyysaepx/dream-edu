@@ -125,6 +125,7 @@ function writeString(view, offset, string) {
 
 /**
  * Internal worker for Azure Speech Pronunciation Assessment (Ultra-fast direct REST API)
+ * Supports unscripted IELTS Speaking evaluation with zero hallucination.
  */
 async function _internalAzureAssess(audioBlob, referenceText) {
   try {
@@ -143,10 +144,17 @@ async function _internalAzureAssess(audioBlob, referenceText) {
       GradingSystem: 'HundredMark',
       Granularity: 'Phoneme',
       Dimension: 'Comprehensive',
-      EnableMiscue: true
+      EnableMiscue: false
     };
-    if (referenceText && referenceText.trim()) {
+
+    // BẬT CHẾ ĐỘ NÓI TỰ DO (Unscripted Speaking Assessment):
+    // Trong phỏng vấn IELTS Speaking (Practice / Homework / Mock Test), thí sinh tự do trả lời theo ý mình.
+    // TUYỆT ĐỐI KHÔNG gán câu hỏi (prompt) làm ReferenceText! Gán prompt làm ReferenceText sẽ ép Azure so khớp âm
+    // với đề bài thay vì câu trả lời của thí sinh, gây sai lệch toàn bộ từ vựng (hallucination).
+    // Chỉ truyền ReferenceText khi đây là bài đọc mẫu chuẩn (scripted reading) không chứa dấu hỏi.
+    if (referenceText && typeof referenceText === 'string' && referenceText.trim() && !referenceText.includes('?')) {
       pronConfig.ReferenceText = referenceText.trim();
+      pronConfig.EnableMiscue = true;
     }
 
     // Unicode-safe base64 encoding
@@ -190,19 +198,21 @@ async function _internalAzureAssess(audioBlob, referenceText) {
           ipa: (w.phonemes || []).map((p) => p.phoneme).join('')
         }));
 
+      const recognizedTranscript = (data.DisplayText || nbest.Display || '').trim();
+
       return {
         hasData: true,
         accuracyScore: Math.round(nbest.AccuracyScore || 0),
         fluencyScore: Math.round(nbest.FluencyScore || 0),
         prosodyScore: nbest.ProsodyScore != null && nbest.ProsodyScore > 0 ? Math.round(nbest.ProsodyScore) : null,
         pronScore: Math.round(nbest.PronScore || 0),
-        transcript: data.DisplayText || nbest.Display || '',
+        transcript: recognizedTranscript,
         words: allWords,
         weakWords
       };
     }
 
-    return { hasData: false, reason: 'Không có dữ liệu NBest' };
+    return { hasData: false, reason: data.RecognitionStatus || 'Không có dữ liệu NBest' };
   } catch (err) {
     console.warn('Azure assessment exception:', err);
     return { hasData: false, error: err.message };
@@ -210,13 +220,19 @@ async function _internalAzureAssess(audioBlob, referenceText) {
 }
 
 /**
- * Perform Azure Pronunciation Assessment with guaranteed 3.2-second timeout protection
+ * Perform Azure Pronunciation Assessment with realistic duration-adaptive timeout protection
  */
 export async function assessAudioWithAzure(audioBlob, referenceText = '') {
+  // Tính toán thời gian timeout linh hoạt dựa trên dung lượng/thời lượng audio
+  // Audio 16kHz 16-bit mono WAV ~ 32.000 bytes/giây.
+  const estSeconds = audioBlob?.size ? Math.max(5, Math.round(audioBlob.size / 32000)) : 15;
+  // Cấp tối thiểu 18s, và thêm 1.2s cho mỗi giây audio (tối đa 65s cho bài nói Part 2)
+  const timeoutMs = Math.min(65000, Math.max(18000, estSeconds * 1200 + 8000));
+
   const timeoutPromise = new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ hasData: false, reason: 'Azure assessment timeout (>3.2s)' });
-    }, 3200);
+      resolve({ hasData: false, reason: `Azure assessment timeout (>${Math.round(timeoutMs / 1000)}s)` });
+    }, timeoutMs);
   });
 
   return Promise.race([
@@ -235,8 +251,8 @@ export async function evaluateSpeakingWithAI({
   responses = [] // [{ question, part, durationSeconds, transcript, audioBase64, audioMimeType, azureMetrics }]
 }) {
   const controller = new AbortController();
-  // 60 seconds timeout to prevent premature abort on mobile networks
-  const timer = setTimeout(() => controller.abort(), 60000);
+  // 90 seconds timeout for full multi-criteria IELTS AI evaluation across all parts
+  const timer = setTimeout(() => controller.abort(), 90000);
 
   try {
     const res = await fetch(`${SPEAKING_WORKER_URL}/api/evaluate`, {
@@ -246,7 +262,7 @@ export async function evaluateSpeakingWithAI({
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-2.0-flash',
         mode,
         testTitle,
         targetLevel,
@@ -267,62 +283,11 @@ export async function evaluateSpeakingWithAI({
 
     const data = await res.json();
 
-    // Luồng 1: Worker đã chấm thành công
     if (data.status === 'success' && data.evaluation) {
       return {
         success: true,
         modelUsed: data.modelUsed,
         evaluation: data.evaluation
-      };
-    }
-
-    // Luồng 2: Fallback kích hoạt gọi thẳng Gemini từ trình duyệt tại Việt Nam (Bypass lỗi vị trí IP và proxy)
-    if (data.status === 'fallback_client' && data.geminiKey) {
-      console.log('⚡ Đang kích hoạt Fallback Gemini Client trực tiếp...');
-      const targetModel = data.model || 'gemini-3.8-flash';
-      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${data.geminiKey}`;
-
-      const clientRes = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: 'user',
-              parts: [{ text: data.promptText }]
-            }
-          ],
-          generationConfig: {
-            temperature: 0.25,
-            responseMimeType: 'application/json'
-          }
-        })
-      });
-
-      if (!clientRes.ok) {
-        const cErrText = await clientRes.text();
-        throw new Error(`Gemini Direct Client lỗi (${clientRes.status}): ${cErrText.slice(0, 200)}`);
-      }
-
-      const clientJson = await clientRes.json();
-      const rawText = clientJson?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!rawText) {
-        throw new Error('Gemini Direct Client không trả về nội dung đánh giá.');
-      }
-
-      const cleaned = rawText
-        .trim()
-        .replace(/^```json\s*/i, '')
-        .replace(/^```\s*/i, '')
-        .replace(/\s*```$/i, '');
-      const parsedEval = JSON.parse(cleaned);
-
-      return {
-        success: true,
-        modelUsed: `${targetModel} (Direct Vietnam Client)`,
-        evaluation: parsedEval
       };
     }
 
