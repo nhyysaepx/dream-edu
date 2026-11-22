@@ -414,7 +414,7 @@ async function callGeminiViaAppsScript(env, contents, generationConfig, model) {
 }
 
 /**
- * Gọi Gemini API với cơ chế tự động fallback model, chống lỗi location Cloudflare Hong Kong
+ * Gọi Gemini API với cơ chế tự động fallback model siêu tốc, chống lỗi location Cloudflare Hong Kong
  */
 async function callGemini(env, parts, requestedModel) {
   const apiKey = env.GEMINI_API_KEY;
@@ -422,12 +422,13 @@ async function callGemini(env, parts, requestedModel) {
     throw new Error('GEMINI_API_KEY chưa được cấu hình trên Cloudflare Worker.');
   }
 
-  const userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-2.0-flash').trim();
+  const userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-3.8-flash').trim();
   const candidateModels = [
     userModel,
+    'gemini-3.8-flash',
+    'gemini-2.5-flash',
     'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-2.5-flash'
+    'gemini-1.5-flash'
   ].filter(Boolean);
 
   const modelsToTry = [...new Set(candidateModels)];
@@ -446,59 +447,46 @@ async function callGemini(env, parts, requestedModel) {
   };
 
   const allAttempts = [];
-  let isLocationBlocked = false;
 
-  // 1. Thử gọi trực tiếp Google Gemini API
-  for (const model of modelsToTry) {
+  // 1. Thử gọi trực tiếp Google Gemini API với timeout nghiêm ngặt (tối đa 4.5 giây)
+  // Nếu Cloudflare edge bị chặn địa lý (User location / FAILED_PRECONDITION / 403 / timeout),
+  // sẽ lập tức chuyển ngay sang Google US Proxy, KHÔNG lặp đi lặp lại làm treo hệ thống.
+  for (const model of modelsToTry.slice(0, 1)) {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+    const directAbort = new AbortController();
+    const directTimer = setTimeout(() => directAbort.abort(), 4500);
 
-    for (let attempt = 0; attempt < 2; attempt++) {
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': apiKey
-          },
-          body: JSON.stringify(requestBody)
-        });
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        signal: directAbort.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
+        body: JSON.stringify(requestBody)
+      });
+      clearTimeout(directTimer);
 
-        if (res.ok) {
-          const data = await res.json();
-          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            return { text, modelUsed: model };
-          }
+      if (res.ok) {
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) {
+          return { text, modelUsed: model };
         }
-
-        const errText = await res.text();
-        const summary = `Model ${model} (${res.status}): ${errText.slice(0, 250)}`;
-        allAttempts.push(summary);
-
-        // Nếu Google trả về lỗi 'User location is not supported', dừng ngay để không mất thời gian thử các model khác!
-        if (errText.includes('User location is not supported') || (res.status === 400 && errText.includes('FAILED_PRECONDITION'))) {
-          isLocationBlocked = true;
-          break;
-        }
-
-        // Nếu rate-limit (429) hoặc server bận (503), đợi 1.2s
-        if ((res.status === 429 || res.status === 503) && attempt === 0) {
-          await new Promise((r) => setTimeout(r, 1200));
-          continue;
-        }
-        break;
-      } catch (fErr) {
-        allAttempts.push(`Fetch error ${model}: ${fErr.message}`);
-        break;
       }
-    }
 
-    if (isLocationBlocked) {
-      break;
+      const errText = await res.text();
+      allAttempts.push(`Direct ${model} (${res.status}): ${errText.slice(0, 150)}`);
+    } catch (fErr) {
+      clearTimeout(directTimer);
+      allAttempts.push(`Direct ${model} error: ${fErr.message}`);
     }
+    // Nếu gọi trực tiếp từ Cloudflare Edge thất bại, bỏ qua ngay để chuyển sang Google US Proxy
+    break;
   }
 
-  // 2. Tự động chuyển qua Google Apps Script proxy (chạy trong US Datacenter của Google)
+  // 2. Chuyển ngay qua Google Apps Script proxy (chạy 100% trong Google US Datacenter, siêu tốc ~1-3s)
   try {
     const proxyResult = await callGeminiViaAppsScript(
       env,

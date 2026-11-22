@@ -711,8 +711,8 @@ export async function evaluateSpeakingWithAI({
   responses = [] // [{ question, part, durationSeconds, transcript, audioBase64, audioMimeType, azureMetrics }]
 }) {
   const controller = new AbortController();
-  // 90 seconds timeout for full multi-criteria IELTS AI evaluation across all parts
-  const timer = setTimeout(() => controller.abort(), 90000);
+  // 120 seconds timeout for full multi-criteria IELTS AI evaluation across all parts
+  const timer = setTimeout(() => controller.abort(), 120000);
 
   try {
     const res = await fetch(`${SPEAKING_WORKER_URL}/api/evaluate`, {
@@ -722,7 +722,7 @@ export async function evaluateSpeakingWithAI({
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-3.8-flash',
         mode,
         testTitle,
         targetLevel,
