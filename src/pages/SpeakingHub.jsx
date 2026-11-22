@@ -46,7 +46,12 @@ export default function SpeakingHub() {
 
   // Filter practice topics
   const filteredTopics = SPEAKING_TOPICS.filter((t) => {
-    const matchesLevel = selectedLevel === 'all' || t.levelId === selectedLevel;
+    const matchesLevel =
+      selectedLevel === 'all' ||
+      t.levelId === selectedLevel ||
+      (selectedLevel === 'intermediate' && (t.levelId === 'intermediate' || t.levelId === 'ielts-foundation')) ||
+      (selectedLevel === 'foundation' && (t.levelId === 'foundation' || t.levelId === 'pre-ielts' || t.levelId === 'ielts-beginner')) ||
+      (selectedLevel === 'advanced' && (t.levelId === 'advanced' || t.levelId === 'ielts-advanced'));
     const matchesSearch =
       !searchQuery.trim() ||
       t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

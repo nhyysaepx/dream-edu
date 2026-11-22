@@ -248,6 +248,126 @@ export const SPEAKING_TOPICS = [
     ]
   },
   {
+    id: 'speaking-practice-intermediate-7',
+    title: 'Speaking Part 2 - Bài Speaking 7: Places, Cities & Natural Attractions',
+    session: 'IELTS Intermediate - Buổi 07',
+    levelId: 'ielts-foundation',
+    category: 'ielts',
+    duration: '12 - 16 phút',
+    part: 'Part 2',
+    instantEvaluationPerQuestion: true,
+    description: 'Luyện tập 4 đề Cue Card Part 2 trọng tâm: Miêu tả thành phố đang sống, Danh lam thắng cảnh yêu thích, Thắng cảnh thiên nhiên và Thành phố ước mơ trong tương lai. Nhận xét chi tiết 4 tiêu chí IELTS và chấm điểm phát âm IPA ngay sau mỗi bài nói.',
+    targetBand: 'Band 5.5 - 6.5+',
+    questions: [
+      {
+        id: 'sp7-q1',
+        prompt: 'Describe the city you are living in',
+        part: 'Part 2',
+        recommendedDuration: 120,
+        prepTimeSeconds: 60,
+        speakTimeSeconds: 120,
+        bulletPoints: [
+          'where the city is',
+          'how long you have lived there',
+          'what the city is famous for',
+          'what you like and dislike about the city',
+          'and explain whether you would like to continue living there in the future.'
+        ],
+        cueCard: {
+          prompt: 'Describe the city you are living in',
+          bulletPoints: [
+            'where the city is',
+            'how long you have lived there',
+            'what the city is famous for',
+            'what you like and dislike about the city',
+            'and explain whether you would like to continue living there in the future.'
+          ],
+          tipsVi: 'Bạn có 60 giây để ghi chú dàn ý từ khóa vào giấy nháp. Sau đó nói liên tục trong 1 đến 2 phút.'
+        },
+        hintVi: 'Nêu vị trí địa lý (coastal city, bustling metropolis), thời gian gắn bó (born and bred, lived here for X years), nét đặc trưng nổi tiếng (ẩm thực đường phố, di tích lịch sử, nhịp sống), điểm thích (tiện nghi, con người thân thiện) và chưa thích (kẹt xe giờ cao điểm, chi phí sinh hoạt đắt đỏ), cùng dự định tương lai (định cư lâu dài vs chuyển về vùng ngoại ô).',
+        vocabKeywords: ['bustling metropolis', 'born and bred', 'renowned for', 'vibrant nightlife', 'traffic congestion', 'steep cost of living', 'hospitable residents', 'settle down permanently']
+      },
+      {
+        id: 'sp7-q2',
+        prompt: 'Describe a tourist attraction you enjoyed visiting.',
+        part: 'Part 2',
+        recommendedDuration: 120,
+        prepTimeSeconds: 60,
+        speakTimeSeconds: 120,
+        bulletPoints: [
+          'Where it is',
+          'What you did there',
+          'Who you went with',
+          'And explain why you enjoyed it'
+        ],
+        cueCard: {
+          prompt: 'Describe a tourist attraction you enjoyed visiting.',
+          bulletPoints: [
+            'Where it is',
+            'What you did there',
+            'Who you went with',
+            'And explain why you enjoyed it'
+          ],
+          tipsVi: 'Bạn có 60 giây để ghi chú dàn ý từ khóa vào giấy nháp. Sau đó nói liên tục trong 1 đến 2 phút.'
+        },
+        hintVi: 'Nêu tên và vị trí điểm tham quan (Hội An, Hạ Long Bay, Bà Nà Hills, Tràng An), các hoạt động nổi bật (ngắm kiến trúc cổ, đi thuyền ngắm cảnh, thưởng thức đặc sản, chụp ảnh), người bạn đồng hành (gia đình, bạn thân), và lý do yêu thích (giải tỏa căng thẳng sau kỳ thi, hiểu thêm về văn hóa truyền thống, kỷ niệm khó quên).',
+        vocabKeywords: ['tourist hotspot', 'breathtaking landscape', 'sample local delicacies', 'travel companion', 'unwind after hectic weeks', 'architectural masterpiece', 'leave a lasting impression']
+      },
+      {
+        id: 'sp7-q3',
+        prompt: 'Describe a natural place you like (a beach, mountain, etc.).',
+        part: 'Part 2',
+        recommendedDuration: 120,
+        prepTimeSeconds: 60,
+        speakTimeSeconds: 120,
+        bulletPoints: [
+          'Where it is',
+          'How you know it',
+          'What you can see/do there',
+          'And explain why you like it'
+        ],
+        cueCard: {
+          prompt: 'Describe a natural place you like (a beach, mountain, etc.).',
+          bulletPoints: [
+            'Where it is',
+            'How you know it',
+            'What you can see/do there',
+            'And explain why you like it'
+          ],
+          tipsVi: 'Bạn có 60 giây để ghi chú dàn ý từ khóa vào giấy nháp. Sau đó nói liên tục trong 1 đến 2 phút.'
+        },
+        hintVi: 'Chọn một địa điểm thiên nhiên cụ thể (bãi biển hoang sơ, đỉnh núi hùng vĩ, rừng nguyên sinh, hồ nước thanh bình), nguồn thông tin biết đến (bạn bè giới thiệu, travel vlog), cảnh quan và hoạt động trải nghiệm (ngắm hoàng hôn, leo núi trekking, hít thở không khí trong lành), giải thích cảm giác thư thái, hòa mình vào thiên nhiên để tái tạo năng lượng.',
+        vocabKeywords: ['pristine beach', 'majestic mountain', 'word of mouth', 'escape the hustle and bustle', 'panoramic view', 'recharge one’s batteries', 'commune with nature', 'tranquil atmosphere']
+      },
+      {
+        id: 'sp7-q4',
+        prompt: 'Describe a city you would like to visit in the future.',
+        part: 'Part 2',
+        recommendedDuration: 120,
+        prepTimeSeconds: 60,
+        speakTimeSeconds: 120,
+        bulletPoints: [
+          'Where it is',
+          'How you know about it',
+          'What you can do there',
+          'And explain why you want to visit'
+        ],
+        cueCard: {
+          prompt: 'Describe a city you would like to visit in the future.',
+          bulletPoints: [
+            'Where it is',
+            'How you know about it',
+            'What you can do there',
+            'And explain why you want to visit'
+          ],
+          tipsVi: 'Bạn có 60 giây để ghi chú dàn ý từ khóa vào giấy nháp. Sau đó nói liên tục trong 1 đến 2 phút.'
+        },
+        hintVi: 'Nêu tên thành phố mơ ước (Tokyo, Paris, London, Melbourne, Singapore...), nguồn biết đến (phim ảnh, mạng xã hội, sách ảnh du lịch), các trải nghiệm mong muốn thực hiện (khám phá ẩm thực đường phố, thăm viện bảo tàng, chiêm ngưỡng công trình kiến trúc hiện đại xen lẫn cổ kính), lý do khao khát đặt chân tới (mở rộng tầm nhìn, trải nghiệm đa văn hóa).',
+        vocabKeywords: ['bucket-list destination', 'cosmopolitan city', 'architectural marvels', 'culinary paradise', 'cross-cultural immersion', 'broaden one’s horizons', 'world-class public transit']
+      }
+    ]
+  },
+  {
     id: 'speaking-practice-ielts-advanced',
     title: 'Speaking Practice: Technology, AI & Modern Challenges',
     session: 'IELTS Advanced - Buổi 01 (Bài mẫu ví dụ)',

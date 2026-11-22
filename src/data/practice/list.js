@@ -228,6 +228,27 @@ export const PRACTICE_LIST = [
     isExample: true
   },
   {
+    id: 'speaking-practice-intermediate-7',
+    category: 'ielts',
+    levelId: 'ielts-foundation',
+    levelLabel: 'IELTS Intermediate',
+    session: 'Buổi 7',
+    skill: 'Speaking',
+    title: 'Speaking Part 2 - Bài Speaking 7: Places, Cities & Natural Attractions',
+    description: 'Luyện tập 4 đề Cue Card Part 2 trọng tâm: Miêu tả thành phố đang sống, Danh lam thắng cảnh yêu thích, Thắng cảnh thiên nhiên và Thành phố ước mơ trong tương lai. Nhận xét chi tiết 4 tiêu chí IELTS và chấm điểm phát âm IPA ngay sau mỗi bài nói.',
+    totalQuestions: 4,
+    duration: '12 - 16 phút',
+    status: 'open',
+    dueDate: 'Luyện nói AI & Nhận xét điểm tức thì',
+    exercisesCount: 4,
+    audioTracksCount: 0,
+    tag: 'Intermediate Band 5.5 - 6.5',
+    isSpeaking: true,
+    speakingTopicId: 'speaking-practice-intermediate-7',
+    instantEvaluationPerQuestion: true,
+    isFeatured: true
+  },
+  {
     id: 'speaking-practice-ielts-advanced',
     category: 'ielts',
     levelId: 'ielts-advanced',

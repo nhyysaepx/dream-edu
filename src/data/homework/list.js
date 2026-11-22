@@ -218,6 +218,26 @@ export const HOMEWORK_LIST = [
     isFeatured: true
   },
   {
+    id: 'hw-speaking-intermediate-7',
+    levelId: 'ielts-foundation',
+    levelLabel: 'IELTS Intermediate',
+    session: 'Homework Speaking - Buổi 07',
+    skill: 'Speaking',
+    title: 'Speaking HW: Speaking Part 2 - Bài Speaking 7 (Places, Cities & Natural Attractions)',
+    description: 'Bài tập về nhà Speaking Part 2 gồm 4 chủ đề Cue Card: Thành phố đang sống, Điểm du lịch yêu thích, Thắng cảnh thiên nhiên và Thành phố ước mơ. Nhận xét chi tiết 4 tiêu chí IELTS ngay sau mỗi bài nói.',
+    totalQuestions: 4,
+    duration: '12 - 16 phút',
+    status: 'open',
+    dueDate: 'Nộp trước buổi học kế tiếp',
+    exercisesCount: 4,
+    audioTracksCount: 0,
+    tag: 'Speaking HW (Band 5.5 - 6.5)',
+    isSpeaking: true,
+    speakingTopicId: 'speaking-practice-intermediate-7',
+    instantEvaluationPerQuestion: true,
+    isFeatured: true
+  },
+  {
     id: 'hw-speaking-ielts-advanced',
     levelId: 'ielts-advanced',
     levelLabel: 'IELTS Advanced',
