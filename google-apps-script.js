@@ -350,12 +350,17 @@ function handleGeminiEvaluation(data) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    const primaryModel = data.model || "gemini-2.0-flash";
+    let primaryModel = (data.model || "gemini-2.0-flash").trim();
+    const VALID_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"];
+    if (!VALID_MODELS.includes(primaryModel)) {
+      primaryModel = "gemini-2.0-flash";
+    }
+
     const candidateModels = [
       primaryModel,
       "gemini-2.0-flash",
       "gemini-1.5-flash",
-      "gemini-2.5-flash"
+      "gemini-1.5-flash-8b"
     ];
     // Remove duplicates
     const modelsToTry = candidateModels.filter((v, i, a) => a.indexOf(v) === i);
@@ -370,7 +375,8 @@ function handleGeminiEvaluation(data) {
       ],
       generationConfig: data.generationConfig || {
         temperature: 0.25,
-        responseMimeType: "application/json"
+        responseMimeType: "application/json",
+        maxOutputTokens: 3072
       }
     };
 

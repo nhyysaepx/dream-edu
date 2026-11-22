@@ -255,6 +255,7 @@ QUY TẮC TÍCH HỢP CHỈ SỐ ÂM HỌC TỪ AZURE AI SPEECH:
 3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng trung thực kể cả từ ngập ngừng (um, uh, like...) rồi mới chấm. Tuyệt đối KHÔNG tự bịa đặt câu trả lời nếu thí sinh im lặng.
 4. Tất cả nhận xét, giải thích cho học sinh và giáo viên viết bằng **tiếng Việt** tự nhiên, giàu tính sư phạm, thẳng thắn nhưng khích lệ.
 5. Điểm từng tiêu chí và overallBand phải là bội số của 0.5 (từ 1.0 đến 9.0). overallBand = trung bình cộng 4 tiêu chí làm tròn đến 0.5 gần nhất.
+6. YÊU CẦU ĐẶC BIỆT VỀ TỐC ĐỘ: Trả lời cô đọng, súc tích, đi thẳng vào bản chất chuyên môn. Mỗi câu nhận xét/giải thích chỉ viết từ 1 đến 2 câu ngắn gọn, chuẩn xác, không viết dài dòng lê thê để đảm bảo phản hồi tức thì.
 
 TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không thêm markdown \`\`\`json):
 {
@@ -379,38 +380,48 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
  * Gọi Gemini thông qua Google Apps Script Web App (chạy tại Google US Datacenter)
  * Giúp giải quyết triệt để lỗi 'User location is not supported' do edge Hong Kong của Cloudflare
  */
-async function callGeminiViaAppsScript(env, contents, generationConfig, model) {
+async function callGeminiViaAppsScript(env, contents, generationConfig, model, timeoutMs = 28000) {
   const appsScriptUrl = (env.APPS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbyklW07HibT6f4nXRIcZV7aYLacXEFH7Je-hdWAtolvVPx5hEnkXYdy57wRhUnusv1vrA/exec').trim();
   const apiKey = env.GEMINI_API_KEY;
 
-  const res = await fetch(appsScriptUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8'
-    },
-    body: JSON.stringify({
-      action: 'callGemini',
-      apiKey,
-      model: model || 'gemini-2.0-flash',
-      contents,
-      generationConfig
-    })
-  });
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Google Apps Script trả về HTTP ${res.status}: ${errText.slice(0, 200)}`);
+  try {
+    const res = await fetch(appsScriptUrl, {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        action: 'callGemini',
+        apiKey,
+        model: model || 'gemini-2.5-flash',
+        contents,
+        generationConfig
+      })
+    });
+    clearTimeout(timer);
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Google Apps Script trả về HTTP ${res.status}: ${errText.slice(0, 200)}`);
+    }
+
+    const json = await res.json();
+    if (json.status === 'success' && json.text) {
+      return {
+        text: json.text,
+        modelUsed: `${json.modelUsed || 'gemini-2.0-flash'} (via Google US proxy)`
+      };
+    }
+
+    throw new Error(json.error || 'Google Apps Script không trả về nội dung AI hợp lệ.');
+  } catch (err) {
+    clearTimeout(timer);
+    throw err;
   }
-
-  const json = await res.json();
-  if (json.status === 'success' && json.text) {
-    return {
-      text: json.text,
-      modelUsed: `${json.modelUsed || 'gemini-2.0-flash'} (via Google US proxy)`
-    };
-  }
-
-  throw new Error(json.error || 'Google Apps Script không trả về nội dung AI hợp lệ.');
 }
 
 /**
@@ -422,14 +433,19 @@ async function callGemini(env, parts, requestedModel) {
     throw new Error('GEMINI_API_KEY chưa được cấu hình trên Cloudflare Worker.');
   }
 
-  const userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-3.8-flash').trim();
+  // Chuẩn hóa model: Bỏ triệt để các model không có thực trên API
+  const VALID_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b'];
+  let userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-2.0-flash').trim();
+  if (!VALID_MODELS.includes(userModel)) {
+    userModel = 'gemini-2.0-flash';
+  }
+
   const candidateModels = [
     userModel,
-    'gemini-3.8-flash',
-    'gemini-2.5-flash',
     'gemini-2.0-flash',
-    'gemini-1.5-flash'
-  ].filter(Boolean);
+    'gemini-1.5-flash',
+    'gemini-1.5-flash-8b'
+  ];
 
   const modelsToTry = [...new Set(candidateModels)];
 
@@ -442,20 +458,22 @@ async function callGemini(env, parts, requestedModel) {
     ],
     generationConfig: {
       temperature: 0.25,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      maxOutputTokens: 3072
     }
   };
 
   const allAttempts = [];
 
   // 1. ƯU TIÊN SỐ 1: Gọi ngay qua Google US Proxy (chạy trực tiếp trong Google US Datacenter)
-  // Đây là con đường siêu tốc (chỉ 1.5s - 2.5s) và 100% không bao giờ bị chặn địa lý
+  // Đây là con đường siêu tốc và 100% không bao giờ bị chặn địa lý
   try {
     const proxyResult = await callGeminiViaAppsScript(
       env,
       requestBody.contents,
       requestBody.generationConfig,
-      userModel
+      userModel,
+      26000
     );
     if (proxyResult && proxyResult.text) {
       return proxyResult;
@@ -464,11 +482,11 @@ async function callGemini(env, parts, requestedModel) {
     allAttempts.push(`Google US Proxy notice: ${proxyErr.message}`);
   }
 
-  // 2. DỰ PHÒNG KHẨN CẤP: Nếu Google US Proxy tạm thời bận, chuyển sang gọi trực tiếp Google Gemini API
-  for (const model of modelsToTry.slice(0, 1)) {
+  // 2. DỰ PHÒNG KHẨN CẤP: Nếu Google US Proxy tạm thời bận hoặc timeout, gọi trực tiếp Google Gemini API
+  for (const model of modelsToTry) {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
     const directAbort = new AbortController();
-    const directTimer = setTimeout(() => directAbort.abort(), 6000);
+    const directTimer = setTimeout(() => directAbort.abort(), 12000);
 
     try {
       const res = await fetch(endpoint, {
@@ -492,11 +510,15 @@ async function callGemini(env, parts, requestedModel) {
 
       const errText = await res.text();
       allAttempts.push(`Direct ${model} (${res.status}): ${errText.slice(0, 150)}`);
+
+      // Nếu Cloudflare IP bị Google chặn địa lý, dừng thử direct để không mất thời gian
+      if (errText.includes('User location is not supported') || (res.status === 400 && errText.includes('FAILED_PRECONDITION'))) {
+        break;
+      }
     } catch (fErr) {
       clearTimeout(directTimer);
       allAttempts.push(`Direct ${model} error: ${fErr.message}`);
     }
-    break;
   }
 
   throw new Error(`Tất cả kênh gọi Gemini đều không phản hồi:\n${allAttempts.join('\n')}`);
