@@ -1,14 +1,23 @@
 import { createContext, useContext, useState } from 'react';
-import { ACCESS_PASSWORD, AUTH_STORAGE_KEY } from '../constants/auth';
+import { 
+  ACCESS_PASSWORD_HASH, 
+  AUTH_STORAGE_KEY, 
+  AUTH_TOKEN_SIGNATURE 
+} from '../constants/auth';
+import { sha256Sync } from '../utils/crypto';
 
 const AuthContext = createContext(null);
+
+const isValidToken = (token) => {
+  return typeof token === 'string' && token === AUTH_TOKEN_SIGNATURE;
+};
 
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
       const sessionAuth = sessionStorage.getItem(AUTH_STORAGE_KEY);
       const localAuth = localStorage.getItem(AUTH_STORAGE_KEY);
-      return sessionAuth === 'granted' || localAuth === 'granted';
+      return isValidToken(sessionAuth) || isValidToken(localAuth);
     } catch {
       return false;
     }
@@ -20,15 +29,20 @@ export function AuthProvider({ children }) {
     }
 
     const cleanInput = password.trim().toLowerCase();
-    if (cleanInput === ACCESS_PASSWORD.toLowerCase()) {
+    const inputHash = sha256Sync(cleanInput);
+
+    if (inputHash === ACCESS_PASSWORD_HASH) {
       setIsAuthenticated(true);
       try {
-        sessionStorage.setItem(AUTH_STORAGE_KEY, 'granted');
+        sessionStorage.setItem(AUTH_STORAGE_KEY, AUTH_TOKEN_SIGNATURE);
         if (rememberMe) {
-          localStorage.setItem(AUTH_STORAGE_KEY, 'granted');
+          localStorage.setItem(AUTH_STORAGE_KEY, AUTH_TOKEN_SIGNATURE);
         } else {
           localStorage.removeItem(AUTH_STORAGE_KEY);
         }
+        // Xóa sạch key cũ trước đây nếu có
+        sessionStorage.removeItem('dream_study_access');
+        localStorage.removeItem('dream_study_access');
       } catch (e) {
         console.error('Storage error:', e);
       }
@@ -46,6 +60,8 @@ export function AuthProvider({ children }) {
     try {
       sessionStorage.removeItem(AUTH_STORAGE_KEY);
       localStorage.removeItem(AUTH_STORAGE_KEY);
+      sessionStorage.removeItem('dream_study_access');
+      localStorage.removeItem('dream_study_access');
     } catch (e) {
       console.error('Storage error:', e);
     }
