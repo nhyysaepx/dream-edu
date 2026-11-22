@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, BookOpen, AlertCircle } from 'lucide-react';
 import ReadingHomeworkView from '../components/homework/ReadingHomeworkView';
+import ListeningHomeworkView from '../components/homework/ListeningHomeworkView';
 import SchoolPracticeView from '../components/homework/SchoolPracticeView';
 import SpeakingPracticeRoom from './SpeakingPracticeRoom';
 import { getPracticeDetailById, PRE_IELTS_READING_2_PRACTICE_DETAIL } from '../data/practiceData';
@@ -44,6 +45,20 @@ export default function PracticeDetail() {
         mode="practice"
         parentPath="/practice"
         parentLabel="Practice"
+        storagePrefix="dream_practice_"
+        historyKey="dream_practice_history"
+      />
+    );
+  }
+
+  // Listening exercises: Render the specialized Listening component with floating audio and modular grading
+  if (practice?.skill === 'Listening') {
+    return (
+      <ListeningHomeworkView
+        homework={practice}
+        mode="practice"
+        parentPath="/practice"
+        parentLabel="Phòng Luyện tập"
         storagePrefix="dream_practice_"
         historyKey="dream_practice_history"
       />

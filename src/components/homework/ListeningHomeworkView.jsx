@@ -34,10 +34,11 @@ import { getMaxChoices, parseSelectedOptions } from './ReadingHomeworkView';
 function checkAnswer(userAnswer, acceptedList = []) {
   if (!userAnswer || !userAnswer.toString().trim()) return false;
   
-  const list = Array.isArray(acceptedList) ? acceptedList : (acceptedList ? [acceptedList] : []);
+  const stripHtml = (s) => (s || '').toString().replace(/<[^>]*>/g, '').trim();
+  const list = (Array.isArray(acceptedList) ? acceptedList : (acceptedList ? [acceptedList] : [])).map(stripHtml);
   if (list.length === 0) return false;
 
-  const rawUser = userAnswer.toString().trim().toLowerCase();
+  const rawUser = stripHtml(userAnswer).toLowerCase();
 
   // 1. Direct trimmed, case-insensitive match (handles single letters 'a', 'b', 'c', 'd' or exact matches)
   if (list.some(accepted => (accepted || '').toString().trim().toLowerCase() === rawUser)) {
@@ -99,15 +100,23 @@ function checkAnswer(userAnswer, acceptedList = []) {
   });
 }
 
-export default function ListeningHomeworkView({ homework }) {
+export default function ListeningHomeworkView({
+  homework,
+  mode = 'homework',
+  parentPath = mode === 'practice' ? '/practice' : '/homework',
+  parentLabel = mode === 'practice' ? 'Phòng Luyện tập' : 'Homework',
+  storagePrefix = mode === 'practice' ? 'dream_practice_' : 'dream_hw_',
+  historyKey = mode === 'practice' ? 'dream_practice_history' : 'dream_homework_history'
+}) {
   const homeworkId = homework?.id || 'intermediate-listening-6';
   const rawPassages = homework?.passages;
   const passages = useMemo(() => rawPassages || [], [rawPassages]);
 
   const [activeTabId, setActiveTabId] = useState(passages[0]?.id || 'p1');
+  const [evaluatedPassages, setEvaluatedPassages] = useState({});
   const [answers, setAnswers] = useState(() => {
     try {
-      const saved = localStorage.getItem(`dream_hw_${homeworkId}_draft`);
+      const saved = localStorage.getItem(`${storagePrefix}${homeworkId}_draft`);
       return saved ? JSON.parse(saved) : {};
     } catch {
       return {};
@@ -116,7 +125,7 @@ export default function ListeningHomeworkView({ homework }) {
 
   const [isSubmitted, setIsSubmitted] = useState(() => {
     try {
-      const history = localStorage.getItem('dream_homework_history');
+      const history = localStorage.getItem(historyKey);
       if (history) {
         const parsed = JSON.parse(history);
         return !!parsed[homeworkId];
@@ -159,7 +168,7 @@ export default function ListeningHomeworkView({ homework }) {
 
   // Handle text input change
   const handleInputChange = (fieldId, val) => {
-    if (isSubmitted) return;
+    if (isSubmitted || evaluatedPassages[activeTabId]) return;
     setAnswers(prev => ({
       ...prev,
       [fieldId]: val
@@ -168,7 +177,7 @@ export default function ListeningHomeworkView({ homework }) {
 
   // Handle multiple-choice selection
   const handleSelectChoice = (q, letter) => {
-    if (isSubmitted) return;
+    if (isSubmitted || evaluatedPassages[q.passageId || activeTabId]) return;
     const maxChoices = getMaxChoices(q);
     const userVal = answers[q.id] || '';
     const selectedLetters = parseSelectedOptions(userVal, q.options);
@@ -221,7 +230,7 @@ export default function ListeningHomeworkView({ homework }) {
   // Save draft
   const handleSaveDraft = () => {
     try {
-      localStorage.setItem(`dream_hw_${homeworkId}_draft`, JSON.stringify(answers));
+      localStorage.setItem(`${storagePrefix}${homeworkId}_draft`, JSON.stringify(answers));
       setSaveToast(true);
       setTimeout(() => setSaveToast(false), 2500);
     } catch (e) {
@@ -247,13 +256,13 @@ export default function ListeningHomeworkView({ homework }) {
     setShowResultsModal(true);
 
     try {
-      const history = JSON.parse(localStorage.getItem('dream_homework_history') || '{}');
+      const history = JSON.parse(localStorage.getItem(historyKey) || '{}');
       history[homeworkId] = {
         score,
         total: totalQuestions,
         completedAt: new Date().toISOString()
       };
-      localStorage.setItem('dream_homework_history', JSON.stringify(history));
+      localStorage.setItem(historyKey, JSON.stringify(history));
     } catch (e) {
       console.error(e);
     }
@@ -269,7 +278,7 @@ export default function ListeningHomeworkView({ homework }) {
           const correctVal = Array.isArray(q.acceptedAnswers) 
             ? q.acceptedAnswers.join('/') 
             : (q.acceptedAnswers || '');
-          const qNum = q.questionNumber || q.id;
+          const qNum = q.questionNumber || q.number || q.id;
           return `Câu ${qNum}: Chọn "${userVal}" [Đúng: "${correctVal}"]`;
         });
 
@@ -277,13 +286,13 @@ export default function ListeningHomeworkView({ homework }) {
       submitHomeworkOrPracticeResult({
         studentName: student.name,
         className: student.className,
-        testTitle: homework.title || 'Bài tập Listening về nhà',
+        testTitle: homework.title || (mode === 'practice' ? 'Bài luyện tập Listening' : 'Bài tập Listening về nhà'),
         score: score,
         total: totalQuestions,
         percentage: percentage,
         duration: durationSeconds,
         wrongAnswers: wrongItems,
-        type: 'Homework'
+        type: mode === 'practice' ? 'Practice' : 'Homework'
       }).then(() => {
         setSubmissionStatus('success');
       }).catch((err) => {
@@ -308,16 +317,56 @@ export default function ListeningHomeworkView({ homework }) {
     setIsSubmitted(false);
     setShowResultsModal(false);
     setSubmissionStatus(null);
+    setEvaluatedPassages({});
     startTimeRef.current = Date.now();
     setAnswers({});
     try {
-      localStorage.removeItem(`dream_hw_${homeworkId}_draft`);
-      const history = JSON.parse(localStorage.getItem('dream_homework_history') || '{}');
+      localStorage.removeItem(`${storagePrefix}${homeworkId}_draft`);
+      const history = JSON.parse(localStorage.getItem(historyKey) || '{}');
       delete history[homeworkId];
-      localStorage.setItem('dream_homework_history', JSON.stringify(history));
+      localStorage.setItem(historyKey, JSON.stringify(history));
     } catch (e) {
       console.error(e);
     }
+  };
+
+  // Modular grading per exercise
+  const handleGradeCurrentPassage = (passageId) => {
+    const passage = passages.find(p => p.id === passageId);
+    if (!passage) return;
+    const passageQuestions = passage.questions || [];
+    const correctCount = passageQuestions.filter(q => isQuestionCorrect(q)).length;
+    const pct = passageQuestions.length > 0 ? (correctCount / passageQuestions.length) : 0;
+    if (pct >= 0.7) {
+      playCorrectSound();
+    } else {
+      playWrongSound();
+    }
+    setEvaluatedPassages(prev => ({
+      ...prev,
+      [passageId]: true
+    }));
+  };
+
+  const handleResetCurrentPassage = (passageId) => {
+    const passage = passages.find(p => p.id === passageId);
+    if (!passage) return;
+    const qIds = (passage.questions || []).map(q => q.id);
+    setAnswers(prev => {
+      const next = { ...prev };
+      qIds.forEach(id => delete next[id]);
+      try {
+        localStorage.setItem(`${storagePrefix}${homeworkId}_draft`, JSON.stringify(next));
+      } catch (e) {
+        void e;
+      }
+      return next;
+    });
+    setEvaluatedPassages(prev => {
+      const next = { ...prev };
+      delete next[passageId];
+      return next;
+    });
   };
 
   const activePassage = passages.find(p => p.id === activeTabId) || passages[0];
@@ -355,7 +404,7 @@ export default function ListeningHomeworkView({ homework }) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link 
-              to="/homework" 
+              to={parentPath} 
               className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors"
               title="Quay lại danh sách bài tập"
             >
@@ -363,7 +412,7 @@ export default function ListeningHomeworkView({ homework }) {
             </Link>
             <div>
               <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
-                <Link to="/homework" className="hover:text-primary transition-colors">Homework</Link>
+                <Link to={parentPath} className="hover:text-primary transition-colors">{parentLabel}</Link>
                 <span>/</span>
                 <span className="text-gray-700 font-semibold">{homework.level || 'IELTS Intermediate'}</span>
                 <span>/</span>
@@ -384,11 +433,11 @@ export default function ListeningHomeworkView({ homework }) {
             {homework.vocabId && (
               <Link
                 to={`/vocab/${homework.vocabId}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold border border-indigo-200 transition-colors shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-bold border border-amber-300 transition-colors shadow-2xs"
                 title="Mở bộ từ vựng trọng tâm bài học"
               >
-                <BookOpen size={14} className="text-indigo-600" />
-                <span className="hidden sm:inline">Tra cứu từ vựng</span>
+                <BookOpen size={14} className="text-amber-700" />
+                <span className="hidden sm:inline">{homework.vocabLabel || 'Học từ vựng'}</span>
                 <span className="sm:hidden">Từ vựng</span>
               </Link>
             )}
@@ -803,14 +852,15 @@ export default function ListeningHomeworkView({ homework }) {
                   {activePassage.questions?.map((q) => {
                     const isChoice = q.options && q.options.length > 0;
                     const userVal = answers[q.id] || '';
-                    const correct = isSubmitted && isQuestionCorrect(q);
+                    const isPassageGraded = isSubmitted || !!evaluatedPassages[activePassage.id];
+                    const correct = isPassageGraded && isQuestionCorrect(q);
 
                     return (
                       <div 
                         key={q.id}
                         id={`q-${q.id}`}
                         className={`bg-white rounded-2xl p-5 sm:p-6 border transition-all scroll-mt-28 ${
-                          isSubmitted 
+                          isPassageGraded 
                             ? (correct 
                                 ? 'border-emerald-300 bg-emerald-50/20 shadow-xs' 
                                 : 'border-rose-300 bg-rose-50/20 shadow-xs')
@@ -828,7 +878,7 @@ export default function ListeningHomeworkView({ homework }) {
                             </h4>
                           </div>
 
-                          {isSubmitted && (
+                          {isPassageGraded && (
                             <div>
                               {correct ? (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300">
@@ -849,7 +899,7 @@ export default function ListeningHomeworkView({ homework }) {
                           const selectedLetters = parseSelectedOptions(userVal, q.options);
 
                           const correctLetters = new Set();
-                          if (isSubmitted) {
+                          if (isPassageGraded) {
                             const validOptions = [
                               ...(Array.isArray(q.acceptedAnswers) ? q.acceptedAnswers : (q.acceptedAnswers ? [q.acceptedAnswers] : [])),
                               q.primaryAnswer,
@@ -885,16 +935,16 @@ export default function ListeningHomeworkView({ homework }) {
                               <div className="grid grid-cols-1 gap-2.5">
                                 {q.options?.map((opt) => {
                                   const isSelected = selectedLetters.includes(opt.letter.toUpperCase());
-                                  const isOptCorrect = isSubmitted && (
+                                  const isOptCorrect = isPassageGraded && (
                                     correctLetters.has(opt.letter.toUpperCase()) ||
                                     (q.acceptedAnswers || []).some(a => a.toString().trim().toLowerCase() === (opt.text || '').toLowerCase())
                                   );
 
                                   let cardStyle = 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/40 text-gray-800';
-                                  if (isSelected && !isSubmitted) {
+                                  if (isSelected && !isPassageGraded) {
                                     cardStyle = 'border-blue-600 bg-blue-50 text-blue-900 shadow-xs ring-2 ring-blue-500/20';
                                   }
-                                  if (isSubmitted) {
+                                  if (isPassageGraded) {
                                     if (isOptCorrect) {
                                       cardStyle = 'border-emerald-500 bg-emerald-100/70 text-emerald-950 font-semibold ring-2 ring-emerald-500/30';
                                     } else if (isSelected && !isOptCorrect) {
@@ -908,20 +958,20 @@ export default function ListeningHomeworkView({ homework }) {
                                     <button
                                       key={opt.letter}
                                       type="button"
-                                      disabled={isSubmitted}
+                                      disabled={isPassageGraded}
                                       onClick={() => handleSelectChoice(q, opt.letter)}
                                       className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition-all cursor-pointer ${cardStyle}`}
                                     >
                                       <span className={`w-6 h-6 rounded-lg text-xs font-bold flex items-center justify-center shrink-0 ${
-                                        isSelected && maxChoices > 1 && !isSubmitted
+                                        isSelected && maxChoices > 1 && !isPassageGraded
                                           ? 'bg-blue-600 text-white'
                                           : isSelected
                                             ? 'bg-blue-600 text-white' 
-                                            : (isSubmitted && isOptCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700')
+                                            : (isPassageGraded && isOptCorrect ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700')
                                       }`}>
-                                        {isSelected && maxChoices > 1 && !isSubmitted ? (
+                                        {isSelected && maxChoices > 1 && !isPassageGraded ? (
                                           <Check size={14} strokeWidth={3} />
-                                        ) : isSubmitted && isOptCorrect ? (
+                                        ) : isPassageGraded && isOptCorrect ? (
                                           <Check size={14} strokeWidth={3} />
                                         ) : (
                                           opt.letter
@@ -940,19 +990,19 @@ export default function ListeningHomeworkView({ homework }) {
                             <div className="relative max-w-lg">
                               <input
                                 type="text"
-                                disabled={isSubmitted}
+                                disabled={isPassageGraded}
                                 value={userVal}
                                 onChange={(e) => handleInputChange(q.id, e.target.value)}
-                                placeholder={q.placeholder || 'Điền câu trả lời (tối đa 2 từ)...'}
+                                placeholder={q.placeholder || 'Điền câu trả lời...'}
                                 className={`w-full px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all focus:outline-none focus:ring-2 ${
-                                  isSubmitted 
+                                  isPassageGraded 
                                     ? (correct 
                                         ? 'bg-emerald-50 border-emerald-400 text-emerald-900 ring-emerald-300' 
                                         : 'bg-rose-50 border-rose-400 text-rose-900 ring-rose-300')
                                     : 'bg-white border-gray-300 focus:border-blue-500 focus:ring-blue-100 text-gray-900'
                                 }`}
                               />
-                              {isSubmitted && (
+                              {isPassageGraded && (
                                 <span className="absolute right-3 top-3">
                                   {correct ? (
                                     <CheckCircle2 size={18} className="text-emerald-600" />
@@ -965,8 +1015,8 @@ export default function ListeningHomeworkView({ homework }) {
                           </div>
                         )}
 
-                        {/* Evidence & Explanation box when submitted */}
-                        {isSubmitted && (
+                        {/* Evidence & Explanation box when submitted or graded */}
+                        {isPassageGraded && (
                           <div className="mt-4 p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs sm:text-sm space-y-2">
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-gray-700">Đáp án chuẩn:</span>
@@ -990,6 +1040,82 @@ export default function ListeningHomeworkView({ homework }) {
                     );
                   })}
                 </div>
+
+                {/* MODULAR INSTANT GRADING BAR FOR ACTIVE PASSAGE */}
+                {activePassage.questions && activePassage.questions.length > 0 && (() => {
+                  const passQuestions = activePassage.questions;
+                  const passAnsweredCount = passQuestions.filter(q => answers[q.id] && answers[q.id].toString().trim() !== '').length;
+                  const passCorrectCount = passQuestions.filter(q => isQuestionCorrect(q)).length;
+                  const passPercent = passQuestions.length > 0 ? Math.round((passCorrectCount / passQuestions.length) * 100) : 0;
+                  const isGraded = isSubmitted || !!evaluatedPassages[activePassage.id];
+
+                  return (
+                    <div className="my-6">
+                      {!isGraded ? (
+                        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+                          <div className="text-left">
+                            <div className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                              <CheckSquare size={15} className="text-blue-600" />
+                              <span>Tiến độ bài này: {passAnsweredCount} / {passQuestions.length} câu đã làm</span>
+                            </div>
+                            <p className="text-xs text-blue-700">
+                              Bạn có thể chấm điểm ngay cho bài tập này để kiểm tra câu đúng/sai và xem giải thích chi tiết.
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleGradeCurrentPassage(activePassage.id)}
+                            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer shrink-0"
+                          >
+                            <CheckCircle2 size={16} />
+                            <span>🎯 Chấm điểm bài tập này ({passQuestions.length} câu)</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+                          <div className="text-left">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="text-sm sm:text-base font-black text-emerald-950">
+                                Kết quả: Đúng {passCorrectCount} / {passQuestions.length} câu ({passPercent}%)
+                              </span>
+                              <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                                passPercent >= 80 ? 'bg-emerald-200 text-emerald-900' :
+                                passPercent >= 50 ? 'bg-amber-200 text-amber-900' : 'bg-rose-200 text-rose-900'
+                              }`}>
+                                {passPercent >= 80 ? 'Xuất sắc' : passPercent >= 50 ? 'Khá tốt' : 'Cần ôn thêm'}
+                              </span>
+                            </div>
+                            <p className="text-xs text-emerald-800">
+                              Đã mở khóa toàn bộ đáp án chuẩn, trích dẫn audio và lời giải chi tiết bên trên.
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                            <button
+                              type="button"
+                              onClick={() => handleResetCurrentPassage(activePassage.id)}
+                              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-gray-100 text-gray-700 text-xs font-bold border border-gray-200 transition-colors cursor-pointer shadow-2xs"
+                            >
+                              <RotateCcw size={14} />
+                              <span>🔄 Làm lại bài này</span>
+                            </button>
+                            {nextPassage && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setActiveTabId(nextPassage.id);
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
+                                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs hover:shadow transition-all cursor-pointer"
+                              >
+                                <span>Sang {nextPassage.shortTitle || 'bài tiếp theo'} ➔</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* Navigation at bottom of Active Part */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-gray-200 shadow-xs">
@@ -1059,7 +1185,8 @@ export default function ListeningHomeworkView({ homework }) {
               const isActive = activeTabId === p.id;
               const pQuestions = p.questions || [];
               const pAnswered = pQuestions.filter(q => answers[q.id] && answers[q.id].toString().trim() !== '').length;
-              const pCorrect = isSubmitted ? pQuestions.filter(q => isQuestionCorrect(q)).length : 0;
+              const pIsGraded = isSubmitted || !!evaluatedPassages[p.id];
+              const pCorrect = pIsGraded ? pQuestions.filter(q => isQuestionCorrect(q)).length : 0;
               const partLabel = `PART ${idx + 1}`;
 
               return (
@@ -1092,11 +1219,11 @@ export default function ListeningHomeworkView({ homework }) {
                       {p.shortTitle ? p.shortTitle.split(':')[1] || p.shortTitle : p.title}
                     </span>
                     <span className={`text-[11px] font-bold px-1.5 py-0.2 rounded-md ${
-                      isSubmitted
+                      pIsGraded
                         ? (pCorrect === pQuestions.length ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700')
                         : (isActive ? 'bg-blue-200/70 text-blue-900' : 'bg-gray-200 text-gray-600')
                     }`}>
-                      {isSubmitted ? `${pCorrect}/${pQuestions.length}` : `${pAnswered}/${pQuestions.length}`}
+                      {pIsGraded ? `${pCorrect}/${pQuestions.length}` : `${pAnswered}/${pQuestions.length}`}
                     </span>
                   </div>
                 </button>
@@ -1108,25 +1235,26 @@ export default function ListeningHomeworkView({ homework }) {
               <div className="hidden sm:flex items-center gap-1 sm:gap-1.5 pl-2 border-l border-gray-200 shrink-0 overflow-x-auto no-scrollbar max-w-xs md:max-w-md">
                 {activePassage.questions.map(q => {
                   const isAns = answers[q.id] && answers[q.id].toString().trim() !== '';
-                  const isCorrect = isSubmitted && isQuestionCorrect(q);
+                  const isQGraded = isSubmitted || !!evaluatedPassages[activePassage.id];
+                  const isCorrect = isQGraded && isQuestionCorrect(q);
                   return (
                     <button
                       key={q.id}
                       type="button"
                       onClick={() => scrollToQuestion(q.id, activePassage.id)}
                       className="group flex flex-col items-center cursor-pointer p-0.5 focus:outline-none transition-all"
-                      title={`Câu ${q.number}${isAns ? ' (Đã làm)' : ' (Chưa làm)'}`}
+                      title={`Câu ${q.number}${isQGraded ? (isCorrect ? ' (Đúng)' : ' (Sai)') : (isAns ? ' (Đã làm)' : ' (Chưa làm)')}`}
                     >
                       {/* Top indicator dash */}
                       <span className={`w-3.5 h-[2px] rounded-full mb-1 transition-all ${
-                        isSubmitted
+                        isQGraded
                           ? (isCorrect ? 'bg-emerald-500' : 'bg-rose-500')
                           : (isAns ? 'bg-blue-600' : 'bg-gray-300 group-hover:bg-gray-400')
                       }`} />
                       
                       {/* Number pill */}
                       <div className={`w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold transition-all ${
-                        isSubmitted
+                        isQGraded
                           ? (isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white')
                           : (isAns ? 'bg-blue-50 text-blue-700 border border-blue-200 font-extrabold' : 'text-gray-600 hover:bg-gray-100')
                       }`}>
@@ -1299,7 +1427,7 @@ export default function ListeningHomeworkView({ homework }) {
           setStudent(updated);
           setShowStudentModal(false);
         }}
-        title="Thông tin học sinh (Homework)"
+        title={mode === 'practice' ? "Thông tin người luyện tập (Practice)" : "Thông tin học sinh (Homework)"}
         subtitle="Vui lòng xác nhận Họ tên và Mã lớp trước khi làm bài để kết quả được lưu và gửi đến giáo viên."
       />
 

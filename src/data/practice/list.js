@@ -1,6 +1,29 @@
 // Full list of in-class practice assignments
 // Only contains real practice assignments uploaded and verified
 export const PRACTICE_LIST = [
+  // ==================== KHUNG NĂNG LỰC CHÂU ÂU (CEFR A2 - C1) ====================
+  {
+    id: 'cefr-b1-listening-1',
+    category: 'cefr',
+    levelId: 'b1',
+    levelLabel: 'Level B1',
+    session: 'Practice 01 - Survival English',
+    skill: 'Listening',
+    title: 'CEFR B1 - Practice: Listening 1 (Survival English)',
+    description: 'Trọn bộ bài luyện tập kỹ năng Listening chuẩn Khung tham chiếu Châu Âu CEFR B1 (Intermediate) gồm 58 câu hỏi qua 7 bài nghe sinh hoạt thực tế: Ellen\'s Cold, Buying a Camera, In the Restaurant, Hotel Reception, Christmas in Britain, Trip to Stonehenge và Marriages & Families.',
+    totalQuestions: 58,
+    duration: '45 - 60 phút',
+    status: 'open',
+    dueDate: 'Luyện tập kỹ năng Nghe trực tiếp trên máy',
+    exercisesCount: 7,
+    audioTracksCount: 7,
+    tag: 'Khung Châu Âu B1 (Intermediate)',
+    vocabId: 'cefr-b1-listening-1',
+    vocabCount: 40,
+    vocabLabel: 'Học 40 từ vựng Listening 1 (Survival English)',
+    isFeatured: true
+  },
+
   // ==================== TIẾNG ANH PHỔ THÔNG (THCS & THPT) ====================
   {
     id: 'revision-midterm-1-english-12',

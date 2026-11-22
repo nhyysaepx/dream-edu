@@ -17,6 +17,7 @@ export { INTERMEDIATE_LISTENING_6_SET } from './sets/intermediate-listening-6.js
 export { INTERMEDIATE_READING_7_SET } from './sets/intermediate-reading-7.js';
 export { IELTS_VOL1_TEST2_LISTENING_SET } from './sets/ielts-vol1-test2-listening.js';
 export { IELTS_VOL1_TEST2_READING_SET } from './sets/ielts-vol1-test2-reading.js';
+export { CEFR_B1_LISTENING_1_SET } from './sets/cefr-b1-listening-1.js';
 
 export { getVocabSetById } from './getVocabSetById.js';
 

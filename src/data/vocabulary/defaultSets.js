@@ -14,8 +14,12 @@ import { INTERMEDIATE_LISTENING_6_SET } from './sets/intermediate-listening-6.js
 import { INTERMEDIATE_READING_7_SET } from './sets/intermediate-reading-7.js';
 import { IELTS_VOL1_TEST2_LISTENING_SET } from './sets/ielts-vol1-test2-listening.js';
 import { IELTS_VOL1_TEST2_READING_SET } from './sets/ielts-vol1-test2-reading.js';
+import { CEFR_B1_LISTENING_1_SET } from './sets/cefr-b1-listening-1.js';
 
 export const DEFAULT_VOCAB_SETS = [
+  // Khung năng lực Châu Âu (CEFR A2 - C1)
+  CEFR_B1_LISTENING_1_SET,
+
   // Tiếng Anh phổ thông (Lớp 6 - 12)
   REVISION_MIDTERM_1_ENGLISH_12_SET,
   UNIT_1_GLOBAL_SUCCESS_10_SET,
