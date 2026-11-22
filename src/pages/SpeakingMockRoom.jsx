@@ -25,6 +25,7 @@ import SpeakingRecorder from '../components/speaking/SpeakingRecorder';
 import SpeakingEvaluationResult from '../components/speaking/SpeakingEvaluationResult';
 import { 
   assessAudioWithAzure, 
+  aggregateSessionAzureMetrics,
   evaluateSpeakingWithAI, 
   submitSpeakingEvaluationToSystem 
 } from '../services/speechAssessmentService';
@@ -290,7 +291,7 @@ export default function SpeakingMockRoom() {
       setAzureMetricsMap(azureMap);
 
       const part2Idx = allResponses.findIndex((r) => r.part && r.part.includes('Part 2'));
-      const combinedAzure = (part2Idx !== -1 && azureMap[part2Idx]) || azureMap[0] || { hasData: false };
+      const combinedAzure = aggregateSessionAzureMetrics(azureMap);
       setCombinedAzure(combinedAzure);
       const part2Response = (part2Idx !== -1 ? allResponses[part2Idx] : null) || allResponses[0];
 

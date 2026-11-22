@@ -30,6 +30,7 @@ import SpeakingRecorder from '../components/speaking/SpeakingRecorder';
 import SpeakingEvaluationResult from '../components/speaking/SpeakingEvaluationResult';
 import { 
   assessAudioWithAzure, 
+  aggregateSessionAzureMetrics,
   evaluateSpeakingWithAI, 
   submitSpeakingEvaluationToSystem 
 } from '../services/speechAssessmentService';
@@ -334,7 +335,7 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
         };
       });
 
-      const combinedAzure = azureMetricsByQuestion[0] || { hasData: false };
+      const combinedAzure = aggregateSessionAzureMetrics(azureMetricsByQuestion);
       setAzureMetrics(combinedAzure);
 
       const combinedEvaluation = {
@@ -452,7 +453,7 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
         })
       );
       setAzureMetricsByQuestion(updatedAzureMetrics);
-      const combinedAzure = updatedAzureMetrics[0] || { hasData: false };
+      const combinedAzure = aggregateSessionAzureMetrics(updatedAzureMetrics);
       setAzureMetrics(combinedAzure);
 
       setAnalysisStep('2/2: Giám khảo AI đang chấm tổng thể 4 tiêu chí IELTS và phân tích chi tiết từng câu...');
@@ -1041,6 +1042,18 @@ export default function SpeakingPracticeRoom({ customTopicId }) {
                         <span>Fluency: <strong>{singleEval.azureMetrics.fluencyScore}/100</strong></span>
                         <span>•</span>
                         <span>Pron: <strong>{singleEval.azureMetrics.pronScore}/100</strong></span>
+                        {singleEval.azureMetrics.wpm > 0 && (
+                          <>
+                            <span>•</span>
+                            <span>Tốc độ: <strong>{singleEval.azureMetrics.wpm} WPM</strong></span>
+                          </>
+                        )}
+                        {singleEval.azureMetrics.pauseCount12s > 0 && (
+                          <>
+                            <span>•</span>
+                            <span className="text-amber-800">Ngập ngừng &gt;1.2s: <strong>{singleEval.azureMetrics.pauseCount12s}</strong></span>
+                          </>
+                        )}
                       </div>
                     </div>
                   )}

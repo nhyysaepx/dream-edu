@@ -230,14 +230,133 @@ function writeString(view, offset, string) {
 }
 
 /**
- * Đánh giá 1 chunk WAV đơn lẻ qua Azure Speech REST API
+ * Trích xuất chỉ số âm học định lượng chuyên sâu từ dòng thời gian (Timestamps) của Azure Speech
+ * Phục vụ đối chiếu trực tiếp với IELTS Speaking Band Descriptors (WPM, Pauses, Phonation, MLR, Prosody)
  */
-async function _assessSingleWavChunk(wavBlob, referenceText, auth) {
+function extractAcousticMetrics(rawWords = [], chunkDurationSec = 0) {
+  const validWords = (rawWords || [])
+    .filter((w) => w && w.word && !/^[,.?!\-:;"'()]+$/.test(w.word.trim()))
+    .map((w) => {
+      const offsetUnits = Number(w.offset || 0);
+      const durationUnits = Number(w.duration || 0);
+      const startSec = offsetUnits / 10000000;
+      const durSec = durationUnits / 10000000;
+      return {
+        ...w,
+        startSec,
+        durSec,
+        endSec: startSec + durSec
+      };
+    });
+
+  const wordCount = validWords.length;
+  if (wordCount === 0) {
+    return {
+      wordCount: 0,
+      effectiveDuration: chunkDurationSec || 0,
+      wpm: 0,
+      pauseCount12s: 0,
+      pauseCount20s: 0,
+      totalPauseDuration: 0,
+      phonationRatio: 0,
+      mlr: 0,
+      unexpectedBreaks: 0,
+      missingBreaks: 0,
+      monotoneCount: 0
+    };
+  }
+
+  // Xác định thời lượng thực tế của đoạn nói
+  const firstWordStart = validWords[0].startSec;
+  const lastWordEnd = validWords[validWords.length - 1].endSec;
+  const spanSec = Math.max(1, lastWordEnd - firstWordStart);
+  const effectiveDuration = chunkDurationSec > 0 ? Math.max(spanSec, chunkDurationSec) : spanSec;
+
+  // 1. Tốc độ nói: Words Per Minute (WPM)
+  const durationMin = effectiveDuration / 60;
+  const rawWpm = durationMin > 0 ? Math.round(wordCount / durationMin) : 0;
+  const wpm = Math.min(260, Math.max(0, rawWpm));
+
+  // 2. Phân tích khoảng lặng ngập ngừng (Pauses giữa 2 từ liên tiếp)
+  let pauseCount12s = 0;
+  let pauseCount20s = 0;
+  let totalPauseDuration = 0;
+  let totalSpeakingDuration = 0;
+
+  for (let i = 0; i < validWords.length; i++) {
+    totalSpeakingDuration += validWords[i].durSec;
+    if (i < validWords.length - 1) {
+      const gap = validWords[i + 1].startSec - validWords[i].endSec;
+      if (gap >= 0.25) {
+        totalPauseDuration += gap;
+      }
+      if (gap >= 1.2 && gap < 2.0) {
+        pauseCount12s++;
+      } else if (gap >= 2.0) {
+        pauseCount20s++;
+      }
+    }
+  }
+
+  // 3. Phonation Ratio (% thời gian nói thực chất)
+  const phonationRatio = Math.min(
+    100,
+    Math.max(10, Math.round((totalSpeakingDuration / effectiveDuration) * 100))
+  );
+
+  // 4. Mean Length of Runs (MLR - Số từ trung bình giữa 2 khoảng nghỉ >= 0.6s)
+  const runs = [];
+  let currentRun = 1;
+  for (let i = 0; i < validWords.length - 1; i++) {
+    const gap = validWords[i + 1].startSec - validWords[i].endSec;
+    if (gap >= 0.6) {
+      runs.push(currentRun);
+      currentRun = 1;
+    } else {
+      currentRun++;
+    }
+  }
+  runs.push(currentRun);
+  const mlr = Number((runs.reduce((a, b) => a + b, 0) / Math.max(1, runs.length)).toFixed(1));
+
+  // 5. Thống kê lỗi Prosody & Chunking
+  let unexpectedBreaks = 0;
+  let missingBreaks = 0;
+  let monotoneCount = 0;
+
+  validWords.forEach((w) => {
+    const err = String(w.errorType || '').toLowerCase();
+    if (err.includes('unexpectedbreak')) unexpectedBreaks++;
+    if (err.includes('missingbreak')) missingBreaks++;
+    if (err.includes('monotone')) monotoneCount++;
+  });
+
+  return {
+    wordCount,
+    effectiveDuration: Number(effectiveDuration.toFixed(1)),
+    wpm,
+    pauseCount12s,
+    pauseCount20s,
+    totalPauseDuration: Number(totalPauseDuration.toFixed(1)),
+    phonationRatio,
+    mlr,
+    unexpectedBreaks,
+    missingBreaks,
+    monotoneCount
+  };
+}
+
+/**
+ * Đánh giá 1 chunk WAV đơn lẻ qua Azure Speech REST API (Chuẩn IPA + Prosody + Detailed Format)
+ */
+async function _assessSingleWavChunk(wavBlob, referenceText, auth, timeOffsetSec = 0) {
   try {
     const pronConfig = {
       GradingSystem: 'HundredMark',
       Granularity: 'Phoneme',
       Dimension: 'Comprehensive',
+      PhonemeAlphabet: 'IPA',
+      EnableProsodyAssessment: true,
       EnableMiscue: false
     };
 
@@ -247,7 +366,7 @@ async function _assessSingleWavChunk(wavBlob, referenceText, auth) {
     }
 
     const pronHeader = btoa(unescape(encodeURIComponent(JSON.stringify(pronConfig))));
-    const endpoint = `https://${auth.region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US`;
+    const endpoint = `https://${auth.region}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US&format=detailed`;
 
     const res = await fetch(endpoint, {
       method: 'POST',
@@ -268,34 +387,84 @@ async function _assessSingleWavChunk(wavBlob, referenceText, auth) {
     const nbest = data.NBest?.[0];
 
     if (nbest) {
-      const allWords = (nbest.Words || []).map((w) => ({
-        word: w.Word || '',
-        accuracyScore: w.AccuracyScore != null ? w.AccuracyScore : 100,
-        phonemes: (w.Phonemes || []).map((p) => ({
-          phoneme: p.Phoneme || '',
-          accuracyScore: p.AccuracyScore || 0
-        }))
-      }));
+      const pronAssessment = nbest.PronunciationAssessment || {};
+      const offsetShift100ns = Math.round(timeOffsetSec * 10000000);
+
+      const allWords = (nbest.Words || []).map((w) => {
+        const wPron = w.PronunciationAssessment || {};
+        const wordAccuracy = wPron.AccuracyScore != null ? wPron.AccuracyScore : (w.AccuracyScore != null ? w.AccuracyScore : 100);
+        const errorType = wPron.ErrorType || w.ErrorType || 'None';
+        const rawOffset = Number(w.Offset || 0) + offsetShift100ns;
+        const rawDuration = Number(w.Duration || 0);
+
+        const phonemes = (w.Phonemes || []).map((p) => {
+          const pPron = p.PronunciationAssessment || {};
+          return {
+            phoneme: p.Phoneme || '',
+            accuracyScore: pPron.AccuracyScore != null ? pPron.AccuracyScore : (p.AccuracyScore != null ? p.AccuracyScore : (p.Score != null ? p.Score : 0)),
+            offset: Number(p.Offset || 0) + offsetShift100ns,
+            duration: Number(p.Duration || 0)
+          };
+        });
+
+        const syllables = (w.Syllables || []).map((s) => {
+          const sPron = s.PronunciationAssessment || {};
+          return {
+            syllable: s.Syllable || s.Grapheme || '',
+            grapheme: s.Grapheme || '',
+            accuracyScore: sPron.AccuracyScore != null ? sPron.AccuracyScore : (s.AccuracyScore != null ? s.AccuracyScore : 0),
+            offset: Number(s.Offset || 0) + offsetShift100ns,
+            duration: Number(s.Duration || 0)
+          };
+        });
+
+        return {
+          word: w.Word || '',
+          accuracyScore: Math.round(wordAccuracy),
+          errorType,
+          offset: rawOffset,
+          duration: rawDuration,
+          phonemes,
+          syllables
+        };
+      });
 
       const weakWords = allWords
-        .filter((w) => w.accuracyScore < 75 && w.word && !/^[,.\?!]+$/.test(w.word))
-        .map((w) => ({
-          word: w.word,
-          accuracyScore: w.accuracyScore,
-          ipa: (w.phonemes || []).map((p) => p.phoneme).join('')
-        }));
+        .filter((w) => w.accuracyScore < 75 && w.word && !/^[,.?!\-:;"'()]+$/.test(w.word))
+        .map((w) => {
+          const ipaString = (w.phonemes || []).map((p) => p.phoneme).join('');
+          return {
+            word: w.word,
+            accuracyScore: w.accuracyScore,
+            errorType: w.errorType,
+            ipa: ipaString,
+            phonemes: w.phonemes,
+            syllables: w.syllables
+          };
+        });
 
       const recognizedTranscript = (data.DisplayText || nbest.Display || '').trim();
 
+      // Điểm số tổng hợp từ Azure (đọc an toàn cả 2 cấu trúc JSON)
+      const accScore = pronAssessment.AccuracyScore != null ? pronAssessment.AccuracyScore : nbest.AccuracyScore;
+      const fluScore = pronAssessment.FluencyScore != null ? pronAssessment.FluencyScore : nbest.FluencyScore;
+      const proScore = pronAssessment.ProsodyScore != null ? pronAssessment.ProsodyScore : nbest.ProsodyScore;
+      const prScore = pronAssessment.PronScore != null ? pronAssessment.PronScore : nbest.PronScore;
+
+      // Tính toán các chỉ số âm học nâng cao (WPM, Pauses, Phonation, MLR, Prosody Errors)
+      const estChunkSec = Math.max(1, (Number(data.Duration || 0) / 10000000) || (wavBlob.size / 32000));
+      const acoustic = extractAcousticMetrics(allWords, estChunkSec);
+
       return {
         hasData: true,
-        accuracyScore: Math.round(nbest.AccuracyScore || 0),
-        fluencyScore: Math.round(nbest.FluencyScore || 0),
-        prosodyScore: nbest.ProsodyScore != null && nbest.ProsodyScore > 0 ? Math.round(nbest.ProsodyScore) : null,
-        pronScore: Math.round(nbest.PronScore || 0),
+        accuracyScore: Math.round(accScore || 0),
+        fluencyScore: Math.round(fluScore || 0),
+        prosodyScore: proScore != null && proScore > 0 ? Math.round(proScore) : null,
+        pronScore: Math.round(prScore || 0),
         transcript: recognizedTranscript,
         words: allWords,
-        weakWords
+        weakWords,
+        ...acoustic
       };
     }
 
@@ -327,12 +496,13 @@ async function _internalAzureAssess(audioBlob, referenceText) {
 
     // Nếu chỉ có 1 chunk (câu nói ngắn dưới 28s như Part 1/Part 3)
     if (wavChunks.length === 1) {
-      return await _assessSingleWavChunk(wavChunks[0], referenceText, auth);
+      return await _assessSingleWavChunk(wavChunks[0], referenceText, auth, 0);
     }
 
     // Nếu bài nói dài (>28s, như Part 2 lên tới 120s): Chấm song song tất cả các đoạn qua Azure REST
+    // Gán offset thời gian chính xác (chunk 0: 0s, chunk 1: 25s, chunk 2: 50s...)
     const chunkResults = await Promise.all(
-      wavChunks.map((chunk) => _assessSingleWavChunk(chunk, '', auth))
+      wavChunks.map((chunk, idx) => _assessSingleWavChunk(chunk, '', auth, idx * 25))
     );
 
     const validResults = chunkResults.filter((r) => r && r.hasData);
@@ -358,9 +528,16 @@ async function _internalAzureAssess(audioBlob, referenceText) {
     let sumPron = 0;
     let sumProsody = 0;
     let prosodyCount = 0;
+    let totalPause12s = 0;
+    let totalPause20s = 0;
+    let sumPhonation = 0;
+    let totalDuration = 0;
+    let totalUnexpectedBreaks = 0;
+    let totalMissingBreaks = 0;
+    let totalMonotone = 0;
 
     validResults.forEach((r) => {
-      const count = Math.max(1, r.words?.length || 1);
+      const count = Math.max(1, r.words?.length || r.wordCount || 1);
       totalWordCount += count;
       sumAccuracy += (r.accuracyScore || 0) * count;
       sumFluency += (r.fluencyScore || 0) * count;
@@ -369,7 +546,17 @@ async function _internalAzureAssess(audioBlob, referenceText) {
         sumProsody += r.prosodyScore * count;
         prosodyCount += count;
       }
+      totalPause12s += (r.pauseCount12s || 0);
+      totalPause20s += (r.pauseCount20s || 0);
+      sumPhonation += (r.phonationRatio || 0) * count;
+      totalDuration += (r.effectiveDuration || 25);
+      totalUnexpectedBreaks += (r.unexpectedBreaks || 0);
+      totalMissingBreaks += (r.missingBreaks || 0);
+      totalMonotone += (r.monotoneCount || 0);
     });
+
+    const wpm = totalDuration > 0 ? Math.round((totalWordCount / (totalDuration / 60))) : 0;
+    const avgPhonation = totalWordCount > 0 ? Math.round(sumPhonation / totalWordCount) : 0;
 
     return {
       hasData: true,
@@ -379,7 +566,16 @@ async function _internalAzureAssess(audioBlob, referenceText) {
       pronScore: Math.round(sumPron / totalWordCount),
       transcript: fullTranscript,
       words: allWords,
-      weakWords
+      weakWords,
+      wordCount: totalWordCount,
+      effectiveDuration: Number(totalDuration.toFixed(1)),
+      wpm,
+      pauseCount12s: totalPause12s,
+      pauseCount20s: totalPause20s,
+      phonationRatio: avgPhonation,
+      unexpectedBreaks: totalUnexpectedBreaks,
+      missingBreaks: totalMissingBreaks,
+      monotoneCount: totalMonotone
     };
   } catch (err) {
     console.warn('Azure assessment exception:', err);
@@ -407,6 +603,102 @@ export async function assessAudioWithAzure(audioBlob, referenceText = '') {
     _internalAzureAssess(audioBlob, referenceText),
     timeoutPromise
   ]);
+}
+
+/**
+ * Tổng hợp toàn bộ dữ liệu đo âm học Azure của tất cả các câu hỏi trong 1 buổi làm bài (Practice / Mock Test)
+ * Tính trung bình có trọng số theo số lượng từ, đảm bảo không bị sai lệch do chỉ lấy 1 câu đại diện
+ */
+export function aggregateSessionAzureMetrics(metricsList = []) {
+  const validMetrics = (Array.isArray(metricsList) ? metricsList : Object.values(metricsList || {}))
+    .filter((m) => m && m.hasData);
+
+  if (validMetrics.length === 0) {
+    return { hasData: false };
+  }
+
+  if (validMetrics.length === 1) {
+    return validMetrics[0];
+  }
+
+  let totalWords = 0;
+  let totalDuration = 0;
+  let sumAccuracy = 0;
+  let sumFluency = 0;
+  let sumPron = 0;
+  let sumProsody = 0;
+  let prosodyCount = 0;
+  let totalPause12s = 0;
+  let totalPause20s = 0;
+  let sumPhonation = 0;
+  let sumMlr = 0;
+  let mlrCount = 0;
+  let totalUnexpectedBreaks = 0;
+  let totalMissingBreaks = 0;
+  let totalMonotone = 0;
+
+  const combinedWeakWords = [];
+  const seenWeakWord = new Set();
+
+  validMetrics.forEach((m) => {
+    const wCount = Math.max(1, m.wordCount || m.words?.length || 1);
+    const dur = Math.max(1, m.effectiveDuration || 15);
+    totalWords += wCount;
+    totalDuration += dur;
+
+    sumAccuracy += (m.accuracyScore || 0) * wCount;
+    sumFluency += (m.fluencyScore || 0) * wCount;
+    sumPron += (m.pronScore || 0) * wCount;
+
+    if (m.prosodyScore != null && m.prosodyScore > 0) {
+      sumProsody += m.prosodyScore * wCount;
+      prosodyCount += wCount;
+    }
+
+    totalPause12s += (m.pauseCount12s || 0);
+    totalPause20s += (m.pauseCount20s || 0);
+    sumPhonation += (m.phonationRatio || 0) * wCount;
+
+    if (m.mlr != null && m.mlr > 0) {
+      sumMlr += m.mlr * wCount;
+      mlrCount += wCount;
+    }
+
+    totalUnexpectedBreaks += (m.unexpectedBreaks || 0);
+    totalMissingBreaks += (m.missingBreaks || 0);
+    totalMonotone += (m.monotoneCount || 0);
+
+    (m.weakWords || []).forEach((w) => {
+      const key = `${(w.word || '').toLowerCase()}_${w.ipa || ''}`;
+      if (!seenWeakWord.has(key)) {
+        seenWeakWord.add(key);
+        combinedWeakWords.push(w);
+      }
+    });
+  });
+
+  const wpm = totalDuration > 0 ? Math.round((totalWords / (totalDuration / 60))) : 0;
+  const avgPhonation = totalWords > 0 ? Math.round(sumPhonation / totalWords) : 0;
+  const avgMlr = mlrCount > 0 ? Number((sumMlr / mlrCount).toFixed(1)) : 0;
+
+  return {
+    hasData: true,
+    accuracyScore: Math.round(sumAccuracy / totalWords),
+    fluencyScore: Math.round(sumFluency / totalWords),
+    prosodyScore: prosodyCount > 0 ? Math.round(sumProsody / prosodyCount) : null,
+    pronScore: Math.round(sumPron / totalWords),
+    weakWords: combinedWeakWords,
+    wordCount: totalWords,
+    effectiveDuration: Number(totalDuration.toFixed(1)),
+    wpm,
+    pauseCount12s: totalPause12s,
+    pauseCount20s: totalPause20s,
+    phonationRatio: avgPhonation,
+    mlr: avgMlr,
+    unexpectedBreaks: totalUnexpectedBreaks,
+    missingBreaks: totalMissingBreaks,
+    monotoneCount: totalMonotone
+  };
 }
 
 /**

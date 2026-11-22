@@ -172,9 +172,18 @@ function handleSpeakingSubmission(ss, data, formattedTime) {
   const pr = crit.pronunciation?.band != null ? String(crit.pronunciation.band) : "";
 
   const azure = data.azureMetrics || {};
-  const azureSummary = azure.hasData
-    ? `Acc: ${azure.accuracyScore || 0} | Flu: ${azure.fluencyScore || 0} | Pron: ${azure.pronScore || 0}`
-    : "Không có";
+  let azureSummary = "Không có";
+  if (azure.hasData) {
+    const parts = [
+      `Acc: ${azure.accuracyScore || 0}`,
+      `Flu: ${azure.fluencyScore || 0}`,
+      azure.prosodyScore != null ? `Prosody: ${azure.prosodyScore}` : null,
+      `Pron: ${azure.pronScore || 0}`,
+      azure.wpm ? `WPM: ${azure.wpm}` : null,
+      azure.pauseCount12s != null ? `Pauses: ${azure.pauseCount12s}` : null
+    ].filter(Boolean);
+    azureSummary = parts.join(" | ");
+  }
 
   const teacherSummary = data.teacherSummary || "";
   const errorsSummary = data.keyErrors || "";
@@ -259,22 +268,34 @@ function handleSpeakingSubmission(ss, data, formattedTime) {
         <tr>
           <td style="padding: 8px; border: 1px solid #e2e8f0; font-weight: bold; color: #1e40af;">Fluency & Coherence</td>
           <td style="padding: 8px; border: 1px solid #e2e8f0; text-align: center; font-weight: bold;">${fc || '-'}</td>
-          <td style="padding: 8px; border: 1px solid #e2e8f0;">${crit.fluencyCoherence?.summaryVi || 'Chưa có'}</td>
+          <td style="padding: 8px; border: 1px solid #e2e8f0;">
+            ${crit.fluencyCoherence?.summaryVi || 'Chưa có'}
+            ${crit.fluencyCoherence?.bandDescriptorJustificationVi ? `<div style="font-size: 11px; color: #475569; margin-top: 4px; background: #ffffff; padding: 4px 6px; border-radius: 4px; border: 1px dashed #cbd5e1;"><strong>Căn cứ IELTS Band Descriptors:</strong> ${crit.fluencyCoherence.bandDescriptorJustificationVi}</div>` : ''}
+          </td>
         </tr>
         <tr style="background: #fafafa;">
           <td style="padding: 8px; border: 1px solid #e2e8f0; font-weight: bold; color: #1e40af;">Lexical Resource</td>
           <td style="padding: 8px; border: 1px solid #e2e8f0; text-align: center; font-weight: bold;">${lr || '-'}</td>
-          <td style="padding: 8px; border: 1px solid #e2e8f0;">${crit.lexicalResource?.summaryVi || 'Chưa có'}</td>
+          <td style="padding: 8px; border: 1px solid #e2e8f0;">
+            ${crit.lexicalResource?.summaryVi || 'Chưa có'}
+            ${crit.lexicalResource?.bandDescriptorJustificationVi ? `<div style="font-size: 11px; color: #475569; margin-top: 4px; background: #ffffff; padding: 4px 6px; border-radius: 4px; border: 1px dashed #cbd5e1;"><strong>Căn cứ IELTS Band Descriptors:</strong> ${crit.lexicalResource.bandDescriptorJustificationVi}</div>` : ''}
+          </td>
         </tr>
         <tr>
           <td style="padding: 8px; border: 1px solid #e2e8f0; font-weight: bold; color: #1e40af;">Grammatical Range</td>
           <td style="padding: 8px; border: 1px solid #e2e8f0; text-align: center; font-weight: bold;">${gra || '-'}</td>
-          <td style="padding: 8px; border: 1px solid #e2e8f0;">${crit.grammaticalRange?.summaryVi || 'Chưa có'}</td>
+          <td style="padding: 8px; border: 1px solid #e2e8f0;">
+            ${crit.grammaticalRange?.summaryVi || 'Chưa có'}
+            ${crit.grammaticalRange?.bandDescriptorJustificationVi ? `<div style="font-size: 11px; color: #475569; margin-top: 4px; background: #ffffff; padding: 4px 6px; border-radius: 4px; border: 1px dashed #cbd5e1;"><strong>Căn cứ IELTS Band Descriptors:</strong> ${crit.grammaticalRange.bandDescriptorJustificationVi}</div>` : ''}
+          </td>
         </tr>
         <tr style="background: #fafafa;">
           <td style="padding: 8px; border: 1px solid #e2e8f0; font-weight: bold; color: #1e40af;">Pronunciation</td>
           <td style="padding: 8px; border: 1px solid #e2e8f0; text-align: center; font-weight: bold;">${pr || '-'}</td>
-          <td style="padding: 8px; border: 1px solid #e2e8f0;">${crit.pronunciation?.summaryVi || 'Chưa có'}</td>
+          <td style="padding: 8px; border: 1px solid #e2e8f0;">
+            ${crit.pronunciation?.summaryVi || 'Chưa có'}
+            ${crit.pronunciation?.bandDescriptorJustificationVi ? `<div style="font-size: 11px; color: #475569; margin-top: 4px; background: #ffffff; padding: 4px 6px; border-radius: 4px; border: 1px dashed #cbd5e1;"><strong>Căn cứ IELTS Band Descriptors:</strong> ${crit.pronunciation.bandDescriptorJustificationVi}</div>` : ''}
+          </td>
         </tr>
       </table>
 

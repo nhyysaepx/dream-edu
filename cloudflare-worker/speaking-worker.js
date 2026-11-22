@@ -128,7 +128,7 @@ async function handleAzureToken(env, corsHeaders) {
 }
 
 /**
- * Xây dựng Prompt giám khảo IELTS Speaking nghiêm túc, sát thực tế
+ * Xây dựng Prompt giám khảo IELTS Speaking chuyên sâu, tích hợp dữ liệu âm học Azure và chuẩn Band Descriptors
  */
 function buildIeltsPrompt(payload) {
   const {
@@ -141,18 +141,29 @@ function buildIeltsPrompt(payload) {
   const formattedQA = responses
     .map((item, idx) => {
       const azure = item.azureMetrics || null;
-      let azureSummary = 'Không có dữ liệu đo Azure (hãy đánh giá qua audio/transcript).';
+      let azureSummary = 'Không có dữ liệu đo Azure (hãy phân tích kỹ qua audio/transcript).';
       if (azure && azure.hasData) {
         const weakWords = (azure.weakWords || [])
           .slice(0, 15)
-          .map((w) => `"${w.word}" (score: ${w.accuracyScore}/100${w.ipa ? `, IPA lỗi: /${w.ipa}/` : ''})`)
+          .map((w) => `"${w.word}" (score: ${w.accuracyScore}/100${w.ipa ? `, IPA: /${w.ipa}/` : ''}${w.errorType && w.errorType !== 'None' ? `, Lỗi: ${w.errorType}` : ''})`)
           .join('; ');
+
+        const prosodyIssues = [];
+        if (azure.unexpectedBreaks > 0) prosodyIssues.push(`UnexpectedBreak (ngắt cụm sai chỗ): ${azure.unexpectedBreaks} lần`);
+        if (azure.missingBreaks > 0) prosodyIssues.push(`MissingBreak (quên ngắt câu): ${azure.missingBreaks} lần`);
+        if (azure.monotoneCount > 0) prosodyIssues.push(`Monotone (thiếu biến thiên cao độ): ${azure.monotoneCount} lần`);
+
         azureSummary = [
-          `- Accuracy (Độ chính xác âm): ${azure.accuracyScore}/100`,
-          `- Fluency (Độ trôi chảy): ${azure.fluencyScore}/100`,
-          azure.prosodyScore != null ? `- Prosody (Ngữ điệu/trọng âm): ${azure.prosodyScore}/100` : null,
+          `- Accuracy (Độ chính xác âm vị IPA): ${azure.accuracyScore}/100`,
+          `- Fluency (Độ trôi chảy luồng âm): ${azure.fluencyScore}/100`,
+          azure.prosodyScore != null ? `- Prosody (Ngữ điệu, trọng âm, nhịp điệu): ${azure.prosodyScore}/100` : null,
           `- Pronunciation tổng hợp Azure: ${azure.pronScore}/100`,
-          weakWords ? `- Các từ phát âm yếu (<75 điểm): ${weakWords}` : '- Không có từ phát âm dưới 75 điểm.'
+          azure.wpm ? `- Tốc độ nói thực tế (Speech Rate): ${azure.wpm} từ/phút (WPM) [Chuẩn tự nhiên IELTS: 120 - 150 WPM]` : null,
+          azure.pauseCount12s != null ? `- Khoảng lặng ngập ngừng: ${azure.pauseCount12s} lần pauses >= 1.2s, ${azure.pauseCount20s || 0} lần pauses >= 2.0s` : null,
+          azure.phonationRatio ? `- Tỷ lệ phát âm liên tục (Phonation Time Ratio): ${azure.phonationRatio}%` : null,
+          azure.mlr ? `- Mean Length of Runs (MLR): ${azure.mlr} từ/chuỗi nói liên tục` : null,
+          prosodyIssues.length > 0 ? `- Nhận diện lỗi nhịp điệu (Prosody): ${prosodyIssues.join(', ')}` : null,
+          weakWords ? `- Các từ phát âm yếu (<75 điểm) kèm IPA: ${weakWords}` : '- Không có từ phát âm dưới 75 điểm.'
         ]
           .filter(Boolean)
           .join('\n');
@@ -174,43 +185,92 @@ function buildIeltsPrompt(payload) {
 - Câu hỏi / Đề bài: ${item.question || '(Không có đề)'}
 - Thời lượng nói: ${item.durationSeconds || 0} giây
 - Transcript học sinh nói: ${transcriptText}
-- Chỉ số đo vật lý từ Azure Speech Pronunciation Assessment:
+- Chỉ số âm học vật lý từ Azure AI Speech Pronunciation Assessment:
 ${azureSummary}
 `.trim();
     })
     .join('\n\n');
 
   return `
-Bạn là Giám khảo IELTS Speaking chính thức (Examiner chuẩn IDP / British Council) đang chấm bài cho học viên tại trung tâm Dream Education.
-Hãy chấm điểm NGHIÊM TÚC, KHÁCH QUAN, KHÔNG NỚI TAY (không tự động cho 6.5–7.0 nếu bài nói ngắn, thiếu phát triển ý, lặp từ hoặc sai ngữ pháp cơ bản).
+Bạn là Giám khảo IELTS Speaking chính thức (Senior Examiner chuẩn IDP / British Council) đang chấm bài cho học viên tại trung tâm Dream Education.
+Hãy chấm điểm NGHIÊM TÚC, KHÁCH QUAN, KHOA HỌC, TUÂN THỦ 100% TÀI LIỆU CHÍNH THỨC "IELTS SPEAKING BAND DESCRIPTORS".
 
 THÔNG TIN BÀI LÀM:
-- Chế độ: ${mode === 'mock_test' ? 'IELTS Speaking Mock Test (Thi thử chuẩn)' : 'Speaking Practice / Homework'}
+- Chế độ: ${mode === 'mock_test' ? 'IELTS Speaking Mock Test (Thi thử chuẩn IDP/BC)' : 'Speaking Practice / Homework'}
 - Tên bài: ${testTitle}
 - Cấp độ mục tiêu: ${targetLevel}
 
 DỮ LIỆU BÀI NÓI CỦA HỌC SINH:
 ${formattedQA}
 
-QUY TẮC CHẤM ĐIỂM BẮT BUỘC:
-1. Nếu có dữ liệu đo từ Azure Speech, BẮT BUỘC neo điểm tiêu chí Pronunciation và một phần Fluency theo thang quy đổi khách quan sau (tránh chấm quá cao so với phát âm thật):
-   - Azure PronScore >= 90 -> Pronunciation ~ 7.5 - 8.5
-   - Azure PronScore 80 - 89 -> Pronunciation ~ 6.5 - 7.5
-   - Azure PronScore 70 - 79 -> Pronunciation ~ 5.5 - 6.5
-   - Azure PronScore 55 - 69 -> Pronunciation ~ 4.5 - 5.5
-   - Azure PronScore < 55 -> Pronunciation <= 4.5
-2. Nếu học sinh nói quá ngắn (ví dụ Part 1 dưới 10 từ, hoặc Part 2 dưới 45 giây / dưới 60 từ), hoặc lạc đề, phải trừ điểm rõ rệt ở Fluency & Coherence và nhắc trong answerQuality.
-3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng (transcript) trung thực kể cả lỗi ngữ pháp, từ ngập ngừng (um, uh, like...) rồi mới chấm. Lưu ý: Thí sinh có thể thu âm qua điện thoại di động (có thể có tạp âm môi trường hoặc âm lượng biến thiên nhẹ), hãy tập trung đánh giá ngữ âm, ngữ pháp và độ lưu loát thực chất của thí sinh. Nếu câu hỏi không có transcript lẫn audio, thí sinh được tính là không đưa ra câu trả lời cho câu này (tuyệt đối KHÔNG tự bịa nội dung câu trả lời).
-4. Tất cả giải thích, nhận xét cho học sinh và giáo viên viết bằng **tiếng Việt** tự nhiên, rõ ràng, khích lệ nhưng thẳng thắn. Các ví dụ tiếng Anh, lỗi sai và bài mẫu nâng cấp viết bằng **tiếng Anh**.
-5. Điểm từng tiêu chí và điểm tổng (overallBand) phải là bội số của 0.5 (từ 1.0 đến 9.0). overallBand = trung bình cộng 4 tiêu chí làm tròn đến 0.5 gần nhất.
+==============================================================================
+TIÊU CHUẨN CHẤM THI CHÍNH THỨC (IELTS SPEAKING BAND DESCRIPTORS RUBRIC):
+==============================================================================
+
+1. FLUENCY AND COHERENCE (FC):
+- Band 9: Nói trôi chảy với rất hiếm lần lặp từ hoặc tự sửa lỗi. Mọi ngập ngừng (hesitation) chỉ dùng để chuẩn bị ý tưởng/nội dung câu tiếp theo, KHÔNG PHẢI để tìm từ vựng hay ngữ pháp. Phát triển chủ đề mạch lạc toàn diện và mở rộng phù hợp.
+- Band 8: Trôi chảy với rất ít lần lặp từ hay tự sửa lỗi. Ngập ngừng có thể đôi khi xuất hiện để tìm từ hay ngữ pháp, nhưng đa số vẫn là để suy nghĩ nội dung. Chủ đề phát triển mạch lạc, thích hợp và liên quan.
+- Band 7: Duy trì được câu trả lời dài mà không thấy nỗ lực rõ rệt. Có thể có ngập ngừng, lặp từ, hoặc tự sửa lỗi ở giữa câu khi tìm kiếm ngôn ngữ phù hợp, nhưng KHÔNG ảnh hưởng đến tính mạch lạc tổng thể. Sử dụng linh hoạt discourse markers và liên từ.
+- Band 6: Sẵn sàng duy trì câu trả lời dài. Đôi lúc mất tính mạch lạc do ngập ngừng, lặp từ hoặc tự sửa lỗi. Dùng được nhiều discourse markers và liên từ nhưng chưa phải lúc nào cũng chuẩn xác.
+- Band 5: Thường duy trì được bài nói nhưng phụ thuộc vào lặp từ, tự sửa lỗi hoặc NÓI CHẬM. Ngập ngừng thường xuyên ở giữa câu để tìm từ vựng và ngữ pháp cơ bản. Lạm dụng một số discourse markers quen thuộc. Cấu trúc phức tạp dễ gây đứt quãng nhịp nói.
+- Band 4: Không thể duy trì bài nói nếu không có những khoảng dừng thấy rõ (noticeable pauses). Tốc độ nói chậm, lặp từ nhiều. Thường xuyên tự sửa lỗi. Chỉ nối được câu đơn bằng liên từ lặp đi lặp lại. Có sự đứt gãy về mạch lạc.
+
+2. LEXICAL RESOURCE (LR):
+- Band 9: Hoàn toàn linh hoạt và chuẩn xác trong mọi ngữ cảnh. Sử dụng bền bỉ từ vựng thành ngữ (idiomatic) và chuẩn xác.
+- Band 8: Vốn từ rộng, sử dụng linh hoạt để thảo luận mọi chủ đề và diễn đạt ý tinh tế. Sử dụng khéo léo từ ít gặp (less common) và thành ngữ dù đôi chỗ chưa hoàn hảo về collocation. Paraphrase hiệu quả.
+- Band 7: Vốn từ linh hoạt để thảo luận nhiều chủ đề. Có khả năng dùng từ ít gặp và thành ngữ, có nhận thức về phong cách và collocation dù còn lỗi nhỏ. Paraphrase tốt khi cần.
+- Band 6: Vốn từ đủ để thảo luận kéo dài chủ đề. Cách dùng từ đôi chỗ chưa thích hợp nhưng ý nghĩa vẫn rõ ràng. Nhìn chung paraphrase thành công.
+- Band 5: Vốn từ đủ cho chủ đề quen thuộc và lạ nhưng tính linh hoạt hạn chế. Có nỗ lực paraphrase nhưng không phải lúc nào cũng thành công.
+- Band 4: Vốn từ đủ cho chủ đề quen thuộc, nhưng chỉ truyền đạt ý cơ bản ở chủ đề lạ. Thường xuyên dùng sai từ. Hiếm khi paraphrase.
+
+3. GRAMMATICAL RANGE AND ACCURACY (GRA):
+- Band 9: Cấu trúc ngữ pháp chính xác tuyệt đối ở mọi thời điểm (ngoại trừ những sơ suất đặc trưng của người bản ngữ).
+- Band 8: Đa dạng cấu trúc câu linh hoạt. ĐA SỐ CÂU HOÀN TOÀN KHÔNG CÓ LỖI NGỮ PHÁP (>60% error-free sentences). Chỉ gặp lỗi nhỏ không mang tính hệ thống.
+- Band 7: Cấu trúc đa dạng linh hoạt. CÂU KHÔNG CÓ LỖI XUẤT HIỆN THƯỜNG XUYÊN (>45% error-free). Sử dụng hiệu quả cả câu đơn và câu phức dù còn vài lỗi nhỏ.
+- Band 6: Kết hợp câu đơn và câu phức. Dù lỗi ngữ pháp thường xuyên xuất hiện ở các cấu trúc phức tạp, các lỗi này HIẾM KHI CẢN TRỞ GIAO TIẾP.
+- Band 5: Cấu trúc câu đơn kiểm soát tương đối tốt. Cố gắng dùng câu phức nhưng phạm vi hạn chế, gần như LUÔN CHỨA LỖI và có thể dẫn đến việc phải nói lại/cấu trúc lại câu.
+- Band 4: Tạo được câu đơn cơ bản, một số câu ngắn không có lỗi. Mệnh đề phụ (subordinate clauses) rất hiếm. Cấu trúc lặp lại và lỗi ngữ pháp dày đặc.
+
+4. PRONUNCIATION (P):
+- Band 9: Dùng toàn diện các đặc trưng âm vị học để truyền tải ý nghĩa tinh tế. Sử dụng kết nối âm (connected speech) linh hoạt bền bỉ. Người nghe hiểu một cách dễ dàng, không tốn chút nỗ lực nào. Accent không ảnh hưởng đến độ rõ.
+- Band 8: Dùng đa dạng các đặc trưng âm vị học. Duy trì được nhịp điệu phù hợp. Sử dụng linh hoạt trọng âm và ngữ điệu (stress and intonation) qua các câu dài. Người nghe hiểu dễ dàng. Accent chỉ ảnh hưởng tối thiểu.
+- Band 7: Thể hiện toàn bộ điểm tích cực của Band 6 và một số điểm tích cực của Band 8.
+- Band 6: Sử dụng được nhiều đặc trưng âm vị nhưng khả năng kiểm soát không đều. Ngắt nhịp (chunking) nhìn chung hợp lý nhưng nhịp điệu có thể bị ảnh hưởng do thiếu stress-timing hoặc nói quá nhanh. Có sử dụng ngữ điệu và trọng âm nhưng không duy trì liên tục. Lỗi phát âm ở vài từ/âm vị gây mất rõ ràng đôi lúc. Nhìn chung hiểu được mà không cần quá nhiều nỗ lực.
+- Band 5: Thể hiện toàn bộ điểm tích cực của Band 4 và một số điểm tích cực của Band 6.
+- Band 4: Sử dụng một số đặc trưng âm vị nhưng phạm vi hạn chế. Có ngắt cụm nhưng nhịp điệu thường xuyên bị gãy. Khả năng dùng trọng âm và ngữ điệu bị hạn chế. Nhiều từ và âm vị bị phát âm sai gây thiếu rõ ràng. Người nghe cần nỗ lực để hiểu.
+
+==============================================================================
+QUY TẮC TÍCH HỢP CHỈ SỐ ÂM HỌC TỪ AZURE AI SPEECH:
+==============================================================================
+1. Điểm PRONUNCIATION: Phải căn cứ trực tiếp vào Azure PronScore, AccuracyScore và ProsodyScore:
+   - Azure PronScore >= 90 (Accuracy >= 90, Prosody >= 88, từ lỗi < 5%): Pronunciation Band 8.0 - 9.0
+   - Azure PronScore 80 - 89 (Accuracy 80-89, Prosody 80-88, từ lỗi < 10%): Pronunciation Band 7.0 - 8.0
+   - Azure PronScore 65 - 79 (Accuracy 65-79, Prosody 65-79, từ lỗi 10-25%): Pronunciation Band 6.0 - 6.5
+   - Azure PronScore 50 - 64 (Accuracy 50-64, từ lỗi 25-40%): Pronunciation Band 5.0 - 5.5
+   - Azure PronScore < 50: Pronunciation Band 4.0 - 4.5
+2. Điểm FLUENCY & COHERENCE:
+   - Tốc độ nói WPM: 120-150 WPM là chuẩn tự nhiên. Nếu WPM < 100 WPM kết hợp nhiều khoảng dừng >= 1.2s (> 5 lần/phút) -> FC chỉ đạt Band 4.5 - 5.5 (đặc trưng nói chậm và ngập ngừng tìm từ cơ bản).
+   - Phân tích nguyên nhân ngập ngừng: Nếu ngập ngừng chỉ xảy ra khi chuẩn bị ý tưởng phân tích sâu (nhất là Part 3) mà không phải để nhớ từ cơ bản, KHÔNG trừ điểm nặng.
+   - Nếu có lỗi UnexpectedBreak (ngắt cụm sai chỗ) dày đặc, đối chiếu trực tiếp với Band 6 của tiêu chí P và FC.
+3. Nếu không có transcript sẵn nhưng có file audio đính kèm, hãy gỡ băng trung thực kể cả từ ngập ngừng (um, uh, like...) rồi mới chấm. Tuyệt đối KHÔNG tự bịa đặt câu trả lời nếu thí sinh im lặng.
+4. Tất cả nhận xét, giải thích cho học sinh và giáo viên viết bằng **tiếng Việt** tự nhiên, giàu tính sư phạm, thẳng thắn nhưng khích lệ.
+5. Điểm từng tiêu chí và overallBand phải là bội số của 0.5 (từ 1.0 đến 9.0). overallBand = trung bình cộng 4 tiêu chí làm tròn đến 0.5 gần nhất.
 
 TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không thêm markdown \`\`\`json):
 {
-  "overallBand": 6.0,
+  "overallBand": 6.5,
+  "acousticAnalysis": {
+    "wpm": 126,
+    "speechPacingEvaluationVi": "Tốc độ nói 126 từ/phút đạt mức độ tự nhiên chuẩn của kỳ thi IELTS (120-150 WPM).",
+    "pauseCountLong": 3,
+    "pauseCountSevere": 1,
+    "phonationRatio": 74,
+    "prosodyHighlightsVi": "Ngắt nhịp câu nhìn chung phù hợp; ngữ điệu có biến thiên tự nhiên ở các câu khẳng định."
+  },
   "partBreakdown": {
-    "part1": { "band": 6.0, "commentVi": "Nhận xét về độ trôi chảy phản xạ và từ vựng cơ bản Part 1." },
-    "part2": { "band": 6.0, "commentVi": "Nhận xét về khả năng duy trì bài nói 2 phút, sự phát triển ý và liên kết Part 2." },
-    "part3": { "band": 6.0, "commentVi": "Nhận xét về tư duy phản biện, lập luận chiều sâu và từ vựng học thuật Part 3." }
+    "part1": { "band": 6.5, "commentVi": "Nhận xét phản xạ, độ trôi chảy và từ vựng Part 1." },
+    "part2": { "band": 6.0, "commentVi": "Nhận xét khả năng duy trì câu chuyện, phát triển ý và liên kết Part 2." },
+    "part3": { "band": 6.5, "commentVi": "Nhận xét tư duy phản biện, lập luận và từ vựng học thuật Part 3." }
   },
   "questionBreakdown": [
     {
@@ -218,7 +278,7 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
       "part": "Part 1",
       "question": "Câu hỏi học sinh đã trả lời",
       "cleanedTranscript": "Bản gỡ băng chính xác của riêng câu hỏi này",
-      "estimatedBand": 6.0,
+      "estimatedBand": 6.5,
       "feedbackVi": "Nhận xét ngắn gọn 1-2 câu về câu trả lời này.",
       "grammarErrors": [
         {
@@ -231,7 +291,7 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
         {
           "word": "từ phát âm chưa chuẩn",
           "ipa": "/phiên âm IPA chuẩn/",
-          "issueVi": "mô tả ngắn lỗi và cách sửa khẩu hình"
+          "issueVi": "mô tả ngắn lỗi (âm cuối, trọng âm, nguyên âm) và cách sửa khẩu hình"
         }
       ],
       "upgradedAnswer": "Phiên bản nâng cấp Band 7.5-8.0 cho riêng câu hỏi này, giữ đúng ý của học sinh"
@@ -245,26 +305,32 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
   ],
   "criteria": {
     "fluencyCoherence": {
-      "band": 6.0,
-      "summaryVi": "Nhận xét ngắn gọn 2-3 câu về độ trôi chảy, tốc độ, ngập ngừng và mạch lạc ý.",
+      "band": 6.5,
+      "summaryVi": "Nhận xét tổng quan về độ trôi chảy, tốc độ nói (WPM), các khoảng nghỉ và tính mạch lạc.",
+      "bandDescriptorJustificationVi": "Giải thích chi tiết vì sao đạt Band này căn cứ theo tiêu chí IELTS Band Descriptors (ví dụ: 'Thí sinh duy trì được độ dài bài nói tốt, có nỗ lực triển khai ý nhưng đôi lúc ngập ngừng mid-sentence để tìm từ vựng, đặc trưng của ngưỡng Band 6.5').",
+      "nextBandTargetVi": "Yêu cầu của Band tiếp theo để bứt phá (ví dụ: 'Để lên Band 7.5+, cần giảm thiểu ngập ngừng tìm từ giữa câu và sử dụng linh hoạt hơn các liên từ phức hợp').",
       "strengthsVi": ["Điểm mạnh 1"],
       "weaknessesVi": ["Điểm cần cải thiện 1"]
     },
     "lexicalResource": {
-      "band": 6.0,
-      "summaryVi": "Nhận xét về vốn từ, collocations, paraphrasing và lặp từ.",
+      "band": 6.5,
+      "summaryVi": "Nhận xét về vốn từ, collocations, khả năng paraphrase và lặp từ.",
+      "bandDescriptorJustificationVi": "Giải thích đối chiếu với Band Descriptors về vốn từ (đủ để mở rộng ý, có cố gắng dùng từ ít gặp dù còn lỗi collocation nhỏ).",
+      "nextBandTargetVi": "Yêu cầu của Band tiếp theo về từ vựng.",
       "goodVocab": ["từ/cụm từ tốt học sinh đã dùng"],
       "suggestedUpgrades": [
         {
-          "original": "cụm từ đơn giản học sinh dùng",
-          "better": "cụm từ/collocation Band 7.5+ thay thế",
+          "original": "từ/cụm từ đơn giản bạn đã dùng",
+          "better": "từ/collocation Band 7.5+ thay thế",
           "meaningVi": "nghĩa tiếng Việt ngắn gọn"
         }
       ]
     },
     "grammaticalRange": {
-      "band": 5.5,
-      "summaryVi": "Nhận xét về độ đa dạng cấu trúc câu (câu đơn/câu phức/thì) và độ chính xác.",
+      "band": 6.0,
+      "summaryVi": "Nhận xét về tỷ lệ câu đơn/câu phức và độ chính xác ngữ pháp.",
+      "bandDescriptorJustificationVi": "Giải thích đối chiếu với Band Descriptors (ví dụ: 'Thí sinh phối hợp được câu đơn và câu ghép, có cố gắng dùng câu phức nhưng các cấu trúc này vẫn thường xuất hiện lỗi chia thì/mạo từ, đúng đặc trưng Band 6.0').",
+      "nextBandTargetVi": "Yêu cầu của Band tiếp theo về ngữ pháp (tăng tỷ lệ câu error-free lên trên 50%).",
       "errors": [
         {
           "original": "câu/cụm học sinh nói sai",
@@ -274,27 +340,29 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
       ]
     },
     "pronunciation": {
-      "band": 6.0,
-      "summaryVi": "Nhận xét cụ thể về âm cuối (ending sounds), trọng âm, ngữ điệu và độ dễ nghe dựa trên Azure/audio.",
+      "band": 6.5,
+      "summaryVi": "Nhận xét cụ thể về âm cuối, trọng âm, ngữ điệu và nhịp điệu dựa trên số liệu âm học Azure.",
+      "bandDescriptorJustificationVi": "Giải thích đối chiếu với Band Descriptors về phát âm (ví dụ: 'Điểm Azure 72/100, ngắt cụm tương đối phù hợp, ngữ điệu có biến thiên dù chưa duy trì xuyên suốt bài nói dài, đáp ứng đầy đủ tiêu chí Band 6 và một phần Band 8').",
+      "nextBandTargetVi": "Yêu cầu của Band tiếp theo về phát âm (duy trì trọng âm câu liên tục và triệt tiêu lỗi nuốt âm cuối).",
       "mispronouncedWords": [
         {
           "word": "từ phát âm chưa chuẩn",
           "ipa": "/phiên âm IPA chuẩn/",
-          "issueVi": "mô tả ngắn lỗi thường gặp & cách sửa khẩu hình"
+          "issueVi": "mô tả lỗi cụ thể và cách đặt lưỡi/khẩu hình"
         }
       ]
     }
   },
   "answerQuality": {
     "isOnTopic": true,
-    "relevanceVi": "Đánh giá mức độ bám sát câu hỏi và phát triển ý (có giải thích/ví dụ chưa).",
-    "lengthCommentVi": "Nhận xét độ dài câu trả lời so với yêu cầu IELTS."
+    "relevanceVi": "Đánh giá mức độ bám sát câu hỏi và phát triển ý (đã có dẫn chứng/giải thích cụ thể chưa).",
+    "lengthCommentVi": "Nhận xét độ dài và dung lượng bài nói so với yêu cầu thời gian IELTS."
   },
   "upgradedSampleAnswers": [
     {
       "questionIndex": 0,
       "targetBand": "Band 7.5 - 8.0",
-      "sampleAnswer": "Phiên bản nâng cấp tự nhiên, giữ đúng ý của học sinh nhưng dùng từ vựng & cấu trúc Band 7.5-8.0."
+      "sampleAnswer": "Phiên bản nâng cấp tự nhiên, giữ đúng ý tưởng của học sinh nhưng dùng từ vựng & cấu trúc Band 7.5-8.0."
     }
   ],
   "nextStepTipsVi": [
@@ -302,7 +370,7 @@ TRẢ VỀ DUY NHẤT MỘT JSON HỢP LỆ THEO ĐÚNG CẤU TRÚC SAU (không 
     "Lời khuyên hành động cụ thể 2",
     "Lời khuyên hành động cụ thể 3"
   ],
-  "teacherSummaryVi": "Tóm tắt chuyên môn 3-4 câu dành cho giáo viên (điểm nổi bật, lỗ hổng lớn nhất cần sửa trên lớp cho học sinh này)."
+  "teacherSummaryVi": "Tóm tắt chuyên môn 3-4 câu dành cho giáo viên (điểm nổi bật, lỗ hổng lớn nhất cần kèm cặp trên lớp cho học sinh này)."
 }
 `.trim();
 }

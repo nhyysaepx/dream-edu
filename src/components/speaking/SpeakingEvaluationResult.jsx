@@ -209,40 +209,147 @@ export default function SpeakingEvaluationResult({
           </div>
         </div>
 
-        {/* Azure Speech Physical Metrics Pill (if present) */}
-        {azureMetrics && azureMetrics.hasData && (
-          <div className="mt-4 p-4 rounded-2xl bg-white border border-blue-200/80 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs shrink-0">
-                🎙️
-              </span>
-              <div>
-                <p className="text-xs font-bold text-gray-900">
-                  Chỉ số đo âm học vật lý từ Azure AI Speech
-                </p>
-                <p className="text-[11px] text-gray-500">
-                  Đo trực tiếp độ chuẩn xác từng âm vị IPA, độ ngập ngừng và nhịp điệu giọng nói
-                </p>
-              </div>
-            </div>
+        {/* =================================================================== */}
+        {/* AZURE AI SPEECH & ACOUSTIC FLUENCY CARD                             */}
+        {/* =================================================================== */}
+        {((azureMetrics && azureMetrics.hasData) || evaluation.acousticAnalysis) && (
+          (() => {
+            const az = azureMetrics || {};
+            const ac = evaluation.acousticAnalysis || {};
+            const wpm = az.wpm || ac.wpm || 0;
+            const pause12s = az.pauseCount12s != null ? az.pauseCount12s : (ac.pauseCountLong != null ? ac.pauseCountLong : 0);
+            const pause20s = az.pauseCount20s != null ? az.pauseCount20s : (ac.pauseCountSevere != null ? ac.pauseCountSevere : 0);
+            const phonation = az.phonationRatio || ac.phonationRatio || 0;
+            const mlr = az.mlr || 0;
 
-            <div className="flex items-center gap-3 text-xs font-bold text-gray-700 flex-wrap">
-              <span className="px-2.5 py-1 bg-gray-50 border border-gray-200 rounded-lg">
-                Accuracy: <strong className="text-blue-700">{azureMetrics.accuracyScore}/100</strong>
-              </span>
-              <span className="px-2.5 py-1 bg-gray-50 border border-gray-200 rounded-lg">
-                Fluency: <strong className="text-emerald-700">{azureMetrics.fluencyScore}/100</strong>
-              </span>
-              {azureMetrics.prosodyScore != null && (
-                <span className="px-2.5 py-1 bg-gray-50 border border-gray-200 rounded-lg">
-                  Prosody: <strong className="text-purple-700">{azureMetrics.prosodyScore}/100</strong>
-                </span>
-              )}
-              <span className="px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg">
-                Tổng hợp: <strong>{azureMetrics.pronScore}/100</strong>
-              </span>
-            </div>
-          </div>
+            const getWpmBadge = (val) => {
+              if (val >= 120 && val <= 155) return { text: 'Tốc độ tự nhiên (Chuẩn IELTS 120-150)', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' };
+              if (val >= 100 && val < 120) return { text: 'Tốc độ vừa phải (100-119 WPM)', color: 'bg-blue-50 text-blue-800 border-blue-200' };
+              if (val > 155 && val <= 175) return { text: 'Tốc độ hơi nhanh', color: 'bg-indigo-50 text-indigo-800 border-indigo-200' };
+              if (val > 175) return { text: 'Nói quá nhanh (dễ nuốt âm)', color: 'bg-purple-50 text-purple-800 border-purple-200' };
+              return { text: 'Nói chậm, nhiều khoảng khựng (<100 WPM)', color: 'bg-amber-50 text-amber-800 border-amber-200' };
+            };
+
+            const wpmBadge = getWpmBadge(wpm);
+
+            return (
+              <div className="mt-5 p-5 rounded-2xl bg-gradient-to-br from-blue-50/70 via-indigo-50/30 to-white border border-blue-200 shadow-2xs text-left space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-blue-150">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                      🎙️
+                    </span>
+                    <div>
+                      <h4 className="text-sm font-black text-gray-900 flex items-center gap-2">
+                        <span>Chỉ số Âm học Đo sóng âm thực tế (Azure AI Speech)</span>
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                          Acoustics & Fluency
+                        </span>
+                      </h4>
+                      <p className="text-[11px] text-gray-600">
+                        Phân tích vật lý dòng âm thanh: tần số âm vị IPA, nhịp điệu (Prosody), tốc độ nói và khoảng ngập ngừng
+                      </p>
+                    </div>
+                  </div>
+
+                  {wpm > 0 && (
+                    <div className="flex items-center gap-1.5 self-start sm:self-auto">
+                      <span className={`text-[11px] font-bold px-3 py-1 rounded-lg border ${wpmBadge.color}`}>
+                        ⏱ {wpm} WPM • {wpmBadge.text}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 4 Azure Physical Metric Bars */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="p-3 bg-white/95 rounded-xl border border-gray-200/80 shadow-2xs">
+                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Độ chính xác âm (IPA)</span>
+                    <div className="text-xl font-black text-blue-700 my-0.5">
+                      {az.accuracyScore || 0}<span className="text-xs text-gray-400 font-normal">/100</span>
+                    </div>
+                    <div className="w-full bg-gray-150 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-blue-600 h-full rounded-full transition-all" style={{ width: `${Math.min(100, az.accuracyScore || 0)}%` }}></div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-white/95 rounded-xl border border-gray-200/80 shadow-2xs">
+                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Độ trôi chảy (Fluency)</span>
+                    <div className="text-xl font-black text-emerald-700 my-0.5">
+                      {az.fluencyScore || 0}<span className="text-xs text-gray-400 font-normal">/100</span>
+                    </div>
+                    <div className="w-full bg-gray-150 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-emerald-600 h-full rounded-full transition-all" style={{ width: `${Math.min(100, az.fluencyScore || 0)}%` }}></div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-white/95 rounded-xl border border-gray-200/80 shadow-2xs">
+                    <span className="text-[10px] uppercase font-bold text-gray-500 block">Ngữ điệu & Trọng âm</span>
+                    <div className="text-xl font-black text-purple-700 my-0.5">
+                      {az.prosodyScore || az.pronScore || 0}<span className="text-xs text-gray-400 font-normal">/100</span>
+                    </div>
+                    <div className="w-full bg-gray-150 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-purple-600 h-full rounded-full transition-all" style={{ width: `${Math.min(100, az.prosodyScore || az.pronScore || 0)}%` }}></div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-white/95 rounded-xl border border-blue-200 shadow-2xs bg-blue-50/30">
+                    <span className="text-[10px] uppercase font-bold text-blue-900 block">Phát âm tổng hợp Azure</span>
+                    <div className="text-xl font-black text-blue-900 my-0.5">
+                      {az.pronScore || 0}<span className="text-xs text-gray-400 font-normal">/100</span>
+                    </div>
+                    <div className="w-full bg-blue-200 rounded-full h-1.5 overflow-hidden">
+                      <div className="bg-blue-800 h-full rounded-full transition-all" style={{ width: `${Math.min(100, az.pronScore || 0)}%` }}></div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Granular Temporal Analytics (Pauses, Phonation, MLR, Prosody flags) */}
+                <div className="p-3.5 bg-white/90 rounded-xl border border-gray-200 text-xs text-gray-700 flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
+                  <div className="flex items-center gap-4 flex-wrap">
+                    <span>
+                      🛑 Ngập ngừng: <strong>{pause12s}</strong> lần (&gt;1.2s){pause20s > 0 && <span className="text-amber-700">, <strong>{pause20s}</strong> lần (&gt;2.0s)</span>}
+                    </span>
+                    {phonation > 0 && (
+                      <span>
+                        🌊 Phát âm liên tục: <strong>{phonation}%</strong> thời lượng
+                      </span>
+                    )}
+                    {mlr > 0 && (
+                      <span>
+                        📏 Độ dài chuỗi nói: <strong>{mlr}</strong> từ/nhịp
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Prosody flags summary */}
+                  <div className="text-[11px] font-medium text-gray-600">
+                    {az.unexpectedBreaks > 0 || az.missingBreaks > 0 || az.monotoneCount > 0 ? (
+                      <span className="text-amber-800 flex items-center gap-1.5">
+                        <AlertTriangle size={13} className="text-amber-600 shrink-0" />
+                        <span>
+                          Phát hiện: {az.unexpectedBreaks > 0 ? `${az.unexpectedBreaks} lần ngắt cụm chưa tự nhiên; ` : ''}
+                          {az.missingBreaks > 0 ? `${az.missingBreaks} lần quên ngắt câu; ` : ''}
+                          {az.monotoneCount > 0 ? `${az.monotoneCount} câu thiếu biến thiên cao độ` : ''}
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="text-emerald-700 flex items-center gap-1.5">
+                        <CheckCircle2 size={13} className="text-emerald-600 shrink-0" />
+                        <span>Nhịp điệu và ngắt nghỉ tự nhiên, không phát hiện lỗi ngắt câu</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {ac.speechPacingEvaluationVi && (
+                  <p className="text-xs text-blue-900 bg-blue-100/50 p-2.5 rounded-lg leading-relaxed">
+                    💡 <strong>Đánh giá nhịp độ:</strong> {ac.speechPacingEvaluationVi} {ac.prosodyHighlightsVi ? `• ${ac.prosodyHighlightsVi}` : ''}
+                  </p>
+                )}
+              </div>
+            );
+          })()
         )}
       </div>
 
@@ -469,6 +576,120 @@ export default function SpeakingEvaluationResult({
           </div>
         )}
 
+        {/* =================================================================== */}
+        {/* SECTION: ĐỐI CHIẾU CHUẨN IELTS SPEAKING BAND DESCRIPTORS (IDP / BC)  */}
+        {/* =================================================================== */}
+        {(crit.fluencyCoherence?.bandDescriptorJustificationVi || crit.pronunciation?.bandDescriptorJustificationVi || crit.lexicalResource?.bandDescriptorJustificationVi || crit.grammaticalRange?.bandDescriptorJustificationVi) && (
+          <div className="p-6 rounded-3xl bg-gradient-to-br from-amber-50/60 via-white to-blue-50/40 border border-amber-200/90 shadow-2xs space-y-4 text-left">
+            <div className="flex items-center gap-2.5 pb-2 border-b border-amber-200/70">
+              <span className="w-8 h-8 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                📜
+              </span>
+              <div>
+                <h3 className="text-base font-black text-gray-900 flex items-center gap-2 flex-wrap">
+                  <span>Đối Chiếu Trực Tiếp Chuẩn IELTS Speaking Band Descriptors (IDP & British Council)</span>
+                  <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                    Official Rubric
+                  </span>
+                </h3>
+                <p className="text-xs text-gray-600 mt-0.5">
+                  Căn cứ giám khảo chính thức lý giải vì sao bài nói rơi vào Band điểm này và điều kiện để nâng lên nấc điểm tiếp theo
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* FC Justification */}
+              {crit.fluencyCoherence?.bandDescriptorJustificationVi && (
+                <div className="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-2 flex flex-col justify-between">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-gray-900">Fluency & Coherence</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getBandBadgeColor(crit.fluencyCoherence?.band)}`}>
+                        Band {crit.fluencyCoherence?.band}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong className="text-gray-900">Căn cứ Band Descriptor:</strong> {crit.fluencyCoherence.bandDescriptorJustificationVi}
+                    </p>
+                  </div>
+                  {crit.fluencyCoherence.nextBandTargetVi && (
+                    <div className="pt-2 border-t border-gray-100 text-[11px] text-emerald-800 bg-emerald-50/70 p-2 rounded-xl">
+                      🎯 <strong>Mục tiêu lên Band kế tiếp:</strong> {crit.fluencyCoherence.nextBandTargetVi}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* LR Justification */}
+              {crit.lexicalResource?.bandDescriptorJustificationVi && (
+                <div className="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-2 flex flex-col justify-between">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-gray-900">Lexical Resource</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getBandBadgeColor(crit.lexicalResource?.band)}`}>
+                        Band {crit.lexicalResource?.band}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong className="text-gray-900">Căn cứ Band Descriptor:</strong> {crit.lexicalResource.bandDescriptorJustificationVi}
+                    </p>
+                  </div>
+                  {crit.lexicalResource.nextBandTargetVi && (
+                    <div className="pt-2 border-t border-gray-100 text-[11px] text-emerald-800 bg-emerald-50/70 p-2 rounded-xl">
+                      🎯 <strong>Mục tiêu lên Band kế tiếp:</strong> {crit.lexicalResource.nextBandTargetVi}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* GRA Justification */}
+              {crit.grammaticalRange?.bandDescriptorJustificationVi && (
+                <div className="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-2 flex flex-col justify-between">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-gray-900">Grammar Range & Accuracy</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getBandBadgeColor(crit.grammaticalRange?.band)}`}>
+                        Band {crit.grammaticalRange?.band}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong className="text-gray-900">Căn cứ Band Descriptor:</strong> {crit.grammaticalRange.bandDescriptorJustificationVi}
+                    </p>
+                  </div>
+                  {crit.grammaticalRange.nextBandTargetVi && (
+                    <div className="pt-2 border-t border-gray-100 text-[11px] text-emerald-800 bg-emerald-50/70 p-2 rounded-xl">
+                      🎯 <strong>Mục tiêu lên Band kế tiếp:</strong> {crit.grammaticalRange.nextBandTargetVi}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Pronunciation Justification */}
+              {crit.pronunciation?.bandDescriptorJustificationVi && (
+                <div className="p-4 rounded-2xl bg-white border border-gray-200/90 shadow-2xs space-y-2 flex flex-col justify-between">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-gray-900">Pronunciation</span>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${getBandBadgeColor(crit.pronunciation?.band)}`}>
+                        Band {crit.pronunciation?.band}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-700 leading-relaxed">
+                      <strong className="text-gray-900">Căn cứ Band Descriptor:</strong> {crit.pronunciation.bandDescriptorJustificationVi}
+                    </p>
+                  </div>
+                  {crit.pronunciation.nextBandTargetVi && (
+                    <div className="pt-2 border-t border-gray-100 text-[11px] text-emerald-800 bg-emerald-50/70 p-2 rounded-xl">
+                      🎯 <strong>Mục tiêu lên Band kế tiếp:</strong> {crit.pronunciation.nextBandTargetVi}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Section 1: Grammatical Corrections */}
         {crit.grammaticalRange?.errors && crit.grammaticalRange.errors.length > 0 && (
           <div>
@@ -529,13 +750,18 @@ export default function SpeakingEvaluationResult({
                     {idx + 1}
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-sm font-extrabold text-gray-900">
                         {item.word}
                       </span>
                       {item.ipa && (
                         <span className="text-xs font-mono font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
                           /{item.ipa}/
+                        </span>
+                      )}
+                      {item.errorType && item.errorType !== 'None' && item.errorType !== 'Mispronunciation' && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 bg-amber-200/60 text-amber-900 rounded">
+                          {item.errorType}
                         </span>
                       )}
                     </div>
