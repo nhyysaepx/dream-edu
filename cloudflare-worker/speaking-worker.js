@@ -448,13 +448,27 @@ async function callGemini(env, parts, requestedModel) {
 
   const allAttempts = [];
 
-  // 1. Thử gọi trực tiếp Google Gemini API với timeout nghiêm ngặt (tối đa 4.5 giây)
-  // Nếu Cloudflare edge bị chặn địa lý (User location / FAILED_PRECONDITION / 403 / timeout),
-  // sẽ lập tức chuyển ngay sang Google US Proxy, KHÔNG lặp đi lặp lại làm treo hệ thống.
+  // 1. ƯU TIÊN SỐ 1: Gọi ngay qua Google US Proxy (chạy trực tiếp trong Google US Datacenter)
+  // Đây là con đường siêu tốc (chỉ 1.5s - 2.5s) và 100% không bao giờ bị chặn địa lý
+  try {
+    const proxyResult = await callGeminiViaAppsScript(
+      env,
+      requestBody.contents,
+      requestBody.generationConfig,
+      userModel
+    );
+    if (proxyResult && proxyResult.text) {
+      return proxyResult;
+    }
+  } catch (proxyErr) {
+    allAttempts.push(`Google US Proxy notice: ${proxyErr.message}`);
+  }
+
+  // 2. DỰ PHÒNG KHẨN CẤP: Nếu Google US Proxy tạm thời bận, chuyển sang gọi trực tiếp Google Gemini API
   for (const model of modelsToTry.slice(0, 1)) {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
     const directAbort = new AbortController();
-    const directTimer = setTimeout(() => directAbort.abort(), 4500);
+    const directTimer = setTimeout(() => directAbort.abort(), 6000);
 
     try {
       const res = await fetch(endpoint, {
@@ -482,21 +496,7 @@ async function callGemini(env, parts, requestedModel) {
       clearTimeout(directTimer);
       allAttempts.push(`Direct ${model} error: ${fErr.message}`);
     }
-    // Nếu gọi trực tiếp từ Cloudflare Edge thất bại, bỏ qua ngay để chuyển sang Google US Proxy
     break;
-  }
-
-  // 2. Chuyển ngay qua Google Apps Script proxy (chạy 100% trong Google US Datacenter, siêu tốc ~1-3s)
-  try {
-    const proxyResult = await callGeminiViaAppsScript(
-      env,
-      requestBody.contents,
-      requestBody.generationConfig,
-      userModel
-    );
-    return proxyResult;
-  } catch (proxyErr) {
-    allAttempts.push(`Fallback Google US Proxy thất bại: ${proxyErr.message}`);
   }
 
   throw new Error(`Tất cả kênh gọi Gemini đều không phản hồi:\n${allAttempts.join('\n')}`);
