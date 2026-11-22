@@ -350,17 +350,17 @@ function handleGeminiEvaluation(data) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    let primaryModel = (data.model || "gemini-2.0-flash").trim();
-    const VALID_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"];
+    let primaryModel = (data.model || "gemini-3.5-flash-lite").trim();
+    const VALID_MODELS = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-3.8-flash"];
     if (!VALID_MODELS.includes(primaryModel)) {
-      primaryModel = "gemini-2.0-flash";
+      primaryModel = "gemini-3.5-flash-lite";
     }
 
     const candidateModels = [
       primaryModel,
-      "gemini-2.0-flash",
-      "gemini-1.5-flash",
-      "gemini-1.5-flash-8b"
+      "gemini-3.5-flash-lite",
+      "gemini-3.5-flash",
+      "gemini-3.8-flash"
     ];
     // Remove duplicates
     const modelsToTry = candidateModels.filter((v, i, a) => a.indexOf(v) === i);

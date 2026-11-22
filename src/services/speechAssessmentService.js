@@ -722,7 +722,7 @@ export async function evaluateSpeakingWithAI({
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-3.5-flash-lite',
         mode,
         testTitle,
         targetLevel,

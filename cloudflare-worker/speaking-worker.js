@@ -397,7 +397,7 @@ async function callGeminiViaAppsScript(env, contents, generationConfig, model, t
       body: JSON.stringify({
         action: 'callGemini',
         apiKey,
-        model: model || 'gemini-2.5-flash',
+        model: model || 'gemini-3.5-flash-lite',
         contents,
         generationConfig
       })
@@ -413,7 +413,7 @@ async function callGeminiViaAppsScript(env, contents, generationConfig, model, t
     if (json.status === 'success' && json.text) {
       return {
         text: json.text,
-        modelUsed: `${json.modelUsed || 'gemini-2.0-flash'} (via Google US proxy)`
+        modelUsed: `${json.modelUsed || 'gemini-3.5-flash-lite'} (via Google US proxy)`
       };
     }
 
@@ -433,18 +433,18 @@ async function callGemini(env, parts, requestedModel) {
     throw new Error('GEMINI_API_KEY chưa được cấu hình trên Cloudflare Worker.');
   }
 
-  // Chuẩn hóa model: Bỏ triệt để các model không có thực trên API
-  const VALID_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b'];
-  let userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-2.0-flash').trim();
+  // Chuẩn hóa model: Sử dụng bộ 3 model thế hệ Gemini 3.x Flash chính thức
+  const VALID_MODELS = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-3.8-flash'];
+  let userModel = (requestedModel || env.GEMINI_MODEL || 'gemini-3.5-flash-lite').trim();
   if (!VALID_MODELS.includes(userModel)) {
-    userModel = 'gemini-2.0-flash';
+    userModel = 'gemini-3.5-flash-lite';
   }
 
   const candidateModels = [
     userModel,
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-1.5-flash-8b'
+    'gemini-3.5-flash-lite',
+    'gemini-3.5-flash',
+    'gemini-3.8-flash'
   ];
 
   const modelsToTry = [...new Set(candidateModels)];
@@ -626,7 +626,7 @@ export default {
           service: 'Dream Education AI Speaking Worker',
           config: {
             geminiConfigured: Boolean(env.GEMINI_API_KEY),
-            geminiModel: env.GEMINI_MODEL || 'gemini-2.0-flash',
+            geminiModel: env.GEMINI_MODEL || 'gemini-3.5-flash-lite',
             azureConfigured: Boolean(env.AZURE_SPEECH_KEY),
             azureRegion: env.AZURE_SPEECH_REGION || 'southeastasia'
           }
