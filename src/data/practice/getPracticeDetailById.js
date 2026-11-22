@@ -6,6 +6,7 @@ import { PRE_IELTS_READING_3_PRACTICE_DETAIL } from './details/pre-ielts-reading
 import { PRE_IELTS_READING_2_PRACTICE_DETAIL } from './details/pre-ielts-reading-2.js';
 import { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from './details/unit-4-global-success-9.js';
 import { CEFR_B1_LISTENING_1_PRACTICE_DETAIL } from './details/cefr-b1-listening-1.js';
+import { CEFR_B1_READING_1_PRACTICE_DETAIL } from './details/cefr-b1-reading-1.js';
 import { 
   PRE_IELTS_READING_1_DETAIL, 
   PRE_IELTS_LISTENING_1_DETAIL,
@@ -19,6 +20,9 @@ export function getPracticeDetailById(id) {
   const speakingItem = PRACTICE_LIST.find((p) => p.id === id && (p.skill === 'Speaking' || p.isSpeaking));
   if (speakingItem) {
     return speakingItem;
+  }
+  if (id === 'cefr-b1-reading-1') {
+    return CEFR_B1_READING_1_PRACTICE_DETAIL;
   }
   if (id === 'cefr-b1-listening-1') {
     return CEFR_B1_LISTENING_1_PRACTICE_DETAIL;

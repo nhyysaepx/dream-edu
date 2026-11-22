@@ -3,6 +3,27 @@
 export const PRACTICE_LIST = [
   // ==================== KHUNG NĂNG LỰC CHÂU ÂU (CEFR A2 - C1) ====================
   {
+    id: 'cefr-b1-reading-1',
+    category: 'cefr',
+    levelId: 'b1',
+    levelLabel: 'Level B1',
+    session: 'Practice 01 - Academic & Life Reading',
+    skill: 'Reading',
+    title: 'CEFR B1 - Practice: Reading 1',
+    description: 'Trọn bộ bài luyện tập kỹ năng Reading chuẩn Khung tham chiếu Châu Âu CEFR B1 (Intermediate) gồm 39 câu hỏi qua 4 bài đọc học thuật: What Is Stress?, Crowding Human Life, Global Warming và Demand for Water in the United States, kết hợp chấm điểm từng phần và giải thích chi tiết.',
+    totalQuestions: 39,
+    duration: '60 - 75 phút',
+    status: 'open',
+    dueDate: 'Luyện tập kỹ năng Đọc hiểu trực tiếp trên máy',
+    exercisesCount: 4,
+    passagesCount: 4,
+    tag: 'Khung Châu Âu B1 (Intermediate)',
+    vocabId: 'cefr-b1-reading-1',
+    vocabCount: 40,
+    vocabLabel: 'Học 40 từ vựng Reading 1',
+    isFeatured: true
+  },
+  {
     id: 'cefr-b1-listening-1',
     category: 'cefr',
     levelId: 'b1',
