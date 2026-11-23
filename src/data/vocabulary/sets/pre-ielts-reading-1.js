@@ -1,11 +1,11 @@
-// Pre-IELTS: Reading 1 (Family Ties)
+// Pre-IELTS: Reading 1 (Social Media and Friendship)
 // Vocabulary set for pre-ielts-reading-1
 
 export const PRE_IELTS_READING_1_SET = {
   id: 'pre-ielts-reading-1',
   title: 'Pre-IELTS: Reading 1',
   subtitle: 'Pre-IELTS (4.0 - 5.0) • Reading 1',
-  description: 'Trọn bộ 30 từ vựng trọng tâm bài đọc Reading 1 cấp độ Pre-IELTS về quan hệ gia đình (Family Ties), đại gia đình và các khía cạnh tâm lý xã hội.',
+  description: 'Trọn bộ 30 từ vựng trọng tâm bài đọc Reading 1 cấp độ Pre-IELTS về chủ đề Tình bạn & Mạng xã hội (Social Media and Friendship), quan hệ gia đình và các khía cạnh tâm lý xã hội.',
   category: 'ielts',
   ieltsLevel: 'pre-ielts',
   skill: 'reading',
@@ -13,7 +13,7 @@ export const PRE_IELTS_READING_1_SET = {
   book: 'Pre-IELTS Reading',
   lesson: 'Reading 1',
   author: 'Dream Education Team',
-  tags: ['IELTS', 'Pre IELTS', 'Reading 1', 'Family'],
+  tags: ['IELTS', 'Pre IELTS', 'Reading 1', 'Friendship', 'Social Media'],
   isOfficial: true,
   terms: [
     { id: 'pir1-1', term: 'Cousin', definition: 'anh/chị/em họ' },
