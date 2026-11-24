@@ -21,6 +21,10 @@ export {
   INTERMEDIATE_READING_7_P3_DETAIL,
   INTERMEDIATE_READING_7_DETAIL,
 } from './details/intermediate-reading-7.js';
+export {
+  INTERMEDIATE_READING_8_DETAIL,
+  INTERMEDIATE_READING_8_P1_DETAIL,
+} from './details/intermediate-reading-8.js';
 export { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
 
 export { getHomeworkDetailById } from './getHomeworkDetailById.js';

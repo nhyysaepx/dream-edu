@@ -156,6 +156,23 @@ export const HOMEWORK_LIST = [
     vocabCount: 36,
     vocabLabel: 'Học 36 từ vựng Reading 7'
   },
+  {
+    id: 'intermediate-reading-8',
+    levelId: 'ielts-foundation',
+    levelLabel: 'IELTS Intermediate',
+    session: 'Buổi 8',
+    skill: 'Reading',
+    title: 'Reading 8: Swallows in Migration (True/False/Not Given, Sentence Completion & Multiple Choice)',
+    description: 'Trọn bộ bài tập về nhà Reading 8 gồm 14 câu hỏi về hành trình di cư của loài chim nhạn: True/False/Not Given (câu 1–6), Sentence Completion (câu 7–12) và Multiple Choice chọn 2 mối nguy hiểm (câu 13–14).',
+    totalQuestions: 14,
+    duration: '25 - 35 phút',
+    status: 'open',
+    dueDate: 'Không giới hạn thời gian',
+    exercisesCount: 1,
+    audioTracksCount: 0,
+    tag: 'Intermediate 5.5 - 6.5',
+    isFeatured: true
+  },
 
   // ===========================================================================
   // BÀI TẬP VỀ NHÀ KỸ NĂNG SPEAKING (HOMEWORK SPEAKING WITH AI)
