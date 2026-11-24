@@ -1,4 +1,5 @@
 // Practice detail lookup function
+import { INTERMEDIATE_READING_8_PRACTICE_DETAIL } from './details/intermediate-reading-8.js';
 import { REVISION_MIDTERM_1_ENGLISH_12_PRACTICE_DETAIL } from './details/revision-midterm-1-english-12.js';
 import { IELTS_ADVANCED_READING_SUPPLEMENTARY_PRACTICE_DETAIL } from './details/ielts-advanced-reading-supplementary.js';
 import { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from './details/revision-midterm-1-english-10.js';
@@ -20,6 +21,9 @@ export function getPracticeDetailById(id) {
   const speakingItem = PRACTICE_LIST.find((p) => p.id === id && (p.skill === 'Speaking' || p.isSpeaking));
   if (speakingItem) {
     return speakingItem;
+  }
+  if (id === 'intermediate-reading-8' || id === 'ielts-intermediate-reading-8') {
+    return INTERMEDIATE_READING_8_PRACTICE_DETAIL;
   }
   if (id === 'cefr-b1-reading-1') {
     return CEFR_B1_READING_1_PRACTICE_DETAIL;

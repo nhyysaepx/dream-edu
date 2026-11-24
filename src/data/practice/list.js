@@ -130,6 +130,26 @@ export const PRACTICE_LIST = [
     isFeatured: true
   },
 
+  // ==================== IELTS INTERMEDIATE ====================
+  {
+    id: 'intermediate-reading-8',
+    category: 'ielts',
+    levelId: 'ielts-foundation',
+    levelLabel: 'IELTS Intermediate',
+    session: 'Buổi 8',
+    skill: 'Reading',
+    title: 'Reading 8: True / False / Not Given (The Magic of Venice Carnival)',
+    description: 'Luyện tập kỹ thuật True / False / Not Given qua bài đọc về Lễ hội hóa trang Venice (The Magic of Venice Carnival) tại Ý, rèn luyện kỹ năng định vị thông tin, phân biệt thông tin đối lập và thông tin không được đề cập.',
+    totalQuestions: 7,
+    duration: '15 - 25 phút',
+    status: 'open',
+    dueDate: 'Luyện tập trực tiếp trên lớp',
+    exercisesCount: 1,
+    audioTracksCount: 0,
+    tag: 'Intermediate 5.0 - 6.0',
+    isFeatured: true
+  },
+
   // ==================== IELTS PRE ====================
   {
     id: 'pre-ielts-reading-3',

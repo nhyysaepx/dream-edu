@@ -16,6 +16,7 @@ import {
   INTERMEDIATE_READING_7_P3_DETAIL,
 } from './details/intermediate-reading-7.js';
 import { INTERMEDIATE_LISTENING_6_DETAIL } from './details/intermediate-listening-6.js';
+import { INTERMEDIATE_READING_8_PRACTICE_DETAIL } from '../practice/details/intermediate-reading-8.js';
 import { UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL } from '../practice/details/unit-4-global-success-9.js';
 import { REVISION_MIDTERM_1_ENGLISH_10_PRACTICE_DETAIL } from '../practice/details/revision-midterm-1-english-10.js';
 import { PRE_IELTS_READING_3_DETAIL } from './details/pre-ielts-reading-3.js';
@@ -32,6 +33,9 @@ export function getHomeworkDetailById(id) {
   }
   if (id === 'unit-4-global-success-9') {
     return UNIT_4_GLOBAL_SUCCESS_9_PRACTICE_DETAIL;
+  }
+  if (id === 'intermediate-reading-8' || id === 'ielts-intermediate-reading-8') {
+    return INTERMEDIATE_READING_8_PRACTICE_DETAIL;
   }
   if (id === 'intermediate-reading-7') {
     return INTERMEDIATE_READING_7_DETAIL;
