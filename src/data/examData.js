@@ -10,4 +10,6 @@
 export {
   EXAM_COLLECTIONS,
   FILTER_CATEGORIES,
+  VOL1_LIS_3,
+  VOL1_READ_3,
 } from './exams/index.js';
